@@ -96,7 +96,7 @@
          <attribute name="title">
           <string>Tab 1</string>
          </attribute>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
             <x>90</x>
@@ -230,7 +230,7 @@
   <customwidget>
    <class>color_widgets::ColorWheel</class>
    <extends>QWidget</extends>
-   <header>color_wheel.hpp</header>
+   <header>QtColorWidgets/color_wheel.hpp</header>
    <container>1</container>
    <slots>
     <signal>colorSelected(QColor)</signal>
@@ -240,7 +240,7 @@
   <customwidget>
    <class>color_widgets::GradientSlider</class>
    <extends>QSlider</extends>
-   <header>gradient_slider.hpp</header>
+   <header>QtColorWidgets/gradient_slider.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -5,7 +5,7 @@
 #include "model/colorsmodel.h"
 #include "repository/skinrepository.h"
 
-#include <ColorDialog>
+#include <QtColorWidgets/ColorDialog>
 
 ColorListWindow::ColorListWindow(QWidget *parent)
     : QDockWidget(parent)
