@@ -6,7 +6,7 @@
 #include <QDataWidgetMapper>
 #include <QAbstractItemModel>
 
-#include "Qt-Color-Widgets/include/ColorWheel"
+#include "Qt-Color-Widgets/include/QtColorWidgets/ColorWheel"
 
 namespace Ui {
 class ColorListWindow;
