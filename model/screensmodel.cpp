@@ -1,5 +1,5 @@
-#include "screensmodel.h"
-#include "repository/skinrepository.h"
+#include "screensmodel.hpp"
+#include "repository/skinrepository.hpp"
 
 
 // ScreensTree

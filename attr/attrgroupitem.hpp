@@ -2,7 +2,7 @@
 #define ATTRGROUPITEM_H
 
 #include <QString>
-#include "attritem.h"
+#include "attritem.hpp"
 
 class AttrGroupItem : public AttrItem
 {

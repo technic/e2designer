@@ -1,5 +1,5 @@
-#include "sizeitem.h"
-#include "repository/widgetdata.h"
+#include "sizeitem.hpp"
+#include "repository/widgetdata.hpp"
 #include <QDebug>
 
 

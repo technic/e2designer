@@ -1,4 +1,4 @@
-#include "windowstyle.h"
+#include "windowstyle.hpp"
 
 
 // WindowStyleTitle

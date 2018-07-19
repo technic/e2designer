@@ -1,4 +1,4 @@
-#include "borderview.h"
+#include "borderview.hpp"
 
 BorderView::BorderView(QGraphicsRectItem *parent) :
     QGraphicsRectItem(parent)

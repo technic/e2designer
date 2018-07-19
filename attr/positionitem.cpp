@@ -1,5 +1,5 @@
-#include "positionitem.h"
-#include "repository/widgetdata.h"
+#include "positionitem.hpp"
+#include "repository/widgetdata.hpp"
 #include <QDebug>
 
 

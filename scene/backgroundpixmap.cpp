@@ -1,4 +1,4 @@
-#include "backgroundpixmap.h"
+#include "backgroundpixmap.hpp"
 #include <QPainter>
 
 void BackgroundPixmap::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

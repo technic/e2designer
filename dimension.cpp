@@ -1,4 +1,4 @@
-#include "dimension.h"
+#include "dimension.hpp"
 
 Dimension::Dimension()
 {

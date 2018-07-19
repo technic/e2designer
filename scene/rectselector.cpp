@@ -1,5 +1,5 @@
-#include "rectselector.h"
-#include "coordinate.h"
+#include "rectselector.hpp"
+#include "coordinate.hpp"
 
 #include <QGraphicsScene>
 

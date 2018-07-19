@@ -2,7 +2,7 @@
 #define FONTLISTWINDOW_H
 
 #include <QDialog>
-#include "model/fontsmodel.h"
+#include "model/fontsmodel.hpp"
 
 namespace Ui {
 class FontListWindow;

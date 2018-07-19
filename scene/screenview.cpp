@@ -1,9 +1,9 @@
 #include <QGraphicsPixmapItem>
 #include <QCoreApplication>
-#include "screenview.h"
-#include "backgroundpixmap.h"
-#include "foregroundwidget.h"
-#include "repository/skinrepository.h"
+#include "screenview.hpp"
+#include "backgroundpixmap.hpp"
+#include "foregroundwidget.hpp"
+#include "repository/skinrepository.hpp"
 
 ScreenView::ScreenView(ScreensModel *model)
     : mModel(model)

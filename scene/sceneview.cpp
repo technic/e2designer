@@ -1,4 +1,4 @@
-#include "sceneview.h"
+#include "sceneview.hpp"
 
 #include <QWheelEvent>
 

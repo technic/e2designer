@@ -3,7 +3,7 @@
 
 #include <QDebug>
 #include <QGraphicsRectItem>
-#include "recthandle.h"
+#include "recthandle.hpp"
 
 class RectSelector : public QObject, public QGraphicsRectItem
 {

@@ -1,6 +1,6 @@
 #include <QColor>
 #include <QDebug>
-#include "colorsmodel.h"
+#include "colorsmodel.hpp"
 
 
 // Color

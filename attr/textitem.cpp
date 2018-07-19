@@ -1,5 +1,5 @@
-#include "textitem.h"
-#include "repository/widgetdata.h"
+#include "textitem.hpp"
+#include "repository/widgetdata.hpp"
 
 
 QVariant TextItem::data(int role) const

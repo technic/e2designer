@@ -1,25 +1,25 @@
-#include "widgetdata.h"
+#include "widgetdata.hpp"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QDebug>
 #include <QTimer>
 
-#include "attr/positionitem.h"
-#include "attr/sizeitem.h"
-#include "attr/textitem.h"
-#include "attr/coloritem.h"
-#include "attr/fontitem.h"
-#include "attr/pixmapitem.h"
-#include "attr/enumitem.h"
-#include "attr/integeritem.h"
-#include "attr/attrgroupitem.h"
-#include "attr/variantitem.h"
+#include "attr/positionitem.hpp"
+#include "attr/sizeitem.hpp"
+#include "attr/textitem.hpp"
+#include "attr/coloritem.hpp"
+#include "attr/fontitem.hpp"
+#include "attr/pixmapitem.hpp"
+#include "attr/enumitem.hpp"
+#include "attr/integeritem.hpp"
+#include "attr/attrgroupitem.hpp"
+#include "attr/variantitem.hpp"
 
-#include "repository/skinrepository.h"
-#include "model/colorsmodel.h"
-#include "model/fontsmodel.h"
-#include "model/screensmodel.h"
-#include "adapter/attritemfactory.h"
+#include "repository/skinrepository.hpp"
+#include "model/colorsmodel.hpp"
+#include "model/fontsmodel.hpp"
+#include "model/screensmodel.hpp"
+#include "adapter/attritemfactory.hpp"
 
 #include <type_traits>
 #include <typeinfo>

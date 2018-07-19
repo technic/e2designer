@@ -1,7 +1,7 @@
 #include <QPainter>
 #include <QTextBlock>
 #include <QRect>
-#include "codeeditor.h"
+#include "codeeditor.hpp"
 
 CodeEditor::CodeEditor(QWidget *parent) :
     QPlainTextEdit(parent)

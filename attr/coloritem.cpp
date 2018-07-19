@@ -1,6 +1,6 @@
-#include "coloritem.h"
-#include "repository/skinrepository.h"
-#include "adapter/attritemfactory.h"
+#include "coloritem.hpp"
+#include "repository/skinrepository.hpp"
+#include "adapter/attritemfactory.hpp"
 #include <QString>
 
 

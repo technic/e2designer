@@ -1,6 +1,6 @@
-#include "propertiesmodel.h"
-#include "repository/skinrepository.h"
-#include "attr/attritem.h"
+#include "propertiesmodel.hpp"
+#include "repository/skinrepository.hpp"
+#include "attr/attritem.hpp"
 
 PropertiesModel::PropertiesModel(QObject *parent)
     : QAbstractItemModel(parent),

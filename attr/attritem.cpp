@@ -1,5 +1,5 @@
 #include <QString>
-#include "attritem.h"
+#include "attritem.hpp"
 
 // AttrItem
 

@@ -1,5 +1,5 @@
 #include <QDebug>
-#include "coordinate.h"
+#include "coordinate.hpp"
 
 Coordinate::Coordinate(Type type, int value) :
     m_type(type),

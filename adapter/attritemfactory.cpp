@@ -1,5 +1,5 @@
-#include "attritemfactory.h"
-#include "repository/widgetdata.h"
+#include "attritemfactory.hpp"
+#include "repository/widgetdata.hpp"
 #include <QApplication>
 #include <QPalette>
 

@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <QAbstractItemModel>
-#include "repository/widgetdata.h"
+#include "repository/widgetdata.hpp"
 
 class AttrItem;
 

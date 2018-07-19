@@ -1,5 +1,5 @@
-#include "attrcommand.h"
-#include "repository/skinrepository.h"
+#include "attrcommand.hpp"
+#include "repository/skinrepository.hpp"
 
 AttrCommand::AttrCommand(QModelIndex idx, int key, QVariant value)
     : mKey(key)

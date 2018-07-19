@@ -1,6 +1,6 @@
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
-#include "skindelegate.h"
+#include "skindelegate.hpp"
 
 #include <QFile>
 #include <QFileDialog>
@@ -16,13 +16,13 @@
 #include <QItemEditorFactory>
 #include <QRgb>
 
-#include "editor/xmlhighlighter.h"
-#include "colorlistbox.h"
-#include "colorlistwindow.h"
-#include "listbox.h"
-#include "fontlistwindow.h"
-#include "model/colorsmodel.h"
-#include "repository/skinrepository.h"
+#include "editor/xmlhighlighter.hpp"
+#include "colorlistbox.hpp"
+#include "colorlistwindow.hpp"
+#include "listbox.hpp"
+#include "fontlistwindow.hpp"
+#include "model/colorsmodel.hpp"
+#include "repository/skinrepository.hpp"
 
 
 MainWindow::MainWindow(QWidget *parent) :

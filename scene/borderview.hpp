@@ -2,7 +2,7 @@
 #define BORDERVIEW_H
 
 #include <QGraphicsRectItem>
-#include "model/borderset.h"
+#include "model/borderset.hpp"
 
 class BorderView : public QObject, public QGraphicsRectItem
 {

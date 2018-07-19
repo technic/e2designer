@@ -1,5 +1,5 @@
-#include "fontsmodel.h"
-#include "repository/skinrepository.h"
+#include "fontsmodel.hpp"
+#include "repository/skinrepository.hpp"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QCoreApplication>

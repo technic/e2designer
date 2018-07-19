@@ -1,2 +1,2 @@
-#include "skinmaps.h"
+#include "skinmaps.hpp"
 

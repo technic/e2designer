@@ -1,5 +1,5 @@
-#include "colorlistbox.h"
-#include "repository/skinrepository.h"
+#include "colorlistbox.hpp"
+#include "repository/skinrepository.hpp"
 
 ColorListBox::ColorListBox(QWidget *parent)
     : QComboBox(parent)

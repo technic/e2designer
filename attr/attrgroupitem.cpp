@@ -1,4 +1,4 @@
-#include "attrgroupitem.h"
+#include "attrgroupitem.hpp"
 #include <QApplication>
 #include <QPalette>
 

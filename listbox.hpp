@@ -2,7 +2,7 @@
 #define LISTBOX_H
 
 #include <QComboBox>
-#include "attr/enumitem.h"
+#include "attr/enumitem.hpp"
 
 class ListBox : public QComboBox
 {

@@ -1,4 +1,4 @@
-#include "skinrepository.h"
+#include "skinrepository.hpp"
 #include <QObject>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>

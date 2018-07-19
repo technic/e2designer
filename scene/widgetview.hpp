@@ -6,9 +6,9 @@
 #include <QGraphicsPixmapItem>
 #include <QFont>
 
-#include "rectselector.h"
-#include "attr/attritem.h"
-#include "repository/skinrepository.h"
+#include "rectselector.hpp"
+#include "attr/attritem.hpp"
+#include "repository/skinrepository.hpp"
 
 
 class ScreenView;

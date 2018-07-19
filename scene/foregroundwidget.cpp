@@ -1,4 +1,4 @@
-#include "foregroundwidget.h"
+#include "foregroundwidget.hpp"
 #include <QPainter>
 
 void ForegroundWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

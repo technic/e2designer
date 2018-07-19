@@ -1,8 +1,8 @@
 #include <QString>
 #include <QStringList>
 #include <QFontDatabase>
-#include "fontitem.h"
-#include "repository/skinrepository.h"
+#include "fontitem.hpp"
+#include "repository/skinrepository.hpp"
 
 
 // FontAttr

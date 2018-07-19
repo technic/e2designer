@@ -1,7 +1,7 @@
 #ifndef TEXTITEM_H
 #define TEXTITEM_H
 
-#include "attritem.h"
+#include "attritem.hpp"
 
 using TextAttr = QString;
 

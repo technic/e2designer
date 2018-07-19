@@ -1,6 +1,6 @@
 #include <QRegExp>
 #include <QTextCharFormat>
-#include "xmlhighlighter.h"
+#include "xmlhighlighter.hpp"
 
 XMLHighlighter::XMLHighlighter(QTextDocument *parent) :
     QSyntaxHighlighter(parent)

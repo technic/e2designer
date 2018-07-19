@@ -4,7 +4,7 @@
 #include <QGraphicsScene>
 #include <QItemSelectionModel>
 
-#include "widgetview.h"
+#include "widgetview.hpp"
 
 
 /**

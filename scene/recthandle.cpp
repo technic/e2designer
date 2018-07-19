@@ -2,8 +2,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QBrush>
 //#include <QGraphicsScene>
-#include "recthandle.h"
-#include "widgetview.h"
+#include "recthandle.hpp"
+#include "widgetview.hpp"
 
 RectHandle::RectHandle(int position, RectSelector *parent) :
     QGraphicsRectItem(parent),

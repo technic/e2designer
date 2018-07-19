@@ -151,12 +151,12 @@
   <customwidget>
    <class>SceneView</class>
    <extends>QGraphicsView</extends>
-   <header>scene/sceneview.h</header>
+   <header>scene/sceneview.hpp</header>
   </customwidget>
   <customwidget>
    <class>CodeEditor</class>
    <extends>QPlainTextEdit</extends>
-   <header>editor/codeeditor.h</header>
+   <header>editor/codeeditor.hpp</header>
   </customwidget>
  </customwidgets>
  <resources/>

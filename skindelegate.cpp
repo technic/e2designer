@@ -1,4 +1,4 @@
-#include "skindelegate.h"
+#include "skindelegate.hpp"
 #include <QComboBox>
 
 SkinDelegate::SkinDelegate(QObject *parent) :

@@ -1,7 +1,7 @@
 #ifndef VARIANTITEM_H
 #define VARIANTITEM_H
 
-#include "attritem.h"
+#include "attritem.hpp"
 
 typedef QVariant VariantAttr;
 

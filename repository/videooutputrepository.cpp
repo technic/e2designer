@@ -1,4 +1,4 @@
-#include "videooutputrepository.h"
+#include "videooutputrepository.hpp"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QDebug>

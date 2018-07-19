@@ -3,10 +3,10 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
-#include "widgetview.h"
-#include "screenview.h"
-#include "attr/positionitem.h"
-#include "repository/skinrepository.h"
+#include "widgetview.hpp"
+#include "screenview.hpp"
+#include "attr/positionitem.hpp"
+#include "repository/skinrepository.hpp"
 
 WidgetView::WidgetView(ScreenView *view, QModelIndex index, WidgetView *parent)
     : QGraphicsRectItem(parent)

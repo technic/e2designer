@@ -1,7 +1,7 @@
 #ifndef PIXMAPITEM_H
 #define PIXMAPITEM_H
 
-#include "attritem.h"
+#include "attritem.hpp"
 
 // Do i need this???
 

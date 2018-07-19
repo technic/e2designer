@@ -1,8 +1,8 @@
 #ifndef ENUMITEM_H
 #define ENUMITEM_H
 
-#include "attritem.h"
-#include "adapter/attritemfactory.h"
+#include "attritem.hpp"
+#include "adapter/attritemfactory.hpp"
 
 // FIXME should we use fancy QMetaType???
 

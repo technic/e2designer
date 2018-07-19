@@ -9,8 +9,8 @@
 #include <QTreeWidgetItem>
 #include <QSortFilterProxyModel>
 
-#include "model/propertiesmodel.h"
-#include "scene/screenview.h"
+#include "model/propertiesmodel.hpp"
+#include "scene/screenview.hpp"
 
 namespace Ui {
 class MainWindow;

@@ -1,4 +1,4 @@
-#include "xmlnode.h"
+#include "xmlnode.hpp"
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 

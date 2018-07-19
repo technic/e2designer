@@ -1,5 +1,5 @@
-#include "enumitem.h"
-#include "repository/widgetdata.h"
+#include "enumitem.hpp"
+#include "repository/widgetdata.hpp"
 #include <QDebug>
 
 

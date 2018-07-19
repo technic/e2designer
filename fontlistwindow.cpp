@@ -1,6 +1,6 @@
-#include "fontlistwindow.h"
+#include "fontlistwindow.hpp"
 #include "ui_fontlistwindow.h"
-#include "repository/skinrepository.h"
+#include "repository/skinrepository.hpp"
 
 FontListWindow::FontListWindow(QWidget *parent)
     : QDialog(parent)

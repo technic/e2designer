@@ -1,7 +1,7 @@
 #ifndef INTEGERITEM_H
 #define INTEGERITEM_H
 
-#include "attritem.h"
+#include "attritem.hpp"
 
 using IntegerAttr = int;
 
