@@ -11,7 +11,7 @@ void Coordinate::parseStr(const QString &str)
 {
     if (str == "center") {
         m_type = Center;
-    } else if (str.back() == '%') {
+    } else if (str.endsWith("%")) {
         m_type = Percent;
         m_value = str.leftRef(str.size()-1).toInt();
     } else {
