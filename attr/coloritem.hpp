@@ -3,7 +3,7 @@
 
 #include <QColor>
 #include <QRgb>
-#include "attr/attritem.h"
+#include "attr/attritem.hpp"
 
 class ColorAttr
 {

@@ -2,8 +2,8 @@
 #define FONTITEM_H
 
 #include <QObject>
-#include "attr/attritem.h"
-#include "model/fontsmodel.h"
+#include "attr/attritem.hpp"
+#include "model/fontsmodel.hpp"
 
 // Do I need this???
 

@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QMetaEnum>
-#include "base/tree.h"
+#include "base/tree.hpp"
 
 /**
  * @brief Dummy class to store properties enum

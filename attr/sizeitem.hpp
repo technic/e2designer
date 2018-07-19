@@ -1,8 +1,8 @@
 #ifndef SIZEITEM_H
 #define SIZEITEM_H
 
-#include "attritem.h"
-#include "dimension.h"
+#include "attritem.hpp"
+#include "dimension.hpp"
 
 class SizeAttr
 {

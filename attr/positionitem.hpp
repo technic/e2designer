@@ -1,8 +1,8 @@
 #ifndef POSITIONITEM_H
 #define POSITIONITEM_H
 
-#include "attritem.h"
-#include "coordinate.h"
+#include "attritem.hpp"
+#include "coordinate.hpp"
 
 typedef QPair<int,int> AnchorPair;
 Q_DECLARE_METATYPE(AnchorPair)

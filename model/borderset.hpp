@@ -1,7 +1,7 @@
 #ifndef BORDERSET_H
 #define BORDERSET_H
 
-#include "repository/xmlnode.h"
+#include "repository/xmlnode.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;

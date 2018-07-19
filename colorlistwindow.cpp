@@ -1,9 +1,9 @@
 #include <QMessageBox>
 #include <QDebug>
-#include "colorlistwindow.h"
+#include "colorlistwindow.hpp"
 #include "ui_colorlistwindow.h"
-#include "model/colorsmodel.h"
-#include "repository/skinrepository.h"
+#include "model/colorsmodel.hpp"
+#include "repository/skinrepository.hpp"
 
 #include <QtColorWidgets/ColorDialog>
 

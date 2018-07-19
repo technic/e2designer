@@ -2,7 +2,7 @@
 #define VIDEOOUTPUTREPOSITORY_H
 
 #include <QVector>
-#include "repository/xmlnode.h"
+#include "repository/xmlnode.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;

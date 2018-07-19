@@ -2,8 +2,8 @@
 #define FONTSMODEL_H
 
 #include <QAbstractTableModel>
-#include "namedlist.h"
-#include "repository/xmlnode.h"
+#include "namedlist.hpp"
+#include "repository/xmlnode.hpp"
 
 
 class QXmlStreamReader;

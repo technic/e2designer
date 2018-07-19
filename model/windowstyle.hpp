@@ -1,11 +1,11 @@
 #ifndef WINDOWSTYLE_H
 #define WINDOWSTYLE_H
 
-#include "attr/coloritem.h"
-#include "attr/fontitem.h"
-#include "attr/positionitem.h"
-#include "borderset.h"
-#include "repository/xmlnode.h"
+#include "attr/coloritem.hpp"
+#include "attr/fontitem.hpp"
+#include "attr/positionitem.hpp"
+#include "borderset.hpp"
+#include "repository/xmlnode.hpp"
 
 
 class WindowStyleTitle

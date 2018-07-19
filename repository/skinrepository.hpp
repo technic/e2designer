@@ -3,14 +3,14 @@
 
 #include <QObject>
 #include <QDir>
-#include "base/singleton.h"
-#include "model/colorsmodel.h"
-#include "model/fontsmodel.h"
-#include "model/screensmodel.h"
-#include "repository/videooutputrepository.h"
-#include "model/colorsmodel.h"
-#include "model/fontsmodel.h"
-#include "model/windowstyle.h"
+#include "base/singleton.hpp"
+#include "model/colorsmodel.hpp"
+#include "model/fontsmodel.hpp"
+#include "model/screensmodel.hpp"
+#include "repository/videooutputrepository.hpp"
+#include "model/colorsmodel.hpp"
+#include "model/fontsmodel.hpp"
+#include "model/windowstyle.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;

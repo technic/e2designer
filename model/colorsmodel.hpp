@@ -3,8 +3,8 @@
 
 #include <QAbstractTableModel>
 #include <QRgb>
-#include "repository/xmlnode.h"
-#include "namedlist.h"
+#include "repository/xmlnode.hpp"
+#include "namedlist.hpp"
 
 
 class QXmlStreamReader;

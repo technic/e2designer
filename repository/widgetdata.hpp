@@ -3,16 +3,16 @@
 
 #include <QVariant>
 #include <QRgb>
-#include "base/tree.h"
-#include "attr/attritem.h"
-#include "repository/xmlnode.h"
-#include "repository/attrcontainer.h"
-#include "adapter/attritemfactory.h"
-#include "base/uniqueid.h"
+#include "base/tree.hpp"
+#include "attr/attritem.hpp"
+#include "repository/xmlnode.hpp"
+#include "repository/attrcontainer.hpp"
+#include "adapter/attritemfactory.hpp"
+#include "base/uniqueid.hpp"
 
-#include "attr/positionitem.h"
-#include "attr/coloritem.h"
-#include "attr/sizeitem.h"
+#include "attr/positionitem.hpp"
+#include "attr/coloritem.hpp"
+#include "attr/sizeitem.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;

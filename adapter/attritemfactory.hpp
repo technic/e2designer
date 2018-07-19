@@ -1,9 +1,9 @@
 #ifndef ATTRITEMFACTORY_H
 #define ATTRITEMFACTORY_H
 
-#include "attr/attritem.h"
-#include "base/tree.h"
-#include "base/singleton.h"
+#include "attr/attritem.hpp"
+#include "base/tree.hpp"
+#include "base/singleton.hpp"
 
 class WidgetData;
 class AttrItem;
