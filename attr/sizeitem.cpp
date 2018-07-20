@@ -2,17 +2,15 @@
 #include "repository/widgetdata.hpp"
 #include <QDebug>
 
-
 // SizeAttr
 
-QSize SizeAttr::getSize(const WidgetData &widget)
+QSize SizeAttr::getSize(const WidgetData& widget)
 {
     QSize ps = widget.parentSize();
-    return QSize(mWidth.getInt(ps.width()),
-                 mHeight.getInt(ps.height()));
+    return QSize(mWidth.getInt(ps.width()), mHeight.getInt(ps.height()));
 }
 
-void SizeAttr::setSize(const WidgetData &widget, const QSize size)
+void SizeAttr::setSize(const WidgetData& widget, const QSize size)
 {
     QSize s = widget.parentSize();
     mWidth.parseInt(size.width(), s.width());
@@ -23,8 +21,7 @@ QString SizeAttr::toStr() const
 {
     return mWidth.toStr() + "," + mHeight.toStr();
 }
-
-void SizeAttr::fromStr(const QString &str)
+void SizeAttr::fromStr(const QString& str)
 {
     QStringList list = str.split(",");
     if (list.length() == 2) {
@@ -34,7 +31,6 @@ void SizeAttr::fromStr(const QString &str)
         qDebug() << "bad position:" << str;
     }
 }
-
 
 // SizeItem
 
@@ -52,11 +48,10 @@ QVariant SizeItem::data(int role) const
     }
 }
 
-bool SizeItem::setData(const QVariant &value, int role)
+bool SizeItem::setData(const QVariant& value, int role)
 {
     switch (role) {
-    case Roles::GraphicsRole:
-    {
+    case Roles::GraphicsRole: {
         auto size = attr();
         size.setSize(*pWidget, value.toSize());
         setAttr(size);
@@ -76,10 +71,8 @@ SizeAttr SizeItem::attr() const
 {
     return pWidget->getAttr<SizeAttr>(key());
 }
-
-void SizeItem::setAttr(const SizeAttr &attr)
+void SizeItem::setAttr(const SizeAttr& attr)
 {
     pWidget->setAttr<SizeAttr>(key(), attr);
 }
-
 static AttrItemRegistrator<SizeAttr, SizeItem> registrator;

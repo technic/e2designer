@@ -22,9 +22,8 @@ public:
     Coordinate(Type type = Pixel, int value = 0);
 
     int anchor() const { return m_type; }
-
     /// Load and save text
-    void parseStr(const QString &str);
+    void parseStr(const QString& str);
     QString toStr() const;
 
     /// Convert to numerical value
@@ -39,6 +38,5 @@ private:
     int m_type;
     int m_value;
 };
-
 
 #endif // COORDINATE_H

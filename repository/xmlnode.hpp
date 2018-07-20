@@ -11,21 +11,22 @@ class XmlData
 {
 protected:
     XmlData();
-    bool nextXmlChild(QXmlStreamReader &xml);
+    bool nextXmlChild(QXmlStreamReader& xml);
 
-//    virtual void toXml(QXmlStreamWriter &xml) const;
+    //    virtual void toXml(QXmlStreamWriter &xml) const;
 
 private:
-
 };
-
 
 class RawXmlElement : public XmlData
 {
 public:
-    RawXmlElement() : XmlData() { }
-    void toXml(QXmlStreamWriter &xml) const;
-    void fromXml(QXmlStreamReader &xml);
+    RawXmlElement()
+        : XmlData()
+    {
+    }
+    void toXml(QXmlStreamWriter& xml) const;
+    void fromXml(QXmlStreamReader& xml);
 
 private:
     QString mTag;

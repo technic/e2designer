@@ -1,6 +1,6 @@
 #include "pixmapitem.hpp"
 
-bool PixmapItem::setData(const QVariant &value, int role)
+bool PixmapItem::setData(const QVariant& value, int role)
 {
     // TODO: implement!
     switch (role) {

@@ -4,10 +4,8 @@
 
 XmlData::XmlData()
 {
-
 }
-
-bool XmlData::nextXmlChild(QXmlStreamReader &xml)
+bool XmlData::nextXmlChild(QXmlStreamReader& xml)
 {
     typedef QXmlStreamReader::TokenType TokenType;
 
@@ -31,20 +29,19 @@ bool XmlData::nextXmlChild(QXmlStreamReader &xml)
     return false;
 }
 
-
 // RawXmlElement
 
-void RawXmlElement::toXml(QXmlStreamWriter &xml) const
+void RawXmlElement::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement(mTag);
     xml.writeAttributes(mAttrs);
-    for (const auto &child: mChilds) {
+    for (const auto& child : mChilds) {
         child.toXml(xml);
     }
     xml.writeEndElement();
 }
 
-void RawXmlElement::fromXml(QXmlStreamReader &xml)
+void RawXmlElement::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement());
 

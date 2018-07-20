@@ -1,7 +1,6 @@
 #include "textitem.hpp"
 #include "repository/widgetdata.hpp"
 
-
 QVariant TextItem::data(int role) const
 {
     switch (role) {
@@ -15,7 +14,7 @@ QVariant TextItem::data(int role) const
     }
 }
 
-bool TextItem::setData(const QVariant &value, int role)
+bool TextItem::setData(const QVariant& value, int role)
 {
     switch (role) {
     case Roles::GraphicsRole:

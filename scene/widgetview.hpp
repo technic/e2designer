@@ -1,15 +1,14 @@
 #ifndef WIDGETVIEW_H
 #define WIDGETVIEW_H
 
+#include <QFont>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
-#include <QGraphicsPixmapItem>
-#include <QFont>
 
-#include "rectselector.hpp"
 #include "attr/attritem.hpp"
+#include "rectselector.hpp"
 #include "repository/skinrepository.hpp"
-
 
 class ScreenView;
 
@@ -22,36 +21,33 @@ class WidgetView : public QObject, public QGraphicsRectItem
     Q_OBJECT
 
 public:
-    WidgetView(ScreenView *view, QModelIndex index, WidgetView *parent);
+    WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent);
 
     //
     enum { Type = UserType + 1 };
     int type() const override { return Type; }
-
     QPersistentModelIndex modelIndex() const { return mData; }
-
     // QGraphicsItem interface
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
-//    ~WidgetView() override;
+    //    ~WidgetView() override;
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-    void keyPressEvent(QKeyEvent *event) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+    QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
+    void keyPressEvent(QKeyEvent* event) override;
 
 private slots:
     void setAttribute(int key);
-    void setSelectorRect(const QRectF &globrect);
+    void setSelectorRect(const QRectF& globrect);
 
 private:
-
     // refs
-    ScreenView *mScreen;
-    ScreensModel *mModel;
+    ScreenView* mScreen;
+    ScreensModel* mModel;
     QPersistentModelIndex mData;
-//    RectSelector *mSelector;
+    //    RectSelector *mSelector;
 
     // Widget Type
     int m_type;
@@ -96,7 +92,7 @@ private:
     class FlagTrue
     {
     public:
-        explicit FlagTrue(bool *value)
+        explicit FlagTrue(bool* value)
             : mOldValue(*value)
             , pValue(value)
         {
@@ -108,25 +104,25 @@ private:
             *pValue = mOldValue;
             qDebug() << "flag" << *pValue;
         }
+
     private:
         bool mOldValue;
-        bool *pValue;
+        bool* pValue;
     };
 
     void initHandles();
     void setHandlesEnabled(bool enabled);
     void updateHandlesPos();
 
-    void commitPositionChange(const QPoint &point);
-    void commitSizeChange(const QSize &size);
-    void paintBorder(QPainter *painter);
-    void paintScreen(QPainter *painter);
-    void paintLabel(QPainter *painter);
-    void paintPixmap(QPainter *painter);
-    void paintSlider(QPainter *painter);
+    void commitPositionChange(const QPoint& point);
+    void commitSizeChange(const QSize& size);
+    void paintBorder(QPainter* painter);
+    void paintScreen(QPainter* painter);
+    void paintLabel(QPainter* painter);
+    void paintPixmap(QPainter* painter);
+    void paintSlider(QPainter* painter);
 
-    QPixmap loadPixmap(const QString &fname);
+    QPixmap loadPixmap(const QString& fname);
 };
-
 
 #endif // WIDGETVIEW_H

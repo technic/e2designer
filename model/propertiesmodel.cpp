@@ -1,13 +1,13 @@
 #include "propertiesmodel.hpp"
-#include "repository/skinrepository.hpp"
 #include "attr/attritem.hpp"
+#include "repository/skinrepository.hpp"
 
-PropertiesModel::PropertiesModel(QObject *parent)
-    : QAbstractItemModel(parent),
-      dummyItem(nullptr, Property::invalid),
-      mData(nullptr),
-      mRoot(&dummyItem),
-      mObserver(new WidgetObserver())
+PropertiesModel::PropertiesModel(QObject* parent)
+    : QAbstractItemModel(parent)
+    , dummyItem(nullptr, Property::invalid)
+    , mData(nullptr)
+    , mRoot(&dummyItem)
+    , mObserver(new WidgetObserver())
 {
 }
 
@@ -15,7 +15,6 @@ PropertiesModel::~PropertiesModel()
 {
     delete mObserver;
 }
-
 void PropertiesModel::setWidget(QModelIndex index)
 {
     beginResetModel();
@@ -23,8 +22,8 @@ void PropertiesModel::setWidget(QModelIndex index)
     mData = SkinRepository::screens()->getWidget(index);
     if (mData != nullptr) {
         mRoot = mData->adaptersRoot();
-        QObject::connect(mData, &WidgetData::attrChanged,
-                         this, &PropertiesModel::onAttributeChanged);
+        QObject::connect(mData, &WidgetData::attrChanged, this,
+                         &PropertiesModel::onAttributeChanged);
     } else {
         mRoot = &dummyItem;
     }
@@ -45,41 +44,41 @@ QVariant PropertiesModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-QModelIndex PropertiesModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex PropertiesModel::index(int row, int column, const QModelIndex& parent) const
 {
     // check that row and column are in range
     if (!hasIndex(row, column, parent)) {
         return QModelIndex();
     }
 
-    Item *parentItem;
+    Item* parentItem;
     if (!parent.isValid()) {
         parentItem = mRoot;
     } else {
         parentItem = castItem(parent);
     }
 
-    AttrItem *childIitem = parentItem->child(row);
+    AttrItem* childIitem = parentItem->child(row);
     if (childIitem)
         return createIndex(row, column, childIitem);
     else
         return QModelIndex();
 }
 
-QModelIndex PropertiesModel::parent(const QModelIndex &index) const
+QModelIndex PropertiesModel::parent(const QModelIndex& index) const
 {
     if (!index.isValid())
         return QModelIndex();
 
-    Item *item = castItem(index)->parent()->self();
+    Item* item = castItem(index)->parent()->self();
     if (item == mRoot)
         return QModelIndex();
     return createIndex(item->myIndex(), ColumnKey, item);
 }
 
-int PropertiesModel::rowCount(const QModelIndex &parent) const
+int PropertiesModel::rowCount(const QModelIndex& parent) const
 {
-    Item *parentItem;
+    Item* parentItem;
     if (!parent.isValid())
         parentItem = mRoot;
     else
@@ -88,20 +87,20 @@ int PropertiesModel::rowCount(const QModelIndex &parent) const
     return parentItem->childCount();
 }
 
-int PropertiesModel::columnCount(const QModelIndex &parent) const
+int PropertiesModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return ColumnsCount;
 }
 
-QVariant PropertiesModel::data(const QModelIndex &index, int role) const
+QVariant PropertiesModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
-    Q_ASSERT( hasIndex(index.row(), index.column(), parent(index)) );
+    Q_ASSERT(hasIndex(index.row(), index.column(), parent(index)));
 
-    AttrItem *attr = static_cast<AttrItem*>(index.internalPointer());
+    AttrItem* attr = static_cast<AttrItem*>(index.internalPointer());
 
     switch (index.column()) {
     case ColumnKey:
@@ -113,12 +112,12 @@ QVariant PropertiesModel::data(const QModelIndex &index, int role) const
     }
 }
 
-bool PropertiesModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool PropertiesModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    if(!index.isValid())
+    if (!index.isValid())
         return false;
 
-    AttrItem *attr = static_cast<AttrItem*>(index.internalPointer());
+    AttrItem* attr = static_cast<AttrItem*>(index.internalPointer());
 
     switch (index.column()) {
     case ColumnValue:
@@ -128,12 +127,12 @@ bool PropertiesModel::setData(const QModelIndex &index, const QVariant &value, i
     }
 }
 
-Qt::ItemFlags PropertiesModel::flags(const QModelIndex &index) const
+Qt::ItemFlags PropertiesModel::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    AttrItem *attr = static_cast<AttrItem*>(index.internalPointer());
+    AttrItem* attr = static_cast<AttrItem*>(index.internalPointer());
 
     if (index.column() == ColumnKey || attr->key() == Property::invalid) {
         return Qt::ItemIsEnabled;
@@ -147,7 +146,7 @@ void PropertiesModel::onAttributeChanged(int attrKey)
     if (mData == nullptr) {
         return;
     }
-    AttrItem *item = mData->getAttrAdapterPtr(attrKey);
+    AttrItem* item = mData->getAttrAdapterPtr(attrKey);
     if (item) {
         QModelIndex attrIndex = createIndex(item->myIndex(), ColumnValue, item);
         emit dataChanged(attrIndex, attrIndex);

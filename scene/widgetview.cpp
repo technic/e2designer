@@ -1,24 +1,23 @@
-#include <QTextDocument>
-#include <QPainter>
-#include <QKeyEvent>
-#include <QGraphicsSceneMouseEvent>
-#include <QCursor>
 #include "widgetview.hpp"
-#include "screenview.hpp"
 #include "attr/positionitem.hpp"
 #include "repository/skinrepository.hpp"
+#include "screenview.hpp"
+#include <QCursor>
+#include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
+#include <QPainter>
+#include <QTextDocument>
 
-WidgetView::WidgetView(ScreenView *view, QModelIndex index, WidgetView *parent)
+WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
     : QGraphicsRectItem(parent)
     , mScreen(view)
     , mModel(SkinRepository::screens())
     , mData(index)
     , mRectChange(false)
-{   
+{
     Q_ASSERT(mData.column() == ScreensModel::ColumnElement);
 
-    qDebug() << "create WidgetView for"
-             << mData.data(Qt::DisplayRole)
+    qDebug() << "create WidgetView for" << mData.data(Qt::DisplayRole)
              << mData.sibling(mData.row(), ScreensModel::ColumnName).data(Qt::DisplayRole);
 
     // interact with user
@@ -34,13 +33,13 @@ WidgetView::WidgetView(ScreenView *view, QModelIndex index, WidgetView *parent)
         setAttribute(i);
     }
 
-    connect(SkinRepository::screens()->getWidget(index), &WidgetData::attrChanged,
-            this, &WidgetView::setAttribute);
+    connect(SkinRepository::screens()->getWidget(index), &WidgetData::attrChanged, this,
+            &WidgetView::setAttribute);
 
     setPen(QPen(QColor(Qt::yellow)));
 }
 
-void WidgetView::setSelectorRect(const QRectF &globrect)
+void WidgetView::setSelectorRect(const QRectF& globrect)
 {
     FlagTrue ft(&mRectChange);
 
@@ -60,13 +59,13 @@ void WidgetView::setSelectorRect(const QRectF &globrect)
     commitPositionChange(pos().toPoint());
 }
 
-void WidgetView::commitSizeChange(const QSize &size)
+void WidgetView::commitSizeChange(const QSize& size)
 {
     FlagTrue ft(&mRectChange);
     mModel->setWidgetAttr(mData, Property::size, size, Roles::GraphicsRole);
 }
 
-void WidgetView::commitPositionChange(const QPoint &point)
+void WidgetView::commitPositionChange(const QPoint& point)
 {
     FlagTrue ft(&mRectChange);
     mModel->setWidgetAttr(mData, Property::position, point, Roles::GraphicsRole);
@@ -80,8 +79,7 @@ void WidgetView::setAttribute(int key)
     QVariant value = SkinRepository::screens()->getWidgetAttr(mData, key, Roles::GraphicsRole);
 
     switch (key) {
-    case Property::position:
-    {
+    case Property::position: {
         QRectF r = rect();
         setPos(value.toPoint() + r.topLeft().toPoint());
         r.moveTopLeft(QPointF(0, 0));
@@ -93,8 +91,7 @@ void WidgetView::setAttribute(int key)
         }
         break;
     }
-    case Property::size:
-    {
+    case Property::size: {
         QRectF r = rect();
         r.setSize(value.toSize());
         setRect(r);
@@ -160,8 +157,7 @@ void WidgetView::setAttribute(int key)
     update();
 }
 
-
-void WidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void WidgetView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     // no blending in the OSD layer
     painter->setCompositionMode(QPainter::CompositionMode_Source);
@@ -208,35 +204,36 @@ void WidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     QGraphicsRectItem::paint(painter, option, widget);
 }
 
-void WidgetView::paintBorder(QPainter *painter)
+void WidgetView::paintBorder(QPainter* painter)
 {
     if (!(m_border_width > 0))
         return;
-    const QRectF &r = rect();
+    const QRectF& r = rect();
     if (m_border_width > r.width() || m_border_width > r.height())
         return;
 
     qDebug() << "border" << m_border_width;
 
     QBrush brush(m_border_color);
-    auto fillRect = [&painter, &brush](qreal x, qreal y, qreal w, qreal h)
-    {
+    auto fillRect = [&painter, &brush](qreal x, qreal y, qreal w, qreal h) {
         painter->fillRect(QRectF(x, y, w, h), brush);
     };
     fillRect(r.x(), r.y(), r.width(), m_border_width);
-    fillRect(r.x(), r.y()+m_border_width, m_border_width, r.height()-m_border_width);
-    fillRect(r.x()+m_border_width, r.bottom()-m_border_width, r.width()-m_border_width, m_border_width);
-    fillRect(r.right()-m_border_width, r.y()+m_border_width, m_border_width, r.height()-m_border_width);
+    fillRect(r.x(), r.y() + m_border_width, m_border_width, r.height() - m_border_width);
+    fillRect(r.x() + m_border_width, r.bottom() - m_border_width, r.width() - m_border_width,
+             m_border_width);
+    fillRect(r.right() - m_border_width, r.y() + m_border_width, m_border_width,
+             r.height() - m_border_width);
 }
 
-void WidgetView::paintScreen(QPainter *painter)
+void WidgetView::paintScreen(QPainter* painter)
 {
     if (!m_transparent)
         painter->fillRect(rect(), QBrush(m_background_color));
     paintBorder(painter);
 }
 
-void WidgetView::paintLabel(QPainter *painter)
+void WidgetView::paintLabel(QPainter* painter)
 {
     if (!m_transparent) {
         //		painter->setCompositionMode(QPainter::CompositionMode_Difference);
@@ -256,7 +253,7 @@ void WidgetView::paintLabel(QPainter *painter)
     paintBorder(painter);
 }
 
-void WidgetView::paintPixmap(QPainter *painter)
+void WidgetView::paintPixmap(QPainter* painter)
 {
     painter->save();
 
@@ -265,22 +262,22 @@ void WidgetView::paintPixmap(QPainter *painter)
     }
 
     if (m_scale) {
-        painter->drawPixmap(rect(), m_pixmap, QRect(QPoint(0,0), m_pixmap.size()));
+        painter->drawPixmap(rect(), m_pixmap, QRect(QPoint(0, 0), m_pixmap.size()));
     } else {
-        painter->drawPixmap(rect(), m_pixmap, QRect(QPoint(0,0), rect().size().toSize()));
+        painter->drawPixmap(rect(), m_pixmap, QRect(QPoint(0, 0), rect().size().toSize()));
     }
     painter->restore();
     paintBorder(painter);
 }
 
-void WidgetView::paintSlider(QPainter *painter)
+void WidgetView::paintSlider(QPainter* painter)
 {
     int percent = qBound(0, m_preview.toInt(), 100);
     QRect r = rect().toRect();
     if (m_orientation == Property::orHorizontal) {
-        r.setWidth(r.width()*percent/100);
+        r.setWidth(r.width() * percent / 100);
     } else {
-        r.setHeight(r.height()*percent/100);
+        r.setHeight(r.height() * percent / 100);
     }
     if (!m_transparent) {
         painter->fillRect(rect(), QBrush(m_background_color));
@@ -288,23 +285,23 @@ void WidgetView::paintSlider(QPainter *painter)
     painter->fillRect(r, QBrush(m_foreground_color));
 }
 
-void WidgetView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void WidgetView::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
-//    if (event->button() == Qt::LeftButton) {
-//        emit m_view->selectionChanged(mData);
-//    }
+    //    if (event->button() == Qt::LeftButton) {
+    //        emit m_view->selectionChanged(mData);
+    //    }
     if (isSelected() || event->modifiers() & Qt::ControlModifier) {
         setFlag(ItemIsMovable, true);
     }
     return QGraphicsRectItem::mousePressEvent(event);
 }
 
-void WidgetView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void WidgetView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     return QGraphicsRectItem::mouseReleaseEvent(event);
 }
 
-void WidgetView::keyPressEvent(QKeyEvent *event)
+void WidgetView::keyPressEvent(QKeyEvent* event)
 {
     qDebug() << "WidgetView keyPressEvent";
     if (!isSelected()) {
@@ -335,18 +332,17 @@ void WidgetView::keyPressEvent(QKeyEvent *event)
     default:
         QGraphicsRectItem::keyPressEvent(event);
     }
-    setPos(pos()+mv);
+    setPos(pos() + mv);
 }
 
-QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-    RectSelector *selector = mScreen->selector();
+    RectSelector* selector = mScreen->selector();
 
     switch (change) {
     case ItemPositionHasChanged:
-        qDebug() << mRectChange
-                 << "pos" << value.toPointF() << rect()
-                 << "sel" << selector->pos() << selector->rect();
+        qDebug() << mRectChange << "pos" << value.toPointF() << rect() << "sel" << selector->pos()
+                 << selector->rect();
         // move is not due to RectSelector action
         if (!mRectChange) {
             QPointF position = value.toPointF();
@@ -358,8 +354,7 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
     case ItemSelectedHasChanged:
         if (isSelected() && scene()) {
             // Init selector at widget position and track its resize signals
-            connect(selector, &RectSelector::rectChnaged,
-                    this, &WidgetView::setSelectorRect);
+            connect(selector, &RectSelector::rectChnaged, this, &WidgetView::setSelectorRect);
             selector->setParentItem(parentItem());
             selector->setPos(pos());
             selector->setRect(rect());
@@ -377,16 +372,16 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
             selector->setVisible(false);
             setFlag(ItemIsFocusable, false);
             setFlag(ItemIsMovable, false);
-            disconnect(mScreen->selector(), &RectSelector::rectChnaged,
-                       this, &WidgetView::setSelectorRect);
+            disconnect(mScreen->selector(), &RectSelector::rectChnaged, this,
+                       &WidgetView::setSelectorRect);
         }
         break;
     case ItemSceneHasChanged:
-//        mSelector->setParentItem(parentItem());
-//        if (mSelector->parentItem() == nullptr) {
-//            if (scene())
-//                scene()->addItem(mSelector);
-//        }
+        //        mSelector->setParentItem(parentItem());
+        //        if (mSelector->parentItem() == nullptr) {
+        //            if (scene())
+        //                scene()->addItem(mSelector);
+        //        }
         break;
     default:
         break;

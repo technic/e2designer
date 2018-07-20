@@ -8,11 +8,12 @@ typedef QVariant VariantAttr;
 class VariantItem : public AttrItem
 {
 public:
-    VariantItem(WidgetData *widget, int key)
-        : AttrItem(widget, key) { }
-
+    VariantItem(WidgetData* widget, int key)
+        : AttrItem(widget, key)
+    {
+    }
     QVariant data(int role) const override;
-    bool setData(const QVariant &value, int role) override;
+    bool setData(const QVariant& value, int role) override;
 };
 
 #endif // VARIANTITEM_H

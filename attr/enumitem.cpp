@@ -2,10 +2,9 @@
 #include "repository/widgetdata.hpp"
 #include <QDebug>
 
-
 // EnumAttr
 
-template<class Enum>
+template <class Enum>
 EnumAttr<Enum>::EnumAttr()
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
@@ -15,8 +14,8 @@ EnumAttr<Enum>::EnumAttr()
         mValue = 0;
 }
 
-template<class Enum>
-EnumAttr<Enum>::EnumAttr(const QString &str)
+template <class Enum>
+EnumAttr<Enum>::EnumAttr(const QString& str)
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
     bool ok;
@@ -26,14 +25,14 @@ EnumAttr<Enum>::EnumAttr(const QString &str)
     }
 }
 
-template<class Enum>
+template <class Enum>
 EnumAttr<Enum>::EnumAttr(const int value)
 {
     // TODO: bounds check?
     mValue = value;
 }
 
-template<class Enum>
+template <class Enum>
 QString EnumAttr<Enum>::toStr(bool emptyDefault) const
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
@@ -46,21 +45,20 @@ QString EnumAttr<Enum>::toStr(bool emptyDefault) const
     return QString();
 }
 
-template<class Enum>
+template <class Enum>
 QStringList EnumAttr<Enum>::toStrList() const
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
     QStringList list;
-    for (int i=0; i < meta.keyCount(); ++i) {
+    for (int i = 0; i < meta.keyCount(); ++i) {
         list.append(QString(meta.key(i)));
     }
     return list;
 }
 
-
 // EnumItem
 
-template<class Enum>
+template <class Enum>
 QVariant EnumItem<Enum>::data(int role) const
 {
     switch (role) {
@@ -79,8 +77,8 @@ QVariant EnumItem<Enum>::data(int role) const
     }
 }
 
-template<class Enum>
-bool EnumItem<Enum>::setData(const QVariant &value, int role)
+template <class Enum>
+bool EnumItem<Enum>::setData(const QVariant& value, int role)
 {
     switch (role) {
     case Roles::DataRole:
@@ -99,13 +97,14 @@ bool EnumItem<Enum>::setData(const QVariant &value, int role)
     return true;
 }
 
-template<class Enum>
-EnumAttr<Enum> EnumItem<Enum>::attr() const {
+template <class Enum>
+EnumAttr<Enum> EnumItem<Enum>::attr() const
+{
     return pWidget->getAttr<EnumAttr<Enum>>(key());
 }
 
-template<class Enum>
-void EnumItem<Enum>::setAttr(const EnumAttr<Enum> &attr)
+template <class Enum>
+void EnumItem<Enum>::setAttr(const EnumAttr<Enum>& attr)
 {
     pWidget->setAttr<EnumAttr<Enum>>(key(), attr);
 }

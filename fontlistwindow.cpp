@@ -1,8 +1,8 @@
 #include "fontlistwindow.hpp"
-#include "ui_fontlistwindow.h"
 #include "repository/skinrepository.hpp"
+#include "ui_fontlistwindow.h"
 
-FontListWindow::FontListWindow(QWidget *parent)
+FontListWindow::FontListWindow(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::FontListWindow)
     , mModel(SkinRepository::fonts())
@@ -19,11 +19,10 @@ FontListWindow::~FontListWindow()
 {
     delete ui;
 }
-
 void FontListWindow::remove()
 {
     QList<int> rows;
-    for (auto const &index : ui->tableView->selectionModel()->selectedRows()) {
+    for (auto const& index : ui->tableView->selectionModel()->selectedRows()) {
         rows.append(index.row());
     }
     // from bigger to smaller
@@ -41,5 +40,5 @@ void FontListWindow::addDefault()
         auto f = Font(QString("Untitled%1").arg(i), QString());
         ok = SkinRepository::fonts()->append(f);
         i++;
-    } while(!ok);
+    } while (!ok);
 }

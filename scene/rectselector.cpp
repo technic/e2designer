@@ -3,10 +3,10 @@
 
 #include <QGraphicsScene>
 
-RectSelector::RectSelector(QGraphicsItem *parent) :
-    QGraphicsRectItem(parent),
-    m_xanchor(Coordinate::Pixel),
-    m_yanchor(Coordinate::Pixel)
+RectSelector::RectSelector(QGraphicsItem* parent)
+    : QGraphicsRectItem(parent)
+    , m_xanchor(Coordinate::Pixel)
+    , m_yanchor(Coordinate::Pixel)
 {
     m_handles.append(new RectHandle(RectHandle::Top, this));
     m_handles.append(new RectHandle(RectHandle::Bottom, this));
@@ -24,7 +24,7 @@ RectSelector::RectSelector(QGraphicsItem *parent) :
     setFlag(ItemIsSelectable, false);
 }
 
-void RectSelector::resize(const QRectF &rectangle)
+void RectSelector::resize(const QRectF& rectangle)
 {
     QRectF r = rect();
 
@@ -59,13 +59,13 @@ void RectSelector::resize(const QRectF &rectangle)
         break;
     }
 
-    for (auto h: m_handles) {
+    for (auto h : m_handles) {
         h->setFlag(ItemSendsGeometryChanges, false);
     }
 
     setRect(r);
 
-    for (auto h: m_handles) {
+    for (auto h : m_handles) {
         h->setFlag(ItemSendsGeometryChanges, true);
     }
 
@@ -74,7 +74,7 @@ void RectSelector::resize(const QRectF &rectangle)
 
 void RectSelector::updateHandlesPos()
 {
-    for (RectHandle *h: m_handles) {
+    for (RectHandle* h : m_handles) {
         h->updatePosition();
     }
 }

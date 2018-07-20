@@ -1,8 +1,8 @@
 #ifndef LISTBOX_H
 #define LISTBOX_H
 
-#include <QComboBox>
 #include "attr/enumitem.hpp"
+#include <QComboBox>
 
 class ListBox : public QComboBox
 {
@@ -10,12 +10,12 @@ class ListBox : public QComboBox
     Q_PROPERTY(SkinEnumList list READ list WRITE setList USER true)
 
 public:
-    ListBox(QWidget *parent = Q_NULLPTR) : QComboBox(parent) { }
-
+    ListBox(QWidget* parent = Q_NULLPTR)
+        : QComboBox(parent)
+    {
+    }
     SkinEnumList list() const;
     void setList(SkinEnumList value);
-
 };
-
 
 #endif // LISTBOX_H

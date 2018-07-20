@@ -3,7 +3,7 @@
 
 #include <QtGlobal>
 
-template<typename T>
+template <typename T>
 class SingletonMixin
 {
     Q_DISABLE_COPY(SingletonMixin)
@@ -22,7 +22,7 @@ public:
 
 private:
     // You should derive from this class to create an instance
-    SingletonMixin() { }
+    SingletonMixin() {}
 };
 
 #endif // SINGLETON_H

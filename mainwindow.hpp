@@ -1,13 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QGraphicsScene>
-#include <QTreeView>
+#include <QMainWindow>
+#include <QSortFilterProxyModel>
 #include <QString>
+#include <QTreeView>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
-#include <QSortFilterProxyModel>
 
 #include "model/propertiesmodel.hpp"
 #include "scene/screenview.hpp"
@@ -21,17 +21,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = Q_NULLPTR);
+    explicit MainWindow(QWidget* parent = Q_NULLPTR);
     ~MainWindow() override;
 
-    void openFile(const QString &dirname);
+    void openFile(const QString& dirname);
 
 protected:
-    void closeEvent(QCloseEvent *event) override;
+    void closeEvent(QCloseEvent* event) override;
 
 private slots:
     void updateTreeSelection(QModelIndex index);
-    void updateScene(const QModelIndex &index, const QModelIndex &previndex);
+    void updateScene(const QModelIndex& index, const QModelIndex& previndex);
 
     void newSkin();
     void open();
@@ -59,15 +59,14 @@ private:
     bool confirmClose();
     bool isModified();
 
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
 
     //	SkinModel *m_model;
 
-
-    ScreenView *mView;
+    ScreenView* mView;
 
     // QObject owned
-    PropertiesModel *mPropertiesModel;
+    PropertiesModel* mPropertiesModel;
 
     //	QSortFilterProxyModel *m_topfilter;
     //	QSortFilterProxyModel *m_headerfilter;

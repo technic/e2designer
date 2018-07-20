@@ -1,16 +1,17 @@
 #include "fontsmodel.hpp"
 #include "repository/skinrepository.hpp"
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QFontDatabase>
-
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 // Font
 
-Font::Font(QString name, QString fileName) :
-    mName(name), mFileName(fileName), mFontId(-1)
+Font::Font(QString name, QString fileName)
+    : mName(name)
+    , mFileName(fileName)
+    , mFontId(-1)
 {
     load();
 }
@@ -21,7 +22,7 @@ QFont Font::font() const
     return QFont();
 }
 
-void Font::fromXml(QXmlStreamReader &xml)
+void Font::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "font");
     mName = xml.attributes().value("name").toString();
@@ -30,7 +31,7 @@ void Font::fromXml(QXmlStreamReader &xml)
     load();
 }
 
-void Font::toXml(QXmlStreamWriter &xml) const
+void Font::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("font");
     xml.writeAttribute("name", mName);
@@ -61,10 +62,9 @@ void Font::load()
     }
 }
 
-
 // FontsList
 
-void FontsList::fromXml(QXmlStreamReader &xml)
+void FontsList::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "fonts");
 
@@ -93,23 +93,21 @@ void FontsList::fromXml(QXmlStreamReader &xml)
     }
 }
 
-void FontsList::toXml(QXmlStreamWriter &xml) const
+void FontsList::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("fonts");
-    for (const Font &f : mItems) {
+    for (const Font& f : mItems) {
         f.toXml(xml);
     }
     xml.writeEndElement();
 }
 
-
 // FontsModel
 
-FontsModel::FontsModel(QObject *parent)
+FontsModel::FontsModel(QObject* parent)
     : QAbstractTableModel(parent)
 {
 }
-
 QVariant FontsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -125,19 +123,19 @@ QVariant FontsModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-int FontsModel::rowCount(const QModelIndex &parent) const
+int FontsModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return mItems.count();
 }
 
-int FontsModel::columnCount(const QModelIndex &parent) const
+int FontsModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return ColumnsCount;
 }
 
-QVariant FontsModel::data(const QModelIndex &index, int role) const
+QVariant FontsModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -165,7 +163,7 @@ QVariant FontsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool FontsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool FontsModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid())
         return false;
@@ -191,7 +189,7 @@ bool FontsModel::setData(const QModelIndex &index, const QVariant &value, int ro
     return changed;
 }
 
-Qt::ItemFlags FontsModel::flags(const QModelIndex &index) const
+Qt::ItemFlags FontsModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = Qt::ItemIsEnabled;
     if (index.column() != ColumnFont) {
@@ -211,8 +209,7 @@ bool FontsModel::append(Font f)
     return false;
 }
 
-
-bool FontsModel::removeRows(int row, int count, const QModelIndex &parent)
+bool FontsModel::removeRows(int row, int count, const QModelIndex& parent)
 {
     if (canRemoveItems(row, count)) {
         beginRemoveRows(parent, row, row + count - 1);
@@ -223,19 +220,18 @@ bool FontsModel::removeRows(int row, int count, const QModelIndex &parent)
     return false;
 }
 
-void FontsModel::fromXml(QXmlStreamReader &xml)
+void FontsModel::fromXml(QXmlStreamReader& xml)
 {
     beginResetModel();
     FontsList::fromXml(xml);
     endResetModel();
 }
 
-void FontsModel::toXml(QXmlStreamWriter &xml) const
+void FontsModel::toXml(QXmlStreamWriter& xml) const
 {
     FontsList::toXml(xml);
 }
-
-void FontsModel::emitValueChanged(const QString &name, const Font &value) const
+void FontsModel::emitValueChanged(const QString& name, const Font& value) const
 {
     emit valueChanged(name, value);
 }

@@ -11,7 +11,7 @@ AttrItemFactory::~AttrItemFactory()
     mCreatorsMap.clear();
 }
 
-void AttrItemFactory::doRegisterAdapter(int type, AttrItemCreatorBase *creator)
+void AttrItemFactory::doRegisterAdapter(int type, AttrItemCreatorBase* creator)
 {
     auto it = mCreatorsMap.find(type);
     if (it != mCreatorsMap.end()) {
@@ -21,7 +21,7 @@ void AttrItemFactory::doRegisterAdapter(int type, AttrItemCreatorBase *creator)
     mCreatorsMap[type] = creator;
 }
 
-AttrItem* AttrItemFactory::doCreateAdapter(WidgetData *widget, int attrType, int attrKey)
+AttrItem* AttrItemFactory::doCreateAdapter(WidgetData* widget, int attrType, int attrKey)
 {
     auto it = mCreatorsMap.find(attrType);
     if (it != mCreatorsMap.end()) {

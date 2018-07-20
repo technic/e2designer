@@ -1,12 +1,11 @@
 #ifndef ATTRCOMMAND_H
 #define ATTRCOMMAND_H
 
-#include <QUndoCommand>
 #include <QAbstractItemModel>
-
+#include <QUndoCommand>
 
 QList<int> pathFromIndex(QModelIndex idx);
-QModelIndex pathToIndex(QList<int> path, QAbstractItemModel *model);
+QModelIndex pathToIndex(QList<int> path, QAbstractItemModel* model);
 
 class AttrCommand : public QUndoCommand
 {
@@ -21,7 +20,7 @@ private:
     int mKey;
     QVariant mOldValue;
     QVariant mValue;
-    QAbstractItemModel *pModel;
+    QAbstractItemModel* pModel;
 };
 
 #endif // ATTRCOMMAND_H

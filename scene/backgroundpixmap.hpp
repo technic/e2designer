@@ -6,12 +6,14 @@
 class BackgroundPixmap : public QGraphicsPixmapItem
 {
 public:
-    explicit BackgroundPixmap(const QPixmap &pixmap, QGraphicsItem *parent = Q_NULLPTR)
-        : QGraphicsPixmapItem(pixmap, parent) { }
+    explicit BackgroundPixmap(const QPixmap& pixmap, QGraphicsItem* parent = Q_NULLPTR)
+        : QGraphicsPixmapItem(pixmap, parent)
+    {
+    }
 
     // QGraphicsItem interface
 public:
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 };
 
 #endif // BACKGROUNDPIXMAP_H

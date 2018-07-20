@@ -1,7 +1,6 @@
 #include "screensmodel.hpp"
 #include "repository/skinrepository.hpp"
 
-
 // ScreensTree
 
 void ScreensTree::loadPreviews()
@@ -30,7 +29,7 @@ void ScreensTree::loadPreviews()
 
         // we are inside screen
         QString screenName;
-        QMap<QString,Preview> map;
+        QMap<QString, Preview> map;
 
         while (xml.readNextStartElement()) {
             if (xml.name() == "name") {
@@ -64,7 +63,7 @@ void ScreensTree::loadPreviews()
     file.close();
 }
 
-Preview ScreensTree::getPreview(const QString &screen, const QString &widget)
+Preview ScreensTree::getPreview(const QString& screen, const QString& widget)
 {
     auto screen_it = mPreviews.find(screen);
     if (screen_it == mPreviews.end())
@@ -75,11 +74,11 @@ Preview ScreensTree::getPreview(const QString &screen, const QString &widget)
     return widget_it.value();
 }
 
-
 // ScreensModel
 
-ScreensModel::ScreensModel(QObject *parent)
-    : QAbstractItemModel(parent), mRoot(new WidgetData(true))
+ScreensModel::ScreensModel(QObject* parent)
+    : QAbstractItemModel(parent)
+    , mRoot(new WidgetData(true))
 {
 }
 
@@ -87,7 +86,6 @@ ScreensModel::~ScreensModel()
 {
     delete mRoot;
 }
-
 QVariant ScreensModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -101,41 +99,41 @@ QVariant ScreensModel::headerData(int section, Qt::Orientation orientation, int 
     return QVariant();
 }
 
-QModelIndex ScreensModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex ScreensModel::index(int row, int column, const QModelIndex& parent) const
 {
     // check that row and column are in range
     if (!hasIndex(row, column, parent)) {
         return QModelIndex();
     }
 
-    Item *parentItem;
+    Item* parentItem;
     if (!parent.isValid()) {
         parentItem = mRoot;
     } else {
         parentItem = castItem(parent);
     }
 
-    Item *childItem = parentItem->child(row);
+    Item* childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
     else
         return QModelIndex();
 }
 
-QModelIndex ScreensModel::parent(const QModelIndex &index) const
+QModelIndex ScreensModel::parent(const QModelIndex& index) const
 {
     if (!index.isValid())
         return QModelIndex();
 
-    Item *item = castItem(index)->parent()->self();
+    Item* item = castItem(index)->parent()->self();
     if (item == mRoot)
         return QModelIndex();
     return createIndex(item->myIndex(), ColumnElement, item);
 }
 
-int ScreensModel::rowCount(const QModelIndex &parent) const
+int ScreensModel::rowCount(const QModelIndex& parent) const
 {
-    Item *parentItem;
+    Item* parentItem;
     if (!parent.isValid())
         parentItem = mRoot;
     else
@@ -144,18 +142,18 @@ int ScreensModel::rowCount(const QModelIndex &parent) const
     return parentItem->childCount();
 }
 
-int ScreensModel::columnCount(const QModelIndex &parent) const
+int ScreensModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
     return ColumnsCount;
 }
 
-QVariant ScreensModel::data(const QModelIndex &index, int role) const
+QVariant ScreensModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
-    WidgetData *widget = static_cast<WidgetData*>(index.internalPointer());
+    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
 
     switch (role) {
     case Qt::DisplayRole:
@@ -183,12 +181,12 @@ QVariant ScreensModel::data(const QModelIndex &index, int role) const
     }
 }
 
-bool ScreensModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid())
         return false;
 
-    WidgetData *widget = static_cast<WidgetData*>(index.internalPointer());
+    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
 
     switch (role) {
     case Qt::EditRole:
@@ -211,27 +209,25 @@ bool ScreensModel::setData(const QModelIndex &index, const QVariant &value, int 
     default:
         return false;
     }
-
-
 }
 
-Qt::ItemFlags ScreensModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ScreensModel::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
 
     if (index.column() == ColumnElement) {
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled
-                | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled ;
+        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled
+            | Qt::ItemIsDropEnabled;
     } else {
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable
-                | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsDragEnabled
+            | Qt::ItemIsDropEnabled;
     }
 }
 
-bool ScreensModel::insertRows(int row, int count, const QModelIndex &parent)
+bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
 {
-    Item *parentItem;
+    Item* parentItem;
     if (!parent.isValid())
         parentItem = mRoot;
     else
@@ -249,9 +245,9 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-bool ScreensModel::removeRows(int row, int count, const QModelIndex &parent)
+bool ScreensModel::removeRows(int row, int count, const QModelIndex& parent)
 {
-    Item *parentItem;
+    Item* parentItem;
     if (!parent.isValid())
         parentItem = mRoot;
     else
@@ -272,45 +268,46 @@ void ScreensModel::clear()
     removeRows(0, rowCount(rootIndex), rootIndex);
 }
 
-void ScreensModel::appendFromXml(QXmlStreamReader &xml)
+void ScreensModel::appendFromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "screen");
 
     beginInsertRows(QModelIndex(), mRoot->childCount(), mRoot->childCount());
 
-    WidgetData *w = new WidgetData();
+    WidgetData* w = new WidgetData();
     w->fromXml(xml);
     mRoot->appendChild(w);
 
     endInsertRows();
 }
 
-void ScreensModel::toXml(QXmlStreamWriter &xml)
+void ScreensModel::toXml(QXmlStreamWriter& xml)
 {
     for (int i = 0; i < mRoot->childCount(); ++i) {
         mRoot->child(i)->toXml(xml);
     }
 }
 
-QVariant ScreensModel::getWidgetAttr(const QModelIndex &index, int attrKey, int role) const
+QVariant ScreensModel::getWidgetAttr(const QModelIndex& index, int attrKey, int role) const
 {
     if (!index.isValid())
         return QVariant();
 
-    WidgetData *widget = static_cast<WidgetData*>(index.internalPointer());
+    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
     return widget->getAttr(attrKey, role);
 }
 
-bool ScreensModel::setWidgetAttr(const QModelIndex &index, int attrKey, const QVariant &value, int role)
+bool ScreensModel::setWidgetAttr(const QModelIndex& index, int attrKey, const QVariant& value,
+                                 int role)
 {
     if (!index.isValid())
         return false;
 
-    WidgetData *widget = static_cast<WidgetData*>(index.internalPointer());
+    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
     return widget->setAttr(attrKey, value, role);
 }
 
-WidgetData *ScreensModel::getWidget(const QModelIndex &index)
+WidgetData* ScreensModel::getWidget(const QModelIndex& index)
 {
     if (!index.isValid())
         return nullptr;
@@ -318,9 +315,9 @@ WidgetData *ScreensModel::getWidget(const QModelIndex &index)
     return static_cast<WidgetData*>(index.internalPointer());
 }
 
-void ScreensModel::widgetAttrHasChanged(const WidgetData *widget, int attrKey)
+void ScreensModel::widgetAttrHasChanged(const WidgetData* widget, int attrKey)
 {
-    Item *item = const_cast<WidgetData*>(widget);
+    Item* item = const_cast<WidgetData*>(widget);
     QModelIndex idx = createIndex(item->myIndex(), ColumnElement, item);
 
     switch (widget->type()) {
@@ -341,7 +338,7 @@ void ScreensModel::widgetAttrHasChanged(const WidgetData *widget, int attrKey)
     emit dataChanged(idx, idx);
 }
 
-ScreensModel::Item *ScreensModel::castItem(const QModelIndex &index)
+ScreensModel::Item* ScreensModel::castItem(const QModelIndex& index)
 {
     Q_ASSERT(index.isValid());
     return static_cast<Item*>(index.internalPointer());

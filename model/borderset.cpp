@@ -1,15 +1,14 @@
 #include "borderset.hpp"
 #include "attr/attritem.hpp"
 
-
 // Border
 
 Border::Border()
-    : m_bp(bpInvalid), m_fname()
+    : m_bp(bpInvalid)
+    , m_fname()
 {
 }
-
-void Border::fromXml(QXmlStreamReader &xml)
+void Border::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "pixmap");
 
@@ -25,13 +24,13 @@ void Border::fromXml(QXmlStreamReader &xml)
     xml.skipCurrentElement();
 }
 
-void Border::toXml(QXmlStreamWriter &xml) const
+void Border::toXml(QXmlStreamWriter& xml) const
 {
     if (m_bp == bpInvalid) {
         return;
     }
     xml.writeStartElement("pixmap");
-    const char *bpstr = QMetaEnum::fromType<Property::BorderPosition>().valueToKey(m_bp);
+    const char* bpstr = QMetaEnum::fromType<Property::BorderPosition>().valueToKey(m_bp);
     xml.writeAttribute("pos", QString(bpstr));
     xml.writeAttribute("filename", m_fname);
     xml.writeEndElement();
@@ -42,7 +41,6 @@ void Border::reset()
     m_bp = bpInvalid;
     m_fname.clear();
 }
-
 
 // BorderSet
 
@@ -56,11 +54,11 @@ BorderSet::BorderSet()
     }
 }
 
-void BorderSet::fromXml(QXmlStreamReader &xml)
+void BorderSet::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "borderset");
 
-    for (Border &b: m_borders) {
+    for (Border& b : m_borders) {
         b.reset();
     }
 
@@ -92,14 +90,14 @@ void BorderSet::fromXml(QXmlStreamReader &xml)
     }
 }
 
-void BorderSet::toXml(QXmlStreamWriter &xml) const
+void BorderSet::toXml(QXmlStreamWriter& xml) const
 {
     if (m_bs == bsInvalid) {
         return;
     }
 
     bool empty = true;
-    for (const Border &b: m_borders) {
+    for (const Border& b : m_borders) {
         if (b.isValid()) {
             empty = false;
             break;
@@ -110,15 +108,15 @@ void BorderSet::toXml(QXmlStreamWriter &xml) const
     }
 
     xml.writeStartElement("borderset");
-    const char *name = QMetaEnum::fromType<Property::BorderSet>().valueToKey(m_bs);
+    const char* name = QMetaEnum::fromType<Property::BorderSet>().valueToKey(m_bs);
     xml.writeAttribute("name", QString(name));
-    for (const Border &b: m_borders) {
+    for (const Border& b : m_borders) {
         b.toXml(xml);
     }
     xml.writeEndElement();
 }
 
-const Border &BorderSet::getBorder(int bp)
+const Border& BorderSet::getBorder(int bp)
 {
     return m_borders[bp];
 }

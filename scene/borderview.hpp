@@ -1,21 +1,19 @@
 #ifndef BORDERVIEW_H
 #define BORDERVIEW_H
 
-#include <QGraphicsRectItem>
 #include "model/borderset.hpp"
+#include <QGraphicsRectItem>
 
 class BorderView : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
 public:
-    BorderView(QGraphicsRectItem *parent);
-    void setBorderSet(BorderSet *bs);
-    void setInnerRect(const QRect &innerRect);
+    BorderView(QGraphicsRectItem* parent);
+    void setBorderSet(BorderSet* bs);
+    void setInnerRect(const QRect& innerRect);
 
 private:
-    BorderSet *mBorders;
-
+    BorderSet* mBorders;
 };
-
 
 #endif // BORDERVIEW_H

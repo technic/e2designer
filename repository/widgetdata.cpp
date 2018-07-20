@@ -1,38 +1,41 @@
 #include "widgetdata.hpp"
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
 #include <QDebug>
 #include <QTimer>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
+#include "attr/attrgroupitem.hpp"
+#include "attr/coloritem.hpp"
+#include "attr/enumitem.hpp"
+#include "attr/fontitem.hpp"
+#include "attr/integeritem.hpp"
+#include "attr/pixmapitem.hpp"
 #include "attr/positionitem.hpp"
 #include "attr/sizeitem.hpp"
 #include "attr/textitem.hpp"
-#include "attr/coloritem.hpp"
-#include "attr/fontitem.hpp"
-#include "attr/pixmapitem.hpp"
-#include "attr/enumitem.hpp"
-#include "attr/integeritem.hpp"
-#include "attr/attrgroupitem.hpp"
 #include "attr/variantitem.hpp"
 
-#include "repository/skinrepository.hpp"
+#include "adapter/attritemfactory.hpp"
 #include "model/colorsmodel.hpp"
 #include "model/fontsmodel.hpp"
 #include "model/screensmodel.hpp"
-#include "adapter/attritemfactory.hpp"
+#include "repository/skinrepository.hpp"
 
-#include <type_traits>
-#include <typeinfo>
 #include <iostream>
 #include <memory>
-
+#include <type_traits>
+#include <typeinfo>
 
 WidgetData::WidgetData(bool empty)
-    : MixinTreeNode<WidgetData>(), UniqueId(), mType(Widget), mConnectedCount(0)
+    : MixinTreeNode<WidgetData>()
+    , UniqueId()
+    , mType(Widget)
+    , mConnectedCount(0)
 {
     /*
     typedef std::remove_pointer<decltype(this)>::type ThisType;
-    static_assert(std::is_base_of< MixinTreeNode<ThisType>, ThisType >::value, "bad inheratance");
+    static_assert(std::is_base_of< MixinTreeNode<ThisType>, ThisType >::value,
+    "bad inheratance");
     */
 
     mRoot = new AttrItem(this, Property::invalid);
@@ -48,7 +51,6 @@ WidgetData::~WidgetData()
 {
     delete mRoot;
 }
-
 AttrItem* WidgetData::getAttrAdapterPtr(const int key) const
 {
     auto it = mAdapters.find(key);
@@ -73,7 +75,7 @@ bool WidgetData::setType(int type)
 void WidgetData::setType(WidgetType type)
 {
     QVariant q = WidgetType::Screen;
-    WidgetType a  = qvariant_cast<WidgetType>(q);
+    WidgetType a = qvariant_cast<WidgetType>(q);
     mType = type;
     emit typeChanged(mType);
 }
@@ -92,7 +94,7 @@ QVariant WidgetData::getAttr(const int key, int role) const
     }
 }
 
-bool WidgetData::setAttr(const int key, const QVariant &value, int role)
+bool WidgetData::setAttr(const int key, const QVariant& value, int role)
 {
     if (role == Roles::DataRole) {
         bool changed = setFromVariant(key, value);
@@ -108,36 +110,36 @@ bool WidgetData::setAttr(const int key, const QVariant &value, int role)
     } else {
         bool changed = it.value()->setData(value, role);
         if (changed)
-           notifyAttrChange(key);
+            notifyAttrChange(key);
         return changed;
     }
 }
 
-void WidgetData::connectNotify(const QMetaMethod &signal)
+void WidgetData::connectNotify(const QMetaMethod& signal)
 {
     if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
         if (mConnectedCount == 0) {
-            connect(SkinRepository::colors(), &ColorsModel::valueChanged,
-                    this, &WidgetData::onColorChanged);
-            connect(SkinRepository::fonts(), &FontsModel::valueChanged,
-                    this, &WidgetData::onFontChanged);
+            connect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
+                    &WidgetData::onColorChanged);
+            connect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
+                    &WidgetData::onFontChanged);
         }
         mConnectedCount++;
     }
 }
 
-void WidgetData::disconnectNotify(const QMetaMethod &signal)
+void WidgetData::disconnectNotify(const QMetaMethod& signal)
 {
-//    return;
+    //    return;
     if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
         mConnectedCount--;
         if (mConnectedCount == 0) {
             // use singleShot workaround to avoid deadlocks
             QTimer::singleShot(0, [this]() {
-                disconnect(SkinRepository::colors(), &ColorsModel::valueChanged,
-                           this, &WidgetData::onColorChanged);
-                disconnect(SkinRepository::fonts(), &FontsModel::valueChanged,
-                           this, &WidgetData::onFontChanged);
+                disconnect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
+                           &WidgetData::onColorChanged);
+                disconnect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
+                           &WidgetData::onFontChanged);
             });
         }
     }
@@ -157,7 +159,7 @@ QString WidgetData::typeStr() const
     }
 }
 
-WidgetData::WidgetType WidgetData::strToType(QStringRef str, bool &ok)
+WidgetData::WidgetType WidgetData::strToType(QStringRef str, bool& ok)
 {
     ok = true;
     if (str == "screen") {
@@ -182,7 +184,7 @@ QSize WidgetData::selfSize() const
 
 QSize WidgetData::parentSize() const
 {
-    MixinTreeNode<WidgetData> *p = parent();
+    MixinTreeNode<WidgetData>* p = parent();
     if (p && p->isChild()) {
         return p->self()->selfSize();
     } else {
@@ -190,7 +192,7 @@ QSize WidgetData::parentSize() const
     }
 }
 
-void WidgetData::fromXml(QXmlStreamReader &xml)
+void WidgetData::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement());
 
@@ -218,7 +220,7 @@ void WidgetData::fromXml(QXmlStreamReader &xml)
                 bool ok;
                 strToType(xml.name(), ok);
                 if (ok) {
-                    WidgetData *widget = new WidgetData();
+                    WidgetData* widget = new WidgetData();
                     appendChild(widget);
                     widget->fromXml(xml);
                 } else {
@@ -235,7 +237,7 @@ void WidgetData::fromXml(QXmlStreamReader &xml)
     }
 
     if (mType == Widget) {
-        MixinTreeNode<WidgetData> *ptr = parent();
+        MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
             QString screen = ptr->self()->getAttr(Property::name, Roles::DataRole).toString();
             QString widget = getAttr(Property::name, Roles::DataRole).toString();
@@ -246,7 +248,7 @@ void WidgetData::fromXml(QXmlStreamReader &xml)
     }
 }
 
-void WidgetData::toXml(QXmlStreamWriter &xml) const
+void WidgetData::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement(typeStr());
 
@@ -274,14 +276,14 @@ void WidgetData::toXml(QXmlStreamWriter &xml) const
     for (int i = 0; i < childCount(); ++i) {
         child(i)->toXml(xml);
     }
-    for (const ConverterItem &item: mConverters) {
+    for (const ConverterItem& item : mConverters) {
         item.toXml(xml);
     }
 
     xml.writeEndElement();
 }
 
-void WidgetData::onColorChanged(const QString &name, QRgb value)
+void WidgetData::onColorChanged(const QString& name, QRgb value)
 {
     for (auto it = mAttrs.begin(); it != mAttrs.end(); ++it) {
         if (it.value()->typeId() == qMetaTypeId<ColorAttr>()) {
@@ -295,7 +297,7 @@ void WidgetData::onColorChanged(const QString &name, QRgb value)
     }
 }
 
-void WidgetData::onFontChanged(const QString &name, const Font &value)
+void WidgetData::onFontChanged(const QString& name, const Font& value)
 {
     for (auto it = mAttrs.begin(); it != mAttrs.end(); ++it) {
         if (it.value()->typeId() == qMetaTypeId<FontAttr>()) {
@@ -449,10 +451,9 @@ WidgetData::ContainerBase*WidgetData::Container<T>::copy() const {
 }
 */
 
-
 // ConverterItem
 
-void ConverterItem::fromXml(QXmlStreamReader &xml)
+void ConverterItem::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "convert");
 
@@ -460,14 +461,14 @@ void ConverterItem::fromXml(QXmlStreamReader &xml)
     mType = xml.attributes().value("type").toString();
     xml.readNext();
     if (xml.isCharacters()) {
-         mText = xml.text().toString();
+        mText = xml.text().toString();
     }
     if (!xml.isEndElement()) {
         xml.skipCurrentElement();
     }
 }
 
-void ConverterItem::toXml(QXmlStreamWriter &xml) const
+void ConverterItem::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("convert");
     xml.writeAttribute("type", mType);

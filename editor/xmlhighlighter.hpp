@@ -8,10 +8,10 @@ class XMLHighlighter : public QSyntaxHighlighter
     Q_OBJECT
 
 public:
-    XMLHighlighter(QTextDocument *parent);
+    XMLHighlighter(QTextDocument* parent);
 
 protected:
-    void highlightBlock(const QString &text) override;
+    void highlightBlock(const QString& text) override;
 
 private:
     enum {

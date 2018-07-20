@@ -1,9 +1,9 @@
 #ifndef PROPERTYITEM_H
 #define PROPERTYITEM_H
 
-#include <QString>
-#include <QMetaEnum>
 #include "base/tree.hpp"
+#include <QMetaEnum>
+#include <QString>
 
 /**
  * @brief Dummy class to store properties enum
@@ -155,7 +155,6 @@ public:
     Q_ENUM(Enum)
 };
 
-
 // Roles to be used in QtModels
 
 enum Roles {
@@ -174,7 +173,6 @@ enum Roles {
     DataRole,
 };
 
-
 class WidgetData;
 
 /**
@@ -184,24 +182,24 @@ class WidgetData;
 class AttrItem : public MixinTreeNode<AttrItem>
 {
 public:
-    AttrItem(WidgetData *widget, int key = Property::invalid) :
-        MixinTreeNode<AttrItem>(), pWidget(widget), mKey(key) { }
-    virtual ~AttrItem() { }
-
+    AttrItem(WidgetData* widget, int key = Property::invalid)
+        : MixinTreeNode<AttrItem>()
+        , pWidget(widget)
+        , mKey(key)
+    {
+    }
+    virtual ~AttrItem() {}
     int key() const { return mKey; }
-
     // Iterface for QtModels
     virtual QVariant keyData(int role) const;
     virtual QVariant data(int role) const;
-    virtual bool setData(const QVariant &value, int role);
+    virtual bool setData(const QVariant& value, int role);
 
 protected:
-    WidgetData *pWidget;
+    WidgetData* pWidget;
 
 private:
     int mKey;
-
 };
-
 
 #endif // PROPERTYITEM_H

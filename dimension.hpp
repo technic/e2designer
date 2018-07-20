@@ -1,8 +1,8 @@
 #ifndef DIMENSION_H
 #define DIMENSION_H
 
-#include <QString>
 #include <QSize>
+#include <QString>
 
 class Dimension
 {
@@ -15,7 +15,7 @@ public:
     };
 
     /// Load and save text
-    void parseStr(const QString &str);
+    void parseStr(const QString& str);
     QString toStr() const;
 
     /// Convert to numerical value

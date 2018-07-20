@@ -13,35 +13,38 @@ class AttrContainer
 public:
     AttrContainer();
 
-    template<typename AttrType>
+    template <typename AttrType>
     AttrType getAttr(int key) const;
 
-    template<typename AttrType>
-    bool setAttr(int key, const AttrType &value);
+    template <typename AttrType>
+    bool setAttr(int key, const AttrType& value);
 
-    template<typename AttrType>
+    template <typename AttrType>
     void addAttr(int key);
 
     // QVariant interface
     QVariant getVariant(const int key) const;
-    bool setFromVariant(const int key, const QVariant &value);
+    bool setFromVariant(const int key, const QVariant& value);
 
     ~AttrContainer();
 
 private:
-
-    class ContainerBase {
+    class ContainerBase
+    {
     private:
         int mTypeId;
 
     protected:
-        ContainerBase(int typeId) : mTypeId(typeId) { }
+        ContainerBase(int typeId)
+            : mTypeId(typeId)
+        {
+        }
 
     public:
-        virtual ~ContainerBase() { }
-//        virtual ContainerBase* copy() const = 0;
+        virtual ~ContainerBase() {}
+        //        virtual ContainerBase* copy() const = 0;
 
-        template<typename T>
+        template <typename T>
         T getValue() const
         {
             if (mTypeId == qMetaTypeId<T>()) {
@@ -50,8 +53,8 @@ private:
                 return T();
             }
         }
-        template<typename T>
-        bool setValue(const T &value)
+        template <typename T>
+        bool setValue(const T& value)
         {
             if (mTypeId == qMetaTypeId<T>()) {
                 static_cast<Container<T>*>(this)->setData(value);
@@ -61,27 +64,31 @@ private:
             }
         }
 
-        virtual bool setFromVariant(const QVariant &value) = 0;
+        virtual bool setFromVariant(const QVariant& value) = 0;
         virtual QVariant getVariant() = 0;
 
         inline int typeId() const { return mTypeId; }
     };
 
-    template<typename T>
-    class Container : public ContainerBase {
+    template <typename T>
+    class Container : public ContainerBase
+    {
     public:
         Container(T data)
-            : ContainerBase(qMetaTypeId<T>()), mData(data) { }
-
+            : ContainerBase(qMetaTypeId<T>())
+            , mData(data)
+        {
+        }
         Container()
-            : Container(T()) { }
-
-//        ContainerBase* copy() const final;
+            : Container(T())
+        {
+        }
+        //        ContainerBase* copy() const final;
 
         T getData() const { return mData; }
         void setData(T data) { mData = data; }
-
-        bool setFromVariant(const QVariant &value) final {
+        bool setFromVariant(const QVariant& value) final
+        {
             if (value.canConvert<T>()) {
                 mData = value.value<T>();
                 return true;
@@ -90,9 +97,7 @@ private:
             }
         }
 
-        QVariant getVariant() final {
-            return QVariant::fromValue(mData);
-        }
+        QVariant getVariant() final { return QVariant::fromValue(mData); }
 
     private:
         T mData;
@@ -101,19 +106,18 @@ private:
 protected:
     // own
     QHash<int, ContainerBase*> mAttrs;
-
 };
 
 // Implementation
 
-template<typename AttrType>
+template <typename AttrType>
 void AttrContainer::addAttr(int key)
 {
     Q_ASSERT(!mAttrs.contains(key));
     mAttrs[key] = new Container<AttrType>();
 }
 
-template<typename AttrType>
+template <typename AttrType>
 AttrType AttrContainer::getAttr(int key) const
 {
     auto it = mAttrs.find(key);
@@ -124,8 +128,8 @@ AttrType AttrContainer::getAttr(int key) const
     }
 }
 
-template<typename AttrType>
-bool AttrContainer::setAttr(int key, const AttrType &value)
+template <typename AttrType>
+bool AttrContainer::setAttr(int key, const AttrType& value)
 {
     auto it = mAttrs.find(key);
     if (it != mAttrs.end()) {

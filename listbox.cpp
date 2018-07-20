@@ -1,10 +1,9 @@
 #include "listbox.hpp"
 
-
 SkinEnumList ListBox::list() const
 {
     QStringList list;
-    for (int i=0; i < count(); ++i) {
+    for (int i = 0; i < count(); ++i) {
         list.append(itemData(i, Qt::EditRole).toString());
     }
     return SkinEnumList(currentText(), list);

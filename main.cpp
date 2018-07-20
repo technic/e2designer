@@ -2,7 +2,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
     QCoreApplication::setOrganizationName("e2designer");

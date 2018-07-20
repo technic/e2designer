@@ -2,12 +2,11 @@
 
 #include <QWheelEvent>
 
-SceneView::SceneView(QWidget *parent) :
-    QGraphicsView(parent)
+SceneView::SceneView(QWidget* parent)
+    : QGraphicsView(parent)
 {
 }
-
-void SceneView::wheelEvent(QWheelEvent *event)
+void SceneView::wheelEvent(QWheelEvent* event)
 {
     if (event->modifiers() & Qt::ControlModifier) {
         // zoom

@@ -8,10 +8,12 @@ using TextAttr = QString;
 class TextItem : public AttrItem
 {
 public:
-    TextItem(WidgetData *widget, int key) : AttrItem(widget, key) { }
+    TextItem(WidgetData* widget, int key)
+        : AttrItem(widget, key)
+    {
+    }
     QVariant data(int role = Qt::UserRole + 1) const override;
-    bool setData(const QVariant &value, int role = Qt::UserRole + 1) override;
+    bool setData(const QVariant& value, int role = Qt::UserRole + 1) override;
 };
-
 
 #endif // TEXTITEM_H

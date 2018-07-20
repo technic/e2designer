@@ -1,26 +1,28 @@
-#include <QMessageBox>
-#include <QDebug>
 #include "colorlistwindow.hpp"
-#include "ui_colorlistwindow.h"
 #include "model/colorsmodel.hpp"
 #include "repository/skinrepository.hpp"
+#include "ui_colorlistwindow.h"
+#include <QDebug>
+#include <QMessageBox>
 
 #include <QtColorWidgets/ColorDialog>
 
-ColorListWindow::ColorListWindow(QWidget *parent)
+ColorListWindow::ColorListWindow(QWidget* parent)
     : QDockWidget(parent)
     , ui(new Ui::ColorListWindow)
     , mModel(SkinRepository::colors())
 {
     ui->setupUi(this);
 
-//    connect(ui->addButton, &QPushButton::clicked, this, &ColorListWindow::add);
+    //    connect(ui->addButton, &QPushButton::clicked, this,
+    //    &ColorListWindow::add);
     connect(ui->removeButton, &QPushButton::clicked, this, &ColorListWindow::remove);
-//    connect(ui->renameButton, &QPushButton::clicked, this, &ColorListWindow::rename);
+    //    connect(ui->renameButton, &QPushButton::clicked, this,
+    //    &ColorListWindow::rename);
     connect(ui->newButton, &QPushButton::clicked, this, &ColorListWindow::addDefault);
 
-    connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged,
-            this, &ColorListWindow::currentChanged);
+    connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, this,
+            &ColorListWindow::currentChanged);
 
     ui->tableView->setModel(mModel);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -30,15 +32,15 @@ ColorListWindow::ColorListWindow(QWidget *parent)
     mMapper->addMapping(ui->name, ColorsModel::ColumnName);
     mMapper->addMapping(ui->value, ColorsModel::ColumnValue);
     mMapper->addMapping(ui->wheel, ColorsModel::ColumnValue, "color");
-    connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged,
-            mMapper, &QDataWidgetMapper::setCurrentModelIndex);
+    connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, mMapper,
+            &QDataWidgetMapper::setCurrentModelIndex);
 
-    connect(ui->wheel, &color_widgets::ColorWheel::colorChanged, [this] (QColor col) {
+    connect(ui->wheel, &color_widgets::ColorWheel::colorChanged, [this](QColor col) {
         mMapper->submit();
         update_widgets();
     });
 
-    QWidget *w = new color_widgets::ColorDialog(this, Qt::Widget);
+    QWidget* w = new color_widgets::ColorDialog(this, Qt::Widget);
     ui->dockWidgetContents->layout()->addWidget(w);
 }
 
@@ -46,7 +48,6 @@ ColorListWindow::~ColorListWindow()
 {
     delete ui;
 }
-
 void ColorListWindow::update_widgets()
 {
     QColor c = color();
@@ -63,11 +64,10 @@ QColor ColorListWindow::color()
 {
     return ui->wheel->color();
 }
-
 void ColorListWindow::remove()
 {
     QList<int> rows;
-    for (auto const &index : ui->tableView->selectionModel()->selectedRows()) {
+    for (auto const& index : ui->tableView->selectionModel()->selectedRows()) {
         rows.append(index.row());
     }
     // from bigger to smaller
@@ -85,7 +85,7 @@ void ColorListWindow::addDefault()
         auto c = Color(QString("Untitled%1").arg(i), QRgb());
         ok = SkinRepository::instance().colors()->append(c);
         i++;
-    } while(!ok);
+    } while (!ok);
 }
 
 void ColorListWindow::add()
@@ -106,7 +106,7 @@ void ColorListWindow::rename()
     }
 }
 
-void ColorListWindow::currentChanged(const QModelIndex &current, const QModelIndex &previous)
+void ColorListWindow::currentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
     mCurrentIndex = current;
     Q_UNUSED(previous)
@@ -116,8 +116,7 @@ QRgb ColorListWindow::currentColor() const
 {
     return ui->wheel->color().rgba();
 }
-
-bool ColorListWindow::confirmAdd(const QString &name)
+bool ColorListWindow::confirmAdd(const QString& name)
 {
     bool has = SkinRepository::colors()->contains(name);
     if (!has) {

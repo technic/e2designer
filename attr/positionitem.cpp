@@ -2,19 +2,16 @@
 #include "repository/widgetdata.hpp"
 #include <QDebug>
 
-
 // PositionAttr
 
-QPoint PositionAttr::toPoint(const WidgetData &widget)
+QPoint PositionAttr::toPoint(const WidgetData& widget)
 {
     QSize s = widget.selfSize();
     QSize p = widget.parentSize();
-    return QPoint(mX.getInt(s.width(), p.width()),
-                  mY.getInt(s.height(), p.height()));
-
+    return QPoint(mX.getInt(s.width(), p.width()), mY.getInt(s.height(), p.height()));
 }
 
-void PositionAttr::setPoint(const WidgetData &widget, const QPoint &pos)
+void PositionAttr::setPoint(const WidgetData& widget, const QPoint& pos)
 {
     // Try to be smart
     const QSize s = widget.selfSize();
@@ -27,7 +24,6 @@ QString PositionAttr::toStr() const
 {
     return mX.toStr() + "," + mY.toStr();
 }
-
 void PositionAttr::fromStr(const QString& str)
 {
     QStringList list = str.split(",");
@@ -39,14 +35,12 @@ void PositionAttr::fromStr(const QString& str)
     }
 }
 
-
 // AbsolutePositionItem
 
 QVariant AbsolutePositionItem::data(int role) const
 {
     switch (role) {
-    case Qt::DisplayRole:
-    {
+    case Qt::DisplayRole: {
         QPoint pos = pWidget->getAttr<PositionAttr>(key()).toPoint(*pWidget);
         return QString("[X=%1 Y=%2]").arg(pos.x(), pos.y());
     }
@@ -55,18 +49,16 @@ QVariant AbsolutePositionItem::data(int role) const
     }
 }
 
-
 // PositionItem
 
 PositionItem::PositionItem(WidgetData* widget, int key)
     : AttrItem(widget, key)
 {
     // TODO: test it
-//    appendChild(new AbsolutePositionItem(pWidget));
-//    appendChild(new CoordinateItem(pWidget, Coordinate::X));
-//    appendChild(new CoordinateItem(pWidget, Coordinate::Y));
+    //    appendChild(new AbsolutePositionItem(pWidget));
+    //    appendChild(new CoordinateItem(pWidget, Coordinate::X));
+    //    appendChild(new CoordinateItem(pWidget, Coordinate::Y));
 }
-
 
 QVariant PositionItem::data(int role) const
 {
@@ -84,11 +76,10 @@ QVariant PositionItem::data(int role) const
     }
 }
 
-bool PositionItem::setData(const QVariant &value, int role)
+bool PositionItem::setData(const QVariant& value, int role)
 {
     switch (role) {
-    case Roles::GraphicsRole:
-    {
+    case Roles::GraphicsRole: {
         auto pos = attr();
         pos.setPoint(*pWidget, value.toPoint());
         setAttr(pos);
@@ -107,21 +98,17 @@ PositionAttr PositionItem::attr() const
 {
     return pWidget->getAttr<PositionAttr>(key());
 }
-
-void PositionItem::setAttr(const PositionAttr &value)
+void PositionItem::setAttr(const PositionAttr& value)
 {
     pWidget->setAttr(key(), value);
 }
-
-
 // PositionItem::CoordinateItem
 
 QVariant PositionItem::CoordinateItem::data(int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
-    case Qt::EditRole:
-    {
+    case Qt::EditRole: {
         // TODO: wrong logic - should edit relative values
         auto pos = pWidget->getAttr<PositionAttr>(Property::position).toPoint(*pWidget);
         switch (axes) {

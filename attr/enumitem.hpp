@@ -1,8 +1,8 @@
 #ifndef ENUMITEM_H
 #define ENUMITEM_H
 
-#include "attritem.hpp"
 #include "adapter/attritemfactory.hpp"
+#include "attritem.hpp"
 
 // FIXME should we use fancy QMetaType???
 
@@ -15,12 +15,12 @@ Q_DECLARE_METATYPE(SkinEnumList)
 /**
  * @brief Property represented by enum
  */
-template<class Enum>
+template <class Enum>
 class EnumAttr
 {
 public:
     EnumAttr();
-    EnumAttr(const QString &str);
+    EnumAttr(const QString& str);
     EnumAttr(const int value);
 
     inline int value() const { return mValue; }
@@ -31,24 +31,24 @@ private:
     int mValue;
 };
 
-
-template<class Enum>
+template <class Enum>
 class EnumItem : public AttrItem
 {
 public:
-    EnumItem(WidgetData *widget, int key)
-        : AttrItem(widget, key) { }
-
+    EnumItem(WidgetData* widget, int key)
+        : AttrItem(widget, key)
+    {
+    }
     QVariant data(int role) const override;
-    bool setData(const QVariant &value, int role) override;
+    bool setData(const QVariant& value, int role) override;
 
 private:
     inline EnumAttr<Enum> attr() const;
-    inline void setAttr(const EnumAttr<Enum> &attr);
+    inline void setAttr(const EnumAttr<Enum>& attr);
 
-//    static AttrItemRegistrator<EnumAttr<Enum>, EnumItem<Enum>> registrator;
+    //    static AttrItemRegistrator<EnumAttr<Enum>, EnumItem<Enum>>
+    //    registrator;
 };
-
 
 // type declarations
 // instanciate in cpp file
@@ -80,7 +80,5 @@ Q_DECLARE_METATYPE(RenderAttr);
 typedef EnumAttr<Property::Flags> FlagsAttr;
 typedef EnumItem<Property::Flags> FlagsItem;
 Q_DECLARE_METATYPE(FlagsAttr);
-
-
 
 #endif // ENUMITEM_H

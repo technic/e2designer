@@ -8,8 +8,7 @@ QVariant IntegerItem::data(int role) const
     case Qt::DisplayRole:
     case Qt::EditRole:
         return pWidget->getAttr<int>(key());
-    case Roles::XmlRole:
-    {
+    case Roles::XmlRole: {
         int value = pWidget->getAttr<int>(key());
         if (value != 0) {
             return QString("%1").arg(value);
@@ -22,7 +21,7 @@ QVariant IntegerItem::data(int role) const
     }
 }
 
-bool IntegerItem::setData(const QVariant &value, int role)
+bool IntegerItem::setData(const QVariant& value, int role)
 {
     switch (role) {
     case Roles::GraphicsRole:

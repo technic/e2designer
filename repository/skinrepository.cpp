@@ -1,24 +1,24 @@
 #include "skinrepository.hpp"
+#include <QDebug>
 #include <QObject>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
-#include <QDebug>
 
-SkinRepository::SkinRepository(QObject *parent) :
-    QObject(parent),
-    mColors(new ColorsModel(this)),
-    mFonts(new FontsModel(this)),
-    mScreensModel(new ScreensModel(this))
+SkinRepository::SkinRepository(QObject* parent)
+    : QObject(parent)
+    , mColors(new ColorsModel(this))
+    , mFonts(new FontsModel(this))
+    , mScreensModel(new ScreensModel(this))
 {
 }
 
-//SkinRepository& SkinRepository::instance()
+// SkinRepository& SkinRepository::instance()
 //{
 //	static SkinRepository self;
 //	return self;
 //}
 
-QString SkinRepository::resolveFilename(const QString &path) const
+QString SkinRepository::resolveFilename(const QString& path) const
 {
     if (path.isEmpty()) {
         return QString();
@@ -41,7 +41,7 @@ QString SkinRepository::resolveFilename(const QString &path) const
     return QString();
 }
 
-bool SkinRepository::loadFile(const QString &path)
+bool SkinRepository::loadFile(const QString& path)
 {
     mDirectory = QDir(path);
     if (!mDirectory.exists()) {
@@ -60,7 +60,7 @@ bool SkinRepository::loadFile(const QString &path)
     return ok;
 }
 
-bool SkinRepository::fromStream(QIODevice *device)
+bool SkinRepository::fromStream(QIODevice* device)
 {
     QXmlStreamReader xml(device);
 
@@ -100,7 +100,7 @@ bool SkinRepository::save()
     return true;
 }
 
-void SkinRepository::fromXml(QXmlStreamReader &xml)
+void SkinRepository::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "skin");
 
@@ -111,7 +111,6 @@ void SkinRepository::fromXml(QXmlStreamReader &xml)
         qDebug() << xml.tokenString() << xml.name() << xml.text() << xml.attributes().value("name");
 
         if (xml.isStartElement()) {
-
             if (xml.name() == "output") {
                 mOutputRepository.addFromXml(xml);
 
@@ -137,7 +136,7 @@ void SkinRepository::fromXml(QXmlStreamReader &xml)
     }
 }
 
-void SkinRepository::toXml(QXmlStreamWriter &xml) const
+void SkinRepository::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("skin");
     mOutputRepository.toXml(xml);
@@ -147,5 +146,3 @@ void SkinRepository::toXml(QXmlStreamWriter &xml) const
     mScreensModel->toXml(xml);
     xml.writeEndElement();
 }
-
-

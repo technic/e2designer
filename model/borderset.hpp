@@ -16,8 +16,8 @@ public:
 
     Border();
 
-    void fromXml(QXmlStreamReader &xml);
-    void toXml(QXmlStreamWriter &xml) const;
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
 
     inline int bp() const { return m_bp; }
     inline bool isValid() const { return m_bp != bpInvalid; }
@@ -28,16 +28,15 @@ private:
     QString m_fname;
 };
 
-
-class BorderSet: public XmlData
+class BorderSet : public XmlData
 {
 public:
     enum { bsInvalid = -1 };
 
     BorderSet();
 
-    void fromXml(QXmlStreamReader &xml);
-    void toXml(QXmlStreamWriter &xml) const;
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
 
     const Border& getBorder(int bp);
 

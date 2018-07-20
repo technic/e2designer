@@ -4,22 +4,23 @@
 #include <QtGlobal>
 #include <limits>
 
-
 class UniqueId
 {
 public:
-    UniqueId() :
-        mId(getNextId()) { }
-
+    UniqueId()
+        : mId(getNextId())
+    {
+    }
     // TODO: release id from possible id pool
-    ~UniqueId() { }
-
+    ~UniqueId() {}
     // copy has new id
 
-    UniqueId(const UniqueId &other) :
-        mId(getNextId()) { Q_UNUSED(other); }
-
-    UniqueId& operator=(const UniqueId &other)
+    UniqueId(const UniqueId& other)
+        : mId(getNextId())
+    {
+        Q_UNUSED(other);
+    }
+    UniqueId& operator=(const UniqueId& other)
     {
         Q_UNUSED(other);
         mId = getNextId();
@@ -28,10 +29,11 @@ public:
 
     // move has same id
 
-    UniqueId(UniqueId &&other) :
-        mId(other.mId) { }
-
-    UniqueId& operator=(const UniqueId &&other)
+    UniqueId(UniqueId&& other)
+        : mId(other.mId)
+    {
+    }
+    UniqueId& operator=(const UniqueId&& other)
     {
         // prevent self-move
         if (this == &other) {

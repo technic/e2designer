@@ -10,49 +10,45 @@
  * provides list like and map like interfaces
  * This is a helper class, mutating methods declared as protected
  */
-template<class T>
+template <class T>
 class NamedList
 {
 public:
-    explicit NamedList() { }
-    virtual ~NamedList() { }
-
-    static_assert (std::is_default_constructible<T>(), "T must be default constructible");
+    explicit NamedList() {}
+    virtual ~NamedList() {}
+    static_assert(std::is_default_constructible<T>(), "T must be default constructible");
 
 protected:
     // list like interface
     bool isValidIndex(int i) const { return 0 <= i && i < mItems.size(); }
-
-    bool setItemName(int i, const QString &name);
-    bool setItemValue(int i, const typename T::Value &value);
+    bool setItemName(int i, const QString& name);
+    bool setItemValue(int i, const typename T::Value& value);
 
     bool canInsertItem(T item);
     bool insertItem(int i, T item);
     bool appendItem(T item) { return insertItem(mItems.count(), item); }
-
     bool canRemoveItems(int position, int count);
     bool removeItems(int position, int count);
 
 public:
-    bool contains(const QString &name) const;
-    T getValue(const QString &name, T defaultValue = T()) const;
+    bool contains(const QString& name) const;
+    T getValue(const QString& name, T defaultValue = T()) const;
     QString getName(const typename T::Value value);
 
     inline int itemsCount() const { return mItems.count(); }
     inline const T& itemAt(int i) { return mItems[i]; }
-
-    int getIndex(const QString &name) const;
+    int getIndex(const QString& name) const;
 
 protected:
-    virtual void emitValueChanged(const QString &name, const T &value) const = 0;
+    virtual void emitValueChanged(const QString& name, const T& value) const = 0;
 
     QVector<T> mItems;
 };
 
 // Implementation
 
-template<typename T>
-bool NamedList<T>::setItemName(int i, const QString &name)
+template <typename T>
+bool NamedList<T>::setItemName(int i, const QString& name)
 {
     if (!isValidIndex(i)) {
         return false;
@@ -66,8 +62,8 @@ bool NamedList<T>::setItemName(int i, const QString &name)
     return true;
 }
 
-template<typename T>
-bool NamedList<T>::setItemValue(int i, const typename T::Value &value)
+template <typename T>
+bool NamedList<T>::setItemValue(int i, const typename T::Value& value)
 {
     if (!isValidIndex(i)) {
         return false;
@@ -77,7 +73,7 @@ bool NamedList<T>::setItemValue(int i, const typename T::Value &value)
     return true;
 }
 
-template<typename T>
+template <typename T>
 bool NamedList<T>::canInsertItem(T item)
 {
     if (contains(item.name())) {
@@ -86,7 +82,7 @@ bool NamedList<T>::canInsertItem(T item)
     return true;
 }
 
-template<typename T>
+template <typename T>
 bool NamedList<T>::insertItem(int i, T item)
 {
     if (canInsertItem(item)) {
@@ -97,7 +93,7 @@ bool NamedList<T>::insertItem(int i, T item)
     return false;
 }
 
-template<typename T>
+template <typename T>
 bool NamedList<T>::canRemoveItems(int position, int count)
 {
     if (position < 0 || position + count > mItems.size()) {
@@ -106,7 +102,7 @@ bool NamedList<T>::canRemoveItems(int position, int count)
     return true;
 }
 
-template<typename T>
+template <typename T>
 bool NamedList<T>::removeItems(int position, int count)
 {
     if (canRemoveItems(position, count)) {
@@ -119,11 +115,11 @@ bool NamedList<T>::removeItems(int position, int count)
     return false;
 }
 
-template<typename T>
-bool NamedList<T>::contains(const QString &name) const
+template <typename T>
+bool NamedList<T>::contains(const QString& name) const
 {
     // TODO: optimization with QHash?
-    for (const T &item : mItems) {
+    for (const T& item : mItems) {
         if (item.name() == name) {
             return true;
         }
@@ -131,22 +127,20 @@ bool NamedList<T>::contains(const QString &name) const
     return false;
 }
 
-template<typename T>
-T NamedList<T>::getValue(const QString &name, T defaultValue) const
+template <typename T>
+T NamedList<T>::getValue(const QString& name, T defaultValue) const
 {
     // TODO: optimization with QHash?
-    for (const T& item: mItems) {
+    for (const T& item : mItems) {
         if (item.name() == name)
             return item;
     }
     return defaultValue;
 }
 
-template<class T>
+template <class T>
 QString NamedList<T>::getName(const typename T::Value value)
 {
-
 }
-
 
 #endif // NAMEDLIST_H

@@ -6,11 +6,11 @@
 class SceneView : public QGraphicsView
 {
 public:
-    SceneView(QWidget *parent = Q_NULLPTR);
+    SceneView(QWidget* parent = Q_NULLPTR);
 
 protected:
     // QWidget interface
-    void wheelEvent(QWheelEvent *event);
+    void wheelEvent(QWheelEvent* event);
 };
 
 #endif // SCENEVIEW_H

@@ -7,11 +7,10 @@ Dimension::Dimension()
     m_value = 0;
 }
 
-void Dimension::parseStr(const QString &str)
+void Dimension::parseStr(const QString& str)
 {
     m_value = str.toInt();
 }
-
 QString Dimension::toStr() const
 {
     switch (m_type) {
@@ -28,7 +27,6 @@ int Dimension::getInt(int parent_size) const
 {
     return m_value;
 }
-
 void Dimension::setInt(int value)
 {
     m_type = Number;

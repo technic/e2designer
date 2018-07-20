@@ -1,31 +1,28 @@
 #include "videooutputrepository.hpp"
+#include <QDebug>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
-#include <QDebug>
-
 
 VideoOutputRepository::VideoOutputRepository()
 {
-
 }
-
-void VideoOutputRepository::addFromXml(QXmlStreamReader &xml)
+void VideoOutputRepository::addFromXml(QXmlStreamReader& xml)
 {
     VideoOutput out;
     out.fromXml(xml);
     mOutputs.append(out);
 }
 
-void VideoOutputRepository::toXml(QXmlStreamWriter &xml) const
+void VideoOutputRepository::toXml(QXmlStreamWriter& xml) const
 {
-    for (const VideoOutput &output : mOutputs) {
+    for (const VideoOutput& output : mOutputs) {
         output.toXml(xml);
     }
 }
 
 VideoOutput VideoOutputRepository::getOutput(int id)
 {
-    for (auto &output : mOutputs) {
+    for (auto& output : mOutputs) {
         if (output.id() == id) {
             return output;
         }
@@ -33,7 +30,7 @@ VideoOutput VideoOutputRepository::getOutput(int id)
     return VideoOutput();
 }
 
-void VideoOutput::fromXml(QXmlStreamReader &xml)
+void VideoOutput::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "output");
     m_id = xml.attributes().value("id").toInt();
@@ -53,7 +50,7 @@ void VideoOutput::fromXml(QXmlStreamReader &xml)
     xml.skipCurrentElement();
 }
 
-void VideoOutput::toXml(QXmlStreamWriter &xml) const
+void VideoOutput::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("output");
     xml.writeAttribute("id", QString::number(m_id));
@@ -66,4 +63,3 @@ void VideoOutput::toXml(QXmlStreamWriter &xml) const
 
     xml.writeEndElement();
 }
-

@@ -1,9 +1,8 @@
-#include <QString>
-#include <QStringList>
-#include <QFontDatabase>
 #include "fontitem.hpp"
 #include "repository/skinrepository.hpp"
-
+#include <QFontDatabase>
+#include <QString>
+#include <QStringList>
 
 // FontAttr
 
@@ -22,7 +21,7 @@ QString FontAttr::toStr() const
         return QString();
 }
 
-void FontAttr::fromStr(const QString &str)
+void FontAttr::fromStr(const QString& str)
 {
     QStringList l = str.split(';');
     if (l.count() != 2)
@@ -30,7 +29,6 @@ void FontAttr::fromStr(const QString &str)
     mName = l[0].trimmed();
     mSize = l[1].toInt();
 }
-
 
 // FontItem
 
@@ -48,7 +46,7 @@ QVariant FontItem::data(int role) const
     }
 }
 
-bool FontItem::setData(const QVariant &value, int role)
+bool FontItem::setData(const QVariant& value, int role)
 {
     switch (role) {
     case Roles::GraphicsRole:
@@ -63,13 +61,12 @@ bool FontItem::setData(const QVariant &value, int role)
     }
 }
 
-FontAttr FontItem::attr() const {
+FontAttr FontItem::attr() const
+{
     return pWidget->getAttr<FontAttr>(key());
 }
-
-void FontItem::setAttr(const FontAttr &attr)
+void FontItem::setAttr(const FontAttr& attr)
 {
     pWidget->setAttr<FontAttr>(key(), attr);
 }
-
 static AttrItemRegistrator<FontAttr, FontItem> registrator;

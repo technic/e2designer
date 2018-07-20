@@ -1,5 +1,5 @@
-#include <QString>
 #include "attritem.hpp"
+#include <QString>
 
 // AttrItem
 
@@ -17,7 +17,6 @@ QVariant AttrItem::data(int role) const
 {
     return QVariant();
 }
-
 bool AttrItem::setData(const QVariant& value, int role)
 {
     return false;

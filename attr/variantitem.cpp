@@ -1,7 +1,6 @@
 #include "variantitem.hpp"
-#include "repository/widgetdata.hpp"
 #include "adapter/attritemfactory.hpp"
-
+#include "repository/widgetdata.hpp"
 
 QVariant VariantItem::data(int role) const
 {
@@ -17,7 +16,7 @@ QVariant VariantItem::data(int role) const
     }
 }
 
-bool VariantItem::setData(const QVariant &value, int role)
+bool VariantItem::setData(const QVariant& value, int role)
 {
     switch (role) {
     case Roles::GraphicsRole:

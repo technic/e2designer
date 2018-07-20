@@ -1,47 +1,44 @@
+#include "colorsmodel.hpp"
 #include <QColor>
 #include <QDebug>
-#include "colorsmodel.hpp"
-
 
 // Color
 
-Color::Color(const QString &name, QRgb value)
-    : mName(name), mValue(value)
+Color::Color(const QString& name, QRgb value)
+    : mName(name)
+    , mValue(value)
 {
 }
-
 QString Color::valueStr() const
 {
     return QColor::fromRgba(mValue).name(QColor::HexArgb);
 }
-
-void Color::fromXml(QXmlStreamReader &xml)
+void Color::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "color");
 
     mName = xml.attributes().value("name").toString();
     QColor color(xml.attributes().value("value").toString());
     // enigma2 has inverted alpha representation
-    color.setAlpha(255-color.alpha());
+    color.setAlpha(255 - color.alpha());
     mValue = color.rgba();
     xml.skipCurrentElement();
 }
 
-void Color::toXml(QXmlStreamWriter &xml) const
+void Color::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("color");
     xml.writeAttribute("name", mName);
     QColor color = QColor::fromRgba(mValue);
     // enigma2 has inverted alpha representation
-    color.setAlpha(255-color.alpha());
+    color.setAlpha(255 - color.alpha());
     xml.writeAttribute("value", color.name(QColor::HexArgb));
     xml.writeEndElement();
 }
 
-
 // ColorsList
 
-void ColorsList::fromXml(QXmlStreamReader &xml)
+void ColorsList::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "colors");
 
@@ -70,23 +67,22 @@ void ColorsList::fromXml(QXmlStreamReader &xml)
     }
 }
 
-void ColorsList::toXml(QXmlStreamWriter &xml) const
+void ColorsList::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("colors");
-    for (const Color &item : mItems) {
+    for (const Color& item : mItems) {
         item.toXml(xml);
     }
     xml.writeEndElement();
 }
 
-
 // ColorsModel
 
-ColorsModel::ColorsModel(QObject *parent)
-    : QAbstractTableModel(parent), ColorsList()
+ColorsModel::ColorsModel(QObject* parent)
+    : QAbstractTableModel(parent)
+    , ColorsList()
 {
 }
-
 QVariant ColorsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -102,19 +98,19 @@ QVariant ColorsModel::headerData(int section, Qt::Orientation orientation, int r
     return QVariant();
 }
 
-int ColorsModel::rowCount(const QModelIndex &parent) const
+int ColorsModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return mItems.count();
 }
 
-int ColorsModel::columnCount(const QModelIndex &parent) const
+int ColorsModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
     return ColumnsCount;
 }
 
-QVariant ColorsModel::data(const QModelIndex &index, int role) const
+QVariant ColorsModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -142,7 +138,7 @@ QVariant ColorsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool ColorsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool ColorsModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!index.isValid())
         return false;
@@ -168,7 +164,7 @@ bool ColorsModel::setData(const QModelIndex &index, const QVariant &value, int r
     return changed;
 }
 
-Qt::ItemFlags ColorsModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ColorsModel::flags(const QModelIndex& index) const
 {
     Qt::ItemFlags flags = Qt::ItemIsEnabled;
     if (index.column() != ColumnColor) {
@@ -188,7 +184,7 @@ bool ColorsModel::append(Color c)
     return false;
 }
 
-bool ColorsModel::removeRows(int row, int count, const QModelIndex &parent)
+bool ColorsModel::removeRows(int row, int count, const QModelIndex& parent)
 {
     if (canRemoveItems(row, count)) {
         beginRemoveRows(parent, row, row + count - 1);
@@ -199,19 +195,18 @@ bool ColorsModel::removeRows(int row, int count, const QModelIndex &parent)
     return false;
 }
 
-void ColorsModel::fromXml(QXmlStreamReader &xml)
+void ColorsModel::fromXml(QXmlStreamReader& xml)
 {
     beginResetModel();
     ColorsList::fromXml(xml);
     endResetModel();
 }
 
-void ColorsModel::toXml(QXmlStreamWriter &xml) const
+void ColorsModel::toXml(QXmlStreamWriter& xml) const
 {
     ColorsList::toXml(xml);
 }
-
-void ColorsModel::emitValueChanged(const QString &name, const Color &value) const
+void ColorsModel::emitValueChanged(const QString& name, const Color& value) const
 {
     emit valueChanged(name, value.value());
 }

@@ -1,9 +1,8 @@
 #include "windowstyle.hpp"
 
-
 // WindowStyleTitle
 
-void WindowStyleTitle::fromXml(QXmlStreamReader &xml)
+void WindowStyleTitle::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "title");
 
@@ -12,7 +11,7 @@ void WindowStyleTitle::fromXml(QXmlStreamReader &xml)
     xml.skipCurrentElement();
 }
 
-void WindowStyleTitle::toXml(QXmlStreamWriter &xml) const
+void WindowStyleTitle::toXml(QXmlStreamWriter& xml) const
 {
     if (font.name().isEmpty()) {
         return;
@@ -23,10 +22,9 @@ void WindowStyleTitle::toXml(QXmlStreamWriter &xml) const
     xml.writeEndElement();
 }
 
-
 // WindowStyleColor
 
-void WindowStyleColor::fromXml(QXmlStreamReader &xml)
+void WindowStyleColor::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "color");
 
@@ -35,7 +33,7 @@ void WindowStyleColor::fromXml(QXmlStreamReader &xml)
     xml.skipCurrentElement();
 }
 
-void WindowStyleColor::toXml(QXmlStreamWriter &xml) const
+void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("color");
     xml.writeAttribute("name", name);
@@ -43,14 +41,12 @@ void WindowStyleColor::toXml(QXmlStreamWriter &xml) const
     xml.writeEndElement();
 }
 
-
 // WindowStyle
 
 WindowStyle::WindowStyle()
 {
 }
-
-void WindowStyle::fromXml(QXmlStreamReader &xml)
+void WindowStyle::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "windowstyle");
 
@@ -78,36 +74,36 @@ void WindowStyle::fromXml(QXmlStreamReader &xml)
     }
 }
 
-void WindowStyle::toXml(QXmlStreamWriter &xml) const
+void WindowStyle::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("windowstyle");
     xml.writeAttribute("type", m_type);
     xml.writeAttribute("id", QString::number(m_id));
     m_title.toXml(xml);
-    for (const WindowStyleColor &c: m_colors) {
+    for (const WindowStyleColor& c : m_colors) {
         c.toXml(xml);
     }
     m_borderSet.toXml(xml);
     xml.writeEndElement();
 }
 
-
 // WindowStylesList
 
 void WindowStylesList::append(WindowStyle style)
 {
-//    appendItem(style);
+    //    appendItem(style);
     mItems.append(style);
 }
 
-void WindowStylesList::toXml(QXmlStreamWriter &xml) const
+void WindowStylesList::toXml(QXmlStreamWriter& xml) const
 {
-    for (const WindowStyle &s: mItems) {
+    for (const WindowStyle& s : mItems) {
         s.toXml(xml);
     }
 }
 
-//void WindowStylesList::emitValueChanged(int id, const WindowStyle &value) const
+// void WindowStylesList::emitValueChanged(int id, const WindowStyle &value)
+// const
 //{
 //    // nothing to do here so far
 //}

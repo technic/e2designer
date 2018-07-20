@@ -9,7 +9,7 @@ class ColorListBox : public QComboBox
     Q_PROPERTY(QColor color READ color WRITE setColor USER true)
 
 public:
-    ColorListBox(QWidget *parent = nullptr);
+    ColorListBox(QWidget* parent = nullptr);
 
     QColor color() const;
     void setColor(QColor color);

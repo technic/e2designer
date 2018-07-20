@@ -7,37 +7,33 @@
 #include "borderset.hpp"
 #include "repository/xmlnode.hpp"
 
-
 class WindowStyleTitle
 {
 public:
-    void fromXml(QXmlStreamReader &xml);
-    void toXml(QXmlStreamWriter &xml) const;
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
 
     PositionAttr position;
     FontAttr font;
 };
 
-
 class WindowStyleColor
 {
 public:
-    void fromXml(QXmlStreamReader &xml);
-    void toXml(QXmlStreamWriter &xml) const;
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
 
     QString name;
     ColorAttr color;
 };
 
-
-class WindowStyle: public XmlData
+class WindowStyle : public XmlData
 {
 public:
     WindowStyle();
     QString name() const { return QString::number(m_id); }
-
-    void fromXml(QXmlStreamReader &xml);
-    void toXml(QXmlStreamWriter &xml) const;
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
 
 private:
     QString m_type;
@@ -47,17 +43,17 @@ private:
     BorderSet m_borderSet;
 };
 
-
 class WindowStylesList
 {
 public:
     void append(WindowStyle style);
 
     // Xml:
-    void toXml(QXmlStreamWriter &xml) const;
+    void toXml(QXmlStreamWriter& xml) const;
 
 protected:
-//    void emitValueChanged(const QString &name, const WindowStyle &value) const final;
+    //    void emitValueChanged(const QString &name, const WindowStyle &value)
+    //    const final;
     QVector<WindowStyle> mItems;
 };
 

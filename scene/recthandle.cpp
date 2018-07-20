@@ -1,21 +1,21 @@
+#include <QBrush>
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
-#include <QBrush>
 //#include <QGraphicsScene>
 #include "recthandle.hpp"
 #include "widgetview.hpp"
 
-RectHandle::RectHandle(int position, RectSelector *parent) :
-    QGraphicsRectItem(parent),
-    m_parent(parent),
-    m_place(position)
+RectHandle::RectHandle(int position, RectSelector* parent)
+    : QGraphicsRectItem(parent)
+    , m_parent(parent)
+    , m_place(position)
 {
     setFlags(ItemIsMovable | ItemSendsGeometryChanges);
     setFlag(ItemIsSelectable, false);
 
     // TODO: scale handles depending on QGraphicsView scale
     static_assert(handle_size % 2 == 0, "HandleItem size must be even");
-    setRect(-handle_size/2, -handle_size/2, handle_size, handle_size);
+    setRect(-handle_size / 2, -handle_size / 2, handle_size, handle_size);
     setBrush(QBrush(Qt::lightGray));
     updatePosition();
 
@@ -39,24 +39,24 @@ RectHandle::RectHandle(int position, RectSelector *parent) :
     }
 }
 
-QVariant RectHandle::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+QVariant RectHandle::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
     if (change == ItemPositionChange) {
         QPointF p = value.toPointF();
         p = restrictPosition(p);
 
-//        QRectF r = m_parent->rect();
-//        if (m_place & Left)
-//            r.setLeft(p.x());
-//        if (m_place & Right)
-//            r.setRight(p.x());
-//        if (m_place & Top)
-//            r.setTop(p.y());
-//        if (m_place & Bottom)
-//            r.setBottom(p.y());
+        //        QRectF r = m_parent->rect();
+        //        if (m_place & Left)
+        //            r.setLeft(p.x());
+        //        if (m_place & Right)
+        //            r.setRight(p.x());
+        //        if (m_place & Top)
+        //            r.setTop(p.y());
+        //        if (m_place & Bottom)
+        //            r.setBottom(p.y());
 
-//        qDebug() << "New Rect" << r;
-//        m_parent->resize(r);
+        //        qDebug() << "New Rect" << r;
+        //        m_parent->resize(r);
 
         return QGraphicsRectItem::itemChange(change, p);
     }
@@ -88,7 +88,7 @@ QPointF RectHandle::restrictPosition(QPointF newPos)
     if (m_place & Top || m_place & Bottom) {
         pos.setY(newPos.y());
     }
-    const QRectF &r = m_parent->rect();
+    const QRectF& r = m_parent->rect();
     if (m_place & Left && pos.x() > r.right()) {
         pos.setX(r.right());
     }
@@ -107,31 +107,31 @@ QPointF RectHandle::restrictPosition(QPointF newPos)
 void RectHandle::updatePosition()
 {
     setFlag(ItemSendsGeometryChanges, false);
-    const QRectF &r = m_parent->rect();
+    const QRectF& r = m_parent->rect();
     switch (m_place) {
     case TopLeft:
         setPos(r.topLeft());
         break;
     case Top:
-        setPos((r.left() + r.right())/2, r.top());
+        setPos((r.left() + r.right()) / 2, r.top());
         break;
     case TopRight:
         setPos(r.topRight());
         break;
     case Right:
-        setPos(r.right(), (r.top() + r.bottom())/2);
+        setPos(r.right(), (r.top() + r.bottom()) / 2);
         break;
     case BottomRight:
         setPos(r.bottomRight());
         break;
     case Bottom:
-        setPos((r.left() + r.right())/2, r.bottom());
+        setPos((r.left() + r.right()) / 2, r.bottom());
         break;
     case BottomLeft:
         setPos(r.bottomLeft());
         break;
     case Left:
-        setPos(r.left(), (r.top() + r.bottom())/2);
+        setPos(r.left(), (r.top() + r.bottom()) / 2);
         break;
     default:
         break;
@@ -139,18 +139,18 @@ void RectHandle::updatePosition()
     setFlag(ItemSendsGeometryChanges, true);
 }
 
-void RectHandle::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void RectHandle::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton) {
-//        m_parent->setResizeStatus(true);
+        //        m_parent->setResizeStatus(true);
     }
     return QGraphicsRectItem::mousePressEvent(event);
 }
 
-void RectHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void RectHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton) {
-//        m_parent->setResizeStatus(false);
+        //        m_parent->setResizeStatus(false);
     }
     return QGraphicsRectItem::mouseReleaseEvent(event);
 }

@@ -1,9 +1,9 @@
+#include "xmlhighlighter.hpp"
 #include <QRegExp>
 #include <QTextCharFormat>
-#include "xmlhighlighter.hpp"
 
-XMLHighlighter::XMLHighlighter(QTextDocument *parent) :
-    QSyntaxHighlighter(parent)
+XMLHighlighter::XMLHighlighter(QTextDocument* parent)
+    : QSyntaxHighlighter(parent)
 {
     elementFormat.setFontWeight(QFont::Bold);
     attrNameFormat.setForeground(Qt::darkGreen);
@@ -11,26 +11,23 @@ XMLHighlighter::XMLHighlighter(QTextDocument *parent) :
     commentFormat.setForeground(Qt::gray);
 }
 
-void XMLHighlighter::highlightBlock(const QString &text)
+void XMLHighlighter::highlightBlock(const QString& text)
 {
-
     int state = previousBlockState();
     int offset = 0;
 
-    for (int i=0; i < text.length(); ++i) {
-
+    for (int i = 0; i < text.length(); ++i) {
         switch (state) {
         case Element:
         case AttrName:
-            if (text.mid(i,2) == "/>") {
+            if (text.mid(i, 2) == "/>") {
                 setFormat(offset, i - offset, getFormat(state));
                 setFormat(i, 2, elementFormat);
                 offset = i + 2;
                 i++;
                 state = Normal;
                 continue;
-            }
-            else if (text.at(i) == '>') {
+            } else if (text.at(i) == '>') {
                 setFormat(offset, i - offset, getFormat(state));
                 setFormat(i, 1, elementFormat);
                 offset = i + 1;
@@ -86,8 +83,7 @@ void XMLHighlighter::highlightBlock(const QString &text)
             if (text.mid(i, 4) == "<!--") {
                 state = Comment;
                 offset = i;
-            }
-            else if (text.at(i) == '<') {
+            } else if (text.at(i) == '<') {
                 state = Element;
                 offset = i;
             }
@@ -97,5 +93,3 @@ void XMLHighlighter::highlightBlock(const QString &text)
     setFormat(offset, text.length() - offset, getFormat(state));
     setCurrentBlockState(state);
 }
-
-
