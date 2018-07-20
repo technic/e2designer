@@ -1,0 +1,25 @@
+image: ubuntu:bionic
+
+build:
+  stage: build
+  before_script:
+    - apt-get update && apt-get -y install make g++ qt5-qmake qt5-default
+  script:
+    - mkdir build
+    - pushd build
+    - qmake --version
+    - g++ --version
+    - qmake ..
+    - make
+  artifacts:
+    paths:
+      - build/e2designer
+  cache:
+    paths:
+      - "*.o"
+
+# run tests using the binary built before
+test:
+  stage: test
+  script:
+    - echo "TODO"
