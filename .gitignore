@@ -1,2 +1,6 @@
 *.user
+*.o
+.vagrant/
+*.log
+build/
 doxygen/
