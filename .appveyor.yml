@@ -12,10 +12,10 @@ after_build:
   - mkdir deploy
   - copy release\e2designer.exe deploy\e2designer.exe
   - windeployqt --release deploy/e2designer.exe
-  - 7z a EzGraver_win_%arch%.zip .\deploy\*
+  - 7z a e2designer_win_%arch%.zip .\deploy\*
 
 artifacts:
-  - path: '*.7z'
+  - path: '*.zip'
 
 deploy:
 - provider: BinTray
