@@ -19,6 +19,12 @@ build:
     - g++ --version
     - qmake ..
     - make
+    - make INSTALL_ROOT=appdir install
+    - find appdir
+    - curl -fsSL -o linuxdeployqt https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
+    - chmod a+x linuxdeployqt
+    - export VERSION=$(git rev-parse --short HEAD)
+    - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -appimage
   artifacts:
     paths:
       - build/e2designer

@@ -146,3 +146,21 @@ FORMS += \
     mainwindow.ui \
     colorlistwindow.ui \
     fontlistwindow.ui
+
+unix {
+    isEmpty(PREFIX) {
+        PREFIX = /usr
+    }
+
+    target.path = $$PREFIX/bin
+
+    desktopFiles.files = misc/e2designer.desktop
+    desktopFiles.path = $$PREFIX/share/applications/
+
+    iconFiles.files = misc/e2designer.png
+    iconFiles.path = $$PREFIX/share/pixmaps/
+
+    INSTALLS += desktopFiles iconFiles
+}
+
+INSTALLS += target

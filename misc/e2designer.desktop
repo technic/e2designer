@@ -3,4 +3,5 @@ Type=Application
 Name=e2designer
 Comment=skin editor for enigma2
 Exec=e2designer
+Icon=e2designer
 
