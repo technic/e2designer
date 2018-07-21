@@ -140,7 +140,7 @@ HEADERS += \
     model/borderset.hpp \
     model/windowstyle.hpp \
     scene/borderview.hpp \
-    repository/attrcontainer.h
+    repository/attrcontainer.hpp
 
 FORMS += \
     mainwindow.ui \
