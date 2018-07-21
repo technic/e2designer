@@ -12,6 +12,7 @@ format:
 build:
   stage: build
   script:
+    - sudo apt-get update && sudo apt-get -y install fuse
     - mkdir build
     - pushd build
     - which qmake
