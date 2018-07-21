@@ -12,7 +12,7 @@ after_build:
   - mkdir deploy
   - copy release\e2designer.exe deploy\e2designer.exe
   - windeployqt --release deploy/e2designer.exe
-  - 7z a e2designer_win_%arch%.zip .\deploy\*
+  - 7z a e2designer_win.zip .\deploy\*
 
 artifacts:
   - path: '*.zip'
@@ -21,7 +21,7 @@ deploy:
 - provider: BinTray
   username: technic93
   api_key:
-    secure: AABBCC+DDD==
+    secure: jy1FUyYxHh37QsyYOVcrEHNNZLU/T9FFoWwiO4TVcUSfQ4zGu66G/dwxbwSqutfr
   subject: technic93
   repo: e2designer
   package: e2designer
