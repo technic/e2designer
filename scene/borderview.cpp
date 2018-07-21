@@ -6,7 +6,11 @@ BorderView::BorderView(QGraphicsRectItem* parent)
 }
 void BorderView::setBorderSet(BorderSet* bs)
 {
+    mBorders = bs;
+    // TODO
 }
 void BorderView::setInnerRect(const QRect& innerRect)
 {
+    mRect = innerRect;
+    // TODO
 }

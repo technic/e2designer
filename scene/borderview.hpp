@@ -14,6 +14,7 @@ public:
 
 private:
     BorderSet* mBorders;
+    QRect mRect;
 };
 
 #endif // BORDERVIEW_H
