@@ -141,6 +141,11 @@ T NamedList<T>::getValue(const QString& name, T defaultValue) const
 template <class T>
 QString NamedList<T>::getName(const typename T::Value value)
 {
+    for (const T& item : mItems) {
+        if (item.value() == value)
+            return item.name();
+    }
+    return QString();
 }
 
 #endif // NAMEDLIST_H
