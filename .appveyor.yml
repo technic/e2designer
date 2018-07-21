@@ -19,9 +19,9 @@ artifacts:
 
 deploy:
 - provider: BinTray
-  username: technic93
+  username: technic
   api_key:
     secure: jy1FUyYxHh37QsyYOVcrEHNNZLU/T9FFoWwiO4TVcUSfQ4zGu66G/dwxbwSqutfr
-  subject: technic93
+  subject: technic
   repo: e2designer
   package: e2designer
