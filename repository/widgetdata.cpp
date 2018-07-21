@@ -74,8 +74,6 @@ bool WidgetData::setType(int type)
 
 void WidgetData::setType(WidgetType type)
 {
-    QVariant q = WidgetType::Screen;
-    WidgetType a = qvariant_cast<WidgetType>(q);
     mType = type;
     emit typeChanged(mType);
 }
