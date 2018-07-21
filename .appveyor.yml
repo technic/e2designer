@@ -14,6 +14,9 @@ after_build:
   - windeployqt --release deploy/e2designer.exe
   - 7z a EzGraver_win_%arch%.zip .\deploy\*
 
+artifacts:
+  - path: '*.7z'
+
 deploy:
 - provider: BinTray
   username: technic93
