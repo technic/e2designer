@@ -1,9 +1,16 @@
 image: rabits/qt:5.11-desktop
 
-build:
+format:
   stage: build
   before_script:
-    - apt-get update && apt-get -y install clang-format
+    - sudo apt-get update && sudo apt-get -y install clang-format
+  script:
+    - clang-format -style=file -i
+      $(find . -type d -path './Qt-Color-Widgets' -prune -iname '*.hpp' -o -iname '*.cpp')
+    - git diff --exit-code
+
+build:
+  stage: build
   script:
     - mkdir build
     - pushd build
