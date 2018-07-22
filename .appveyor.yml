@@ -4,6 +4,8 @@ install:
   - set QTDIR=C:\Qt\5.11.1\msvc2017_64
   - set PATH=%PATH%;%QTDIR%\bin;C:\Qt\Tools\QtCreator\bin
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - choco install gitversion.portable -y
+
 build_script:
   - qmake.exe e2designer.pro -spec win32-msvc 
   - jom.exe
@@ -13,6 +15,7 @@ after_build:
   - copy release\e2designer.exe deploy\e2designer.exe
   - windeployqt --release deploy/e2designer.exe
   - 7z a e2designer_win.zip .\deploy\*
+  - ps: Update-AppveyorBuild -Version (git describe)
 
 artifacts:
   - path: '*.zip'
