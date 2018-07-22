@@ -44,4 +44,4 @@ deploy-AppImage:
   script:
     - apt-get update && apt-get -y install curl
     - export VERSION=$(git describe)
-    - curl -T e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY https://api.bintray.com/content/technic/e2designer/e2designer/$VERSION/e2designer-$VERSION-x86_64.AppImage
+    - curl -T build/e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY https://api.bintray.com/content/technic/e2designer/e2designer/$VERSION/e2designer-$VERSION-x86_64.AppImage
