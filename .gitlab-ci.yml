@@ -3,7 +3,7 @@ image: ubuntu:bionic
 format:
   stage: build
   before_script:
-    - apt-get update && apt-get -y install clang-format
+    - apt-get update && apt-get -y install clang-format git
   script:
     - clang-format -style=file -i
       $(find . -type d -path './Qt-Color-Widgets' -prune -iname '*.hpp' -o -iname '*.cpp')
