@@ -1,4 +1,4 @@
-image: rabits/qt:5.11-desktop
+image: ubuntu:bionic
 
 format:
   stage: build
@@ -12,7 +12,7 @@ format:
 build:
   stage: build
   script:
-    - sudo apt-get update && sudo apt-get -y install fuse
+    - apt-get update && apt-get -y install fuse curl make file g++ qt5-qmake qt5-default
     - mkdir build
     - pushd build
     - which qmake
@@ -22,16 +22,17 @@ build:
     - make
     - make INSTALL_ROOT=appdir install
     - find appdir
+    - export VERSION=$(git rev-parse --short HEAD)
     - curl -fsSL -o linuxdeployqt https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
     - chmod a+x linuxdeployqt
-    - export VERSION=$(git rev-parse --short HEAD)
-    - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -appimage
+    - ./linuxdeployqt --appimage-extract
+    - ./squashfs-root/AppRun appdir/usr/share/applications/e2designer.desktop -appimage
   artifacts:
     paths:
-      - build/e2designer
+      - build/*.AppImage
   cache:
     paths:
-      - "*.o"
+      - "build/*.o"
 
 # run tests using the binary built before
 test:
