@@ -30,3 +30,6 @@ deploy:
   subject: technic
   repo: e2designer
   package: e2designer
+  on:
+    branch: master
+    appveyor_repo_tag: true
