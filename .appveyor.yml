@@ -15,9 +15,9 @@ after_build:
   - copy release\e2designer.exe deploy\e2designer.exe
   - windeployqt --release deploy/e2designer.exe
   - ps: |
-    $version = git describe
-    Update-AppveyorBuild -Version ${version}
-    7z a e2designer_${version}_win.zip .\deploy\*
+      $version = git describe
+      Update-AppveyorBuild -Version ${version}
+      7z a e2designer_${version}_win.zip .\deploy\*
 
 artifacts:
   - path: '*.zip'
