@@ -8,6 +8,7 @@ format:
     - clang-format -style=file -i
       $(find . -type d -path './Qt-Color-Widgets' -prune -iname '*.hpp' -o -iname '*.cpp')
     - git diff --exit-code
+  allow_failure: true
 
 build:
   stage: build
