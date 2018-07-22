@@ -22,11 +22,9 @@ build:
     - make
     - make INSTALL_ROOT=appdir install
     - find appdir
-    - export VERSION=$(git rev-parse --short HEAD)
     - curl -fsSL -o linuxdeployqt https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
     - chmod a+x linuxdeployqt
-    - ./linuxdeployqt --appimage-extract
-    - ./squashfs-root/AppRun appdir/usr/share/applications/e2designer.desktop -appimage
+    - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -appimage
   artifacts:
     paths:
       - build/*.AppImage
@@ -39,3 +37,9 @@ test:
   stage: test
   script:
     - echo "TODO"
+
+deploy-AppImage:
+  stage: deploy
+  script:
+    - export VERSION=$(git describe)
+    - curl -T e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY https://api.bintray.com/content/technic/e2designer/e2designer/$VERSION/e2designer-$VERSION-x86_64.AppImage
