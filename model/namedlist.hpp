@@ -33,10 +33,10 @@ protected:
 public:
     bool contains(const QString& name) const;
     T getValue(const QString& name, T defaultValue = T()) const;
-    QString getName(const typename T::Value value);
+    QString getName(const typename T::Value value) const;
 
     inline int itemsCount() const { return mItems.count(); }
-    inline const T& itemAt(int i) { return mItems[i]; }
+    inline const T& itemAt(int i) const { return mItems[i]; }
     int getIndex(const QString& name) const;
 
 protected:
@@ -139,7 +139,7 @@ T NamedList<T>::getValue(const QString& name, T defaultValue) const
 }
 
 template <class T>
-QString NamedList<T>::getName(const typename T::Value value)
+QString NamedList<T>::getName(const typename T::Value value) const
 {
     for (const T& item : mItems) {
         if (item.value() == value)
