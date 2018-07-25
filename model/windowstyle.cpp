@@ -68,8 +68,6 @@ void WindowStyle::fromXml(QXmlStreamReader& xml)
                 xml.skipCurrentElement();
                 continue;
             }
-        } else {
-            xml.skipCurrentElement();
         }
     }
 }

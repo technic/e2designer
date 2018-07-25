@@ -83,9 +83,6 @@ void BorderSet::fromXml(QXmlStreamReader& xml)
             if (b.isValid()) {
                 m_borders[b.bp()] = b;
             }
-
-        } else {
-            xml.skipCurrentElement();
         }
     }
 }
