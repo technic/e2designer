@@ -14,9 +14,9 @@ public:
 
     // functions to initalize initial size and position
 
-    void setRect(const QRectF& rectangle)
+    void setSceneRect(const QRectF& rectangle)
     {
-        QGraphicsRectItem::setRect(rectangle);
+        QGraphicsRectItem::setRect(mapRectFromScene(rectangle));
         updateHandlesPos();
     }
 
@@ -25,6 +25,7 @@ public:
         QRectF r = rect();
         r.setSize(size);
         setRect(r);
+        updateHandlesPos();
     }
 
     void setXanchor(int anchor) { m_xanchor = anchor; }

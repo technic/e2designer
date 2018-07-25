@@ -64,12 +64,13 @@ void RectSelector::resize(const QRectF& rectangle)
     }
 
     setRect(r);
+    updateHandlesPos();
 
     for (auto h : m_handles) {
         h->setFlag(ItemSendsGeometryChanges, true);
     }
 
-    emit rectChnaged(mapRectToParent(r));
+    emit rectChnaged(mapRectToScene(r));
 }
 
 void RectSelector::updateHandlesPos()

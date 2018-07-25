@@ -46,7 +46,7 @@ void WidgetView::setSelectorRect(const QRectF& globrect)
     // qDebug() << __func__ << globrect;
 
     // Widget local coordinates origin is always in the topLeft corener
-    setPos(globrect.topLeft());
+    setPos(mapToParent(mapFromScene(globrect.topLeft())));
     setRect(0., 0., globrect.width(), globrect.height());
 
     // Forbid moving during resize,
@@ -341,13 +341,13 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
 
     switch (change) {
     case ItemPositionHasChanged:
-        qDebug() << mRectChange << "pos" << value.toPointF() << rect() << "sel" << selector->pos()
-                 << selector->rect();
+        qDebug() << mRectChange << "pos" << value.toPointF() << rect();
+        qDebug() << "sel" << selector->pos() << selector->rect();
         // move is not due to RectSelector action
         if (!mRectChange) {
             QPointF position = value.toPointF();
-            selector->setPos(position);
-            selector->setRect(rect());
+            selector->setPos(mapToScene(position));
+            selector->setSceneRect(mapRectToScene(rect()));
             commitPositionChange(position.toPoint());
         }
         break;
@@ -355,9 +355,7 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
         if (isSelected() && scene()) {
             // Init selector at widget position and track its resize signals
             connect(selector, &RectSelector::rectChnaged, this, &WidgetView::setSelectorRect);
-            selector->setParentItem(parentItem());
-            selector->setPos(pos());
-            selector->setRect(rect());
+            selector->setSceneRect(mapRectToScene(rect()));
             selector->setEnabled(true);
             selector->setVisible(true);
             QVariant v = mModel->getWidgetAttr(mData, Property::position, AnchorRole);
@@ -376,6 +374,7 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
                        &WidgetView::setSelectorRect);
         }
         break;
+
     case ItemSceneHasChanged:
         //        mSelector->setParentItem(parentItem());
         //        if (mSelector->parentItem() == nullptr) {
