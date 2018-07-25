@@ -169,7 +169,9 @@ QVector<T*> MixinTreeNode<T>::takeChildren(int position, int count)
     }
     QVector<T*> list;
     for (int row = 0; row < count; ++row) {
-        list.append(mChilds.takeAt(position));
+        auto child = mChilds.takeAt(position);
+        child->mParent = nullptr;
+        list.append(child);
     }
     return list;
 }
