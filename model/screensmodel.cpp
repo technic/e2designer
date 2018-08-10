@@ -264,8 +264,10 @@ bool ScreensModel::removeRows(int row, int count, const QModelIndex& parent)
 
 void ScreensModel::clear()
 {
+    beginResetModel();
     QModelIndex rootIndex;
     removeRows(0, rowCount(rootIndex), rootIndex);
+    endResetModel();
 }
 
 void ScreensModel::appendFromXml(QXmlStreamReader& xml)
