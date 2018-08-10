@@ -97,7 +97,7 @@ QVariant ColorItem::data(int role) const
 {
     switch (role) {
     case Roles::DataRole:
-        return QVariant::fromValue(mData);
+        return QVariant::fromValue(attr());
     case Qt::DecorationRole:
     case Roles::GraphicsRole:
     case Qt::EditRole:
@@ -115,7 +115,7 @@ bool ColorItem::setData(const QVariant& value, int role)
 {
     switch (role) {
     case Roles::DataRole:
-        mData = value.value<ColorAttr>();
+        setAttr(value.value<ColorAttr>());
         return true;
     case Roles::GraphicsRole:
     case Qt::EditRole:

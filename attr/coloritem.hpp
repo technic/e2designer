@@ -43,7 +43,6 @@ public:
 private:
     inline ColorAttr attr() const;
     inline void setAttr(const ColorAttr& attr);
-    ColorAttr mData;
 };
 
 #endif // COLORITEM_H
