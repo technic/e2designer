@@ -10,10 +10,15 @@ ScreenView::ScreenView(ScreensModel* model)
     , mScene(new QGraphicsScene(this))
     , mSelector(new RectSelector(nullptr))
     , mBackground(new BackgroundPixmap(QPixmap(":/background.jpg")))
+    , mBackgroundRect(new BackgroundRect(QRectF()))
 {
-    // Add background on top, it has composition DestinationOver
+    // Add background pixmap on top, it has composition DestinationOver
     mBackground->setZValue(1000);
     mScene->addItem(mBackground);
+    // Add OSD background below, it has compostion Source
+    mBackgroundRect->setBrush(QBrush(QColor(Qt::transparent)));
+    mBackgroundRect->setZValue(-1000);
+    mScene->addItem(mBackgroundRect);
 
     // set inital scene size and subscribe to changes
     setSceneSize(SkinRepository::outputs()->getOutput(mOutputId).size());
@@ -56,6 +61,7 @@ void ScreenView::onOutputChanged(int id, const VideoOutput &output)
 void ScreenView::setSceneSize(const QSize &size)
 {
     mScene->setSceneRect(0, 0, size.width(), size.height());
+    mBackgroundRect->setRect(0, 0, size.width(), size.height());
     // Adjust background scale
     QSizeF pixmapSize = mBackground->boundingRect().size();
     qreal sw = size.width() / pixmapSize.width();

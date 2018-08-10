@@ -62,6 +62,7 @@ private:
     // references within mScene
     RectSelector* mSelector;
     QGraphicsPixmapItem* mBackground;
+    QGraphicsRectItem* mBackgroundRect;
     QHash<QPersistentModelIndex, WidgetView*> mWidgets;
 };
 

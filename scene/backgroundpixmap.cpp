@@ -11,3 +11,9 @@ void BackgroundPixmap::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
     painter->setCompositionMode(QPainter::CompositionMode_DestinationOver);
     QGraphicsPixmapItem::paint(painter, option, widget);
 }
+
+void BackgroundRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setCompositionMode(QPainter::CompositionMode_Source);
+    QGraphicsRectItem::paint(painter, option, widget);
+}
