@@ -163,6 +163,7 @@ void PropertiesModel::onAttributeChanged(int attrKey)
 
 void PropertiesModel::onWidgetDestroyed()
 {
+    mData = nullptr;
     beginResetModel();
     mRoot = &dummyItem;
     endResetModel();
