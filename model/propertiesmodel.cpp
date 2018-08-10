@@ -18,11 +18,17 @@ void PropertiesModel::setWidget(QModelIndex index)
 {
     beginResetModel();
 
+    if (mData != nullptr) {
+        disconnect(mData, &WidgetData::attrChanged, this, nullptr);
+        disconnect(mData, &QObject::destroyed, this, nullptr);
+    }
+
     mData = SkinRepository::screens()->getWidget(index);
+
     if (mData != nullptr) {
         mRoot = mData->adaptersRoot();
-        QObject::connect(mData, &WidgetData::attrChanged, this,
-                         &PropertiesModel::onAttributeChanged);
+        connect(mData, &WidgetData::attrChanged, this, &PropertiesModel::onAttributeChanged);
+        connect(mData, &QObject::destroyed, this, &PropertiesModel::onWidgetDestroyed);
     } else {
         mRoot = &dummyItem;
     }
@@ -151,6 +157,13 @@ void PropertiesModel::onAttributeChanged(int attrKey)
         emit dataChanged(attrIndex, attrIndex);
         // TODO: emit also for childs
     }
+}
+
+void PropertiesModel::onWidgetDestroyed()
+{
+    beginResetModel();
+    mRoot = &dummyItem;
+    endResetModel();
 }
 
 PropertiesModel::Item* PropertiesModel::castItem(QModelIndex index)

@@ -42,13 +42,15 @@ public:
 
 private slots:
     void onAttributeChanged(int attrKey);
+    void onWidgetDestroyed();
 
 private:
     static Item* castItem(QModelIndex index);
-
     AttrItem dummyItem;
-    // ref
+    // weak reference to QObject containing data for the model
+    // reset it to nullptr when QObject::destroyed signal arrives
     WidgetData* mData;
+    // ref to current model root
     AttrItem* mRoot;
 };
 
