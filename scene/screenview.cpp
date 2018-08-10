@@ -14,7 +14,7 @@ ScreenView::ScreenView(ScreensModel* model)
     mScene->addItem(mBackground);
 
     // set inital scene size and subscribe to changes
-    onOutputChanged(mOutputId, SkinRepository::outputs()->getOutput(mOutputId));
+    setSceneSize(SkinRepository::outputs()->getOutput(mOutputId).size());
     connect(SkinRepository::outputs(), &VideoOutputRepository::valueChanged,
             this, &ScreenView::onOutputChanged);
 
@@ -47,14 +47,18 @@ void ScreenView::selectCurrentWidget(QModelIndex selected, QModelIndex deselecte
 void ScreenView::onOutputChanged(int id, const VideoOutput &output)
 {
     if (id == mOutputId) {
-        QSize sz = output.size();
-        mScene->setSceneRect(0, 0, sz.width(), sz.height());
-
-        QSizeF pixmapSize = mBackground->boundingRect().size();
-        qreal sw = sz.width() / pixmapSize.width();
-        qreal sh = sz.height() / pixmapSize.height();
-        mBackground->setTransform(QTransform::fromScale(sw, sh));
+        setSceneSize(output.size());
     }
+}
+
+void ScreenView::setSceneSize(const QSize &size)
+{
+    mScene->setSceneRect(0, 0, size.width(), size.height());
+    // Adjust background scale
+    QSizeF pixmapSize = mBackground->boundingRect().size();
+    qreal sw = size.width() / pixmapSize.width();
+    qreal sh = size.height() / pixmapSize.height();
+    mBackground->setTransform(QTransform::fromScale(sw, sh));
 }
 
 void ScreenView::setScreen(QModelIndex index)

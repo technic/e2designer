@@ -45,6 +45,7 @@ private slots:
 
     // Outputs
     void onOutputChanged(int id, const VideoOutput &output);
+    void setSceneSize(const QSize &size);
 
 private:
     //	bool isInOurView(QModelIndex index);
