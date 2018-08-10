@@ -19,8 +19,10 @@ void PropertiesModel::setWidget(WidgetData *widget)
     beginResetModel();
 
     if (mData != nullptr) {
-        disconnect(mData, &WidgetData::attrChanged, this, nullptr);
-        disconnect(mData, &QObject::destroyed, this, nullptr);
+        disconnect(mData, &WidgetData::attrChanged,
+                   this, &PropertiesModel::onAttributeChanged);
+        disconnect(mData, &QObject::destroyed,
+                   this, &PropertiesModel::onWidgetDestroyed);
     }
 
     mData = widget;
