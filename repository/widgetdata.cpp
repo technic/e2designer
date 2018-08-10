@@ -212,7 +212,7 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
     }
 
     while (nextXmlChild(xml)) {
-        qDebug() << "child" << xml.tokenString() << xml.name() << xml.text();
+        // qDebug() << "child" << xml.tokenString() << xml.name() << xml.text();
         if (xml.isStartElement()) {
             if (mType == Screen) {
                 bool ok;
@@ -311,7 +311,7 @@ void WidgetData::buildPropertiesTree()
     typedef TextAttr PixmapAttr; // TODO: fix this quick and dirty hack
 
     auto global = new AttrGroupItem("Global");
-    qDebug() << global->data(Qt::DisplayRole);
+    // qDebug() << global->data(Qt::DisplayRole);
     mRoot->appendChild(global);
     addProperty<TextAttr>(Property::name, global);
     addProperty<PositionAttr>(Property::position, global);

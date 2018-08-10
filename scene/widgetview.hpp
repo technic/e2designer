@@ -97,12 +97,12 @@ private:
             , pValue(value)
         {
             *pValue = true;
-            qDebug() << "flag" << *pValue;
+            // qDebug() << "flag" << *pValue;
         }
         ~FlagTrue()
         {
             *pValue = mOldValue;
-            qDebug() << "flag" << *pValue;
+            // qDebug() << "flag" << *pValue;
         }
 
     private:
