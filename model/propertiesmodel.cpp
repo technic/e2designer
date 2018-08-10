@@ -14,7 +14,7 @@ PropertiesModel::~PropertiesModel()
 {
 }
 
-void PropertiesModel::setWidget(QModelIndex index)
+void PropertiesModel::setWidget(WidgetData *widget)
 {
     beginResetModel();
 
@@ -23,7 +23,7 @@ void PropertiesModel::setWidget(QModelIndex index)
         disconnect(mData, &QObject::destroyed, this, nullptr);
     }
 
-    mData = SkinRepository::screens()->getWidget(index);
+    mData = widget;
 
     if (mData != nullptr) {
         mRoot = mData->adaptersRoot();

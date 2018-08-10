@@ -157,7 +157,8 @@ void MainWindow::updateTreeSelection(QModelIndex index)
 void MainWindow::updateScene(const QModelIndex& index, const QModelIndex& previndex)
 {
     qDebug() << "current changed" << index;
-    mPropertiesModel->setWidget(index);
+    WidgetData *w = SkinRepository::screens()->getWidget(index);
+    mPropertiesModel->setWidget(w);
     ui->propView->expandAll();
 
     QModelIndex idx = index;

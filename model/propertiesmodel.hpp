@@ -19,7 +19,7 @@ public:
 
     enum { ColumnKey, ColumnValue, ColumnsCount };
 
-    void setWidget(QModelIndex index);
+    void setWidget(WidgetData *widget);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation,
