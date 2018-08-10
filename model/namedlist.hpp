@@ -110,7 +110,7 @@ bool NamedList<T>::removeItems(int position, int count)
 {
     if (canRemoveItems(position, count)) {
         for (int i = 0; i < count; ++i) {
-            emitValueChanged(mItems[i].name(), T());
+            emitValueChanged(mItems[position].name(), T());
             mItems.removeAt(position);
         }
         return true;
