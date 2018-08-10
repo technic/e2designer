@@ -39,6 +39,9 @@ public:
     inline const T& itemAt(int i) const { return mItems[i]; }
     int getIndex(const QString& name) const;
 
+    typename QVector<T>::const_iterator begin() const noexcept { return mItems.cbegin(); }
+    typename QVector<T>::const_iterator end() const noexcept { return mItems.cend(); }
+
 protected:
     virtual void emitValueChanged(const QString& name, const T& value) const = 0;
 
