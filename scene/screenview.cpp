@@ -9,8 +9,10 @@ ScreenView::ScreenView(ScreensModel* model)
     : mModel(model)
     , mScene(new QGraphicsScene(this))
     , mSelector(new RectSelector(nullptr))
-    , mBackground(new QGraphicsPixmapItem(QPixmap(":/background.jpg")))
+    , mBackground(new BackgroundPixmap(QPixmap(":/background.jpg")))
 {
+    // Add background on top, it has composition DestinationOver
+    mBackground->setZValue(1000);
     mScene->addItem(mBackground);
 
     // set inital scene size and subscribe to changes
