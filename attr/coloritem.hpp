@@ -36,9 +36,7 @@ class ColorItem : public AttrItem
 {
 public:
     explicit ColorItem(WidgetData* widget, int key)
-        : AttrItem(widget, key)
-    {
-    }
+        : AttrItem(widget, key) {}
     QVariant data(int role) const override;
     bool setData(const QVariant& value, int role) override;
 
