@@ -43,3 +43,5 @@ Application icon made by [Picol](https://www.flaticon.com/authors/picol)
 from [Flaticon](https://www.flaticon.com/)
 and is licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/).
 
+Editor background image is taken from [wallpaper.wiki](https://wallpaper.wiki)
+and it is licensed by [CC0 Creative Commons](https://creativecommons.org/publicdomain/zero/1.0/).

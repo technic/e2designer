@@ -17,7 +17,7 @@ ScreenView::ScreenView(ScreensModel* model)
     mSelector->setPen(Qt::NoPen);
     mScene->addItem(mSelector);
 
-    QPixmap pixmap(QCoreApplication::applicationDirPath() + "/bg.png");
+    QPixmap pixmap(":/background.jpg");
     // TODO: resize/crop pixmap to fit output()
     //	QGraphicsPixmapItem *background = new BackgroundPixmap(pixmap, nullptr);
     QGraphicsPixmapItem* background = new QGraphicsPixmapItem(pixmap, nullptr);

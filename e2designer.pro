@@ -164,3 +164,8 @@ unix {
 }
 
 INSTALLS += target
+
+RESOURCES += \
+    resources.qrc
+
+DISTFILES += LICENSE README.md
