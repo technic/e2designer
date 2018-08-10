@@ -31,7 +31,8 @@ public:
     static ColorsModel* colors() { return instance().mColors; }
     static FontsModel* fonts() { return instance().mFonts; }
     static ScreensModel* screens() { return instance().mScreensModel; }
-    QSize outputSize() { return QSize(1920, 1080); } // TODO: implement
+    static VideoOutputRepository* outputs() { return &instance().mOutputRepository; }
+    QSize outputSize() const;
     inline QDir dir() const { return mDirectory; }
     QString resolveFilename(const QString& path) const;
 

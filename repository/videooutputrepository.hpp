@@ -2,10 +2,17 @@
 #define VIDEOOUTPUTREPOSITORY_H
 
 #include "repository/xmlnode.hpp"
+#include "model/namedlist.hpp"
 #include <QVector>
+#include <QSize>
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
+
+struct VideoOutputData {
+    QSize resolution;
+    int bpp;
+};
 
 class VideoOutput : public XmlData
 {
@@ -21,10 +28,15 @@ public:
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    int xres() { return m_xres; }
-    int yres() { return m_yres; }
-    int bpp() { return m_bpp; }
-    int id() { return m_id; }
+    int xres() const { return m_xres; }
+    int yres() const { return m_yres; }
+    QSize size() const { return QSize(m_xres, m_yres); }
+    int bpp() const { return m_bpp; }
+    int id() const { return m_id; }
+
+    typedef VideoOutputData Value;
+    VideoOutputData value() const { return VideoOutputData{size(), m_bpp}; }
+    QString name() const { return QString::number(m_id); }
 
 private:
     int m_xres;
@@ -33,19 +45,25 @@ private:
     int m_id;
 };
 
-class VideoOutputRepository : public XmlData
+class VideoOutputRepository : public QObject, public NamedList<VideoOutput>, public XmlData
 {
+    Q_OBJECT
 public:
     VideoOutputRepository();
 
     void addFromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    VideoOutput getOutput(int id = 0);
-    void clear() { mOutputs.clear(); }
+    inline VideoOutput getOutput(int id = 0) const {
+        return getValue(QString::number(id));
+    }
+    void clear() { removeItems(0, itemsCount()); }
 
-private:
-    QVector<VideoOutput> mOutputs;
+signals:
+    void valueChanged(int id, const VideoOutput &output) const;
+
+protected:
+    void emitValueChanged(const QString &name, const VideoOutput &value) const final;
 };
 
 #endif // VIDEOOUTPUTREPOSITORY_H

@@ -10,24 +10,20 @@ void VideoOutputRepository::addFromXml(QXmlStreamReader& xml)
 {
     VideoOutput out;
     out.fromXml(xml);
-    mOutputs.append(out);
+    appendItem(out);
 }
 
 void VideoOutputRepository::toXml(QXmlStreamWriter& xml) const
 {
-    for (const VideoOutput& output : mOutputs) {
+    for (const VideoOutput& output : *this) {
         output.toXml(xml);
     }
 }
 
-VideoOutput VideoOutputRepository::getOutput(int id)
+void VideoOutputRepository::emitValueChanged(const QString &name, const VideoOutput &value) const
 {
-    for (auto& output : mOutputs) {
-        if (output.id() == id) {
-            return output;
-        }
-    }
-    return VideoOutput();
+    Q_UNUSED(name);
+    emit valueChanged(value.id(), value);
 }
 
 void VideoOutput::fromXml(QXmlStreamReader& xml)

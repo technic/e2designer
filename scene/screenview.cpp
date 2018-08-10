@@ -10,8 +10,10 @@ ScreenView::ScreenView(ScreensModel* model)
     , mScene(new QGraphicsScene(this))
     , mSelector(new RectSelector(nullptr))
 {
-    QSize sz = SkinRepository::instance().outputSize();
-    mScene->setSceneRect(0, 0, sz.width(), sz.height());
+    // set inital scene size and subscribe to changes
+    onOutputChanged(mOutputId, SkinRepository::outputs()->getOutput(mOutputId));
+    connect(SkinRepository::outputs(), &VideoOutputRepository::valueChanged,
+            this, &ScreenView::onOutputChanged);
 
     mSelector->setZValue(1000.);
     mSelector->setPen(Qt::NoPen);
@@ -45,6 +47,14 @@ void ScreenView::selectCurrentWidget(QModelIndex selected, QModelIndex deselecte
     Q_ASSERT(mWidgets.contains(index));
     mScene->clearSelection();
     mWidgets[index]->setSelected(true);
+}
+
+void ScreenView::onOutputChanged(int id, const VideoOutput &output)
+{
+    if (id == mOutputId) {
+        QSize sz = output.size();
+        mScene->setSceneRect(0, 0, sz.width(), sz.height());
+    }
 }
 
 void ScreenView::setScreen(QModelIndex index)

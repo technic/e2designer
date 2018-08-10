@@ -12,6 +12,11 @@ SkinRepository::SkinRepository(QObject* parent)
 {
 }
 
+QSize SkinRepository::outputSize() const
+{
+    return mOutputRepository.getOutput(0).size();
+}
+
 // SkinRepository& SkinRepository::instance()
 //{
 //	static SkinRepository self;

@@ -43,8 +43,12 @@ private slots:
     // Selection Model
     void selectCurrentWidget(QModelIndex selected, QModelIndex deselected);
 
+    // Outputs
+    void onOutputChanged(int id, const VideoOutput &output);
+
 private:
     //	bool isInOurView(QModelIndex index);
+    const int mOutputId = 0;
 
     // ref
     ScreensModel* mModel;
