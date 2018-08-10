@@ -50,9 +50,6 @@ private:
     // ref
     WidgetData* mData;
     AttrItem* mRoot;
-
-    // own
-    WidgetObserver* mObserver;
 };
 
 #endif // PROPERTIESMODEL_H

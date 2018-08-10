@@ -127,7 +127,6 @@ MainWindow::~MainWindow()
 void MainWindow::openFile(const QString& dirname)
 {
     SkinRepository::instance().loadFile(dirname);
-    //	m_model->loadFile(dirname);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)

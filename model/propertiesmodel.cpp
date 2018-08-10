@@ -7,14 +7,13 @@ PropertiesModel::PropertiesModel(QObject* parent)
     , dummyItem(nullptr, Property::invalid)
     , mData(nullptr)
     , mRoot(&dummyItem)
-    , mObserver(new WidgetObserver())
 {
 }
 
 PropertiesModel::~PropertiesModel()
 {
-    delete mObserver;
 }
+
 void PropertiesModel::setWidget(QModelIndex index)
 {
     beginResetModel();
