@@ -9,7 +9,10 @@ ScreenView::ScreenView(ScreensModel* model)
     : mModel(model)
     , mScene(new QGraphicsScene(this))
     , mSelector(new RectSelector(nullptr))
+    , mBackground(new QGraphicsPixmapItem(QPixmap(":/background.jpg")))
 {
+    mScene->addItem(mBackground);
+
     // set inital scene size and subscribe to changes
     onOutputChanged(mOutputId, SkinRepository::outputs()->getOutput(mOutputId));
     connect(SkinRepository::outputs(), &VideoOutputRepository::valueChanged,
@@ -18,14 +21,6 @@ ScreenView::ScreenView(ScreensModel* model)
     mSelector->setZValue(1000.);
     mSelector->setPen(Qt::NoPen);
     mScene->addItem(mSelector);
-
-    QPixmap pixmap(":/background.jpg");
-    // TODO: resize/crop pixmap to fit output()
-    //	QGraphicsPixmapItem *background = new BackgroundPixmap(pixmap, nullptr);
-    QGraphicsPixmapItem* background = new QGraphicsPixmapItem(pixmap, nullptr);
-    // draw background pixmap on the top, because it has inverse blending
-    //	background->setZValue(100);
-    mScene->addItem(background);
 
     //	// Fill in with transparent layer by default
     //	QRectF r(0, 0, sz.width(), sz.height());
@@ -54,6 +49,11 @@ void ScreenView::onOutputChanged(int id, const VideoOutput &output)
     if (id == mOutputId) {
         QSize sz = output.size();
         mScene->setSceneRect(0, 0, sz.width(), sz.height());
+
+        QSizeF pixmapSize = mBackground->boundingRect().size();
+        qreal sw = sz.width() / pixmapSize.width();
+        qreal sh = sz.height() / pixmapSize.height();
+        mBackground->setTransform(QTransform::fromScale(sw, sh));
     }
 }
 
