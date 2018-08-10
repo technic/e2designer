@@ -21,6 +21,6 @@ void ColorListBox::populateList()
     for (int i = 0; i < colors->rowCount(); ++i) {
         Color color = colors->itemAt(i);
         insertItem(i, color.name());
-        setItemData(i, QColor(color.value()), Qt::DecorationRole);
+        setItemData(i, QColor::fromRgba(color.value()), Qt::DecorationRole);
     }
 }
