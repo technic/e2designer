@@ -2,12 +2,14 @@
 #include "backgroundpixmap.hpp"
 #include "foregroundwidget.hpp"
 #include "repository/skinrepository.hpp"
+#include "base/flagsetter.hpp"
 #include <QCoreApplication>
 #include <QGraphicsPixmapItem>
 
 ScreenView::ScreenView(ScreensModel* model)
     : mModel(model)
     , mSelectionModel(nullptr)
+    , mDisableSelectionSlots(false)
     , mScene(new QGraphicsScene(this))
     , mSelector(new RectSelector(nullptr))
     , mBackground(new BackgroundPixmap(QPixmap(":/background.jpg")))
@@ -198,8 +200,8 @@ void ScreenView::onSceneSelectionChanged()
 {
     if (!mSelectionModel)
         return;
-    // avoid signal loop
-    QSignalBlocker blocker(this);
+
+    FlagSetter fs(&mDisableSelectionSlots);
 
     for (auto index: mSelectionModel->selectedIndexes()) {
         auto it = mWidgets.find(index);
@@ -224,6 +226,9 @@ void ScreenView::onSceneSelectionChanged()
 
 void ScreenView::setCurrentWidget(const QModelIndex &current, const QModelIndex &previous)
 {
+    if (mDisableSelectionSlots)
+        return;
+
     // previous widget should be in the scene
     if (previous.isValid()) {
         qDebug() << "previous in the scene:"
@@ -248,6 +253,9 @@ void ScreenView::setCurrentWidget(const QModelIndex &current, const QModelIndex 
 
 void ScreenView::updateSelection(const QItemSelection &selected, const QItemSelection &deselected)
 {
+    if (mDisableSelectionSlots)
+        return;
+
     for (QModelIndex index: deselected.indexes()) {
         auto it = mWidgets.find(index);
         if (it != mWidgets.end()) {

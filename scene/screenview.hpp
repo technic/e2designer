@@ -28,9 +28,6 @@ public:
 
     void deleteSelected();
 
-signals:
-    void selectionChanged(QModelIndex index);
-
 private slots:
     // Screens Model
     void onRowsAboutToBeRemoved(const QModelIndex& parent, int first, int last);
@@ -60,6 +57,8 @@ private:
     QPointer<QItemSelectionModel> mSelectionModel;
 
     QPersistentModelIndex mRoot;
+    // flag to ignore signals from selectionModel
+    bool mDisableSelectionSlots;
 
     // QObject owned
     QGraphicsScene* mScene;
