@@ -2,6 +2,7 @@
 #include "attr/positionitem.hpp"
 #include "repository/skinrepository.hpp"
 #include "screenview.hpp"
+#include "base/flagsetter.hpp"
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
@@ -41,7 +42,7 @@ WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
 
 void WidgetView::setSelectorRect(const QRectF& globrect)
 {
-    FlagTrue ft(&mRectChange);
+    FlagSetter fs(&mRectChange);
 
     // qDebug() << __func__ << globrect;
 
@@ -61,13 +62,13 @@ void WidgetView::setSelectorRect(const QRectF& globrect)
 
 void WidgetView::commitSizeChange(const QSize& size)
 {
-    FlagTrue ft(&mRectChange);
+    FlagSetter fs(&mRectChange);
     mModel->setWidgetAttr(mData, Property::size, size, Roles::GraphicsRole);
 }
 
 void WidgetView::commitPositionChange(const QPoint& point)
 {
-    FlagTrue ft(&mRectChange);
+    FlagSetter fs(&mRectChange);
     mModel->setWidgetAttr(mData, Property::position, point, Roles::GraphicsRole);
 }
 

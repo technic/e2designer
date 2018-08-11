@@ -86,30 +86,6 @@ private:
     // don't call setData
     bool mRectChange;
 
-    // syntax shugar
-    // use RAII to keep flag true while object alive
-    // and set to orginal value when object goes out of scope
-    class FlagTrue
-    {
-    public:
-        explicit FlagTrue(bool* value)
-            : mOldValue(*value)
-            , pValue(value)
-        {
-            *pValue = true;
-            // qDebug() << "flag" << *pValue;
-        }
-        ~FlagTrue()
-        {
-            *pValue = mOldValue;
-            // qDebug() << "flag" << *pValue;
-        }
-
-    private:
-        bool mOldValue;
-        bool* pValue;
-    };
-
     void initHandles();
     void setHandlesEnabled(bool enabled);
     void updateHandlesPos();

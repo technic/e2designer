@@ -81,7 +81,8 @@ SOURCES += \
     model/borderset.cpp \
     model/windowstyle.cpp \
     scene/borderview.cpp \
-    repository/attrcontainer.cpp
+    repository/attrcontainer.cpp \
+    base/flagsetter.cpp
 
 HEADERS += \
     mainwindow.hpp \
@@ -140,7 +141,8 @@ HEADERS += \
     model/borderset.hpp \
     model/windowstyle.hpp \
     scene/borderview.hpp \
-    repository/attrcontainer.hpp
+    repository/attrcontainer.hpp \
+    base/flagsetter.hpp
 
 FORMS += \
     mainwindow.ui \
