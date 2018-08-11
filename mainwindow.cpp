@@ -77,10 +77,13 @@ MainWindow::MainWindow(QWidget* parent)
 
     QItemEditorFactory::setDefaultFactory(factory);
 
-    connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged, this,
-            &MainWindow::updateScene);
+    // Synchronize selections
 
-    connect(mView, &ScreenView::selectionChanged, this, &MainWindow::updateTreeSelection);
+    ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    mView->setSelectionModel(ui->treeView->selectionModel());
+
+    connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &MainWindow::onCurrentSelectionChanged);
 
     // TEST!!!
 
@@ -139,36 +142,13 @@ void MainWindow::closeEvent(QCloseEvent* event)
     }
 }
 
-// TODO: somehow multiple selection?
-
-void MainWindow::updateTreeSelection(QModelIndex index)
+void MainWindow::onCurrentSelectionChanged(const QModelIndex& index, const QModelIndex& previous)
 {
-    //    ui->treeView->selectionModel()->select(index,
-    //    QItemSelectionModel::SelectCurrent);
-    ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
-    ui->treeView->scrollTo(index);
-
-    qDebug() << "is true?" << (ui->treeView->selectionModel()->currentIndex() == index);
-
-    mPropertiesModel->setWidget(index);
-    ui->propView->expandAll();
-}
-
-void MainWindow::updateScene(const QModelIndex& index, const QModelIndex& previndex)
-{
+    Q_UNUSED(previous);
     qDebug() << "current changed" << index;
     WidgetData *w = SkinRepository::screens()->getWidget(index);
     mPropertiesModel->setWidget(w);
     ui->propView->expandAll();
-
-    QModelIndex idx = index;
-
-    while (idx.isValid() && idx.data(ScreensModel::TypeRole).toInt() != WidgetData::Screen) {
-        idx = idx.parent();
-    }
-    if (idx.isValid()) {
-        mView->setScreen(idx);
-    }
 }
 
 void MainWindow::newSkin()

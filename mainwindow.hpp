@@ -30,8 +30,7 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private slots:
-    void updateTreeSelection(QModelIndex index);
-    void updateScene(const QModelIndex& index, const QModelIndex& previndex);
+    void onCurrentSelectionChanged(const QModelIndex& index, const QModelIndex& previous);
 
     void newSkin();
     void open();

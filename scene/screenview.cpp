@@ -7,6 +7,7 @@
 
 ScreenView::ScreenView(ScreensModel* model)
     : mModel(model)
+    , mSelectionModel(nullptr)
     , mScene(new QGraphicsScene(this))
     , mSelector(new RectSelector(nullptr))
     , mBackground(new BackgroundPixmap(QPixmap(":/background.jpg")))
@@ -36,15 +37,6 @@ ScreenView::ScreenView(ScreensModel* model)
     connect(mScene, &QGraphicsScene::selectionChanged, this, &ScreenView::onSceneSelectionChanged);
 }
 
-void ScreenView::selectCurrentWidget(QModelIndex selected, QModelIndex deselected)
-{
-    Q_UNUSED(deselected);
-    QModelIndex index = selected;
-    Q_ASSERT(mWidgets.contains(index));
-    mScene->clearSelection();
-    mWidgets[index]->setSelected(true);
-}
-
 void ScreenView::onOutputChanged(int id, const VideoOutput &output)
 {
     if (id == mOutputId) {
@@ -63,6 +55,19 @@ void ScreenView::setSceneSize(const QSize &size)
     mBackground->setTransform(QTransform::fromScale(sw, sh));
 }
 
+QModelIndex ScreenView::normalizeIndex(const QModelIndex &index) const
+{
+    return index.sibling(index.row(), ScreensModel::ColumnElement);
+}
+
+QItemSelection ScreenView::makeRowSelection(const QModelIndex &index)
+{
+    return QItemSelection(
+            index.sibling(index.row(), 0),
+            index.sibling(index.row(), mModel->columnCount(index.parent()) - 1)
+    );
+}
+
 void ScreenView::setScreen(QModelIndex index)
 {
     Q_ASSERT(index.data(ScreensModel::TypeRole).toInt() == WidgetData::Screen);
@@ -77,10 +82,11 @@ void ScreenView::setScreen(QModelIndex index)
         // All items must be childs of the oldScreen
         mScene->removeItem(oldScreen);
         delete oldScreen;
+        mScene->clearSelection();
     }
     mWidgets.clear();
 
-    mRoot = index.sibling(index.row(), ScreensModel::ColumnElement);
+    mRoot = normalizeIndex(index);
     WidgetView* screen = new WidgetView(this, mRoot, nullptr);
     mWidgets[mRoot] = screen;
     mScene->addItem(screen);
@@ -93,12 +99,27 @@ void ScreenView::setScreen(QModelIndex index)
     }
 }
 
-void ScreenView::point(QItemSelectionModel* model)
+void ScreenView::setSelectionModel(QItemSelectionModel* model)
 {
-    if (model) {
-        mSelectionModel = model;
-        connect(mSelectionModel, &QItemSelectionModel::currentChanged, this,
-                &ScreenView::selectCurrentWidget);
+    if Q_UNLIKELY(model->model() != mModel) {
+        qWarning() << "failed to set selectionModel"
+                   << "because it works on a different model";
+        return;
+    }
+    // disconnect from old model
+    if (mSelectionModel) {
+        disconnect(mSelectionModel, &QItemSelectionModel::currentChanged,
+                   this, &ScreenView::setCurrentWidget);
+        disconnect(mSelectionModel, &QItemSelectionModel::selectionChanged,
+                   this, &ScreenView::updateSelection);
+    }
+    mSelectionModel = model;
+    // connect to new model
+    if (mSelectionModel) {
+        connect(mSelectionModel, &QItemSelectionModel::currentChanged,
+                this, &ScreenView::setCurrentWidget);
+        connect(mSelectionModel, &QItemSelectionModel::selectionChanged,
+                this, &ScreenView::updateSelection);
     }
 }
 
@@ -175,20 +196,68 @@ void ScreenView::onModelReset()
 
 void ScreenView::onSceneSelectionChanged()
 {
-    //    for (auto item: mScene->selectedItems()) {
-    //        if (item->type() != WidgetView::Type)
-    //            continue;
-    //        WidgetView *w = static_cast<WidgetView*>(item);
-    //        QModelIndex index = w->modelIndex();
-    //        if (mSelectionModel->isSelected(index)) {
-    //            mSelectionModel->select(index, QItemSelectionModel::Select);
-    //        }
-    //    }
+    if (!mSelectionModel)
+        return;
+    // avoid signal loop
+    QSignalBlocker blocker(this);
 
-    if (!mScene->selectedItems().isEmpty()) {
-        QGraphicsItem* i = mScene->selectedItems().back();
-        if (i->type() == WidgetView::Type) {
-            emit selectionChanged(static_cast<WidgetView*>(i)->modelIndex());
+    for (auto index: mSelectionModel->selectedIndexes()) {
+        auto it = mWidgets.find(index);
+        if (it != mWidgets.end() && !(*it)->isSelected()) {
+            mSelectionModel->select(makeRowSelection(index), QItemSelectionModel::Deselect);
+        }
+    }
+    for (auto *item: mScene->selectedItems()) {
+        if (item->type() != WidgetView::Type)
+            continue;
+        WidgetView *w = static_cast<WidgetView*>(item);
+        mSelectionModel->select(makeRowSelection(w->modelIndex()), QItemSelectionModel::Select);
+    }
+    if (!mScene->selectedItems().empty()) {
+        auto *item = mScene->selectedItems().back();
+        if (item->type() == WidgetView::Type) {
+            WidgetView *w = static_cast<WidgetView*>(item);
+            mSelectionModel->setCurrentIndex(w->modelIndex(), QItemSelectionModel::NoUpdate);
+        }
+    }
+}
+
+void ScreenView::setCurrentWidget(const QModelIndex &current, const QModelIndex &previous)
+{
+    // previous widget should be in the scene
+    if (previous.isValid()) {
+        qDebug() << "previous in the scene:"
+                 << mWidgets.contains(normalizeIndex(previous));
+    }
+    // find parent Screen
+    QModelIndex index = current;
+    while (index.isValid() && index.data(ScreensModel::TypeRole).toInt() != WidgetData::Screen) {
+        index = index.parent();
+    }
+    if (index.isValid()) {
+        setScreen(index);
+    } else {
+        qWarning() << "failed to set current widget: screen not found!";
+        return;
+    }
+    // current widgget should be in the scene
+    Q_ASSERT(mWidgets.contains(normalizeIndex(current)));
+    mWidgets[normalizeIndex(current)]->setSelected(true);
+}
+
+
+void ScreenView::updateSelection(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    for (QModelIndex index: deselected.indexes()) {
+        auto it = mWidgets.find(index);
+        if (it != mWidgets.end()) {
+            (*it)->setSelected(false);
+        }
+    }
+    for (QModelIndex index: selected.indexes()) {
+        auto it = mWidgets.find(index);
+        if (it != mWidgets.end()) {
+            (*it)->setSelected(true);
         }
     }
 }

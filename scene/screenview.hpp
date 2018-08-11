@@ -1,6 +1,7 @@
 #ifndef SCREENVIEW_H
 #define SCREENVIEW_H
 
+#include <QPointer>
 #include <QGraphicsScene>
 #include <QItemSelectionModel>
 
@@ -23,7 +24,7 @@ public:
     void setScreen(QModelIndex index);
     //	SkinModel* model() const { return m_model; }
 
-    void point(QItemSelectionModel* model);
+    void setSelectionModel(QItemSelectionModel* model);
 
     void deleteSelected();
 
@@ -41,19 +42,22 @@ private slots:
     void onSceneSelectionChanged();
 
     // Selection Model
-    void selectCurrentWidget(QModelIndex selected, QModelIndex deselected);
+    void setCurrentWidget(const QModelIndex &current, const QModelIndex &previous);
+    void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
 
     // Outputs
     void onOutputChanged(int id, const VideoOutput &output);
     void setSceneSize(const QSize &size);
 
 private:
+    QModelIndex normalizeIndex(const QModelIndex &index) const;
+    QItemSelection makeRowSelection(const QModelIndex &index);
     //	bool isInOurView(QModelIndex index);
     const int mOutputId = 0;
 
     // ref
     ScreensModel* mModel;
-    QItemSelectionModel* mSelectionModel;
+    QPointer<QItemSelectionModel> mSelectionModel;
 
     QPersistentModelIndex mRoot;
 
