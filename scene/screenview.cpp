@@ -29,12 +29,6 @@ ScreenView::ScreenView(ScreensModel* model)
     mSelector->setPen(Qt::NoPen);
     mScene->addItem(mSelector);
 
-    //	// Fill in with transparent layer by default
-    //	QRectF r(0, 0, sz.width(), sz.height());
-    //	auto *foreground = new ForegroundWidget(r, nullptr);
-    //	foreground->setBrush(QBrush(QColor(0,0,0,10)));
-    //	m_scene->addItem(foreground);
-
     connect(mModel, &ScreensModel::rowsAboutToBeRemoved, this, &ScreenView::onRowsAboutToBeRemoved);
     connect(mModel, &ScreensModel::rowsInserted, this, &ScreenView::onRowsInserted);
     connect(mModel, &ScreensModel::modelReset, this, &ScreenView::onModelReset);
