@@ -101,7 +101,7 @@ void ScreenView::setScreen(QModelIndex index)
 
 void ScreenView::setSelectionModel(QItemSelectionModel* model)
 {
-    if Q_UNLIKELY(model->model() != mModel) {
+    if (Q_UNLIKELY(model->model() != mModel)) {
         qWarning() << "failed to set selectionModel"
                    << "because it works on a different model";
         return;
