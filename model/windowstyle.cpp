@@ -89,19 +89,17 @@ void WindowStyle::toXml(QXmlStreamWriter& xml) const
 
 void WindowStylesList::append(WindowStyle style)
 {
-    //    appendItem(style);
-    mItems.append(style);
+    appendItem(style);
 }
 
 void WindowStylesList::toXml(QXmlStreamWriter& xml) const
 {
-    for (const WindowStyle& s : mItems) {
+    for (const WindowStyle& s : *this) {
         s.toXml(xml);
     }
 }
 
-// void WindowStylesList::emitValueChanged(int id, const WindowStyle &value)
-// const
-//{
-//    // nothing to do here so far
-//}
+void WindowStylesList::emitValueChanged(const QString &name, const WindowStyle &value) const
+{
+    emit styleChanged(name, value);
+}

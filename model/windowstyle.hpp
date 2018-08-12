@@ -32,6 +32,8 @@ class WindowStyle : public XmlData
 public:
     WindowStyle();
     QString name() const { return QString::number(m_id); }
+    using Value = WindowStyle;
+
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
@@ -43,18 +45,20 @@ private:
     BorderSet m_borderSet;
 };
 
-class WindowStylesList
+class WindowStylesList : public QObject, public NamedList<WindowStyle>
 {
+    Q_OBJECT
 public:
     void append(WindowStyle style);
-
     // Xml:
     void toXml(QXmlStreamWriter& xml) const;
-
+    inline const WindowStyle& getStyle(int id) {
+        return getValue(QString::number(id));
+    }
+signals:
+    void styleChanged(const QString &name, const WindowStyle &value) const;
 protected:
-    //    void emitValueChanged(const QString &name, const WindowStyle &value)
-    //    const final;
-    QVector<WindowStyle> mItems;
+    void emitValueChanged(const QString &name, const WindowStyle &value) const final;
 };
 
 #endif // WINDOWSTYLE_H
