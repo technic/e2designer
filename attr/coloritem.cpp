@@ -24,7 +24,11 @@ ColorAttr::ColorAttr(const QString& str, bool invertAlpha)
 
 QColor ColorAttr::getColor() const
 {
-    return QColor::fromRgba(mValue);
+    if (mDefined) {
+        return QColor::fromRgba(mValue);
+    } else {
+        return QColor();
+    }
 }
 void ColorAttr::setColor(const QColor& color)
 {
