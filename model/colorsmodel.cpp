@@ -42,7 +42,7 @@ void ColorsList::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "colors");
 
-    removeItems(0, mItems.size());
+    removeItems(0, itemsCount());
 
     while (nextXmlChild(xml)) {
         if (xml.isStartElement()) {
@@ -70,7 +70,7 @@ void ColorsList::fromXml(QXmlStreamReader& xml)
 void ColorsList::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("colors");
-    for (const Color& item : mItems) {
+    for (const Color& item : *this) {
         item.toXml(xml);
     }
     xml.writeEndElement();
@@ -101,7 +101,7 @@ QVariant ColorsModel::headerData(int section, Qt::Orientation orientation, int r
 int ColorsModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return mItems.count();
+    return itemsCount();
 }
 
 int ColorsModel::columnCount(const QModelIndex& parent) const
@@ -123,16 +123,16 @@ QVariant ColorsModel::data(const QModelIndex& index, int role) const
     case Qt::EditRole:
         switch (index.column()) {
         case ColumnName:
-            return mItems[index.row()].name();
+            return itemAt(index.row()).name();
         case ColumnValue:
-            return mItems[index.row()].valueStr();
+            return itemAt(index.row()).valueStr();
         case ColumnColor:
             return QString();
         }
     case Qt::BackgroundColorRole:
         switch (index.column()) {
         case ColumnColor:
-            return QColor(mItems[index.row()].value());
+            return QColor(itemAt(index.row()).value());
         }
     }
     return QVariant();
@@ -176,7 +176,7 @@ Qt::ItemFlags ColorsModel::flags(const QModelIndex& index) const
 bool ColorsModel::append(Color c)
 {
     if (canInsertItem(c)) {
-        beginInsertRows(QModelIndex(), mItems.count(), mItems.count());
+        beginInsertRows(QModelIndex(), itemsCount(), itemsCount());
         appendItem(c);
         endInsertRows();
         return true;

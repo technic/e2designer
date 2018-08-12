@@ -68,7 +68,7 @@ void FontsList::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "fonts");
 
-    removeItems(0, mItems.size());
+    removeItems(0, itemsCount());
 
     while (nextXmlChild(xml)) {
         if (xml.isStartElement()) {
@@ -96,7 +96,7 @@ void FontsList::fromXml(QXmlStreamReader& xml)
 void FontsList::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("fonts");
-    for (const Font& f : mItems) {
+    for (const Font& f : *this) {
         f.toXml(xml);
     }
     xml.writeEndElement();
@@ -126,7 +126,7 @@ QVariant FontsModel::headerData(int section, Qt::Orientation orientation, int ro
 int FontsModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent);
-    return mItems.count();
+    return itemsCount();
 }
 
 int FontsModel::columnCount(const QModelIndex& parent) const
@@ -148,16 +148,16 @@ QVariant FontsModel::data(const QModelIndex& index, int role) const
     case Qt::EditRole:
         switch (index.column()) {
         case ColumnName:
-            return mItems[index.row()].name();
+            return itemAt(index.row()).name();
         case ColumnFile:
-            return mItems[index.row()].value();
+            return itemAt(index.row()).value();
         case ColumnFont:
-            return mItems[index.row()].font().family();
+            return itemAt(index.row()).font().family();
         }
     case Qt::FontRole:
         switch (index.column()) {
         case ColumnFont:
-            return mItems[index.row()].font();
+            return itemAt(index.row()).font();
         }
     }
     return QVariant();
@@ -201,7 +201,7 @@ Qt::ItemFlags FontsModel::flags(const QModelIndex& index) const
 bool FontsModel::append(Font f)
 {
     if (canInsertItem(f)) {
-        beginInsertRows(QModelIndex(), mItems.count(), mItems.count());
+        beginInsertRows(QModelIndex(), itemsCount(), itemsCount());
         appendItem(f);
         endInsertRows();
         return true;
