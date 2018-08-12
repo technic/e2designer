@@ -124,9 +124,17 @@ void WidgetView::setAttribute(int key)
         break;
     case Property::backgroundColor:
         m_background_color = qvariant_cast<QColor>(value);
+        if (!m_background_color.isValid()) {
+            auto &style = SkinRepository::styles()->getStyle(mScreen->outputId());
+            m_background_color = style.getColorAttr(WindowStyle::Background).getColor();
+        }
         break;
     case Property::foregroundColor:
         m_foreground_color = qvariant_cast<QColor>(value);
+        if (!m_foreground_color.isValid()) {
+            auto &style = SkinRepository::styles()->getStyle(mScreen->outputId());
+            m_foreground_color = style.getColorAttr(WindowStyle::LabelForeground).getColor();
+        }
         break;
     case Property::valign:
         m_valign = value.toInt();

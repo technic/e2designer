@@ -19,6 +19,7 @@ public:
     ScreenView(ScreensModel* model);
     // returns current screen index
     QModelIndex currentIndex() { return mRoot; }
+    int outputId() const { return mOutputId; }
     QGraphicsScene* scene() const { return mScene; }
     RectSelector* selector() const { return mSelector; }
     void setScreen(QModelIndex index);
