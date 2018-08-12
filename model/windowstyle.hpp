@@ -29,13 +29,33 @@ public:
 
 class WindowStyle : public XmlData
 {
+    Q_GADGET
 public:
     WindowStyle();
+
     QString name() const { return QString::number(m_id); }
     using Value = WindowStyle;
 
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
+
+    enum ColorName  {
+        Background,
+        LabelForeground,
+        ListboxBackground,
+        ListboxForeground,
+        ListboxSelectedBackground,
+        ListboxSelectedForeground,
+        ListboxMarkedBackground,
+        ListboxMarkedForeground,
+        ListboxMarkedAndSelectedBackground,
+        ListboxMarkedAndSelectedForeground,
+        WindowTitleForeground,
+        WindowTitleBackground,
+    };
+    Q_ENUM(ColorName)
+
+    ColorAttr getColorAttr(ColorName name) const;
 
 private:
     QString m_type;

@@ -85,6 +85,20 @@ void WindowStyle::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
+ColorAttr WindowStyle::getColorAttr(WindowStyle::ColorName name) const
+{
+    // FIXME: optimize it!
+    auto metaEnum = QMetaEnum::fromType<ColorName>();
+    for (const auto &c : m_colors) {
+        bool ok;
+        int k = metaEnum.keyToValue(c.name.toLatin1().data(), &ok);
+        if (ok && k == name) {
+            return c.color;
+        }
+    }
+    return ColorAttr();
+}
+
 // WindowStylesList
 
 void WindowStylesList::append(WindowStyle style)
