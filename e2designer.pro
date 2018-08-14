@@ -28,6 +28,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 include(Qt-Color-Widgets/color_widgets.pri)
 DEFINES += QTCOLORWIDGETS_STATICALLY_LINKED
 
+*msvc* {
+    # visual studio parallel compile
+    QMAKE_CXXFLAGS += -MP
+}
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
