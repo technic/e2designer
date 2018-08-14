@@ -24,8 +24,8 @@ protected:
     bool setItemName(int i, const QString& name);
     bool setItemValue(int i, const typename T::Value& value);
 
-    bool canInsertItem(T item);
-    bool insertItem(int i, T item);
+    bool canInsertItem(const T &item);
+    bool insertItem(int i, const T &item);
     bool appendItem(T item) { return insertItem(mItems.count(), item); }
     bool canRemoveItems(int position, int count);
     bool removeItems(int position, int count);
@@ -78,7 +78,7 @@ bool NamedList<T>::setItemValue(int i, const typename T::Value& value)
 }
 
 template <typename T>
-bool NamedList<T>::canInsertItem(T item)
+bool NamedList<T>::canInsertItem(const T &item)
 {
     if (contains(item.name())) {
         return false;
@@ -87,7 +87,7 @@ bool NamedList<T>::canInsertItem(T item)
 }
 
 template <typename T>
-bool NamedList<T>::insertItem(int i, T item)
+bool NamedList<T>::insertItem(int i, const T &item)
 {
     if (canInsertItem(item)) {
         mItems.insert(i, item);
