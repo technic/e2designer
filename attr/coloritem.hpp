@@ -12,7 +12,7 @@ public:
     ColorAttr(const QColor& color);
     ColorAttr(const QString& str, bool invertAlpha = false);
 
-    bool isDefined() const;
+    bool isDefined() const { return mDefined == true; }
 
     QColor getColor() const;
     void setColor(const QColor& color);
