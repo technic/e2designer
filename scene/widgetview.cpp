@@ -77,7 +77,7 @@ void WidgetView::setAttribute(int key)
     if (mRectChange)
         return;
 
-    QVariant value = SkinRepository::screens()->getWidgetAttr(mData, key, Roles::GraphicsRole);
+    QVariant value = mModel->getWidgetAttr(mData, key, Roles::GraphicsRole);
 
     switch (key) {
     case Property::position: {
