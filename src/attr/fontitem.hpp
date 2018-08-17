@@ -1,35 +1,8 @@
 #ifndef FONTITEM_H
 #define FONTITEM_H
 
-#include "attr/attritem.hpp"
-#include "model/fontsmodel.hpp"
-#include <QObject>
-
-// Do I need this???
-
-class FontAttr
-{
-public:
-    FontAttr()
-        : mName()
-        , mSize(0)
-    {
-    }
-    FontAttr(const QString& str)
-        : FontAttr()
-    {
-        fromStr(str);
-    }
-    QString name() const { return mName; }
-    QFont getFont() const;
-    QString toStr() const;
-    void fromStr(const QString& str);
-
-private:
-    QString mName;
-    int mSize;
-};
-Q_DECLARE_METATYPE(FontAttr);
+#include "attritem.hpp"
+#include "skin/fontattr.hpp"
 
 class FontItem : public AttrItem
 {

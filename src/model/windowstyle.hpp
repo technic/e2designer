@@ -6,6 +6,7 @@
 #include "attr/positionitem.hpp"
 #include "borderset.hpp"
 #include "repository/xmlnode.hpp"
+#include "model/namedlist.hpp"
 
 class WindowStyleTitle
 {

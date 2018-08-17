@@ -3,7 +3,7 @@
 
 #include "attritem.hpp"
 
-// Do i need this???
+// TODO!
 
 class PixmapItem : public AttrItem
 {

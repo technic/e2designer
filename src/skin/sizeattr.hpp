@@ -1,8 +1,9 @@
-#ifndef DIMENSION_H
-#define DIMENSION_H
+#ifndef SIZEATTR_HPP
+#define SIZEATTR_HPP
 
 #include <QSize>
 #include <QString>
+#include <QMetaType>
 
 class Dimension
 {
@@ -33,4 +34,28 @@ private:
     int m_value;
 };
 
-#endif // DIMENSION_H
+class WidgetData;
+
+class SizeAttr
+{
+public:
+    SizeAttr(Dimension w = Dimension(), Dimension h = Dimension())
+        : mWidth(w)
+        , mHeight(h)
+    {
+    }
+    SizeAttr(const QString& str) { fromStr(str); }
+    bool isRelative() const { return mWidth.isRelative() || mHeight.isRelative(); }
+    QSize getSize(const WidgetData& widget);
+    void setSize(const WidgetData& widget, const QSize size);
+
+    QString toStr() const;
+    void fromStr(const QString& str);
+
+private:
+    Dimension mWidth, mHeight;
+};
+Q_DECLARE_METATYPE(SizeAttr);
+
+
+#endif // SIZEATTR_HPP

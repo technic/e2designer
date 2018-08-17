@@ -1,7 +1,10 @@
-#ifndef COORDINATE_H
-#define COORDINATE_H
+#ifndef POSITIONATTR_HPP
+#define POSITIONATTR_HPP
 
 #include <QString>
+#include <QPair>
+#include <QPoint>
+#include <QMetaType>
 
 /**
  * @brief The Coordinate class
@@ -9,7 +12,6 @@
  * allows getting actual value relative to parent
  * has string convert functions
  */
-
 class Coordinate
 {
 public:
@@ -39,4 +41,28 @@ private:
     int m_value;
 };
 
-#endif // COORDINATE_H
+
+class WidgetData;
+
+typedef QPair<int, int> AnchorPair;
+
+class PositionAttr
+{
+public:
+    PositionAttr() {}
+    PositionAttr(const QString& str) { fromStr(str); }
+    bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
+    AnchorPair anchor() { return AnchorPair(mX.anchor(), mY.anchor()); }
+    QPoint toPoint(const WidgetData& widget);
+    void setPoint(const WidgetData& widget, const QPoint& pos);
+
+    QString toStr() const;
+    void fromStr(const QString& str);
+
+private:
+    Coordinate mX, mY;
+};
+Q_DECLARE_METATYPE(PositionAttr);
+
+
+#endif // POSITIONATTR_HPP

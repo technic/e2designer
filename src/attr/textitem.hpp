@@ -3,8 +3,6 @@
 
 #include "attritem.hpp"
 
-using TextAttr = QString;
-
 class TextItem : public AttrItem
 {
 public:

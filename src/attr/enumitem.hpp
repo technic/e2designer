@@ -2,6 +2,7 @@
 #define ENUMITEM_H
 
 #include "adapter/attritemfactory.hpp"
+#include "skin/enumattr.hpp"
 #include "attritem.hpp"
 
 // FIXME should we use fancy QMetaType???
@@ -12,24 +13,6 @@
 typedef QPair<QString, QStringList> SkinEnumList;
 Q_DECLARE_METATYPE(SkinEnumList)
 
-/**
- * @brief Property represented by enum
- */
-template <class Enum>
-class EnumAttr
-{
-public:
-    EnumAttr();
-    EnumAttr(const QString& str);
-    EnumAttr(const int value);
-
-    inline int value() const { return mValue; }
-    QString toStr(bool emptyDefault = false) const;
-    QStringList toStrList() const;
-
-private:
-    int mValue;
-};
 
 template <class Enum>
 class EnumItem : public AttrItem

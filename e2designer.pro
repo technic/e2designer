@@ -36,10 +36,8 @@ DEFINES += QTCOLORWIDGETS_STATICALLY_LINKED
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/coordinate.cpp \
     src/skinmaps.cpp \
     src/skindelegate.cpp \
-    src/dimension.cpp \
 #    src/headerfilter.cpp \
     src/attr/attritem.cpp \
     src/attr/attrgroupitem.cpp \
@@ -87,14 +85,18 @@ SOURCES += \
     src/model/windowstyle.cpp \
     src/scene/borderview.cpp \
     src/repository/attrcontainer.cpp \
-    src/base/flagsetter.cpp
+    src/base/flagsetter.cpp \
+    src/skin/attributes.cpp \
+    src/skin/colorattr.cpp \
+    src/skin/fontattr.cpp \
+    src/skin/sizeattr.cpp \
+    src/skin/positionattr.cpp \
+    src/skin/enumattr.cpp
 
 HEADERS += \
     src/mainwindow.hpp \
-    src/coordinate.hpp \
     src/skinmaps.hpp \
     src/skindelegate.hpp \
-    src/dimension.hpp \
     src/attr/enumitem.hpp \
     src/attr/fontitem.hpp \
     src/attr/integeritem.hpp \
@@ -148,7 +150,13 @@ HEADERS += \
     src/scene/borderview.hpp \
     src/repository/attrcontainer.hpp \
     src/base/flagsetter.hpp \
-    src/skin/enums.hpp
+    src/skin/enums.hpp \
+    src/skin/fontattr.hpp \
+    src/skin/colorattr.hpp \
+    src/skin/fontattr.hpp \
+    src/skin/sizeattr.hpp \
+    src/skin/positionattr.hpp \
+    src/skin/enumattr.hpp
 
 FORMS += \
     mainwindow.ui \

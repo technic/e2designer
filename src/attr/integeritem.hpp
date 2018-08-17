@@ -3,8 +3,6 @@
 
 #include "attritem.hpp"
 
-using IntegerAttr = int;
-
 class IntegerItem : public AttrItem
 {
 public:

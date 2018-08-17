@@ -1,5 +1,10 @@
-#include "coordinate.hpp"
+#include "positionattr.hpp"
+#include "repository/widgetdata.hpp"
+#include <QPoint>
+#include <QSize>
 #include <QDebug>
+
+// Coordinate
 
 Coordinate::Coordinate(Type type, int value)
     : m_type(type)
@@ -55,4 +60,38 @@ void Coordinate::parseInt(int value, int my_size, int parent_size)
 bool Coordinate::isRelative() const
 {
     return m_type == Center;
+}
+
+
+// PositionAttr
+
+QPoint PositionAttr::toPoint(const WidgetData& widget)
+{
+    QSize s = widget.selfSize();
+    QSize p = widget.parentSize();
+    return QPoint(mX.getInt(s.width(), p.width()), mY.getInt(s.height(), p.height()));
+}
+
+void PositionAttr::setPoint(const WidgetData& widget, const QPoint& pos)
+{
+    // Try to be smart
+    const QSize s = widget.selfSize();
+    const QSize p = widget.parentSize();
+    mX.parseInt(pos.x(), s.width(), p.width());
+    mY.parseInt(pos.y(), s.height(), p.height());
+}
+
+QString PositionAttr::toStr() const
+{
+    return mX.toStr() + "," + mY.toStr();
+}
+void PositionAttr::fromStr(const QString& str)
+{
+    QStringList list = str.split(",");
+    if (list.length() == 2) {
+        mX.parseStr(list[0]);
+        mY.parseStr(list[1]);
+    } else {
+        qWarning() << "bad position:" << str;
+    }
 }

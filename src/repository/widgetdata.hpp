@@ -13,6 +13,7 @@
 #include "attr/coloritem.hpp"
 #include "attr/positionitem.hpp"
 #include "attr/sizeitem.hpp"
+#include "skin/attributes.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;

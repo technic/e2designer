@@ -2,35 +2,6 @@
 #include "repository/widgetdata.hpp"
 #include <QDebug>
 
-// SizeAttr
-
-QSize SizeAttr::getSize(const WidgetData& widget)
-{
-    QSize ps = widget.parentSize();
-    return QSize(mWidth.getInt(ps.width()), mHeight.getInt(ps.height()));
-}
-
-void SizeAttr::setSize(const WidgetData& widget, const QSize size)
-{
-    QSize s = widget.parentSize();
-    mWidth.parseInt(size.width(), s.width());
-    mHeight.parseInt(size.height(), s.height());
-}
-
-QString SizeAttr::toStr() const
-{
-    return mWidth.toStr() + "," + mHeight.toStr();
-}
-void SizeAttr::fromStr(const QString& str)
-{
-    QStringList list = str.split(",");
-    if (list.length() == 2) {
-        mWidth.parseStr(list[0]);
-        mHeight.parseStr(list[1]);
-    } else {
-        qDebug() << "bad position:" << str;
-    }
-}
 
 // SizeItem
 

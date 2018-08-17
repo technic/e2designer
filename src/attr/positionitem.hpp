@@ -2,32 +2,10 @@
 #define POSITIONITEM_H
 
 #include "attritem.hpp"
-#include "coordinate.hpp"
+#include "skin/positionattr.hpp"
 
 typedef QPair<int, int> AnchorPair;
 Q_DECLARE_METATYPE(AnchorPair)
-
-// Data
-
-class PositionAttr
-{
-public:
-    PositionAttr() {}
-    PositionAttr(const QString& str) { fromStr(str); }
-    bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
-    AnchorPair anchor() { return AnchorPair(mX.anchor(), mY.anchor()); }
-    QPoint toPoint(const WidgetData& widget);
-    void setPoint(const WidgetData& widget, const QPoint& pos);
-
-    QString toStr() const;
-    void fromStr(const QString& str);
-
-private:
-    Coordinate mX, mY;
-};
-Q_DECLARE_METATYPE(PositionAttr);
-
-// Adapter
 
 class AbsolutePositionItem : public AttrItem
 {

@@ -2,28 +2,7 @@
 #define SIZEITEM_H
 
 #include "attritem.hpp"
-#include "dimension.hpp"
-
-class SizeAttr
-{
-public:
-    SizeAttr(Dimension w = Dimension(), Dimension h = Dimension())
-        : mWidth(w)
-        , mHeight(h)
-    {
-    }
-    SizeAttr(const QString& str) { fromStr(str); }
-    bool isRelative() const { return mWidth.isRelative() || mHeight.isRelative(); }
-    QSize getSize(const WidgetData& widget);
-    void setSize(const WidgetData& widget, const QSize size);
-
-    QString toStr() const;
-    void fromStr(const QString& str);
-
-private:
-    Dimension mWidth, mHeight;
-};
-Q_DECLARE_METATYPE(SizeAttr);
+#include "skin/sizeattr.hpp"
 
 class SizeItem : public AttrItem
 {
