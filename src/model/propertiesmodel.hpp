@@ -1,7 +1,7 @@
 #ifndef PROPERTIESMODEL_H
 #define PROPERTIESMODEL_H
 
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 #include <QAbstractItemModel>
 #include <memory>
 

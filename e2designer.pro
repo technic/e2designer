@@ -65,7 +65,7 @@ SOURCES += \
     src/base/singleton.cpp \
     src/repository/xmlnode.cpp \
     src/repository/skinrepository.cpp \
-    src/repository/widgetdata.cpp \
+    src/skin/widgetdata.cpp \
 #    src/repository/treenode.cpp \
 #    src/repository/previewsrepository.cpp \
     src/repository/videooutputrepository.cpp \
@@ -127,7 +127,7 @@ HEADERS += \
     src/base/singleton.hpp \
     src/repository/xmlnode.hpp \
     src/repository/skinrepository.hpp \
-    src/repository/widgetdata.hpp \
+    src/skin/widgetdata.hpp \
 #    src/repository/treenode.hpp \
 #    src/repository/previewsrepository.hpp \
     src/repository/videooutputrepository.hpp \
@@ -146,7 +146,7 @@ HEADERS += \
     src/model/borderset.hpp \
     src/model/windowstyle.hpp \
     src/scene/borderview.hpp \
-    src/repository/attrcontainer.hpp \
+    src/skin/attrcontainer.hpp \
     src/base/flagsetter.hpp \
     src/skin/enums.hpp \
     src/skin/fontattr.hpp \

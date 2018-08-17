@@ -5,7 +5,7 @@
 #include "attr/attritem.hpp"
 #include "base/tree.hpp"
 #include "base/uniqueid.hpp"
-#include "repository/attrcontainer.hpp"
+#include "attrcontainer.hpp"
 #include "repository/xmlnode.hpp"
 #include <QRgb>
 #include <QVariant>

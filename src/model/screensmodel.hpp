@@ -1,7 +1,7 @@
 #ifndef SCREENSMODEL_H
 #define SCREENSMODEL_H
 
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 #include <QAbstractItemModel>
 
 class WidgetObserver;
