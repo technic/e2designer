@@ -147,7 +147,8 @@ HEADERS += \
     src/model/windowstyle.hpp \
     src/scene/borderview.hpp \
     src/repository/attrcontainer.hpp \
-    src/base/flagsetter.hpp
+    src/base/flagsetter.hpp \
+    src/skin/enums.hpp
 
 FORMS += \
     mainwindow.ui \
