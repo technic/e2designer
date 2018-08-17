@@ -83,7 +83,6 @@ SOURCES += \
     src/model/borderset.cpp \
     src/model/windowstyle.cpp \
     src/scene/borderview.cpp \
-    src/repository/attrcontainer.cpp \
     src/base/flagsetter.cpp \
     src/skin/attributes.cpp \
     src/skin/colorattr.cpp \

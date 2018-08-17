@@ -80,10 +80,6 @@ void WidgetData::setType(WidgetType type)
 
 QVariant WidgetData::getAttr(const int key, int role) const
 {
-    if (role == Roles::DataRole) {
-        return getVariant(key);
-    }
-
     auto it = mAdapters.find(key);
     if (it != mAdapters.end()) {
         return it.value()->data(role);
@@ -94,14 +90,6 @@ QVariant WidgetData::getAttr(const int key, int role) const
 
 bool WidgetData::setAttr(const int key, const QVariant& value, int role)
 {
-    if (role == Roles::DataRole) {
-        bool changed = setFromVariant(key, value);
-        if (changed) {
-            notifyAttrChange(key);
-        }
-        return changed;
-    }
-
     auto it = mAdapters.find(key);
     if (it == mAdapters.end()) {
         return false;
@@ -283,12 +271,13 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
 
 void WidgetData::onColorChanged(const QString& name, QRgb value)
 {
-    for (auto it = mAttrs.begin(); it != mAttrs.end(); ++it) {
-        if (it.value()->typeId() == qMetaTypeId<ColorAttr>()) {
-            ColorAttr old = it.value()->getValue<ColorAttr>();
+    for (auto it = begin(); it != end(); ++it) {
+        if (it.value().type() == qMetaTypeId<ColorAttr>()) {
+            ColorAttr old = qvariant_cast<ColorAttr>(it.value());
             if (old.getName() == name) {
                 // TODO: use given rgba value
-                it.value()->setValue(ColorAttr(old.toStr()));
+                // FIXME: this is bad
+                setAttr(it.key(), ColorAttr(old.getName()));
                 notifyAttrChange(it.key());
             }
         }
@@ -297,9 +286,9 @@ void WidgetData::onColorChanged(const QString& name, QRgb value)
 
 void WidgetData::onFontChanged(const QString& name, const Font& value)
 {
-    for (auto it = mAttrs.begin(); it != mAttrs.end(); ++it) {
-        if (it.value()->typeId() == qMetaTypeId<FontAttr>()) {
-            if (it.value()->getValue<FontAttr>().name() == name) {
+    for (auto it = begin(); it != end(); ++it) {
+        if (it.value().type() == qMetaTypeId<FontAttr>()) {
+            if (qvariant_cast<FontAttr>(it.value()).name() == name) {
                 notifyAttrChange(it.key());
             }
         }
