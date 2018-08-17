@@ -25,16 +25,6 @@ class Font;
 class WidgetDataObserver;
 class WidgetObserver;
 
-class ConverterItem
-{
-public:
-    void fromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml) const;
-
-private:
-    QString mType;
-    QString mText;
-};
 
 class WidgetData : public QObject,
                    public MixinTreeNode<WidgetData>,
@@ -140,7 +130,7 @@ private:
     // refs within mRoot
     QHash<int, AttrItem*> mAdapters;
 
-    QVector<ConverterItem> mConverters;
+    QVector<Converter> mConverters;
 
     int mConnectedCount;
 };

@@ -225,7 +225,7 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
                     xml.skipCurrentElement();
                 }
             } else if (xml.name() == "convert") {
-                ConverterItem c;
+                Converter c;
                 c.fromXml(xml);
                 mConverters.append(c);
             } else {
@@ -274,7 +274,7 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
     for (int i = 0; i < childCount(); ++i) {
         child(i)->toXml(xml);
     }
-    for (const ConverterItem& item : mConverters) {
+    for (const Converter& item : mConverters) {
         item.toXml(xml);
     }
 
@@ -448,28 +448,3 @@ WidgetData::ContainerBase*WidgetData::Container<T>::copy() const {
     return new Container<T>(mData);
 }
 */
-
-// ConverterItem
-
-void ConverterItem::fromXml(QXmlStreamReader& xml)
-{
-    Q_ASSERT(xml.isStartElement() && xml.name() == "convert");
-
-    mText.clear();
-    mType = xml.attributes().value("type").toString();
-    xml.readNext();
-    if (xml.isCharacters()) {
-        mText = xml.text().toString();
-    }
-    if (!xml.isEndElement()) {
-        xml.skipCurrentElement();
-    }
-}
-
-void ConverterItem::toXml(QXmlStreamWriter& xml) const
-{
-    xml.writeStartElement("convert");
-    xml.writeAttribute("type", mType);
-    xml.writeCharacters(mText);
-    xml.writeEndElement();
-}

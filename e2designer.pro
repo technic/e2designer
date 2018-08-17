@@ -90,7 +90,8 @@ SOURCES += \
     src/skin/fontattr.cpp \
     src/skin/sizeattr.cpp \
     src/skin/positionattr.cpp \
-    src/skin/enumattr.cpp
+    src/skin/enumattr.cpp \
+    src/skin/converter.cpp
 
 HEADERS += \
     src/mainwindow.hpp \
@@ -154,7 +155,8 @@ HEADERS += \
     src/skin/fontattr.hpp \
     src/skin/sizeattr.hpp \
     src/skin/positionattr.hpp \
-    src/skin/enumattr.hpp
+    src/skin/enumattr.hpp \
+    src/skin/converter.hpp
 
 FORMS += \
     mainwindow.ui \
