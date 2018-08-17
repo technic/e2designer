@@ -36,7 +36,6 @@ DEFINES += QTCOLORWIDGETS_STATICALLY_LINKED
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/skinmaps.cpp \
     src/skindelegate.cpp \
 #    src/headerfilter.cpp \
     src/attr/attritem.cpp \
@@ -95,7 +94,6 @@ SOURCES += \
 
 HEADERS += \
     src/mainwindow.hpp \
-    src/skinmaps.hpp \
     src/skindelegate.hpp \
     src/attr/enumitem.hpp \
     src/attr/fontitem.hpp \

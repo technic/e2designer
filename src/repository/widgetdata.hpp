@@ -130,30 +130,6 @@ private:
         }
     }
 
-    //    template<typename T>
-    //    inline T getHashMember(QHash<int,T> &hash, int k) {
-    //        auto it = hash.find(k);
-    //        if (it != hash.end()) {
-    //            return it.value();
-    //        } else {
-    //            return T();
-    //        }
-    //    }
-
-    //    template<typename T>
-    //    inline bool setHashMember(QHash<int,T> &hash, int k, const T &value,
-    //    bool add = false) {
-    //        auto it = hash.find(k);
-    //        if (it != hash.end()) {
-    //            *it = value;
-    //            emit attrChanged(k);
-    //            return true;
-    //        } else {
-    //            hash[k] = value;
-    //            return false;
-    //        }
-    //    }
-
     WidgetType mType;
     // own
     QVector<int> mPropertiesOrder;
