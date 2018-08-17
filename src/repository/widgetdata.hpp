@@ -14,6 +14,7 @@
 #include "attr/positionitem.hpp"
 #include "attr/sizeitem.hpp"
 #include "skin/attributes.hpp"
+#include "skin/converter.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
