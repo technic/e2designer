@@ -40,6 +40,7 @@ template <typename AttrType>
 void AttrContainer::addAttr(int key)
 {
     Q_ASSERT(!mAttrs.contains(key));
+    mAttrs[key] = QVariant::fromValue(AttrType());
 }
 
 template <typename AttrType>
@@ -58,7 +59,7 @@ bool AttrContainer::setAttr(int key, const AttrType& value)
 {
     auto it = mAttrs.find(key);
     if (it != mAttrs.end() ) {
-        if (it.value().type() == qMetaTypeId<AttrType>()) {
+        if (it.value().userType() == qMetaTypeId<AttrType>()) {
             it.value().setValue(value);
         }
     }
