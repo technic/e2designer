@@ -162,6 +162,16 @@ FORMS += \
     colorlistwindow.ui \
     fontlistwindow.ui
 
+test {
+    message(Configure test build)
+    SOURCES -= src/main.cpp
+    include(tests/tests.pri)
+
+    TARGET = tests
+} else {
+    TARGET = e2designer
+}
+
 unix {
     isEmpty(PREFIX) {
         PREFIX = /usr
