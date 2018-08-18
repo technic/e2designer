@@ -9,11 +9,15 @@ class Dimension
 {
 public:
     Dimension();
+    Dimension(const QString &str) { parseStr(str); }
     enum {
         Fill, // TODO: implement this
         Percent, // TODO: implement this
         Number,
     };
+
+    inline int type() const { return m_type; }
+    inline int value() const { return m_value; }
 
     /// Load and save text
     void parseStr(const QString& str);
@@ -39,11 +43,10 @@ class WidgetData;
 class SizeAttr
 {
 public:
-    SizeAttr(Dimension w = Dimension(), Dimension h = Dimension())
-        : mWidth(w)
-        , mHeight(h)
-    {
-    }
+    SizeAttr(Dimension w = Dimension(), Dimension h = Dimension());
+    inline const Dimension &w() const { return mWidth; }
+    inline const Dimension &h() const { return mHeight; }
+
     SizeAttr(const QString& str) { fromStr(str); }
     bool isRelative() const { return mWidth.isRelative() || mHeight.isRelative(); }
     QSize getSize(const WidgetData& widget);

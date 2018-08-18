@@ -11,6 +11,11 @@ Coordinate::Coordinate(Type type, int value)
     , m_value(value)
 {
 }
+
+Coordinate::Coordinate(const QString &str)
+{
+    parseStr(str);
+}
 void Coordinate::parseStr(const QString& str)
 {
     if (str == "center") {

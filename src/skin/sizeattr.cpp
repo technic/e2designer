@@ -50,6 +50,12 @@ bool Dimension::isRelative() const
 
 // SizeAttr
 
+SizeAttr::SizeAttr(Dimension w, Dimension h)
+    : mWidth(w)
+    , mHeight(h)
+{
+}
+
 QSize SizeAttr::getSize(const WidgetData& widget)
 {
     QSize ps = widget.parentSize();

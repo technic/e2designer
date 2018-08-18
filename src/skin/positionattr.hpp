@@ -22,8 +22,10 @@ public:
     };
 
     Coordinate(Type type = Pixel, int value = 0);
+    Coordinate(const QString &str);
 
-    int anchor() const { return m_type; }
+    inline int type() const { return m_type; }
+    inline int value() const { return m_value; }
     /// Load and save text
     void parseStr(const QString& str);
     QString toStr() const;
@@ -51,8 +53,10 @@ class PositionAttr
 public:
     PositionAttr() {}
     PositionAttr(const QString& str) { fromStr(str); }
+    inline const Coordinate &x() const { return mX; }
+    inline const Coordinate &y() const { return mY; }
     bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
-    AnchorPair anchor() { return AnchorPair(mX.anchor(), mY.anchor()); }
+    AnchorPair anchor() { return AnchorPair(mX.type(), mY.type()); }
     QPoint toPoint(const WidgetData& widget);
     void setPoint(const WidgetData& widget, const QPoint& pos);
 
