@@ -33,11 +33,17 @@ build:
     paths:
       - "build/*.o"
 
-# run tests using the binary built before
 test:
   stage: test
   script:
-    - echo "TODO"
+  - apt-get update && apt-get -y install fuse curl make file g++ qt5-qmake qt5-default
+  - mkdir -p build && cd build
+  - which qmake
+  - qmake --version
+  - g++ --version
+  - qmake .. "CONFIG += test"
+  - make
+  - ./tests
 
 deploy-AppImage:
   stage: deploy
