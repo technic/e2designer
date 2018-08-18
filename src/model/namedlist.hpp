@@ -32,7 +32,7 @@ protected:
 
 public:
     bool contains(const QString& name) const;
-    const T &getValue(const QString& name, T defaultValue = T()) const;
+    T getValue(const QString& name, const T &defaultValue = T()) const;
     QString getName(const typename T::Value value) const;
 
     inline int itemsCount() const { return mItems.count(); }
@@ -132,7 +132,7 @@ bool NamedList<T>::contains(const QString& name) const
 }
 
 template <typename T>
-const T& NamedList<T>::getValue(const QString& name, T defaultValue) const
+T NamedList<T>::getValue(const QString& name, const T &defaultValue) const
 {
     // TODO: optimization with QHash?
     for (const T& item : mItems) {

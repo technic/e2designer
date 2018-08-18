@@ -73,7 +73,7 @@ public:
     void append(WindowStyle style);
     // Xml:
     void toXml(QXmlStreamWriter& xml) const;
-    inline const WindowStyle& getStyle(int id) {
+    inline const WindowStyle getStyle(int id) {
         return getValue(QString::number(id));
     }
 signals:
