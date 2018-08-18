@@ -193,4 +193,4 @@ INSTALLS += target
 RESOURCES += \
     resources.qrc
 
-DISTFILES += LICENSE README.md
+DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml
