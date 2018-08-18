@@ -12,7 +12,7 @@ build_script:
 
 after_build:
   - mkdir deploy
-  - copy release\e2designer.exe deploy\e2designer.exe
+  - copy app\release\e2designer.exe deploy\e2designer.exe
   - windeployqt --release deploy/e2designer.exe
   - ps: |
       $version = git describe

@@ -1,4 +1,5 @@
-#include "testcase.hpp"
+#include <QtTest>
+
 #include "skin/sizeattr.hpp"
 #include "skin/positionattr.hpp"
 #include "skin/colorattr.hpp"
@@ -53,6 +54,6 @@ private:
     SampleContainer c;
 };
 
-static TestCase<TestContainer> t;
+QTEST_APPLESS_MAIN(TestContainer)
 
-#include "tst_container.moc"
+#include "tst_testcontainer.moc"

@@ -1,4 +1,5 @@
-#include "testcase.hpp"
+#include <QtTest>
+
 #include "skin/sizeattr.hpp"
 #include "skin/positionattr.hpp"
 #include "skin/colorattr.hpp"
@@ -35,5 +36,6 @@ TestAttr::~TestAttr()
 
 }
 
-static TestCase<TestAttr> t;
-#include "tst_attr.moc"
+QTEST_APPLESS_MAIN(TestAttr)
+
+#include "tst_testattr.moc"
