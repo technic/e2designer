@@ -1,5 +1,5 @@
 #include "positionitem.hpp"
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 #include <QDebug>
 
 // AbsolutePositionItem

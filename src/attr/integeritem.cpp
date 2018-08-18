@@ -1,5 +1,5 @@
 #include "integeritem.hpp"
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 
 QVariant IntegerItem::data(int role) const
 {

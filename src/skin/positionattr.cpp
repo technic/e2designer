@@ -1,5 +1,5 @@
 #include "positionattr.hpp"
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 #include <QPoint>
 #include <QSize>
 #include <QDebug>

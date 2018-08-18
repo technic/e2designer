@@ -1,6 +1,6 @@
 #include "variantitem.hpp"
 #include "adapter/attritemfactory.hpp"
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 
 QVariant VariantItem::data(int role) const
 {

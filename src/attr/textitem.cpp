@@ -1,5 +1,5 @@
 #include "textitem.hpp"
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 
 QVariant TextItem::data(int role) const
 {

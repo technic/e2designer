@@ -1,5 +1,5 @@
 #include "sizeattr.hpp"
-#include "repository/widgetdata.hpp"
+#include "skin/widgetdata.hpp"
 #include <QDebug>
 
 Dimension::Dimension()
