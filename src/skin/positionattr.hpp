@@ -20,9 +20,9 @@ public:
         Percent,
         Center,
     };
-
-    Coordinate(Type type = Pixel, int value = 0);
-    Coordinate(const QString &str);
+    Coordinate(int px) : Coordinate(Pixel, px) {}
+    explicit Coordinate(Type type = Pixel, int value = 0);
+    explicit Coordinate(const QString &str);
 
     inline int type() const { return m_type; }
     inline int value() const { return m_value; }
@@ -38,6 +38,10 @@ public:
     /// Depends on parent or on size
     bool isRelative() const;
 
+    inline bool operator==(const Coordinate &other) {
+        return m_type == other.m_type && m_value == other.m_value;
+    }
+
 private:
     int m_type;
     int m_value;
@@ -52,6 +56,7 @@ class PositionAttr
 {
 public:
     PositionAttr() {}
+    PositionAttr(const Coordinate &x, const Coordinate &y);
     PositionAttr(const QString& str) { fromStr(str); }
     inline const Coordinate &x() const { return mX; }
     inline const Coordinate &y() const { return mY; }
@@ -62,6 +67,10 @@ public:
 
     QString toStr() const;
     void fromStr(const QString& str);
+
+    inline bool operator==(const PositionAttr &other) {
+        return mX == other.mX && mY == other.mY;
+    }
 
 private:
     Coordinate mX, mY;

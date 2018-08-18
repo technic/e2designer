@@ -70,6 +70,11 @@ bool Coordinate::isRelative() const
 
 // PositionAttr
 
+PositionAttr::PositionAttr(const Coordinate &x, const Coordinate &y)
+    : mX(x), mY(y)
+{
+}
+
 QPoint PositionAttr::toPoint(const WidgetData& widget)
 {
     QSize s = widget.selfSize();
