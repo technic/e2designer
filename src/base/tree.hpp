@@ -112,7 +112,7 @@ int MixinTreeNode<T>::myIndex() const
 {
     // FIXME: not that smart way to find index
     if (mParent) {
-        return mParent->indexOf((self()));
+        return mParent->indexOf(self());
     }
     return -1;
 }
