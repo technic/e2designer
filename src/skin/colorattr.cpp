@@ -30,8 +30,8 @@ QColor ColorAttr::getColor() const
 void ColorAttr::setColor(const QColor& color)
 {
     // FIXME!
-    //    mName = SkinRepository::colors()->getName(color.rgba());
-    mName = QString();
+    mName = SkinRepository::colors()->getName(color.rgba());
+//    mName = QString();
     mValue = color.rgba();
     mDefined = true;
 }
