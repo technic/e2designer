@@ -44,6 +44,8 @@ void Dimension::parseInt(int value, int parent_size)
 {
     if (m_type == Number) {
         m_value = value;
+    } else if (m_type == Percent) {
+        m_value = value * 100 / parent_size;
     }
 }
 
