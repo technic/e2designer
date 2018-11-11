@@ -34,6 +34,10 @@ public:
     /// Depends on parent or on size
     bool isRelative() const;
 
+    inline bool operator==(const Dimension &other) {
+        return m_type == other.m_type && m_value == other.m_value;
+    }
+
 private:
     int m_type;
     int m_value;
@@ -50,11 +54,15 @@ public:
 
     SizeAttr(const QString& str) { fromStr(str); }
     bool isRelative() const { return mWidth.isRelative() || mHeight.isRelative(); }
-    QSize getSize(const WidgetData& widget);
+    QSize getSize(const WidgetData& widget) const;
     void setSize(const WidgetData& widget, const QSize size);
 
     QString toStr() const;
     void fromStr(const QString& str);
+
+    inline bool operator==(const SizeAttr &other) {
+        return mWidth == other.mWidth && mHeight == other.mHeight;
+    }
 
 private:
     Dimension mWidth, mHeight;

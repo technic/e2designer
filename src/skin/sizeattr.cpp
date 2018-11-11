@@ -63,7 +63,7 @@ SizeAttr::SizeAttr(Dimension w, Dimension h)
 {
 }
 
-QSize SizeAttr::getSize(const WidgetData& widget)
+QSize SizeAttr::getSize(const WidgetData& widget) const
 {
     QSize ps = widget.parentSize();
     return QSize(mWidth.getInt(ps.width()), mHeight.getInt(ps.height()));
