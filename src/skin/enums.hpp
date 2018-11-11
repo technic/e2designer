@@ -36,6 +36,7 @@ public:
         halign,
         shadowColor,
         shadowOffset,
+        noWrap,
         // screen
         title,
         flags,
@@ -92,8 +93,11 @@ public:
         Widget,
         Screen,
         Label,
+        FixedLabel,
         Pixmap,
+        Picon,
         Slider,
+        Pig,
     };
     Q_ENUM(Render)
 
@@ -142,6 +146,8 @@ public:
     };
     Q_ENUM(Enum)
 };
+using VAlign = PropertyVAlign::Enum;
+
 class PropertyHAlign : public QObject
 {
     // for enum
@@ -154,6 +160,7 @@ public:
     };
     Q_ENUM(Enum)
 };
+using HAlign = PropertyHAlign::Enum;
 
 // Roles to be used in QtModels
 
