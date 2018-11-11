@@ -6,7 +6,6 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
 
-#include "attr/attritem.hpp"
 #include "rectselector.hpp"
 #include "repository/skinrepository.hpp"
 

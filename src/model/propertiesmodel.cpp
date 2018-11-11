@@ -1,5 +1,4 @@
 #include "propertiesmodel.hpp"
-#include "attr/attritem.hpp"
 #include "repository/skinrepository.hpp"
 
 PropertiesModel::PropertiesModel(QObject* parent)

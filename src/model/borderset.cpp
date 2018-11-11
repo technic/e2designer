@@ -1,5 +1,5 @@
 #include "borderset.hpp"
-#include "attr/attritem.hpp"
+#include "skin/enums.hpp"
 
 // Border
 
