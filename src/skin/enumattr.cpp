@@ -22,6 +22,7 @@ EnumAttr<Enum>::EnumAttr(const QString& str)
     mValue = meta.keyToValue(str.toLatin1().data(), &ok);
     if (!ok) {
         qWarning() << "bad enum " << str;
+        mValue = meta.value(0);
     }
 }
 

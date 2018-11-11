@@ -28,4 +28,12 @@ private:
 };
 Q_DECLARE_METATYPE(FontAttr);
 
+inline QString serialize(const FontAttr &font) {
+    return font.toStr();
+}
+inline void deserialize(const QString &str, FontAttr &font) {
+    font = FontAttr(str);
+}
+
+
 #endif // FONTATTR_HPP

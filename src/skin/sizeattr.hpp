@@ -69,5 +69,12 @@ private:
 };
 Q_DECLARE_METATYPE(SizeAttr);
 
+inline QString serialize(const SizeAttr &size) {
+    return size.toStr();
+}
+inline void deserialize(const QString &str, SizeAttr &value) {
+    value = SizeAttr(str);
+}
+
 
 #endif // SIZEATTR_HPP

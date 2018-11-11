@@ -77,5 +77,12 @@ private:
 };
 Q_DECLARE_METATYPE(PositionAttr);
 
+inline QString serialize(const PositionAttr &pos) {
+    return pos.toStr();
+}
+inline void deserialize(const QString &str, PositionAttr &pos) {
+    pos = PositionAttr(str);
+}
+
 
 #endif // POSITIONATTR_HPP
