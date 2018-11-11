@@ -75,7 +75,7 @@ PositionAttr::PositionAttr(const Coordinate &x, const Coordinate &y)
 {
 }
 
-QPoint PositionAttr::toPoint(const WidgetData& widget)
+QPoint PositionAttr::toPoint(const WidgetData& widget) const
 {
     QSize s = widget.selfSize();
     QSize p = widget.parentSize();

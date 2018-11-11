@@ -62,7 +62,7 @@ public:
     inline const Coordinate &y() const { return mY; }
     bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
     AnchorPair anchor() { return AnchorPair(mX.type(), mY.type()); }
-    QPoint toPoint(const WidgetData& widget);
+    QPoint toPoint(const WidgetData& widget) const;
     void setPoint(const WidgetData& widget, const QPoint& pos);
 
     QString toStr() const;
