@@ -28,7 +28,7 @@ protected:
     }
 
 public:
-    ~MixinTreeNode();
+    virtual ~MixinTreeNode();
     // FIXME: rule of three!
 
     // Mixin (CRTP) magic
@@ -50,13 +50,13 @@ public:
     int childCount() const { return mChilds.size(); }
     // takes ownership
     void appendChild(T* child) { insertChild(mChilds.size(), child); }
-    bool insertChild(int position, T* child);
-    bool insertChildren(int position, QVector<T*> list);
+    virtual bool insertChild(int position, T* child);
+    virtual bool insertChildren(int position, QVector<T*> list);
     // deletes underline data
     bool removeChildren(int position, int count);
     void clear() { removeChildren(0, mChilds.size()); }
     // releases ownership
-    QVector<T*> takeChildren(int position, int count);
+    virtual QVector<T*> takeChildren(int position, int count);
 
     /**
      * @brief DFS tree iterator
