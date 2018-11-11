@@ -73,159 +73,314 @@
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+     <layout class="QVBoxLayout" name="verticalLayout_right">
       <property name="sizeConstraint">
        <enum>QLayout::SetMinimumSize</enum>
       </property>
       <property name="leftMargin">
-       <number>5</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
-       <number>5</number>
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
       </property>
       <item>
        <widget class="color_widgets::ColorWheel" name="wheel" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>300</width>
-          <height>300</height>
+          <width>180</width>
+          <height>180</height>
          </size>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QTabWidget" name="tabWidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
-        <widget class="QWidget" name="tab">
+        <widget class="QWidget" name="tabRGB">
          <attribute name="title">
-          <string>Tab 1</string>
+          <string>RGB</string>
          </attribute>
-         <widget class="QWidget" name="layoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>90</x>
-            <y>50</y>
-            <width>308</width>
-            <height>544</height>
-           </rect>
-          </property>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_green">
-             <property name="text">
-              <string>Green</string>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Hex ARGB</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lable_alpha">
-             <property name="text">
-              <string>Alpha</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Color Name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QSpinBox" name="spin_alpha"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_blue">
-             <property name="text">
-              <string>Blue</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="color_widgets::GradientSlider" name="slider_alpha">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QSpinBox" name="spin_green"/>
-           </item>
-           <item row="4" column="2">
-            <widget class="QSpinBox" name="spin_blue"/>
-           </item>
-           <item row="9" column="1" colspan="2">
-            <widget class="QLineEdit" name="value"/>
-           </item>
-           <item row="2" column="2">
-            <widget class="QSpinBox" name="spin_red"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="color_widgets::GradientSlider" name="slider_red">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="color_widgets::GradientSlider" name="slider_green">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_red">
-             <property name="text">
-              <string>Red</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="2">
-            <widget class="QSpinBox" name="spinBox"/>
-           </item>
-           <item row="10" column="1" colspan="2">
-            <widget class="QLineEdit" name="name"/>
-           </item>
-           <item row="1" column="0" colspan="3">
-            <widget class="Line" name="line">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="color_widgets::GradientSlider" name="slider_blue">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0" colspan="3">
-            <widget class="Line" name="line_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_red">
+            <property name="text">
+             <string>Red</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QSpinBox" name="spin_red">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_green">
+            <property name="text">
+             <string>Green</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="color_widgets::GradientSlider" name="slider_green">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QSpinBox" name="spin_green">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_blue">
+            <property name="text">
+             <string>Blue</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="color_widgets::GradientSlider" name="slider_red">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2">
+           <widget class="QSpinBox" name="spin_blue">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="color_widgets::GradientSlider" name="slider_blue">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
-        <widget class="QWidget" name="tab_2">
+        <widget class="QWidget" name="tabHSV">
          <attribute name="title">
-          <string>Tab 2</string>
+          <string>HSV</string>
          </attribute>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="4" column="2">
+           <widget class="QSpinBox" name="spin_value">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="color_widgets::HueSlider" name="slider_hue">
+            <property name="maximum">
+             <number>359</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="color_widgets::GradientSlider" name="slider_saturation">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="color_widgets::GradientSlider" name="slider_value">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="2">
+           <widget class="QSpinBox" name="spin_saturation">
+            <property name="maximum">
+             <number>255</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QSpinBox" name="spin_hue">
+            <property name="maximum">
+             <number>359</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_hue">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Hue</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_saturation">
+            <property name="text">
+             <string>Saturation</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_value">
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QLabel" name="lable_alpha">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Alpha</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="color_widgets::GradientSlider" name="slider_alpha">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="spin_alpha">
+           <property name="maximum">
+            <number>255</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_hex">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Hex RGBA</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_name">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Color Name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="3">
+         <widget class="Line" name="line">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="2">
+         <widget class="QLineEdit" name="name"/>
+        </item>
+        <item row="3" column="1" colspan="2">
+         <widget class="color_widgets::ColorLineEdit" name="edit_hex"/>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -248,7 +403,35 @@
    <extends>QSlider</extends>
    <header>QtColorWidgets/gradient_slider.hpp</header>
   </customwidget>
+  <customwidget>
+   <class>color_widgets::ColorLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>QtColorWidgets/color_line_edit.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>color_widgets::HueSlider</class>
+   <extends>QSlider</extends>
+   <header>QtColorWidgets/hue_slider.hpp</header>
+  </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>spin_blue</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>removeButton</tabstop>
+  <tabstop>spin_green</tabstop>
+  <tabstop>tableView</tabstop>
+  <tabstop>newButton</tabstop>
+  <tabstop>spin_red</tabstop>
+  <tabstop>slider_red</tabstop>
+  <tabstop>slider_green</tabstop>
+  <tabstop>slider_blue</tabstop>
+  <tabstop>slider_hue</tabstop>
+  <tabstop>slider_saturation</tabstop>
+  <tabstop>slider_value</tabstop>
+  <tabstop>spin_hue</tabstop>
+  <tabstop>spin_saturation</tabstop>
+  <tabstop>spin_value</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -258,12 +441,12 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>697</x>
-     <y>392</y>
+     <x>886</x>
+     <y>282</y>
     </hint>
     <hint type="destinationlabel">
-     <x>581</x>
-     <y>391</y>
+     <x>835</x>
+     <y>280</y>
     </hint>
    </hints>
   </connection>
@@ -274,28 +457,28 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>697</x>
-     <y>424</y>
+     <x>886</x>
+     <y>311</y>
     </hint>
     <hint type="destinationlabel">
-     <x>581</x>
-     <y>423</y>
+     <x>835</x>
+     <y>312</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>slider_blue</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>slider_blue</receiver>
+   <receiver>spin_blue</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>581</x>
-     <y>455</y>
+     <x>835</x>
+     <y>344</y>
     </hint>
     <hint type="destinationlabel">
-     <x>581</x>
-     <y>455</y>
+     <x>866</x>
+     <y>329</y>
     </hint>
    </hints>
   </connection>
@@ -306,12 +489,156 @@
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>697</x>
-     <y>350</y>
+     <x>887</x>
+     <y>429</y>
     </hint>
     <hint type="destinationlabel">
-     <x>581</x>
-     <y>349</y>
+     <x>834</x>
+     <y>425</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_red</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spin_red</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>677</x>
+     <y>271</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>866</x>
+     <y>271</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_green</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spin_green</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>677</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>866</x>
+     <y>300</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_hue</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spin_hue</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>558</x>
+     <y>263</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>865</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_saturation</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spin_saturation</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>558</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>865</x>
+     <y>292</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_value</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spin_value</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>558</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>865</x>
+     <y>324</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spin_hue</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_hue</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>865</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>558</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spin_saturation</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_saturation</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>865</x>
+     <y>292</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>558</x>
+     <y>295</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spin_value</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>slider_value</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>865</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>558</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_alpha</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spin_alpha</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>834</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>887</x>
+     <y>429</y>
     </hint>
    </hints>
   </connection>
