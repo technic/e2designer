@@ -29,6 +29,12 @@ public:
 
     void deleteSelected();
 
+    // Widget borders
+    bool haveBorders() const { return m_showBorders; }
+
+public slots:
+    void displayBorders(bool display);
+
 private slots:
     // Screens Model
     void onRowsAboutToBeRemoved(const QModelIndex& parent, int first, int last);
@@ -68,6 +74,8 @@ private:
     QGraphicsPixmapItem* mBackground;
     QGraphicsRectItem* mBackgroundRect;
     QHash<QPersistentModelIndex, WidgetView*> mWidgets;
+
+    bool m_showBorders;
 };
 
 #endif // SCREENVIEW_H

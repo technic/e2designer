@@ -166,6 +166,15 @@ void WidgetView::setAttribute(int key)
     update();
 }
 
+void WidgetView::showBorder(bool show)
+{
+    if (show) {
+        setPen(QPen(Qt::yellow));
+    } else {
+        setPen(Qt::NoPen);
+    }
+}
+
 void WidgetView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     // no blending in the OSD layer

@@ -14,6 +14,7 @@ ScreenView::ScreenView(ScreensModel* model)
     , mSelector(new RectSelector(nullptr))
     , mBackground(new BackgroundPixmap(QPixmap(":/background.jpg")))
     , mBackgroundRect(new BackgroundRect(QRectF()))
+    , m_showBorders(true)
 {
     // Add background pixmap on top, it has composition DestinationOver
     mBackground->setZValue(1000);
@@ -136,6 +137,14 @@ void ScreenView::deleteSelected()
         mModel->removeRow(i.row(), i.parent());
     } else {
         qWarning() << "garbage selected";
+    }
+}
+
+void ScreenView::displayBorders(bool display)
+{
+    m_showBorders = display;
+    for (const auto& widget : mWidgets) {
+        widget->showBorder(display);
     }
 }
 

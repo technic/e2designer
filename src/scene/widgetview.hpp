@@ -32,6 +32,9 @@ public:
 
     //    ~WidgetView() override;
 
+    // Whether to display widget borders
+    void showBorder(bool show);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
