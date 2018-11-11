@@ -5,3 +5,8 @@
 *.log
 build/
 doxygen/
+
+# Visual Studio
+.vs/
+*.vspx
+*.psess
