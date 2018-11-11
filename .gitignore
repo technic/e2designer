@@ -6,7 +6,20 @@
 build/
 doxygen/
 
+# qmake
+/.qmake.stash
+stable.hpp.cpp
+
 # Visual Studio
 .vs/
+target_wrapper.bat
 *.vspx
 *.psess
+*.diagsession
+[Dd]ebug
+[Rr]elease
+GeneratedFiles/
+# Visual Studio Project generated from qmake
+*.sln
+*.vcxproj
+*.vcxproj.filters
