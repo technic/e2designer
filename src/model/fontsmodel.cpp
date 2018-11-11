@@ -211,7 +211,7 @@ bool FontsModel::append(Font f)
 
 bool FontsModel::removeRows(int row, int count, const QModelIndex& parent)
 {
-    if (canRemoveItems(row, count)) {
+    if (canRemoveItems(row, count) && count > 0) {
         beginRemoveRows(parent, row, row + count - 1);
         removeItems(row, count);
         endRemoveRows();

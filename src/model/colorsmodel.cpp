@@ -186,7 +186,7 @@ bool ColorsModel::append(Color c)
 
 bool ColorsModel::removeRows(int row, int count, const QModelIndex& parent)
 {
-    if (canRemoveItems(row, count)) {
+    if (canRemoveItems(row, count) && count > 0) {
         beginRemoveRows(parent, row, row + count - 1);
         removeItems(row, count);
         endRemoveRows();
