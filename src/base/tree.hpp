@@ -38,7 +38,6 @@ public:
     T* self() { return static_cast<T*>(this); }
     const T* self() const { return static_cast<const T*>(this); }
     // Tree-like logic
-
     inline bool isChild() const { return mParent != nullptr; }
     inline Node* parent() const { return mParent; }
     // find my index among sibling nodes
@@ -48,6 +47,7 @@ public:
 
     T* child(int i) const { return mChilds[i]; }
     int childCount() const { return mChilds.size(); }
+
     // takes ownership
     void appendChild(T* child) { insertChild(mChilds.size(), child); }
     virtual bool insertChild(int position, T* child);
