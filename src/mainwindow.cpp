@@ -277,6 +277,28 @@ void MainWindow::editFonts()
 
 void MainWindow::createActions()
 {
+    // Connect actions
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSkin);
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::save);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
+    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
+
+    connect(ui->actionAddWidget, &QAction::triggered, this, &MainWindow::addWidget);
+    connect(ui->actionDeleteWidget, &QAction::triggered, this, &MainWindow::delWidget);
+    connect(ui->actionAddPixmap, &QAction::triggered, this, &MainWindow::addPixmap);
+    connect(ui->actionAddLabel, &QAction::triggered, this, &MainWindow::addLabel);
+    connect(ui->actionAddScreen, &QAction::triggered, this, &MainWindow::addScreen);
+
+    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
+    connect(ui->actionAboutQt, &QAction::triggered, this, &QApplication::aboutQt);
+
+    ui->actionWidget_borders->setChecked(mView->haveBorders());
+    connect(ui->actionWidget_borders, &QAction::triggered, mView, &ScreenView::displayBorders);
+
+    return;
+
+    // File
     QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar* mainToolBar = ui->mainToolBar;
 
@@ -317,6 +339,7 @@ void MainWindow::createActions()
     exitAct->setShortcuts(QKeySequence::Quit);
     exitAct->setStatusTip(tr("Exit the application"));
 
+    // Edit
     QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
 
     QAction* addWidgetAct = editMenu->addAction(tr("Add widget"), this, &MainWindow::addWidget);
@@ -331,6 +354,7 @@ void MainWindow::createActions()
 
     fileMenu->addSeparator();
 
+    // Help
     QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
 
     QAction* aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);

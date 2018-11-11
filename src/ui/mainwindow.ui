@@ -136,6 +136,46 @@
    <property name="nativeMenuBar">
     <bool>true</bool>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionAddWidget"/>
+    <addaction name="actionDeleteWidget"/>
+    <addaction name="actionAddLabel"/>
+    <addaction name="actionAddPixmap"/>
+    <addaction name="actionAddScreen"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditColors"/>
+    <addaction name="actionEditFonts"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionWidget_borders"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -144,7 +184,133 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="separator"/>
+   <addaction name="actionAddWidget"/>
+   <addaction name="actionDeleteWidget"/>
   </widget>
+  <action name="actionOpen">
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open an existing skin</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the document to disk</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>&amp;New</string>
+   </property>
+   <property name="toolTip">
+    <string>Create new skin</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save &amp;As...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the document under a new name</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset theme="document-new">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit the application</string>
+   </property>
+  </action>
+  <action name="actionAddWidget">
+   <property name="text">
+    <string>Add &amp;Widget</string>
+   </property>
+  </action>
+  <action name="actionAddLabel">
+   <property name="text">
+    <string>Add &amp;Label</string>
+   </property>
+  </action>
+  <action name="actionAddPixmap">
+   <property name="text">
+    <string>Add &amp;Pixmap</string>
+   </property>
+  </action>
+  <action name="actionAddScreen">
+   <property name="text">
+    <string>Add &amp;Screen</string>
+   </property>
+  </action>
+  <action name="actionEditColors">
+   <property name="text">
+    <string>Edit &amp;Colors</string>
+   </property>
+  </action>
+  <action name="actionEditFonts">
+   <property name="text">
+    <string>Edit &amp;Fonts</string>
+   </property>
+  </action>
+  <action name="actionWidget_borders">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Widget &amp;borders</string>
+   </property>
+   <property name="toolTip">
+    <string>Display widget borders</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the application's About box</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About &amp;Qt</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the Qt library's About box</string>
+   </property>
+  </action>
+  <action name="actionDeleteWidget">
+   <property name="text">
+    <string>Delete Widget</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
