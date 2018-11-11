@@ -57,7 +57,7 @@ private:
     ColorsModel* mModel;
     bool m_updating;
     QDataWidgetMapper* mMapper;
-    QPersistentModelIndex mCurrentIndex;
+    QPersistentModelIndex mCurrentIndex; // TODO: remove
 };
 
 #endif // COLORLISTWINDOW_H
