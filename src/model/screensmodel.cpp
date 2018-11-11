@@ -13,7 +13,6 @@ void ScreensTree::loadPreviews()
         return;
 
     QXmlStreamReader xml(&file);
-    auto converter = QMetaEnum::fromType<Property::Render>();
 
     while (xml.readNextStartElement()) {
         if (xml.name() == "screens")
@@ -43,12 +42,9 @@ void ScreensTree::loadPreviews()
                     // we are inside entry
                     const QString widgetName = xml.attributes().value("name").toString();
                     const QString value = xml.attributes().value("value").toString();
-                    QStringRef rstr = xml.attributes().value("render");
-                    bool ok;
-                    int render = converter.keyToValue(rstr.toLatin1().data(), &ok);
-                    if (!ok)
-                        render = Property::Widget;
-                    if (!widgetName.isNull() && !widgetName.isEmpty()) {
+                    QString str = xml.attributes().value("render").toString();
+                    auto render = EnumAttr<Property::Render>(str).value();
+                    if (!widgetName.isEmpty()) {
                         map.insert(widgetName, Preview(value, render));
                     }
                 }
