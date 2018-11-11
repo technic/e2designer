@@ -159,7 +159,11 @@ bool ColorsModel::setData(const QModelIndex& index, const QVariant& value, int r
         }
     }
     if (changed) {
-        emit dataChanged(index.sibling(index.row(), 0), index.sibling(index.row(), ColumnsCount));
+        auto sibling = [index](int col) {
+            return index.sibling(index.row(), col); };
+        emit dataChanged(sibling(ColumnName), sibling(ColumnName));
+        emit dataChanged(sibling(ColumnValue), sibling(ColumnValue));
+        emit dataChanged(sibling(ColumnColor), sibling(ColumnColor));
     }
     return changed;
 }
