@@ -127,8 +127,10 @@ QVariant ColorsModel::data(const QModelIndex& index, int role) const
         case ColumnValue:
             return itemAt(index.row()).valueStr();
         case ColumnColor:
-            return QString();
+            if (role == Qt::EditRole)
+				return QColor::fromRgba(itemAt(index.row()).value());
         }
+        break;
     case Qt::BackgroundColorRole:
         switch (index.column()) {
         case ColumnColor:
@@ -155,6 +157,9 @@ bool ColorsModel::setData(const QModelIndex& index, const QVariant& value, int r
             break;
         case ColumnValue:
             changed = setItemValue(index.row(), QColor(value.toString()).rgba());
+            break;
+        case ColumnColor:
+            changed = setItemValue(index.row(), qvariant_cast<QColor>(value).rgba());
             break;
         }
     }
