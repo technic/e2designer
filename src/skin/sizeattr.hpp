@@ -9,6 +9,7 @@ class Dimension
 {
 public:
     Dimension();
+    Dimension(int px);
     Dimension(const QString &str) { parseStr(str); }
     enum {
         Fill, // TODO: implement this

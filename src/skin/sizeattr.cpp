@@ -9,6 +9,11 @@ Dimension::Dimension()
     m_value = 0;
 }
 
+Dimension::Dimension(int px)
+    : m_type(Number), m_value(px)
+{
+}
+
 void Dimension::parseStr(const QString& str)
 {
     m_value = str.toInt();
