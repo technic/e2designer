@@ -1,16 +1,21 @@
 #include "colorlistwindow.hpp"
 #include "model/colorsmodel.hpp"
 #include "repository/skinrepository.hpp"
+#include "base/flagsetter.hpp"
 #include "ui_colorlistwindow.h"
 #include <QDebug>
 #include <QMessageBox>
-
-#include <QtColorWidgets/ColorDialog>
+#include <array>
+#include <QtColorWidgets/color_line_edit.hpp>
+#include <QtColorWidgets/color_dialog.hpp>
+#include <QtColorWidgets/ColorSelector>
 
 ColorListWindow::ColorListWindow(QWidget* parent)
     : QDockWidget(parent)
     , ui(new Ui::ColorListWindow)
     , mModel(SkinRepository::colors())
+    , m_updating(false)
+    , mMapper(new QDataWidgetMapper(this))
 {
     ui->setupUi(this);
 
@@ -27,43 +32,166 @@ ColorListWindow::ColorListWindow(QWidget* parent)
     ui->tableView->setModel(mModel);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    mMapper = new QDataWidgetMapper(this);
-    mMapper->setModel(mModel);
+    // Color selectors
+    using namespace color_widgets;
+    // Rgb
+    connect(ui->slider_red, &GradientSlider::valueChanged, this, &ColorListWindow::setRgb);
+    connect(ui->slider_green, &GradientSlider::valueChanged, this, &ColorListWindow::setRgb);
+    connect(ui->slider_blue, &GradientSlider::valueChanged, this, &ColorListWindow::setRgb);
+    // Hsv
+    connect(ui->slider_hue, &HueSlider::valueChanged, this, &ColorListWindow::setHsv);
+    connect(ui->slider_saturation, &GradientSlider::valueChanged, this, &ColorListWindow::setHsv);
+    connect(ui->slider_value, &GradientSlider::valueChanged, this, &ColorListWindow::setHsv);
+    // Alpha
+    connect(ui->slider_alpha, &GradientSlider::valueChanged, this, &ColorListWindow::setAlpha);
+    // Hex
+    connect(ui->edit_hex, &ColorLineEdit::colorChanged, this, &ColorListWindow::setHex);
+    // Wheel
+    connect(ui->wheel, &ColorWheel::colorChanged, this, &ColorListWindow::setFromWheel);
+
+	// Map model data to color widgets
+	mMapper->setModel(mModel);
     mMapper->addMapping(ui->name, ColorsModel::ColumnName);
-    mMapper->addMapping(ui->value, ColorsModel::ColumnValue);
-    mMapper->addMapping(ui->wheel, ColorsModel::ColumnValue, "color");
+    mMapper->addMapping(this, ColorsModel::ColumnColor, "color");
     connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, mMapper,
             &QDataWidgetMapper::setCurrentModelIndex);
+    mMapper->toFirst();
+	// submit immediately
+    connect(this, &ColorListWindow::colorChanged, mMapper, &QDataWidgetMapper::submit);
 
-    connect(ui->wheel, &color_widgets::ColorWheel::colorChanged, [this](QColor col) {
-        mMapper->submit();
-        update_widgets();
-    });
-
-    QWidget* w = new color_widgets::ColorDialog(this, Qt::Widget);
-    ui->dockWidgetContents->layout()->addWidget(w);
 }
 
 ColorListWindow::~ColorListWindow()
 {
     delete ui;
 }
-void ColorListWindow::update_widgets()
-{
-    QColor c = color();
 
-    ui->slider_red->setValue(c.red());
+void ColorListWindow::updateColorWidgets(const QColor &col)
+{
+    FlagSetter fs(&m_updating);
+
+    const std::array<QWidget*, 16> widgets = {
+        ui->wheel, ui->edit_hex,
+        ui->slider_red, ui->slider_green, ui->slider_blue,
+        ui->spin_red, ui->spin_green, ui->spin_blue,
+        ui->slider_hue, ui->slider_saturation, ui->slider_value,
+        ui->spin_hue, ui->spin_saturation, ui->spin_value,
+        ui->spin_alpha, ui->slider_alpha
+    };
+    for (auto &w: widgets) {
+        w->blockSignals(true);
+    }
+
+    // Wheel
+
+    ui->wheel->setColor(col);
+
+    // RGB sliders
+
+    ui->slider_red->setValue(col.red());
     ui->spin_red->setValue(ui->slider_red->value());
-    ui->slider_green->setValue(c.green());
+    ui->slider_red->setFirstColor(QColor(0, col.green(), col.blue()));
+    ui->slider_red->setLastColor(QColor(255, col.green(), col.blue()));
+
+    ui->slider_green->setValue(col.green());
     ui->spin_green->setValue(ui->slider_green->value());
-    ui->slider_blue->setValue(c.blue());
+    ui->slider_green->setFirstColor(QColor(col.red(), 0, col.blue()));
+    ui->slider_green->setLastColor(QColor(col.red(), 255, col.blue()));
+
+    ui->slider_blue->setValue(col.blue());
     ui->spin_blue->setValue(ui->slider_blue->value());
+    ui->slider_blue->setFirstColor(QColor(col.red(), col.green(), 0));
+    ui->slider_blue->setLastColor(QColor(col.red(), col.green(), 255));
+
+	// HSV sliders
+
+    ui->slider_hue->setValue(qRound(ui->wheel->hue() * 360.0));
+    ui->slider_hue->setColorSaturation(ui->wheel->saturation());
+    ui->slider_hue->setColorValue(ui->wheel->value());
+    ui->spin_hue->setValue(ui->slider_hue->value());
+
+    ui->slider_saturation->setValue(qRound(ui->wheel->saturation() * 255.0));
+    ui->spin_saturation->setValue(ui->slider_saturation->value());
+    ui->slider_saturation->setFirstColor(QColor::fromHsvF(ui->wheel->hue(), 0, ui->wheel->value()));
+    ui->slider_saturation->setLastColor(QColor::fromHsvF(ui->wheel->hue(), 1, ui->wheel->value()));
+
+    ui->slider_value->setValue(qRound(ui->wheel->value() * 255.0));
+    ui->spin_value->setValue(ui->slider_value->value());
+    ui->slider_value->setFirstColor(QColor::fromHsvF(ui->wheel->hue(), ui->wheel->saturation(), 0));
+    ui->slider_value->setLastColor(QColor::fromHsvF(ui->wheel->hue(), ui->wheel->saturation(), 1));
+
+	// Alpha slider
+
+    ui->slider_alpha->setValue(col.alpha());
+    ui->spin_alpha->setValue(ui->slider_alpha->value());
+    QColor apha_color = col;
+    apha_color.setAlpha(0);
+    ui->slider_alpha->setFirstColor(apha_color);
+    apha_color.setAlpha(255);
+    ui->slider_alpha->setLastColor(apha_color);
+
+    // Hex editor
+
+    if (ui->edit_hex->isModified())
+        ui->edit_hex->setColor(col);
+
+    // Push changes to model
+    qDebug() << "changed" << color();
+    emit colorChanged();
+
+    for (auto &w: widgets) {
+        w->blockSignals(false);
+    }
 }
 
 QColor ColorListWindow::color()
 {
-    return ui->wheel->color();
+    QColor col = ui->wheel->color();
+    col.setAlpha(ui->slider_alpha->value());
+    return col;
 }
+
+void ColorListWindow::setColor(const QColor &col)
+{
+    if (m_updating)
+        return;
+    updateColorWidgets(col);
+}
+
+void ColorListWindow::setFromWheel()
+{
+    QColor col = ui->wheel->color();
+    col.setAlpha(ui->slider_alpha->value());
+    updateColorWidgets(col);
+}
+
+void ColorListWindow::setRgb()
+{
+    QColor col(ui->slider_red->value(),
+               ui->slider_green->value(),
+               ui->slider_blue->value(),
+               ui->slider_alpha->value());
+    updateColorWidgets(col);
+}
+void ColorListWindow::setHsv()
+{
+    auto col = QColor::fromHsv(ui->slider_hue->value(),
+                               ui->slider_saturation->value(),
+                               ui->slider_value->value(),
+                               ui->slider_alpha->value());
+    updateColorWidgets(col);
+}
+
+void ColorListWindow::setHex(const QColor &color)
+{
+    updateColorWidgets(color);
+}
+
+void ColorListWindow::setAlpha()
+{
+    updateColorWidgets(color());
+}
+
 void ColorListWindow::remove()
 {
     QList<int> rows;

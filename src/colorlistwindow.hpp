@@ -22,11 +22,23 @@ public:
     explicit ColorListWindow(QWidget* parent = Q_NULLPTR);
     ~ColorListWindow();
 
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     QColor color();
+    void setColor(const QColor &color);
+
+signals:
+    void colorChanged();
+
 public slots:
-    void update_widgets();
+    // Color selector widgets
+    void setFromWheel();
+    void setRgb();
+    void setHsv();
+    void setHex(const QColor& color);
+    void setAlpha();
 
 private slots:
+	// Colors model
     void remove();
     void add();
     void addDefault();
@@ -34,12 +46,16 @@ private slots:
 
     void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 
+
+    void updateColorWidgets(const QColor &col);
+
 private:
     QRgb currentColor() const;
     bool confirmAdd(const QString& name);
 
     Ui::ColorListWindow* ui;
     ColorsModel* mModel;
+    bool m_updating;
     QDataWidgetMapper* mMapper;
     QPersistentModelIndex mCurrentIndex;
 };
