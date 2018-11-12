@@ -214,16 +214,17 @@ void MainWindow::addSkinItem(int type)
 {
     // FIXME: is m_view always athorative?
     // TODO: should model provide more friendly interface?
-    auto model = SkinRepository::screens();
+    auto &model = *SkinRepository::screens();
     QModelIndex screen = mView->currentIndex();
-    model->insertRow(model->rowCount(screen), screen);
-    QModelIndex widget = model->index(model->rowCount(screen) - 1, 0, screen);
-    model->setData(widget, type, ScreensModel::TypeRole);
-    model->setWidgetAttr(widget, Property::size, QSize(100, 100), Roles::GraphicsRole);
+    model.insertRow(model.rowCount(screen), screen);
+    QModelIndex widget = model.index(model.rowCount(screen) - 1, 0, screen);
+    model.setData(widget, type, ScreensModel::TypeRole);
+    auto size = SizeAttr(100, 100);
+    model.setWidgetAttr(widget, Property::size, QVariant::fromValue(size));
     if (type == WidgetData::Widget) {
-        model->setWidgetAttr(widget, Property::name, "Untitled", Qt::EditRole);
+        model.setWidgetAttr(widget, Property::name, "Untitled");
     } else if (type == WidgetData::Label) {
-        model->setWidgetAttr(widget, Property::text, "Default text", Qt::EditRole);
+        model.setWidgetAttr(widget, Property::text, "Default text");
     }
 }
 
@@ -241,15 +242,18 @@ void MainWindow::addLabel()
 }
 void MainWindow::addScreen()
 {
-    auto model = SkinRepository::instance().screens();
+    auto &model = *SkinRepository::instance().screens();
     // TODO: should model provide more friendly interface?
     QModelIndex root;
-    model->insertRow(model->rowCount(root), root);
-    QModelIndex screen = model->index(model->rowCount(root) - 1, 0, root);
-    model->setData(screen, WidgetData::Screen, ScreensModel::TypeRole);
-    model->setWidgetAttr(screen, Property::position, "center,center", Qt::EditRole);
-    model->setWidgetAttr(screen, Property::size, QSize(300, 200), Roles::GraphicsRole);
-    model->setWidgetAttr(screen, Property::name, "UntitledScreen", Qt::EditRole);
+    model.insertRow(model.rowCount(root), root);
+    QModelIndex screen = model.index(model.rowCount(root) - 1, 0, root);
+    model.setData(screen, WidgetData::Screen, ScreensModel::TypeRole);
+    auto pos = PositionAttr("center,center");
+    auto size = SizeAttr(300, 200);
+    model.setWidgetAttr(screen, Property::position, QVariant::fromValue(pos));
+    model.setWidgetAttr(screen, Property::size, QVariant::fromValue(size));
+    model.setWidgetAttr(screen, Property::name, "UntitledScreen");
+    QVariant(QColor(Qt::red));
 }
 
 void MainWindow::delWidget()
