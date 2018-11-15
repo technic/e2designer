@@ -11,6 +11,9 @@ PropertiesModel::PropertiesModel(ScreensModel *model, QObject* parent)
     Q_CHECK_PTR(mModel);
     connect(mModel, &ScreensModel::widgetChanged,
             this, &PropertiesModel::onAttributeChanged);
+
+    connect(mModel, &ScreensModel::modelAboutToBeReset,
+            this, &PropertiesModel::onModelAboutToBeReset);
 }
 
 PropertiesModel::~PropertiesModel()
@@ -175,6 +178,12 @@ void PropertiesModel::onAttributeChanged(const QModelIndex &index, int key)
         emit dataChanged(index, index);
         // TODO: emit also for childs
     }
+}
+
+void PropertiesModel::onModelAboutToBeReset()
+{
+    // Our widget becomes invalid
+    setWidget(QModelIndex());
 }
 
 //void PropertiesModel::onWidgetDestroyed()

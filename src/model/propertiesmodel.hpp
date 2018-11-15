@@ -43,6 +43,7 @@ public:
 
 private slots:
     void onAttributeChanged(const QModelIndex &index, int key);
+    void onModelAboutToBeReset();
 
 private:
     static Item* castItem(QModelIndex index);
