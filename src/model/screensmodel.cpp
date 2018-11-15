@@ -443,9 +443,8 @@ void ScreensModel::onFontChanged(const QString &name, const Font &value)
 
 ScreensModel::Item *ScreensModel::indexToItem(const QModelIndex &index)
 {
-    Q_ASSERT(index.model() == this);
-
     if (index.isValid()) {
+        Q_ASSERT(index.model() == this);
         return static_cast<Item*>(index.internalPointer());
     } else {
         return mRoot;
