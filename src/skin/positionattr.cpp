@@ -55,7 +55,7 @@ void Coordinate::parseInt(int value, int my_size, int parent_size)
         // exact match, set Center
         m_type = Type::Center;
     } else if (m_type == Type::Center && value == (parent_size - my_size) / 2) {
-        // keep Center
+        // one pixel precision, keep Center
     } else {
         m_type = Type::Pixel;
         m_value = value;
