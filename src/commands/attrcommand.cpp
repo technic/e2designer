@@ -68,9 +68,13 @@ bool MoveWidgetCommand::mergeWith(const QUndoCommand *other)
     if (id() != other->id()) {
         return false;
     }
-    m_point = static_cast<const MoveWidgetCommand *>(other)->m_point;
-    updateText();
-    return true;
+    auto otherCommand = static_cast<const MoveWidgetCommand *>(other);
+    if (otherCommand->m_widget == m_widget) {
+        m_point = otherCommand->m_point;
+        updateText();
+        return true;
+    }
+    return false;
 }
 
 void MoveWidgetCommand::updateText()
@@ -104,9 +108,13 @@ bool ResizeWidgetCommand::mergeWith(const QUndoCommand *other)
     if (id() != other->id()) {
         return false;
     }
-    m_size = static_cast<const ResizeWidgetCommand *>(other)->m_size;
-    updateText();
-    return true;
+    auto otherCommand = static_cast<const ResizeWidgetCommand *>(other);
+    if (otherCommand->m_widget == m_widget) {
+        m_size = otherCommand->m_size;
+        updateText();
+        return true;
+    }
+    return false;
 }
 
 void ResizeWidgetCommand::updateText()
