@@ -117,6 +117,7 @@ ScreensModel::ScreensModel(ColorsModel *colors, FontsModel *fonts, QObject* pare
     , mRoot(new WidgetData())
     , mCommander(new QUndoStack(this))
 {
+    mCommander->setUndoLimit(100);
     mRoot->setModel(this);
     connect(colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
     connect(fonts, &FontsModel::valueChanged, this, &ScreensModel::onFontChanged);
