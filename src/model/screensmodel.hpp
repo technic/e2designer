@@ -124,10 +124,12 @@ private:
 	QTimer* m_timer;
     QTime m_lastShot;
 
+    // own
     WidgetData* mRoot;
 //    QMap<QString, QMap<QString, Preview>> mPreviews;
 
 //    QMap<int, WidgetObserver*> mObservers;
+    // QObject owned
     QUndoStack *mCommander;
 };
 
