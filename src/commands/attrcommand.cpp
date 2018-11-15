@@ -8,6 +8,12 @@ AttrCommand::AttrCommand(WidgetData *widget, int key, QVariant value, QUndoComma
     , m_value(value)
 {
     m_oldValue = m_widget->getAttr(m_key);
+
+    int index = key + 1; // first key is invalid
+    Q_ASSERT(Property::propertyEnum().value(index) == key);
+
+    const QString name(Property::propertyEnum().key(index));
+    setText(QString("%1 = %2").arg(name).arg(value.toString()));
 }
 
 void AttrCommand::redo()

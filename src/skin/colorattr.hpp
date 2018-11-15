@@ -21,6 +21,7 @@ public:
     void setColorName(const QString& name);
 
     QString toStr(bool invertAlpha = true) const;
+    QString toString() const { return toStr(false); }
     inline QString toXml() const { return toStr(true); }
     bool fromStr(const QString& str, bool invertAlpha = false);
 
@@ -40,6 +41,8 @@ inline QString serialize(const ColorAttr &color) {
 inline void deserialize(const QString &str, ColorAttr &color) {
     color = ColorAttr(str);
 }
+
+
 
 
 #endif // COLORATTR_HPP

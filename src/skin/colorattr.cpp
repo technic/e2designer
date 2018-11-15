@@ -1,4 +1,5 @@
 #include "colorattr.hpp"
+#include "base/meta.hpp"
 #include "repository/skinrepository.hpp"
 #include <QColor>
 
@@ -97,3 +98,5 @@ void ColorAttr::updateValue(QRgb value)
     Q_ASSERT(!mName.isEmpty());
     mValue = value;
 }
+
+static ConverterRegistrator cr(&ColorAttr::toString);

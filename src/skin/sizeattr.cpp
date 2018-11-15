@@ -1,5 +1,6 @@
 #include "sizeattr.hpp"
 #include "skin/widgetdata.hpp"
+#include "base/meta.hpp"
 #include <QDebug>
 
 Dimension::Dimension()
@@ -97,4 +98,6 @@ void SizeAttr::fromStr(const QString& str)
         qDebug() << "bad position:" << str;
     }
 }
+
+static ConverterRegistrator cr(&SizeAttr::toStr);
 

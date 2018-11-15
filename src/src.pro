@@ -110,7 +110,8 @@ HEADERS += \
     skin/positionattr.hpp \
     skin/enumattr.hpp \
     skin/converter.hpp \
-    skin/offsetattr.hpp
+    skin/offsetattr.hpp \
+    base/meta.hpp
 
 FORMS += \
     ui/mainwindow.ui \

@@ -1,5 +1,6 @@
 #include "positionattr.hpp"
 #include "skin/widgetdata.hpp"
+#include "base/meta.hpp"
 #include <QPoint>
 #include <QSize>
 #include <QDebug>
@@ -105,3 +106,5 @@ void PositionAttr::fromStr(const QString& str)
         qWarning() << "bad position:" << str;
     }
 }
+
+static ConverterRegistrator cr(&PositionAttr::toStr);
