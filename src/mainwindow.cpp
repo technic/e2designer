@@ -306,6 +306,9 @@ void MainWindow::createActions()
     ui->actionWidget_borders->setChecked(mView->haveBorders());
     connect(ui->actionWidget_borders, &QAction::triggered, mView, &ScreenView::displayBorders);
 
+    connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
+    connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);
+
     return;
 
     // File
