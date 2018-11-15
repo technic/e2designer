@@ -5,8 +5,8 @@
 
 RectSelector::RectSelector(QGraphicsItem* parent)
     : QGraphicsRectItem(parent)
-    , m_xanchor(Coordinate::Pixel)
-    , m_yanchor(Coordinate::Pixel)
+    , m_xanchor(Coordinate::Type::Pixel)
+    , m_yanchor(Coordinate::Type::Pixel)
 {
     m_handles.append(new RectHandle(RectHandle::Top, this));
     m_handles.append(new RectHandle(RectHandle::Bottom, this));
@@ -30,12 +30,12 @@ void RectSelector::resize(const QRectF& rectangle)
 
     qreal dw;
     switch (m_xanchor) {
-    case Coordinate::Pixel:
-    case Coordinate::Percent:
+    case Coordinate::Type::Pixel:
+    case Coordinate::Type::Percent:
         r.setLeft(rectangle.left());
         r.setRight(rectangle.right());
         break;
-    case Coordinate::Center:
+    case Coordinate::Type::Center:
         dw = rectangle.width() - r.width();
         r.adjust(-dw, 0., +dw, 0.);
         break;
@@ -45,12 +45,12 @@ void RectSelector::resize(const QRectF& rectangle)
     }
     qreal dh;
     switch (m_yanchor) {
-    case Coordinate::Pixel:
-    case Coordinate::Percent:
+    case Coordinate::Type::Pixel:
+    case Coordinate::Type::Percent:
         r.setTop(rectangle.top());
         r.setBottom(rectangle.bottom());
         break;
-    case Coordinate::Center:
+    case Coordinate::Type::Center:
         dh = rectangle.height() - r.height();
         r.adjust(0., -dh, 0., +dh);
         break;
