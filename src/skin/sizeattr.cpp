@@ -32,7 +32,12 @@ QString Dimension::toStr() const
 
 int Dimension::getInt(int parent_size) const
 {
-    return m_value;
+    switch (m_type) {
+    case Number:
+        return m_value;
+    case Percent:
+        return m_value * parent_size / 100;
+    }
 }
 void Dimension::setInt(int value)
 {
