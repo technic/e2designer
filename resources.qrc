@@ -2,4 +2,10 @@
     <qresource prefix="/">
         <file>background.jpg</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>icons/baseline-redo-24px.svg</file>
+        <file>icons/baseline-save-24px.svg</file>
+        <file>icons/baseline-undo-24px.svg</file>
+        <file>icons/folder-open.svg</file>
+    </qresource>
 </RCC>

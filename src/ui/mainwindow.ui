@@ -206,6 +206,10 @@
    </widget>
   </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/icons/icons/folder-open.svg</normaloff>:/icons/icons/folder-open.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Open...</string>
    </property>
@@ -217,6 +221,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/icons/icons/baseline-save-24px.svg</normaloff>:/icons/icons/baseline-save-24px.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Save</string>
    </property>
@@ -327,13 +335,27 @@
    </property>
   </action>
   <action name="actionUndo">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/icons/icons/baseline-undo-24px.svg</normaloff>:/icons/icons/baseline-undo-24px.svg</iconset>
+   </property>
    <property name="text">
     <string>Undo</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="actionRedo">
+   <property name="icon">
+    <iconset resource="../../resources.qrc">
+     <normaloff>:/icons/icons/baseline-redo-24px.svg</normaloff>:/icons/icons/baseline-redo-24px.svg</iconset>
+   </property>
    <property name="text">
     <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Z</string>
    </property>
   </action>
  </widget>
@@ -355,6 +377,8 @@
    <header>QUndoView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
