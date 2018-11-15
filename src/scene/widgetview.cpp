@@ -77,6 +77,7 @@ void WidgetView::updateAttribute(int key)
 {
     if (mRectChange)
         return;
+    FlagSetter fs(&mRectChange);
 
     auto &w = mModel->widget(mData);
 
