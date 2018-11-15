@@ -1,5 +1,5 @@
 #include "attrcommand.hpp"
-#include "repository/skinrepository.hpp"
+#include "skin/widgetdata.hpp"
 
 AttrCommand::AttrCommand(WidgetData *widget, int key, QVariant value, QUndoCommand *parent)
     : QUndoCommand(parent)

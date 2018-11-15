@@ -8,7 +8,6 @@
 #include <QPoint>
 #include <QSize>
 
-class ScreensModel;
 
 QVector<int> pathFromIndex(QModelIndex idx);
 QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model);
