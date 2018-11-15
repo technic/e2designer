@@ -37,6 +37,7 @@ public:
     void undo() final;
     bool mergeWith(const QUndoCommand *other) final;
 private:
+    void updateText();
     WidgetData *m_widget;
     QPointF m_point;
     PositionAttr m_pos;
@@ -51,6 +52,7 @@ public:
     void undo() final;
     bool mergeWith(const QUndoCommand *other) final;
 private:
+    void updateText();
     WidgetData *m_widget;
     QSizeF m_size;
     SizeAttr m_value;

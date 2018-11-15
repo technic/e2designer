@@ -50,9 +50,7 @@ MoveWidgetCommand::MoveWidgetCommand(WidgetData *widget, QPointF pos)
     , m_point(pos)
     , m_pos(m_widget->position())
 {
-    setText(QString("Move %1,%2")
-            .arg(pos.toPoint().x())
-            .arg(pos.toPoint().y()));
+    updateText();
 }
 
 void MoveWidgetCommand::redo()
@@ -71,7 +69,16 @@ bool MoveWidgetCommand::mergeWith(const QUndoCommand *other)
         return false;
     }
     m_point = static_cast<const MoveWidgetCommand *>(other)->m_point;
+    updateText();
     return true;
+}
+
+void MoveWidgetCommand::updateText()
+{
+    setText(QString("Move %1,%2")
+            .arg(m_point.toPoint().x())
+            .arg(m_point.toPoint().y()));
+
 }
 
 ResizeWidgetCommand::ResizeWidgetCommand(WidgetData *widget, QSizeF size)
@@ -79,9 +86,7 @@ ResizeWidgetCommand::ResizeWidgetCommand(WidgetData *widget, QSizeF size)
     , m_size(size)
     , m_value(m_widget->size())
 {
-    setText(QString("Resize %1x%2")
-            .arg(size.toSize().width())
-            .arg(size.toSize().height()));
+    updateText();
 }
 
 void ResizeWidgetCommand::redo()
@@ -100,5 +105,13 @@ bool ResizeWidgetCommand::mergeWith(const QUndoCommand *other)
         return false;
     }
     m_size = static_cast<const ResizeWidgetCommand *>(other)->m_size;
+    updateText();
     return true;
+}
+
+void ResizeWidgetCommand::updateText()
+{
+    setText(QString("Resize %1x%2")
+            .arg(m_size.toSize().width())
+            .arg(m_size.toSize().height()));
 }
