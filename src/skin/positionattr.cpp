@@ -19,21 +19,21 @@ Coordinate::Coordinate(const QString &str)
 void Coordinate::parseStr(const QString& str)
 {
     if (str == "center") {
-        m_type = Center;
+        m_type = Type::Center;
     } else if (str.endsWith("%")) {
-        m_type = Percent;
+        m_type = Type::Percent;
         m_value = str.leftRef(str.size() - 1).toInt();
     } else {
-        m_type = Pixel;
+        m_type = Type::Pixel;
         m_value = str.toInt();
     }
 }
 
 QString Coordinate::toStr() const
 {
-    if (m_type == Center) {
+    if (m_type == Type::Center) {
         return "center";
-    } else if (m_type == Percent) {
+    } else if (m_type == Type::Percent) {
         return QString("%1%").arg(m_value);
     } else {
         return QString("%1").arg(m_value);
@@ -42,7 +42,7 @@ QString Coordinate::toStr() const
 
 int Coordinate::getInt(int my_size, int parent_size) const
 {
-    if (m_type == Center) {
+    if (m_type == Type::Center) {
         return (parent_size - my_size) / 2;
     } else {
         return m_value;
@@ -53,18 +53,18 @@ void Coordinate::parseInt(int value, int my_size, int parent_size)
 {
     if (value * 2 == parent_size - my_size) {
         // exact match, set Center
-        m_type = Center;
-    } else if (m_type == Center && value == (parent_size - my_size) / 2) {
+        m_type = Type::Center;
+    } else if (m_type == Type::Center && value == (parent_size - my_size) / 2) {
         // keep Center
     } else {
-        m_type = Pixel;
+        m_type = Type::Pixel;
         m_value = value;
     }
 }
 
 bool Coordinate::isRelative() const
 {
-    return m_type == Center;
+    return m_type == Type::Center;
 }
 
 

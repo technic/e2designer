@@ -5,12 +5,12 @@
 Dimension::Dimension()
 {
     // default
-    m_type = Number;
+    m_type = Type::Number;
     m_value = 0;
 }
 
 Dimension::Dimension(int px)
-    : m_type(Number), m_value(px)
+    : m_type(Type::Number), m_value(px)
 {
 }
 
@@ -21,9 +21,9 @@ void Dimension::parseStr(const QString& str)
 QString Dimension::toStr() const
 {
     switch (m_type) {
-    case Number:
+    case Type::Number:
         return QString("%1").arg(m_value);
-    case Percent:
+    case Type::Percent:
         return QString("%1%").arg(m_value);
     default:
         return QString("");
@@ -33,23 +33,25 @@ QString Dimension::toStr() const
 int Dimension::getInt(int parent_size) const
 {
     switch (m_type) {
-    case Number:
+    case Type::Number:
         return m_value;
-    case Percent:
+    case Type::Percent:
         return m_value * parent_size / 100;
+    case Type::Fill:
+        return parent_size;
     }
 }
 void Dimension::setInt(int value)
 {
-    m_type = Number;
+    m_type = Type::Number;
     m_value = value;
 }
 
 void Dimension::parseInt(int value, int parent_size)
 {
-    if (m_type == Number) {
+    if (m_type == Type::Number) {
         m_value = value;
-    } else if (m_type == Percent) {
+    } else if (m_type == Type::Percent) {
         m_value = value * 100 / parent_size;
     }
 }

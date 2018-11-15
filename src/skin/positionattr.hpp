@@ -15,13 +15,13 @@
 class Coordinate
 {
 public:
-    enum Type {
+    enum class Type {
         Pixel,
         Percent,
         Center,
     };
-    Coordinate(int px) : Coordinate(Pixel, px) {}
-    explicit Coordinate(Type type = Pixel, int value = 0);
+    Coordinate(int px) : Coordinate(Type::Pixel, px) {}
+    explicit Coordinate(Type type = Type::Pixel, int value = 0);
     explicit Coordinate(const QString &str);
 
     inline Type type() const { return m_type; }

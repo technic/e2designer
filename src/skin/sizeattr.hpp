@@ -11,13 +11,13 @@ public:
     Dimension();
     Dimension(int px);
     Dimension(const QString &str) { parseStr(str); }
-    enum {
+    enum class Type {
         Fill, // TODO: implement this
         Percent, // TODO: implement this
         Number,
     };
 
-    inline int type() const { return m_type; }
+    inline Type type() const { return m_type; }
     inline int value() const { return m_value; }
 
     /// Load and save text
@@ -39,7 +39,7 @@ public:
     }
 
 private:
-    int m_type;
+    Type m_type;
     int m_value;
 };
 
