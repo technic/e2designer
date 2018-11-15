@@ -82,7 +82,6 @@ void MoveWidgetCommand::updateText()
     setText(QString("Move %1,%2")
             .arg(m_point.toPoint().x())
             .arg(m_point.toPoint().y()));
-
 }
 
 ResizeWidgetCommand::ResizeWidgetCommand(WidgetData *widget, QSizeF size)
