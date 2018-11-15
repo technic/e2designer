@@ -17,60 +17,6 @@
 #include <type_traits>
 #include <typeinfo>
 
-//class AbstractSerializer {
-//public:
-//    virtual QString toStr(const WidgetData &w, int key) = 0;
-//    virtual void setFromStr(WidgetData &w, int key, const QString &str) = 0;
-//    virtual QVariant toVariant(const WidgetData &w, int key) = 0;
-//    virtual void setFromVariant(WidgetData &w, int key, const QVariant &v) = 0;
-//    // destructor
-//    virtual ~AbstractSerializer() {}
-//};
-
-//template<typename T>
-//class Serializer : public AbstractSerializer {
-//public:
-//    QString toStr(const WidgetData &w, int key) final {
-//        w.get<T>(key).toStr();
-//    }
-//    void setFromStr(WidgetData &w, int key, const QString &str) final {
-//        w.set(key, T(str));
-//    }
-//    QVariant toVariant(const WidgetData &w, int key) final {
-//        return QVariant::fromValue(w.get<T>(key));
-//    }
-//    void setFromVariant(WidgetData &w, int key, const QVariant &v) final {
-//        w.set(key, qvariant_cast<T>(v));
-//    }
-//};
-
-//class WidgetSerializer {
-//public:
-//    WidgetSerializer();
-//    template<typename T>
-//    void add(int k) {
-//        Q_ASSERT(m_map.find(k) == m_map.end());
-//        m_map[k] = new T();
-//    }
-//    ~WidgetSerializer() {
-//        qDeleteAll(m_map.values());
-//    }
-
-//    using Hash = QHash<int, AbstractSerializer*>;
-//    // Allow iteration
-//    inline Hash::const_iterator cbegin() const { return m_map.cbegin(); }
-//    inline Hash::const_iterator cend() const { return m_map.cend(); }
-//    inline Hash::const_iterator find(int key) const { return m_map.find(key); }
-//private:
-//    Hash m_map;
-//};
-
-//WidgetSerializer::WidgetSerializer()
-//{
-//}
-
-//static WidgetSerializer serializer;
-
 
 using Widget = WidgetData;
 
@@ -128,46 +74,6 @@ Reflection<T, Getter, Setter>* makeReflection(Getter g, Setter s) {
     return new Reflection<T, Getter, Setter>(g, s);
 }
 
-//template<typename T>
-//class Reflection : public AbstractReflection {
-//public:
-//    Reflection(Getter<T> get_method, Setter<T> set_method)
-//        : m_getter(get_method), m_setter(set_method) {}
-
-//    QVariant get(const Widget &w) final {
-//        const T& t = (w.*m_getter)();
-//        return QVariant::fromValue(t);
-//    }
-//    void set(Widget &w, const QVariant &v) final {
-//        const T& t = v.value<T>();
-//        (w.*m_setter)(t);
-//    }
-//    int type() const final { return qMetaTypeId<T>(); }
-//private:
-//    Getter<T> m_getter;
-//    Setter<T> m_setter;
-//};
-
-//template<typename T>
-//class ReflectionValue : public AbstractReflection {
-//public:
-//    ReflectionValue(Getter<T> get_method, SetterValue<T> set_method)
-//        : m_getter(get_method), m_setter(set_method) {}
-
-//    QVariant get(const Widget &w) final {
-//        const T& t = (w.*m_getter)();
-//        return QVariant::fromValue(t);
-//    }
-//    void set(Widget &w, const QVariant &v) final {
-//        const T& t = v.value<T>();
-//        (w.*m_setter)(t);
-//    }
-//    int type() const final { return qMetaTypeId<T>(); }
-//private:
-//    Getter<T> m_getter;
-//    SetterValue<T> m_setter;
-//};
-
 template<typename T, typename GetterKey, typename SetterKey>
 class ReflectionKey : public AbstractReflection {
 public:
@@ -202,27 +108,6 @@ template<typename T, typename GetterKey, typename SetterKey>
 ReflectionKey<T, GetterKey, SetterKey>* makeReflectionKey(int k, GetterKey g, SetterKey s) {
     return new ReflectionKey<T, GetterKey, SetterKey>(k, g, s);
 }
-
-//template<typename T>
-//class ReflectionKeyValue : public AbstractReflection {
-//public:
-//    ReflectionKey(int key, GetterKey<T> get_method, SetterKeyValue<T> set_method)
-//        : m_key(key), m_getter(get_method), m_setter(set_method) {}
-
-//    QVariant get(const Widget &w) final {
-//        const T& t = (w.*m_getter)(m_key);
-//        return QVariant::fromValue(t);
-//    }
-//    void set(Widget &w, const QVariant &v) final {
-//        const T& t = v.value<T>();
-//        (w.*m_setter)(m_key, t);
-//    }
-//    int type() const final { return qMetaTypeId<T>(); }
-//private:
-//    int m_key;
-//    GetterKey<T> m_getter;
-//    SetterKeyValue<T> m_setter;
-//};
 
 class WidgetReflection {
 public:
