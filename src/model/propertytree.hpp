@@ -19,8 +19,6 @@ public:
     const WidgetData &widget();
     void setWidget(const WidgetData *widget);
 
-    static PropertyTree instance;
-
 private:
     template<typename T>
     void add(int k, AttrItem *parent);
