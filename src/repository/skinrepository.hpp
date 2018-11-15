@@ -43,6 +43,7 @@ public:
 
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
+    QString previewFilePath();
 
 signals:
 

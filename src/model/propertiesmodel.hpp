@@ -2,24 +2,25 @@
 #define PROPERTIESMODEL_H
 
 #include "skin/widgetdata.hpp"
+#include "propertytree.hpp"
 #include <QAbstractItemModel>
 #include <memory>
 
 class AttrItem;
+class WidgetObserverRegistrator;
 
 class PropertiesModel : public QAbstractItemModel
 {
     Q_OBJECT
-
 public:
     typedef AttrItem Item;
 
-    explicit PropertiesModel(QObject* parent = Q_NULLPTR);
+    explicit PropertiesModel(ScreensModel *model, QObject* parent = Q_NULLPTR);
     ~PropertiesModel() override;
 
     enum { ColumnKey, ColumnValue, ColumnsCount };
 
-    void setWidget(WidgetData *widget);
+    void setWidget(const QModelIndex &index);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -41,17 +42,16 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 private slots:
-    void onAttributeChanged(int attrKey);
-    void onWidgetDestroyed();
+    void onAttributeChanged(const QModelIndex &index, int key);
 
 private:
     static Item* castItem(QModelIndex index);
-    AttrItem dummyItem;
-    // weak reference to QObject containing data for the model
-    // reset it to nullptr when QObject::destroyed signal arrives
-    WidgetData* mData;
-    // ref to current model root
+    AttrItem mDummyRoot;
+    std::unique_ptr<PropertyTree> mTree;
     AttrItem* mRoot;
+    ScreensModel *mModel;
+    QPersistentModelIndex mIndex;
+    QScopedPointer<WidgetObserverRegistrator> mObserver;
 };
 
 #endif // PROPERTIESMODEL_H

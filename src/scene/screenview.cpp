@@ -33,6 +33,7 @@ ScreenView::ScreenView(ScreensModel* model)
     mSelector->setPen(Qt::NoPen);
     mScene->addItem(mSelector);
 
+    connect(mModel, &ScreensModel::widgetChanged, this, &ScreenView::onWidgetChanged);
     connect(mModel, &ScreensModel::rowsAboutToBeRemoved, this, &ScreenView::onRowsAboutToBeRemoved);
     connect(mModel, &ScreensModel::rowsInserted, this, &ScreenView::onRowsInserted);
     connect(mModel, &ScreensModel::modelReset, this, &ScreenView::onModelReset);
@@ -145,6 +146,14 @@ void ScreenView::displayBorders(bool display)
     m_showBorders = display;
     for (const auto& widget : mWidgets) {
         widget->showBorder(display);
+    }
+}
+
+void ScreenView::onWidgetChanged(const QModelIndex &index, int key)
+{
+    auto it = mWidgets.find(index);
+    if (it != mWidgets.end()) {
+        (*it)->updateAttribute(key);
     }
 }
 

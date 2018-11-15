@@ -8,7 +8,7 @@ SkinRepository::SkinRepository(QObject* parent)
     : QObject(parent)
     , mColors(new ColorsModel(this))
     , mFonts(new FontsModel(this))
-    , mScreensModel(new ScreensModel(this))
+    , mScreensModel(new ScreensModel(mColors, mFonts, this))
 {
 }
 
@@ -28,8 +28,7 @@ QString SkinRepository::resolveFilename(const QString& path) const
     if (path.isEmpty()) {
         return QString();
     }
-    QDir dir;
-    dir = this->dir();
+    QDir dir = this->dir();
     // First assume that file prefix is a our directory name
     dir.cdUp();
     if (dir.exists(path)) {
@@ -53,7 +52,7 @@ bool SkinRepository::loadFile(const QString& path)
         return false;
     }
 
-    mScreensModel->loadPreviews();
+    mScreensModel->loadPreviews(previewFilePath());
 
     QFile file(mDirectory.filePath("skin.xml"));
     bool ok = file.open(QIODevice::ReadOnly);
@@ -99,9 +98,14 @@ bool SkinRepository::save()
     QXmlStreamWriter xml(&file);
     xml.setAutoFormatting(true);
     xml.setAutoFormattingIndent(2);
+    xml.writeStartDocument();
     toXml(xml);
+    xml.writeEndDocument();
 
     file.close();
+    //mScreensModel->updatePreviewMap();
+    //mScreensModel->savePreviews(previewFilePath());
+    mScreensModel->savePreviewTree(previewFilePath());
     return true;
 }
 
@@ -111,6 +115,9 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
 
     mScreensModel->clear();
     mOutputRepository.clear();
+    mWindowStyles.clear();
+    mColors->removeRows(0, mColors->rowCount());
+    mFonts->removeRows(0, mFonts->rowCount());
 
     while (nextXmlChild(xml)) {
         qDebug() << xml.tokenString() << xml.name() << xml.text() << xml.attributes().value("name");
@@ -150,4 +157,9 @@ void SkinRepository::toXml(QXmlStreamWriter& xml) const
     mColors->toXml(xml);
     mScreensModel->toXml(xml);
     xml.writeEndElement();
+}
+
+QString SkinRepository::previewFilePath()
+{
+    return dir().filePath("preview.xml");
 }

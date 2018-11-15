@@ -1,139 +1,272 @@
 #ifndef WIDGETDATA_H
 #define WIDGETDATA_H
 
-#include "adapter/attritemfactory.hpp"
-#include "attr/attritem.hpp"
 #include "base/tree.hpp"
-#include "base/uniqueid.hpp"
-#include "attrcontainer.hpp"
 #include "repository/xmlnode.hpp"
+#include "converter.hpp"
+#include "attributes.hpp"
+#include "sizeattr.hpp"
+#include "positionattr.hpp"
+#include "enumattr.hpp"
+#include "fontattr.hpp"
+#include "colorattr.hpp"
+#include "offsetattr.hpp"
 #include <QRgb>
 #include <QVariant>
 
-#include "attr/coloritem.hpp"
-#include "attr/positionitem.hpp"
-#include "attr/sizeitem.hpp"
-#include "skin/attributes.hpp"
-#include "skin/converter.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
 class ScreensModel;
-
-class PositionItem;
-class SizeItem;
 class Font;
-class WidgetDataObserver;
-class WidgetObserver;
 
+typedef QString PixmapAttr; // FIXME: HACK
 
-class WidgetData : public QObject,
-                   public MixinTreeNode<WidgetData>,
-                   protected AttrContainer,
-                   public XmlData,
-                   public UniqueId
+class WidgetData : public MixinTreeNode<WidgetData>, public XmlData
 {
-    Q_OBJECT
+    Q_GADGET
+
+    using Size = SizeAttr;
+    using Position = PositionAttr;
+
+    using Base = MixinTreeNode<WidgetData>;
 
 public:
     using MixinTreeNode<WidgetData>::parent;
 
-    explicit WidgetData(bool empty = false);
-    ~WidgetData() override;
+    explicit WidgetData();
+    ~WidgetData();
 
+    // expose tree functions
+    using Base::child;
+    using Base::myIndex;
+    using Base::childCount;
+
+    // override tree functions to manage model pointer
+    // takes ownership
+    bool insertChild(int position, WidgetData* child) final;
+    bool insertChildren(int position, QVector<WidgetData*> list) final;
+    // releases ownership
+    QVector<WidgetData*> takeChildren(int position, int count) final;
+
+    // model
+    ScreensModel* model() const { return m_model; }
+    void setModel(ScreensModel* model);
+
+    // Widget tag
     enum WidgetType { Screen, Widget, Label, Pixmap };
     Q_ENUM(WidgetType)
 
-    AttrItem* adaptersRoot() const { return mRoot; }
-    AttrItem* getAttrAdapterPtr(const int key) const;
-
-    WidgetType type() const { return mType; }
+    WidgetType type() const { return m_type; }
     bool setType(int type);
     void setType(WidgetType type);
     QString typeStr() const;
     static WidgetType strToType(QStringRef str, bool& ok);
 
-    // Quick access to size
+    // size
+    SizeAttr size() const { return m_size; }
+    void resize(const QSizeF &size);
+    void setSize(const SizeAttr &size);
+
+    // postion
+    PositionAttr position() const { return m_position; }
+    void move(const QPointF &pos);
+    void setPosition(const PositionAttr &pos);
+
+    // Access to absolute size and position
+    QPoint absolutePosition() const;
     QSize selfSize() const;
     QSize parentSize() const;
+
+    // Common
+    int zPosition() const { return m_zValue; }
+    void setZPosition(int z);
+    bool transparent() const { return m_transparent; }
+    void setTransparent(bool val);
+
+    // Colors
+    ColorAttr color(int key) const;
+    void setColor(int key, const ColorAttr &color);
+    // Pixmaps
+    PixmapAttr pixmap(int key) const;
+    void setPixmap(int key, const PixmapAttr &p);
+    // Booleans
+    bool hasFlag(int key) const;
+    void setFlag(int key, bool value);
+
+    // Font
+    FontAttr font() const { return m_font; }
+    void setFont(const FontAttr &font);
+
+    // Borders
+    int borderWidth() const { return m_borderWidth; }
+    void setBorderWidth(int px);
+
+    // Label
+    QString text() const { return m_text; }
+    void setText(const QString &text);
+    PropertyHAlign::Enum halign() const { return m_halign; }
+    void setHalign(PropertyHAlign::Enum align);
+    PropertyVAlign::Enum valign() const { return m_valign; }
+    void setValign(PropertyVAlign::Enum align);
+    OffsetAttr shadowOffset() const { return m_shadowOffset; }
+    void setShadowOffset(const OffsetAttr &offset);
+    bool noWrap() const { return m_noWrap; }
+    void setNoWrap(bool value);
+
+    // List
+    int itemHeight() const { return m_itemHeight; }
+    void setItemHeight(int px);
+    Property::ScrollbarMode scrollbarMode() const { return m_scrollbarMode; }
+    void setScrollbarMode(Property::ScrollbarMode mode);
+
+    // Pixmap
+    Property::Alphatest alphatest() const { return m_alphatest; }
+    void setAlphatest(Property::Alphatest value);
+    int scale() const { return m_scale; }
+    void setScale(int scale);
+
+    // Slider
+    Property::Orientation orientation() const { return m_orientation; }
+    void setOrientation(Property::Orientation orientation);
+
+    // Widget
+    QString name() const { return m_name; }
+    void setName(const QString &name);
+    Property::Render render() const { return m_render; }
+    void setRender(Property::Render render);
+    QString source() const { return m_source; }
+    void setSource(const QString &source);
+
+    // Widget preview
+    Property::Render previewRender() const { return m_previewRender; }
+    void setPreviewRender(Property::Render render);
+    QVariant previewValue() const { return m_previewValue; }
+    void setPreviewValue(const QVariant &value);
+    // Render to use on scene
+    Property::Render sceneRender() const;
+    //
+    QVariant scenePreview();
+
+    // Screen
+    QString title() const { return m_title; }
+    void setTitle(const QString &text);
+    Property::Flags flags() const { return m_flags; }
+    void setFlags(Property::Flags flags);
 
     // Xml
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    // Attr template type methods
-    template <typename T>
-    inline T getAttr(int key) const
-    {
-        return AttrContainer::getAttr<T>(key);
-    }
-    template <typename T>
-    bool setAttr(int key, const T& value)
-    {
-        bool changed = AttrContainer::setAttr(key, value);
-        if (changed) {
-            notifyAttrChange(key);
-            switch (key) {
-            case Property::position:
-                for (int i = 0; i < childCount(); ++i) {
-                    // TODO: test
-                    child(i)->parentSizeChanged();
-                }
-            }
-        }
-        return changed;
-    }
-    // Attr QVariant methods
-    QVariant getAttr(const int key, int role) const;
-    bool setAttr(const int key, const QVariant& value, int role);
+    // Attribute get/set QVariant methods
+    QVariant getAttr(int key) const;
+    bool setAttr(int key, const QVariant &value);
 
     // Required for the optimisation:
     // only widgets which are viewed by someone
     // listen to color/font changed signals
-    void connectNotify(const QMetaMethod& signal) override;
-    void disconnectNotify(const QMetaMethod& signal) override;
+//    void connectNotify(const QMetaMethod& signal) override;
+//    void disconnectNotify(const QMetaMethod& signal) override;
 
-signals:
-    void attrChanged(int key);
-    void typeChanged(WidgetType type);
+//signals:
+//    void attrChanged(int key);
+//    void typeChanged(WidgetType type);
 
-private slots:
+//private slots:
     void onColorChanged(const QString& name, QRgb value);
     void onFontChanged(const QString& name, const Font& value);
 
 private:
-    void buildPropertiesTree();
+    void sizeChanged();
     void parentSizeChanged();
-    AttrItem* getAttrPtr(int key);
     void notifyAttrChange(int key);
+    void setAttrFromXml(int key, const QString &str);
 
-    template <class AttrType>
-    void addProperty(int key, AttrItem* parent)
-    {
-        if (key != Property::invalid) {
-            addAttr<AttrType>(key);
-        }
+    // Size and position
+    Size m_size;
+    Position m_position;
 
-        auto* adapter = AttrItemFactory::createAdapter(this, qMetaTypeId<AttrType>(), key);
-        parent->appendChild(adapter);
-        if (key != Property::invalid) {
-            mAdapters[key] = adapter;
-        }
-    }
+    // Common
+    QString m_name;
+    int m_zValue;
+    bool m_transparent;
+//    ColorAttr m_borderColor;
+    int m_borderWidth;
 
-    WidgetType mType;
-    // own
-    QVector<int> mPropertiesOrder;
+    // Pixmap
+//    PixmapAttr m_pixmap;
+    Property::Alphatest m_alphatest;
+    int m_scale;
 
-    // TODO: move out of class
-    // own
-    AttrItem* mRoot;
-    // refs within mRoot
-    QHash<int, AttrItem*> mAdapters;
+    // Label
+    QString m_text;
+    FontAttr m_font;
+    PropertyVAlign::Enum m_valign;
+    PropertyHAlign::Enum m_halign;
+//    ColorAttr m_shadowColor;
+    OffsetAttr m_shadowOffset;
+    bool m_noWrap;
 
-    QVector<Converter> mConverters;
+    // Screen
+    QString m_title;
+    Property::Flags m_flags;
 
-    int mConnectedCount;
+    // List
+    int m_itemHeight;
+//    PixmapAttr m_selectionPixmap;
+//    bool m_selectionDisabled;
+    Property::ScrollbarMode m_scrollbarMode;
+//    bool m_enableWrapAround;
+
+    // Slider
+//    PixmapAttr m_sliderPixmap;
+//    PixmapAttr m_backgroundPixmap;
+    Property::Orientation m_orientation;
+
+    // Widget
+    Property::Render m_render;
+    QString m_source;
+
+    // Preview
+    Property::Render m_previewRender;
+    QVariant m_previewValue;
+
+    // named by key
+    QHash<int, ColorAttr> m_colors;
+    QHash<int, PixmapAttr> m_pixmaps;
+    QHash<int, bool> m_switches;
+
+    // Other
+    WidgetType m_type;
+    QVector<int> m_propertiesOrder;
+    QVector<Converter> m_converters;
+    ScreensModel* m_model;
+    QMap<QString, QString> m_otherAttributes;
 };
+
+// Template methods implementation
+//template<typename T>
+//T WidgetData::getAttr(int key) const
+//{
+//        return AttrContainer::getAttr<T>(key);
+//}
+
+//template<typename T>
+//bool WidgetData::setAttr(int key, const T &value)
+//{
+//    bool changed = AttrContainer::setAttr(key, value);
+//    if (changed) {
+//        notifyAttrChange(key);
+//        switch (key) {
+//        case Property::size:
+//            for (int i = 0; i < childCount(); ++i) {
+//                // TODO: test
+//                child(i)->parentSizeChanged();
+//            }
+//        }
+//    }
+//    return changed;
+//}
+
 
 #endif // WIDGETDATA_H

@@ -17,7 +17,7 @@ public:
     QColor getColor() const;
     void setColor(const QColor& color);
 
-    QString getName() const { return mName; }
+    const QString& name() const { return mName; }
     void setColorName(const QString& name);
 
     QString toStr(bool invertAlpha = true) const;
@@ -25,6 +25,7 @@ public:
     bool fromStr(const QString& str, bool invertAlpha = false);
 
     void reload();
+    void updateValue(QRgb value);
 
 private:
     QString mName;

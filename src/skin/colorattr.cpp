@@ -91,3 +91,9 @@ void ColorAttr::reload()
         mValue = SkinRepository::colors()->getValue(mName).value();
     }
 }
+
+void ColorAttr::updateValue(QRgb value)
+{
+    Q_ASSERT(!mName.isEmpty());
+    mValue = value;
+}

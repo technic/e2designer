@@ -1,4 +1,5 @@
 #include "windowstyle.hpp"
+#include <QMetaEnum>
 
 // WindowStyleTitle
 
@@ -85,14 +86,14 @@ void WindowStyle::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-ColorAttr WindowStyle::getColorAttr(WindowStyle::ColorName name) const
+ColorAttr WindowStyle::getColorAttr(WindowStyle::ColorRole role) const
 {
     // FIXME: optimize it!
-    auto metaEnum = QMetaEnum::fromType<ColorName>();
+    auto metaEnum = QMetaEnum::fromType<ColorRole>();
     for (const auto &c : m_colors) {
         bool ok;
         int k = metaEnum.keyToValue(c.name.toLatin1().data(), &ok);
-        if (ok && k == name) {
+        if (ok && k == role) {
             return c.color;
         }
     }

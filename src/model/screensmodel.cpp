@@ -1,13 +1,15 @@
 #include "screensmodel.hpp"
+#include "commands/attrcommand.hpp"
 #include "repository/skinrepository.hpp"
+#include <QUndoStack>
 
 // ScreensTree
 
-void ScreensTree::loadPreviews()
+void ScreensTree::loadPreviews(const QString &path)
 {
     mPreviews.clear();
 
-    QFile file(SkinRepository::instance().dir().filePath("preview.xml"));
+    QFile file(path);
     bool ok = file.open(QIODevice::ReadOnly);
     if (!ok)
         return;
@@ -52,14 +54,52 @@ void ScreensTree::loadPreviews()
                 xml.skipCurrentElement();
             }
         }
-        if (!screenName.isNull() && !screenName.isEmpty()) {
+        if (!screenName.isEmpty()) {
             mPreviews.insert(screenName, map);
         }
     }
-    file.close();
 }
 
-Preview ScreensTree::getPreview(const QString& screen, const QString& widget)
+void ScreensTree::savePreviews(const QString &path)
+{
+    QFile file(path);
+    bool ok = file.open(QIODevice::WriteOnly);
+    if (!ok)
+        return;
+    QXmlStreamWriter xml(&file);
+    xml.setAutoFormatting(true);
+    xml.setAutoFormattingIndent(2);
+
+    xml.writeStartDocument();
+    xml.writeStartElement("screens");
+    // iterate over screens
+    for (auto s = mPreviews.begin(); s != mPreviews.end(); ++s) {
+        if (s.value().empty())
+            continue;
+        xml.writeStartElement("screen");
+        xml.writeTextElement("name", s.key());
+        xml.writeStartElement("entries");
+        // iterate over widgets
+        for (auto w = s.value().begin(); w != s.value().end(); ++w) {
+            auto valueStr = w.value().value.toString();
+            auto renderStr = EnumAttr<Property::Render>(w.value().render).toStr();
+            if (valueStr.isEmpty())
+                continue;
+            xml.writeStartElement("entry");
+            xml.writeAttribute("name", w.key());
+            xml.writeAttribute("value", valueStr);
+            xml.writeAttribute("render", renderStr);
+            xml.writeAttribute("type", "string");  // compatibility
+            xml.writeEndElement();
+        }
+        xml.writeEndElement();
+        xml.writeEndElement();
+    }
+    xml.writeEndElement();
+    xml.writeEndDocument();
+}
+
+Preview ScreensTree::getPreview(const QString& screen, const QString& widget) const
 {
     auto screen_it = mPreviews.find(screen);
     if (screen_it == mPreviews.end())
@@ -72,10 +112,14 @@ Preview ScreensTree::getPreview(const QString& screen, const QString& widget)
 
 // ScreensModel
 
-ScreensModel::ScreensModel(QObject* parent)
+ScreensModel::ScreensModel(ColorsModel *colors, FontsModel *fonts, QObject* parent)
     : QAbstractItemModel(parent)
-    , mRoot(new WidgetData(true))
+    , mRoot(new WidgetData())
+    , mCommander(new QUndoStack(this))
 {
+    mRoot->setModel(this);
+    connect(colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
+    connect(fonts, &FontsModel::valueChanged, this, &ScreensModel::onFontChanged);
 }
 
 ScreensModel::~ScreensModel()
@@ -160,16 +204,17 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
         case ColumnName:
             switch (widget->type()) {
             case WidgetData::Label:
-                return widget->getAttr(Property::text, role);
+                return widget->text();
             case WidgetData::Pixmap:
-                return widget->getAttr(Property::pixmap, role);
+                return widget->getAttr(Property::pixmap).toString();
             case WidgetData::Screen:
             case WidgetData::Widget:
-                return widget->getAttr(Property::name, role);
+                if (widget->name().isNull() && !widget->source().isEmpty()) {
+                    return widget->source();
+                }
+                return widget->name();
             }
         }
-    case ScreensModel::IdRole:
-        return widget->id();
     case ScreensModel::TypeRole:
         return widget->type();
     default:
@@ -190,12 +235,12 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
         case ColumnName:
             switch (widget->type()) {
             case WidgetData::Label:
-                return widget->setAttr(Property::text, value, role);
+                return widget->setAttr(Property::text, value);
             case WidgetData::Pixmap:
-                return widget->setAttr(Property::pixmap, value, role);
+                return widget->setAttr(Property::pixmap, value);
             case WidgetData::Screen:
             case WidgetData::Widget:
-                return widget->setAttr(Property::name, value, role);
+                return widget->setAttr(Property::name, value);
             }
         default:
             return false;
@@ -273,6 +318,7 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
     beginInsertRows(QModelIndex(), mRoot->childCount(), mRoot->childCount());
 
     WidgetData* w = new WidgetData();
+    w->setModel(this);
     w->fromXml(xml);
     mRoot->appendChild(w);
 
@@ -286,58 +332,203 @@ void ScreensModel::toXml(QXmlStreamWriter& xml)
     }
 }
 
-QVariant ScreensModel::getWidgetAttr(const QModelIndex& index, int attrKey, int role) const
+const WidgetData &ScreensModel::widget(const QModelIndex &index) const
+{
+    return *static_cast<WidgetData *>(index.internalPointer());
+}
+
+QVariant ScreensModel::widgetAttr(const QModelIndex& index, int key) const
 {
     if (!index.isValid())
         return QVariant();
 
     WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
-    return widget->getAttr(attrKey, role);
+    return widget->getAttr(key);
 }
 
-bool ScreensModel::setWidgetAttr(const QModelIndex& index, int attrKey, const QVariant& value,
-                                 int role)
+bool ScreensModel::setWidgetAttr(const QModelIndex& index, int key, const QVariant& value)
 {
-    if (!index.isValid())
-        return false;
-
-    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
-    return widget->setAttr(attrKey, value, role);
+    auto *widget = indexToItem(index);
+    if (widget) {
+        mCommander->push(new AttrCommand(widget, key, value));
+        return true;
+    }
+    return false;
 }
 
-WidgetData* ScreensModel::getWidget(const QModelIndex& index)
+void ScreensModel::resizeWidget(const QModelIndex &index, const QSize &size)
 {
-    if (!index.isValid())
-        return nullptr;
+    auto *widget = indexToItem(index);
+    if (widget) {
+        mCommander->push(new ResizeWidgetCommand(widget, size));
+    }
+}
 
-    return static_cast<WidgetData*>(index.internalPointer());
+void ScreensModel::moveWidget(const QModelIndex &index, const QPoint &pos)
+{
+    auto *widget = indexToItem(index);
+    if (widget) {
+        mCommander->push(new MoveWidgetCommand(widget, pos));
+    }
+}
+
+void ScreensModel::registerObserver(const QModelIndex& index) {
+    if (!index.isValid())
+        return;
+    m_observers[index]++;
+}
+
+void ScreensModel::unregisterObserver(const QModelIndex& index) {
+    if (!index.isValid())
+        return;
+	auto it = m_observers.find(index);
+    if (it != m_observers.end()) {
+        it.value()--;
+        if (it.value() == 0) {
+            m_observers.erase(it);
+		}
+    } else {
+        qWarning() << "observers map corrupted";	
+	}
 }
 
 void ScreensModel::widgetAttrHasChanged(const WidgetData* widget, int attrKey)
 {
-    Item* item = const_cast<WidgetData*>(widget);
-    QModelIndex idx = createIndex(item->myIndex(), ColumnElement, item);
+    QModelIndex index = createIndex(widget->myIndex(), ColumnElement,
+                                    const_cast<WidgetData *>(widget));
+    emit widgetChanged(index, attrKey);
 
-    switch (widget->type()) {
-    case WidgetData::Label:
-        if (attrKey != Property::text)
-            return;
-        break;
-    case WidgetData::Pixmap:
-        if (attrKey != Property::pixmap)
-            return;
-        break;
-    case WidgetData::Screen:
-    case WidgetData::Widget:
-        if (attrKey != Property::name)
-            return;
-        break;
+//    switch (widget->type()) {
+//    case WidgetData::Label:
+//        if (attrKey != Property::text)
+//            return;
+//        break;
+//    case WidgetData::Pixmap:
+//        if (attrKey != Property::pixmap)
+//            return;
+//        break;
+//    case WidgetData::Screen:
+//    case WidgetData::Widget:
+//        if (attrKey != Property::name)
+//            return;
+//        break;
+//    }
+    switch (attrKey) {
+    case Property::text:
+    case Property::name:
+    case Property::source:
+    case Property::pixmap:
+        auto nameIndex = index.sibling(index.row(), ColumnName);
+        emit dataChanged(nameIndex, nameIndex);
     }
-    emit dataChanged(idx, idx);
+}
+
+void ScreensModel::onColorChanged(const QString &name, QRgb value)
+{
+    for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
+        auto* w = indexToItem(it.key());
+        w->onColorChanged(name, value);
+	}
+}
+
+void ScreensModel::onFontChanged(const QString &name, const Font &value)
+{
+    for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
+        auto* w = indexToItem(it.key());
+        w->onFontChanged(name, value);
+	}
+}
+
+ScreensModel::Item *ScreensModel::indexToItem(const QModelIndex &index)
+{
+    Q_ASSERT(index.model() == this);
+
+    if (index.isValid()) {
+        return static_cast<Item*>(index.internalPointer());
+    } else {
+        return mRoot;
+    }
 }
 
 ScreensModel::Item* ScreensModel::castItem(const QModelIndex& index)
 {
     Q_ASSERT(index.isValid());
     return static_cast<Item*>(index.internalPointer());
+}
+
+void ScreensModel::updatePreviewMap()
+{
+    mPreviews.clear();
+    for (int i = 0; i < mRoot->childCount(); ++i) {
+        const auto* screen = mRoot->child(i);
+        QMap<QString, Preview> map;
+        for (int j = 0; j < screen->childCount(); ++j) {
+            const auto* widget = screen->child(j);
+            if (!widget->previewValue().isNull())
+                map[widget->name()] = Preview(widget->previewValue(), widget->previewRender());
+        }
+        if (!map.empty())
+            mPreviews[screen->name()] = map;
+    }
+}
+
+void ScreensModel::savePreviewTree(const QString &path)
+{
+    // When iterating over QMap order is sorted by name
+    // Here walk over the tree structure
+
+    QFile file(path);
+    bool ok = file.open(QIODevice::WriteOnly);
+    if (!ok)
+        return;
+    QXmlStreamWriter xml(&file);
+    xml.setAutoFormatting(true);
+    xml.setAutoFormattingIndent(2);
+
+    xml.writeStartDocument();
+    xml.writeStartElement("screens");
+    // iterate over screens
+    for (int i = 0; i < mRoot->childCount(); ++i) {
+        const auto* screen = mRoot->child(i);
+        xml.writeStartElement("screen");
+        xml.writeTextElement("name", screen->name());
+        xml.writeStartElement("entries");
+        // iterate over widgets
+        for (int j = 0; j < screen->childCount(); ++j) {
+            auto const* widget = screen->child(j);
+            auto valueStr = widget->previewValue().toString();
+            auto renderStr = EnumAttr<Property::Render>(widget->previewRender()).toStr();
+            if (valueStr.isEmpty())
+                continue;
+            xml.writeStartElement("entry");
+            xml.writeAttribute("name", widget->name());
+            xml.writeAttribute("value", valueStr);
+            xml.writeAttribute("render", renderStr);
+            xml.writeAttribute("type", "string");  // compatibility
+            xml.writeEndElement();
+        }
+        xml.writeEndElement();
+        xml.writeEndElement();
+    }
+    xml.writeEndElement();
+    xml.writeEndDocument();
+}
+
+WidgetObserverRegistrator::WidgetObserverRegistrator(ScreensModel* model, const QModelIndex& index)
+    : m_model(model)
+    , m_index(index)
+{
+    m_model->registerObserver(index);
+}
+
+void WidgetObserverRegistrator::setIndex(const QModelIndex& index) 
+{
+	m_model->unregisterObserver(m_index);
+    m_index = index;
+	m_model->registerObserver(m_index);
+}
+
+WidgetObserverRegistrator::~WidgetObserverRegistrator()
+{
+    m_model->unregisterObserver(m_index);
 }

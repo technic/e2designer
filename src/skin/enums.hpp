@@ -167,17 +167,17 @@ using HAlign = PropertyHAlign::Enum;
 enum Roles {
     UserRole = Qt::UserRole,
     // Roles for scene
-    GraphicsRole,
+//    GraphicsRole,
     AnchorRole,
     // Role for QComboxBox
-    StringListRole,
+//    StringListRole,
     //	// Role to select editor
     //	RoleDelegate, // TODO
     // Role to get type()
-    WidgetTypeRole,
+//    WidgetTypeRole,
     // Role to store in XML
     XmlRole,
-    DataRole,
+//    DataRole,
 };
 
 

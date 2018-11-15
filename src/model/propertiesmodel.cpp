@@ -1,38 +1,51 @@
 #include "propertiesmodel.hpp"
 #include "repository/skinrepository.hpp"
 
-PropertiesModel::PropertiesModel(QObject* parent)
+PropertiesModel::PropertiesModel(ScreensModel *model, QObject* parent)
     : QAbstractItemModel(parent)
-    , dummyItem(nullptr, Property::invalid)
-    , mData(nullptr)
-    , mRoot(&dummyItem)
+    , mDummyRoot(Property::invalid)
+    , mRoot(&mDummyRoot)
+    , mModel(model)
+    , mObserver(new WidgetObserverRegistrator(model, QModelIndex()))
 {
+    Q_CHECK_PTR(mModel);
+    connect(mModel, &ScreensModel::widgetChanged,
+            this, &PropertiesModel::onAttributeChanged);
 }
 
 PropertiesModel::~PropertiesModel()
 {
 }
 
-void PropertiesModel::setWidget(WidgetData *widget)
+void PropertiesModel::setWidget(const QModelIndex &index)
 {
     beginResetModel();
-
-    if (mData != nullptr) {
-        disconnect(mData, &WidgetData::attrChanged,
-                   this, &PropertiesModel::onAttributeChanged);
-        disconnect(mData, &QObject::destroyed,
-                   this, &PropertiesModel::onWidgetDestroyed);
-    }
-
-    mData = widget;
-
-    if (mData != nullptr) {
-        mRoot = mData->adaptersRoot();
-        connect(mData, &WidgetData::attrChanged, this, &PropertiesModel::onAttributeChanged);
-        connect(mData, &QObject::destroyed, this, &PropertiesModel::onWidgetDestroyed);
+    mIndex = index;
+    if (mIndex.isValid()) {
+        mTree.reset(new PropertyTree(&mModel->widget(mIndex)));
+        mRoot = mTree->root();
     } else {
-        mRoot = &dummyItem;
+        mTree.reset();
+        mRoot = &mDummyRoot;
     }
+    mObserver->setIndex(index);
+
+//    if (mData != nullptr) {
+//        disconnect(mData, &WidgetData::attrChanged,
+//                   this, &PropertiesModel::onAttributeChanged);
+//        disconnect(mData, &QObject::destroyed,
+//                   this, &PropertiesModel::onWidgetDestroyed);
+//    }
+
+//    mData = widget;
+
+//    if (mData != nullptr) {
+//        mRoot = mData->adaptersRoot();
+//        connect(mData, &WidgetData::attrChanged, this, &PropertiesModel::onAttributeChanged);
+//        connect(mData, &QObject::destroyed, this, &PropertiesModel::onWidgetDestroyed);
+//    } else {
+//        mRoot = &dummyItem;
+//    }
 
     endResetModel();
 }
@@ -123,11 +136,16 @@ bool PropertiesModel::setData(const QModelIndex& index, const QVariant& value, i
     if (!index.isValid())
         return false;
 
-    AttrItem* attr = static_cast<AttrItem*>(index.internalPointer());
+    AttrItem &item = *static_cast<AttrItem*>(index.internalPointer());
 
     switch (index.column()) {
-    case ColumnValue:
-        return attr->setData(value, role);
+    case ColumnValue: {
+        const QVariant &newValue = item.convert(value, role);
+        if (newValue.isValid()) {
+                mModel->setWidgetAttr(mIndex, item.key(), newValue);
+        }
+        return true;
+    }
     default:
         return false;
     }
@@ -147,26 +165,25 @@ Qt::ItemFlags PropertiesModel::flags(const QModelIndex& index) const
     }
 }
 
-void PropertiesModel::onAttributeChanged(int attrKey)
+void PropertiesModel::onAttributeChanged(const QModelIndex &index, int key)
 {
-    if (mData == nullptr) {
+    if (index != mIndex)
         return;
-    }
-    AttrItem* item = mData->getAttrAdapterPtr(attrKey);
+    AttrItem *item = mTree->getItemPtr(key);
     if (item) {
-        QModelIndex attrIndex = createIndex(item->myIndex(), ColumnValue, item);
-        emit dataChanged(attrIndex, attrIndex);
+        QModelIndex index = createIndex(item->myIndex(), ColumnValue, item);
+        emit dataChanged(index, index);
         // TODO: emit also for childs
     }
 }
 
-void PropertiesModel::onWidgetDestroyed()
-{
-    mData = nullptr;
-    beginResetModel();
-    mRoot = &dummyItem;
-    endResetModel();
-}
+//void PropertiesModel::onWidgetDestroyed()
+//{
+//    mData = nullptr;
+//    beginResetModel();
+//    mRoot = &dummyItem;
+//    endResetModel();
+//}
 
 PropertiesModel::Item* PropertiesModel::castItem(QModelIndex index)
 {

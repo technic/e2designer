@@ -8,11 +8,11 @@ void Converter::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "convert");
 
-    mText.clear();
-    mType = xml.attributes().value("type").toString();
+    m_text.clear();
+    m_type = xml.attributes().value("type").toString();
     xml.readNext();
     if (xml.isCharacters()) {
-        mText = xml.text().toString();
+        m_text = xml.text().toString();
     }
     if (!xml.isEndElement()) {
         xml.skipCurrentElement();
@@ -22,7 +22,8 @@ void Converter::fromXml(QXmlStreamReader& xml)
 void Converter::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("convert");
-    xml.writeAttribute("type", mType);
-    xml.writeCharacters(mText);
+    xml.writeAttribute("type", m_type);
+    if (!m_text.isEmpty())
+        xml.writeCharacters(m_text);
     xml.writeEndElement();
 }

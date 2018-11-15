@@ -24,7 +24,7 @@ public:
     explicit Coordinate(Type type = Pixel, int value = 0);
     explicit Coordinate(const QString &str);
 
-    inline int type() const { return m_type; }
+    inline Type type() const { return m_type; }
     inline int value() const { return m_value; }
     /// Load and save text
     void parseStr(const QString& str);
@@ -43,7 +43,7 @@ public:
     }
 
 private:
-    int m_type;
+    Type m_type;
     int m_value;
 };
 
@@ -61,7 +61,6 @@ public:
     inline const Coordinate &x() const { return mX; }
     inline const Coordinate &y() const { return mY; }
     bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
-    AnchorPair anchor() { return AnchorPair(mX.type(), mY.type()); }
     QPoint toPoint(const WidgetData& widget) const;
     void setPoint(const WidgetData& widget, const QPoint& pos);
 

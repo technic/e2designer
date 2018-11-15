@@ -8,3 +8,6 @@ TEMPLATE = app
 include(../../src/src.pri)
 
 SOURCES +=  tst_testwidget.cpp
+
+DISTFILES += \
+    widget.xml

@@ -3,43 +3,50 @@
 
 #include "skin/widgetdata.hpp"
 #include <QAbstractItemModel>
-
-class WidgetObserver;
+#include <QUndoStack>
 
 struct Preview
 {
-    Preview(QVariant value = QVariant(), int render = Property::Label)
+    Preview(QVariant value = QVariant(), Property::Render render = Property::Label)
         : value(value)
         , render(render)
     {
     }
     QVariant value;
-    int render;
+    Property::Render render;
 };
 
 class ScreensTree
 {
 public:
-    void loadPreviews();
-    Preview getPreview(const QString& screen, const QString& widget);
+    void loadPreviews(const QString &path);
+    /**
+     * @brief Save previews stored in QMap
+     * @param path Xml file name
+     */
+    void savePreviews(const QString &path);
+    Preview getPreview(const QString& screen, const QString& widget) const;
 
-private:
+protected:
     QMap<QString, QMap<QString, Preview>> mPreviews;
 };
+
+class ColorsModel;
+class FontsModel;
 
 class ScreensModel : public QAbstractItemModel, public ScreensTree
 {
     Q_OBJECT
 
 public:
-    explicit ScreensModel(QObject* parent = Q_NULLPTR);
+    explicit ScreensModel(ColorsModel *colors, FontsModel *fonts, QObject* parent = Q_NULLPTR);
     ~ScreensModel() override;
 
     //	typedef MixinTreeNode<WidgetData> Item;
     typedef WidgetData Item;
 
     enum { ColumnElement, ColumnName, ColumnsCount };
-    enum { IdRole = Qt::UserRole + 1, TypeRole };
+    enum { TypeRole = Qt::UserRole + 1 };
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation,
@@ -71,31 +78,65 @@ public:
     void appendFromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml);
 
-    // Access widget attributes:
-    QVariant getWidgetAttr(const QModelIndex& index, int attrKey, int role = Qt::DisplayRole) const;
-    bool setWidgetAttr(const QModelIndex& index, int attrKey, const QVariant& value, int role);
+    // Read only access to widget:
+    const WidgetData &widget(const QModelIndex &index) const;
 
-    // Access widget by raw pointer, use carefully
-    WidgetData* getWidget(const QModelIndex& index);
+    // Access widget attributes:
+    QVariant widgetAttr(const QModelIndex& index, int key) const;
+    bool setWidgetAttr(const QModelIndex& index, int key, const QVariant& value);
+    // Syntax shugar
+//    template<class T>
+//    bool setWidgetAttr(const QModelIndex &index, int key, const T &value) {
+//        return setWidgetAttr(index, key, QVariant::fromValue(value));
+//    }
+
+    // Move and resize widget
+    void resizeWidget(const QModelIndex &index, const QSize &size);
+    void moveWidget(const QModelIndex &index, const QPoint &pos);
+
+	// widgetChanged only emmited for widgets being observed
+    void registerObserver(const QModelIndex& index);
+    void unregisterObserver(const QModelIndex& index);
+
+    // Build preview map from widget tree
+    void updatePreviewMap();
+    void savePreviewTree(const QString &path);
+
+signals:
+    void widgetChanged(const QModelIndex &index, int attr);
 
 public slots:
     // to be called from WidgetData
     void widgetAttrHasChanged(const WidgetData* widget, int attrKey);
+    //
+    void onColorChanged(const QString &name, QRgb value);
+    void onFontChanged(const QString &name, const Font &value);
 
 private:
+    Item *indexToItem(const QModelIndex &index);
     static Item* castItem(const QModelIndex& index);
 
-    WidgetData* mRoot;
-    QMap<QString, QMap<QString, Preview>> mPreviews;
+	QHash<QPersistentModelIndex, int> m_observers;
 
-    QMap<int, WidgetObserver*> mObservers;
+	QTimer* m_timer;
+    QTime m_lastShot;
+
+    WidgetData* mRoot;
+//    QMap<QString, QMap<QString, Preview>> mPreviews;
+
+//    QMap<int, WidgetObserver*> mObservers;
+    QUndoStack *mCommander;
 };
 
-class WidgetObserver : public QObject
+class WidgetObserverRegistrator
 {
-    Q_OBJECT
-
 public:
+    WidgetObserverRegistrator(ScreensModel *model, const QModelIndex& index);
+    void setIndex(const QModelIndex& index);
+    ~WidgetObserverRegistrator();
+private:
+    ScreensModel* m_model;
+    QPersistentModelIndex m_index;
 };
 
 #endif // SCREENSMODEL_H

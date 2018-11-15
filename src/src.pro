@@ -26,17 +26,6 @@ DEFINES += QTCOLORWIDGETS_STATICALLY_LINKED
 SOURCES += \
     mainwindow.cpp \
     skindelegate.cpp \
-    attr/attritem.cpp \
-    attr/attrgroupitem.cpp \
-    attr/enumitem.cpp \
-    attr/integeritem.cpp \
-    attr/pixmapitem.cpp \
-    attr/positionitem.cpp \
-    attr/sizeitem.cpp \
-    attr/textitem.cpp \
-    attr/variantitem.cpp \
-    attr/coloritem.cpp \
-    attr/fontitem.cpp \
     colorlistwindow.cpp \
     colorlistbox.cpp \
     listbox.cpp \
@@ -57,7 +46,6 @@ SOURCES += \
     base/uniqueid.cpp \
     repository/pixmapstorage.cpp \
     base/tree.cpp \
-    adapter/attritemfactory.cpp \
     commands/attrcommand.cpp \
     fontlistwindow.cpp \
     model/namedlist.cpp \
@@ -75,20 +63,13 @@ SOURCES += \
     skin/sizeattr.cpp \
     skin/positionattr.cpp \
     skin/enumattr.cpp \
-    skin/converter.cpp
+    skin/converter.cpp \
+    model/propertytree.cpp \
+    skin/offsetattr.cpp
 
 HEADERS += \
     mainwindow.hpp \
     skindelegate.hpp \
-    attr/enumitem.hpp \
-    attr/fontitem.hpp \
-    attr/integeritem.hpp \
-    attr/pixmapitem.hpp \
-    attr/positionitem.hpp \
-    attr/sizeitem.hpp \
-    attr/coloritem.hpp \
-    attr/textitem.hpp \
-    attr/variantitem.hpp \
     colorlistwindow.hpp \
     colorlistbox.hpp \
     listbox.hpp \
@@ -98,7 +79,6 @@ HEADERS += \
     scene/sceneview.hpp \
     scene/rectselector.hpp \
     scene/recthandle.hpp \
-    attr/attritem.hpp \
     scene/backgroundpixmap.hpp \
     editor/codeeditor.hpp \
     scene/foregroundwidget.hpp \
@@ -110,8 +90,6 @@ HEADERS += \
     base/uniqueid.hpp \
     repository/pixmapstorage.hpp \
     base/tree.hpp \
-    attr/attrgroupitem.hpp \
-    adapter/attritemfactory.hpp \
     commands/attrcommand.hpp \
     fontlistwindow.hpp \
     model/namedlist.hpp \
@@ -122,8 +100,8 @@ HEADERS += \
     model/borderset.hpp \
     model/windowstyle.hpp \
     scene/borderview.hpp \
-    skin/attrcontainer.hpp \
     base/flagsetter.hpp \
+    skin/attributes.hpp \
     skin/enums.hpp \
     skin/fontattr.hpp \
     skin/colorattr.hpp \
@@ -131,7 +109,8 @@ HEADERS += \
     skin/sizeattr.hpp \
     skin/positionattr.hpp \
     skin/enumattr.hpp \
-    skin/converter.hpp
+    skin/converter.hpp \
+    skin/offsetattr.hpp
 
 FORMS += \
     ui/mainwindow.ui \

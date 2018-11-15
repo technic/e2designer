@@ -1,7 +1,7 @@
 #ifndef LISTBOX_H
 #define LISTBOX_H
 
-#include "attr/enumitem.hpp"
+#include "model/propertytree.hpp"
 #include <QComboBox>
 
 class ListBox : public QComboBox

@@ -2,6 +2,7 @@
 #define RECTSELECTOR_H
 
 #include "recthandle.hpp"
+#include "skin/positionattr.hpp"
 #include <QDebug>
 #include <QGraphicsRectItem>
 
@@ -28,8 +29,8 @@ public:
         updateHandlesPos();
     }
 
-    void setXanchor(int anchor) { m_xanchor = anchor; }
-    void setYanchor(int anchor) { m_yanchor = anchor; }
+    void setXanchor(Coordinate::Type anchor) { m_xanchor = anchor; }
+    void setYanchor(Coordinate::Type anchor) { m_yanchor = anchor; }
     void resize(const QRectF& rectangle);
 
 signals:
@@ -41,7 +42,7 @@ private:
     // QGraphicsItem owned
     QList<RectHandle*> m_handles;
 
-    int m_xanchor, m_yanchor;
+    Coordinate::Type m_xanchor, m_yanchor;
 };
 
 #endif // RECTSELECTOR_H

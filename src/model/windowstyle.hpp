@@ -40,7 +40,7 @@ public:
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    enum ColorName  {
+    enum ColorRole  {
         Background,
         LabelForeground,
         ListboxBackground,
@@ -54,9 +54,9 @@ public:
         WindowTitleForeground,
         WindowTitleBackground,
     };
-    Q_ENUM(ColorName)
+    Q_ENUM(ColorRole)
 
-    ColorAttr getColorAttr(ColorName name) const;
+    ColorAttr getColorAttr(ColorRole role) const;
 
 private:
     QString m_type;
@@ -76,6 +76,7 @@ public:
     inline const WindowStyle getStyle(int id) {
         return getValue(QString::number(id));
     }
+    void clear() { removeItems(0, itemsCount()); }
 signals:
     void styleChanged(const QString &name, const WindowStyle &value) const;
 protected:

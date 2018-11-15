@@ -23,7 +23,7 @@ public:
     QGraphicsScene* scene() const { return mScene; }
     RectSelector* selector() const { return mSelector; }
     void setScreen(QModelIndex index);
-    //	SkinModel* model() const { return m_model; }
+    ScreensModel* model() const { return mModel; }
 
     void setSelectionModel(QItemSelectionModel* model);
 
@@ -37,6 +37,7 @@ public slots:
 
 private slots:
     // Screens Model
+    void onWidgetChanged(const QModelIndex& index, int key);
     void onRowsAboutToBeRemoved(const QModelIndex& parent, int first, int last);
     void onRowsInserted(const QModelIndex& parent, int first, int last);
     void onModelAboutToBeReset();

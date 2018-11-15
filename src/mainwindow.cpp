@@ -1,5 +1,4 @@
 #include "mainwindow.hpp"
-#include "skindelegate.hpp"
 #include "ui_mainwindow.h"
 
 #include <QCloseEvent>
@@ -28,7 +27,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , mView(new ScreenView(SkinRepository::screens()))
-    , mPropertiesModel(new PropertiesModel(this))
+    , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 {
     ui->setupUi(this);
     readSettings();
@@ -146,8 +145,7 @@ void MainWindow::onCurrentSelectionChanged(const QModelIndex& index, const QMode
 {
     Q_UNUSED(previous);
     qDebug() << "current changed" << index;
-    WidgetData *w = SkinRepository::screens()->getWidget(index);
-    mPropertiesModel->setWidget(w);
+    mPropertiesModel->setWidget(index);
     ui->propView->expandAll();
 }
 

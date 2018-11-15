@@ -4,60 +4,389 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-#include "attr/attrgroupitem.hpp"
-#include "attr/coloritem.hpp"
-#include "attr/enumitem.hpp"
-#include "attr/fontitem.hpp"
-#include "attr/integeritem.hpp"
-#include "attr/pixmapitem.hpp"
-#include "attr/positionitem.hpp"
-#include "attr/sizeitem.hpp"
-#include "attr/textitem.hpp"
-#include "attr/variantitem.hpp"
-
-#include "adapter/attritemfactory.hpp"
 #include "model/colorsmodel.hpp"
 #include "model/fontsmodel.hpp"
 #include "model/screensmodel.hpp"
 #include "repository/skinrepository.hpp"
+#include "model/propertytree.hpp"
+#include "skin/enumattr.hpp"
+#include "skin/attributes.hpp"
 
 #include <iostream>
 #include <memory>
 #include <type_traits>
 #include <typeinfo>
 
-WidgetData::WidgetData(bool empty)
-    : MixinTreeNode<WidgetData>()
-    , UniqueId()
-    , mType(Widget)
-    , mConnectedCount(0)
+//class AbstractSerializer {
+//public:
+//    virtual QString toStr(const WidgetData &w, int key) = 0;
+//    virtual void setFromStr(WidgetData &w, int key, const QString &str) = 0;
+//    virtual QVariant toVariant(const WidgetData &w, int key) = 0;
+//    virtual void setFromVariant(WidgetData &w, int key, const QVariant &v) = 0;
+//    // destructor
+//    virtual ~AbstractSerializer() {}
+//};
+
+//template<typename T>
+//class Serializer : public AbstractSerializer {
+//public:
+//    QString toStr(const WidgetData &w, int key) final {
+//        w.get<T>(key).toStr();
+//    }
+//    void setFromStr(WidgetData &w, int key, const QString &str) final {
+//        w.set(key, T(str));
+//    }
+//    QVariant toVariant(const WidgetData &w, int key) final {
+//        return QVariant::fromValue(w.get<T>(key));
+//    }
+//    void setFromVariant(WidgetData &w, int key, const QVariant &v) final {
+//        w.set(key, qvariant_cast<T>(v));
+//    }
+//};
+
+//class WidgetSerializer {
+//public:
+//    WidgetSerializer();
+//    template<typename T>
+//    void add(int k) {
+//        Q_ASSERT(m_map.find(k) == m_map.end());
+//        m_map[k] = new T();
+//    }
+//    ~WidgetSerializer() {
+//        qDeleteAll(m_map.values());
+//    }
+
+//    using Hash = QHash<int, AbstractSerializer*>;
+//    // Allow iteration
+//    inline Hash::const_iterator cbegin() const { return m_map.cbegin(); }
+//    inline Hash::const_iterator cend() const { return m_map.cend(); }
+//    inline Hash::const_iterator find(int key) const { return m_map.find(key); }
+//private:
+//    Hash m_map;
+//};
+
+//WidgetSerializer::WidgetSerializer()
+//{
+//}
+
+//static WidgetSerializer serializer;
+
+
+using Widget = WidgetData;
+
+class AbstractReflection {
+public:
+    virtual QVariant get(const Widget &w) = 0;
+    virtual void set(Widget &w, const QVariant &v) = 0;
+    virtual int type() const = 0;
+    virtual QString getStr(const Widget &w) = 0;
+    virtual void setFromStr(Widget &w, const QString &str) = 0;
+    virtual ~AbstractReflection() {}
+};
+
+template<typename V> using Getter = V (Widget::*)() const;
+template<typename V> using Setter = void (Widget::*)(const V&);
+template<typename V> using SetterValue = void (Widget::*)(V);
+
+template<typename V> using GetterKey = V (Widget::*)(int) const;
+template<typename V> using SetterKey = void (Widget::*)(int, const V&);
+template<typename V> using SetterKeyValue = void (Widget::*)(int, V);
+
+
+template<typename T, typename Getter, typename Setter>
+class Reflection : public AbstractReflection
 {
-    /*
-    typedef std::remove_pointer<decltype(this)>::type ThisType;
-    static_assert(std::is_base_of< MixinTreeNode<ThisType>, ThisType >::value,
-    "bad inheratance");
-    */
+public:
+    Reflection(Getter get_method, Setter set_method)
+        : m_getter(get_method), m_setter(set_method) {}
 
-    mRoot = new AttrItem(this, Property::invalid);
-
-    if (empty) {
-        return;
+    QVariant get(const Widget &w) final {
+        const T& t = (w.*m_getter)();
+        return QVariant::fromValue(t);
     }
+    void set(Widget &w, const QVariant &v) final {
+        const T& t = v.value<T>();
+        (w.*m_setter)(t);
+    }
+    QString getStr(const Widget &w) final {
+        const T& t = (w.*m_getter)();
+        return serialize(t);
+    }
+    void setFromStr(Widget &w, const QString &str) final {
+        T t;
+        deserialize(str, t);
+        (w.*m_setter)(t);
+    }
+    int type() const final { return qMetaTypeId<T>(); }
+private:
+    Getter m_getter;
+    Setter m_setter;
+};
 
-    buildPropertiesTree();
+template<typename T, typename Getter, typename Setter>
+Reflection<T, Getter, Setter>* makeReflection(Getter g, Setter s) {
+    return new Reflection<T, Getter, Setter>(g, s);
+}
+
+//template<typename T>
+//class Reflection : public AbstractReflection {
+//public:
+//    Reflection(Getter<T> get_method, Setter<T> set_method)
+//        : m_getter(get_method), m_setter(set_method) {}
+
+//    QVariant get(const Widget &w) final {
+//        const T& t = (w.*m_getter)();
+//        return QVariant::fromValue(t);
+//    }
+//    void set(Widget &w, const QVariant &v) final {
+//        const T& t = v.value<T>();
+//        (w.*m_setter)(t);
+//    }
+//    int type() const final { return qMetaTypeId<T>(); }
+//private:
+//    Getter<T> m_getter;
+//    Setter<T> m_setter;
+//};
+
+//template<typename T>
+//class ReflectionValue : public AbstractReflection {
+//public:
+//    ReflectionValue(Getter<T> get_method, SetterValue<T> set_method)
+//        : m_getter(get_method), m_setter(set_method) {}
+
+//    QVariant get(const Widget &w) final {
+//        const T& t = (w.*m_getter)();
+//        return QVariant::fromValue(t);
+//    }
+//    void set(Widget &w, const QVariant &v) final {
+//        const T& t = v.value<T>();
+//        (w.*m_setter)(t);
+//    }
+//    int type() const final { return qMetaTypeId<T>(); }
+//private:
+//    Getter<T> m_getter;
+//    SetterValue<T> m_setter;
+//};
+
+template<typename T, typename GetterKey, typename SetterKey>
+class ReflectionKey : public AbstractReflection {
+public:
+    ReflectionKey(int key, GetterKey get_method, SetterKey set_method)
+        : m_key(key), m_getter(get_method), m_setter(set_method) {}
+
+    QVariant get(const Widget &w) final {
+        const T& t = (w.*m_getter)(m_key);
+        return QVariant::fromValue(t);
+    }
+    void set(Widget &w, const QVariant &v) final {
+        const T& t = v.value<T>();
+        (w.*m_setter)(m_key, t);
+    }
+    QString getStr(const Widget &w) final {
+        const T& t = (w.*m_getter)(m_key);
+        return serialize(t);
+    }
+    void setFromStr(Widget &w, const QString &str) final {
+        T t;
+        deserialize(str, t);
+        (w.*m_setter)(m_key, t);
+    }
+    int type() const final { return qMetaTypeId<T>(); }
+private:
+    int m_key;
+    GetterKey m_getter;
+    SetterKey m_setter;
+};
+
+template<typename T, typename GetterKey, typename SetterKey>
+ReflectionKey<T, GetterKey, SetterKey>* makeReflectionKey(int k, GetterKey g, SetterKey s) {
+    return new ReflectionKey<T, GetterKey, SetterKey>(k, g, s);
+}
+
+//template<typename T>
+//class ReflectionKeyValue : public AbstractReflection {
+//public:
+//    ReflectionKey(int key, GetterKey<T> get_method, SetterKeyValue<T> set_method)
+//        : m_key(key), m_getter(get_method), m_setter(set_method) {}
+
+//    QVariant get(const Widget &w) final {
+//        const T& t = (w.*m_getter)(m_key);
+//        return QVariant::fromValue(t);
+//    }
+//    void set(Widget &w, const QVariant &v) final {
+//        const T& t = v.value<T>();
+//        (w.*m_setter)(m_key, t);
+//    }
+//    int type() const final { return qMetaTypeId<T>(); }
+//private:
+//    int m_key;
+//    GetterKey<T> m_getter;
+//    SetterKeyValue<T> m_setter;
+//};
+
+class WidgetReflection {
+public:
+    WidgetReflection();
+
+    template<typename T>
+    void add(int k, Getter<T> g, Setter<T> s) {
+        Q_ASSERT(m_funcs.find(k) == m_funcs.end());
+        m_funcs[k] = makeReflection<T>(g, s);
+    }
+    template<typename T>
+    void add(int k, Getter<T> g, SetterValue<T> s) {
+        Q_ASSERT(m_funcs.find(k) == m_funcs.end());
+        m_funcs[k] = makeReflection<T>(g, s);
+    }
+    template<typename T>
+    void add(int k, GetterKey<T> g, SetterKey<T> s) {
+        Q_ASSERT(m_funcs.find(k) == m_funcs.end());
+        m_funcs[k] = makeReflectionKey<T>(k, g, s);
+    }
+    template<typename T>
+    void add(int k, GetterKey<T> g, SetterKeyValue<T> s) {
+        Q_ASSERT(m_funcs.find(k) == m_funcs.end());
+        m_funcs[k] = makeReflectionKey<T>(k, g, s);
+    }
+    ~WidgetReflection() {
+        qDeleteAll(m_funcs);
+    }
+    using Hash = QHash<int, AbstractReflection*>;
+    // Allow iteration
+    inline Hash::const_iterator cbegin() const { return m_funcs.cbegin(); }
+    inline Hash::const_iterator cend() const { return m_funcs.cend(); }
+    inline Hash::const_iterator find(int key) const { return m_funcs.find(key); }
+    // test:
+    bool hasAllKeys();
+private:
+    QHash<int, AbstractReflection*> m_funcs;
+};
+
+WidgetReflection::WidgetReflection() {
+    using p = Property;
+    using w = WidgetData;
+
+    add(p::name, &w::name, &w::setName);
+    add(p::position, &w::position, &w::setPosition);
+    add(p::size, &w::size, &w::setSize);
+    add(p::zPosition, &w::zPosition, &w::setZPosition);
+    add(p::transparent, &w::transparent, &w::setTransparent);
+    add(p::borderColor, &w::color, &w::setColor);
+    add(p::borderWidth, &w::borderWidth, &w::setBorderWidth);
+    add(p::pixmap, &w::pixmap, &w::setPixmap);
+    add(p::alphatest, &w::alphatest, &w::setAlphatest);
+    add(p::scale, &w::scale, &w::setScale);
+    add(p::text, &w::text, &w::setText);
+    add(p::font, &w::font, &w::setFont);
+    add(p::valign, &w::valign, &w::setValign);
+    add(p::halign, &w::halign, &w::setHalign);
+    add(p::shadowColor, &w::color, &w::setColor);
+    add(p::shadowOffset, &w::shadowOffset, &w::setShadowOffset);
+    add(p::noWrap, &w::noWrap, &w::setNoWrap);
+    add(p::title, &w::title, &w::setTitle);
+    add(p::flags, &w::flags, &w::setFlags);
+    add(p::itemHeight, &w::itemHeight, &w::setItemHeight);
+    add(p::selectionPixmap, &w::pixmap, &w::setPixmap);
+    add(p::selectionDisabled, &w::hasFlag, &w::setFlag);
+    add(p::scrollbarMode, &w::scrollbarMode, &w::setScrollbarMode);
+    add(p::enableWrapAround, &w::hasFlag, &w::setFlag);
+    add(p::sliderPixmap, &w::pixmap, &w::setPixmap);
+    add(p::backgroundPixmap, &w::pixmap, &w::setPixmap);
+    add(p::orientation, &w::orientation, &w::setOrientation);
+    add(p::backgroundColor, &w::color, &w::setColor);
+    add(p::backgroundColorSelected, &w::color, &w::setColor);
+    add(p::foregroundColor, &w::color, &w::setColor);
+    add(p::foregroundColorSelected, &w::color, &w::setColor);
+    add(p::pointer, &w::pixmap, &w::setPixmap);
+    add(p::seek_pointer, &w::pixmap, &w::setPixmap);
+    add(p::render, &w::render, &w::setRender);
+    add(p::source, &w::source, &w::setSource);
+    add(p::previewRender, &w::previewRender, &w::setPreviewRender);
+    add(p::previewValue, &w::previewValue, &w::setPreviewValue);
+}
+
+bool WidgetReflection::hasAllKeys()
+{
+    auto meta = QMetaEnum::fromType<Property::PropertyEnum>();
+    for (int i = 0; i < meta.keyCount(); ++i) {
+        int key = meta.value(i);
+        // Special values
+        if (key == Property::invalid || key == Property::preview)
+            continue;
+        if (m_funcs.find(key) == m_funcs.end()) {
+            qWarning() << "Missing key:" << meta.key(i);
+            return false;
+        }
+    }
+    return true;
+}
+
+static WidgetReflection reflection;
+
+
+// WidgetData
+
+WidgetData::WidgetData()
+    : MixinTreeNode<WidgetData>()
+    , m_zValue(0)
+    , m_transparent(false)
+    , m_borderWidth(0)
+    , m_alphatest(Property::Alphatest::off)
+    , m_scale(0)
+    , m_valign(PropertyVAlign::top)
+    , m_halign(PropertyHAlign::left)
+    , m_noWrap(false)
+    , m_flags(Property::Flags::wfBorder)
+    , m_itemHeight(0)
+    , m_scrollbarMode(Property::ScrollbarMode::showNever)
+    , m_orientation(Property::Orientation::orHorizontal)
+    , m_render(Property::Render::Widget)
+    , m_previewRender(Property::Render::Widget)
+    , m_type(Widget)
+    , m_model(nullptr)
+{
+    // Call it here because of Qt limitation with static objects
+    Q_ASSERT(reflection.hasAllKeys());
 }
 
 WidgetData::~WidgetData()
 {
-    delete mRoot;
 }
-AttrItem* WidgetData::getAttrAdapterPtr(const int key) const
+
+bool WidgetData::insertChild(int position, WidgetData *child)
 {
-    auto it = mAdapters.find(key);
-    if (it != mAdapters.end()) {
-        return *it;
-    } else {
-        return nullptr;
+    bool inserted = Base::insertChild(position, child);
+    if (inserted) {
+        child->setModel(m_model);
+    }
+    return inserted;
+}
+
+bool WidgetData::insertChildren(int position, QVector<WidgetData *> list)
+{
+    bool inserted = Base::insertChildren(position, list);
+    if (inserted) {
+        for (int i = position; i < position + list.size(); ++i) {
+            child(i)->setModel(m_model);
+        }
+    }
+    return inserted;
+}
+
+QVector<WidgetData *> WidgetData::takeChildren(int position, int count)
+{
+    auto list = Base::takeChildren(position, count);
+    for (auto *w : qAsConst(list)) {
+        w->setModel(nullptr);
+    }
+    return list;
+}
+
+void WidgetData::setModel(ScreensModel *model)
+{
+    m_model = model;
+    for (int i = 0; i < childCount(); ++i) {
+        child(i)->setModel(m_model);
     }
 }
 
@@ -65,8 +394,8 @@ bool WidgetData::setType(int type)
 {
     int typeCount = QMetaEnum::fromType<WidgetType>().keyCount();
     if (type >= 0 && type < typeCount) {
-        mType = static_cast<WidgetType>(type);
-        emit typeChanged(mType);
+        m_type = static_cast<WidgetType>(type);
+//        emit typeChanged(m_type);
         return true;
     }
     return false;
@@ -74,66 +403,44 @@ bool WidgetData::setType(int type)
 
 void WidgetData::setType(WidgetType type)
 {
-    mType = type;
-    emit typeChanged(mType);
+    m_type = type;
+//    emit typeChanged(m_type);
 }
 
-QVariant WidgetData::getAttr(const int key, int role) const
-{
-    auto it = mAdapters.find(key);
-    if (it != mAdapters.end()) {
-        return it.value()->data(role);
-    } else {
-        return QVariant();
-    }
-}
 
-bool WidgetData::setAttr(const int key, const QVariant& value, int role)
-{
-    auto it = mAdapters.find(key);
-    if (it == mAdapters.end()) {
-        return false;
-    } else {
-        bool changed = it.value()->setData(value, role);
-        if (changed)
-            notifyAttrChange(key);
-        return changed;
-    }
-}
+//void WidgetData::connectNotify(const QMetaMethod& signal)
+//{
+//    if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
+//        if (mConnectedCount == 0) {
+//            connect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
+//                    &WidgetData::onColorChanged);
+//            connect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
+//                    &WidgetData::onFontChanged);
+//        }
+//        mConnectedCount++;
+//    }
+//}
 
-void WidgetData::connectNotify(const QMetaMethod& signal)
-{
-    if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
-        if (mConnectedCount == 0) {
-            connect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
-                    &WidgetData::onColorChanged);
-            connect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
-                    &WidgetData::onFontChanged);
-        }
-        mConnectedCount++;
-    }
-}
-
-void WidgetData::disconnectNotify(const QMetaMethod& signal)
-{
+//void WidgetData::disconnectNotify(const QMetaMethod& signal)
+//{
     //    return;
-    if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
-        mConnectedCount--;
-        if (mConnectedCount == 0) {
-            // use singleShot workaround to avoid deadlocks
-            QTimer::singleShot(0, [this]() {
-                disconnect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
-                           &WidgetData::onColorChanged);
-                disconnect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
-                           &WidgetData::onFontChanged);
-            });
-        }
-    }
-}
+//    if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
+//        mConnectedCount--;
+//        if (mConnectedCount == 0) {
+//            // use singleShot workaround to avoid deadlocks
+//            QTimer::singleShot(0, [this]() {
+//                disconnect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
+//                           &WidgetData::onColorChanged);
+//                disconnect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
+//                           &WidgetData::onFontChanged);
+//            });
+//        }
+//    }
+//}
 
 QString WidgetData::typeStr() const
 {
-    switch (mType) {
+    switch (m_type) {
     case Screen:
         return "screen";
     case Widget:
@@ -162,15 +469,43 @@ WidgetData::WidgetType WidgetData::strToType(QStringRef str, bool& ok)
     }
 }
 
+void WidgetData::resize(const QSizeF &size)
+{
+    m_size.setSize(*this, size.toSize());
+    sizeChanged();
+}
+
+void WidgetData::setSize(const SizeAttr &size)
+{
+    m_size = size;
+    sizeChanged();
+}
+
+void WidgetData::move(const QPointF &pos)
+{
+    m_position.setPoint(*this, pos.toPoint());
+    notifyAttrChange(Property::position);
+}
+
+void WidgetData::setPosition(const PositionAttr &pos)
+{
+    m_position = pos;
+    notifyAttrChange(Property::position);
+}
+
+QPoint WidgetData::absolutePosition() const
+{
+    return m_position.toPoint(*this);
+}
+
 QSize WidgetData::selfSize() const
 {
-    auto size = getAttr<SizeAttr>(Property::size);
-    return size.getSize(*this);
+    return m_size.getSize(*this);
 }
 
 QSize WidgetData::parentSize() const
 {
-    MixinTreeNode<WidgetData>* p = parent();
+    MixinTreeNode<WidgetData> *p = parent();
     if (p && p->isChild()) {
         return p->self()->selfSize();
     } else {
@@ -178,31 +513,209 @@ QSize WidgetData::parentSize() const
     }
 }
 
+void WidgetData::setZPosition(int z) {
+    m_zValue = z;
+    notifyAttrChange(Property::zPosition);
+}
+
+void WidgetData::setTransparent(bool val)
+{
+    m_transparent = val;
+    notifyAttrChange(Property::transparent);
+}
+
+ColorAttr WidgetData::color(int key) const
+{
+    switch (key) {
+    case Property::foregroundColor:
+    case Property::backgroundColor:
+    default:
+        return m_colors[key];
+    }
+}
+
+void WidgetData::setColor(int key, const ColorAttr &color)
+{
+    m_colors[key] = color;
+    notifyAttrChange(key);
+}
+
+void WidgetData::setFont(const FontAttr &font)
+{
+    m_font = font;
+    notifyAttrChange(Property::font);
+}
+
+void WidgetData::setBorderWidth(int px)
+{
+    m_borderWidth = px; notifyAttrChange(Property::borderWidth);
+}
+
+void WidgetData::setText(const QString &text)
+{
+    m_text = text;
+    notifyAttrChange(Property::text);
+}
+
+void WidgetData::setHalign(PropertyHAlign::Enum align) {
+    m_halign = align;
+    notifyAttrChange(Property::halign);
+}
+
+void WidgetData::setValign(PropertyVAlign::Enum align) {
+    m_valign = align;
+    notifyAttrChange(Property::valign);
+}
+
+void WidgetData::setShadowOffset(const OffsetAttr &offset)
+{
+    m_shadowOffset = offset;
+    notifyAttrChange(Property::shadowOffset);
+}
+
+void WidgetData::setNoWrap(bool value)
+{
+    m_noWrap = value;
+    notifyAttrChange(Property::noWrap);
+}
+
+void WidgetData::setItemHeight(int px)
+{
+    m_itemHeight = px;
+    notifyAttrChange(Property::itemHeight);
+}
+
+void WidgetData::setScrollbarMode(Property::ScrollbarMode mode)
+{
+    m_scrollbarMode = mode;
+    notifyAttrChange(Property::scrollbarMode);
+}
+
+PixmapAttr WidgetData::pixmap(int key) const
+{
+    return m_pixmaps[key];
+}
+
+void WidgetData::setPixmap(int key, const PixmapAttr &p)
+{
+    m_pixmaps[key] = p;
+    notifyAttrChange(key);
+}
+
+bool WidgetData::hasFlag(int key) const
+{
+    return m_switches[key];
+}
+
+void WidgetData::setFlag(int key, bool value)
+{
+    m_switches[key] = value;
+    notifyAttrChange(key);
+}
+
+void WidgetData::setAlphatest(Property::Alphatest value)
+{
+    m_alphatest = value;
+    notifyAttrChange(Property::alphatest);
+}
+
+void WidgetData::setScale(int scale)
+{
+    m_scale = scale;
+    notifyAttrChange(Property::scale);
+}
+
+void WidgetData::setOrientation(Property::Orientation orientation)
+{
+    m_orientation = orientation;
+    notifyAttrChange(Property::orientation);
+}
+
+void WidgetData::setName(const QString &name)
+{
+    m_name = name;
+    notifyAttrChange(Property::name);
+}
+
+void WidgetData::setRender(Property::Render render)
+{
+    m_render = render;
+    notifyAttrChange(Property::render);
+}
+
+void WidgetData::setSource(const QString &source)
+{
+    m_source = source;
+    notifyAttrChange(Property::source);
+}
+
+void WidgetData::setPreviewRender(Property::Render render)
+{
+    m_previewRender = render;
+    notifyAttrChange(Property::previewRender);
+}
+
+void WidgetData::setPreviewValue(const QVariant &value)
+{
+    m_previewValue = value;
+    notifyAttrChange(Property::previewValue);
+}
+
+QVariant WidgetData::scenePreview()
+{
+//    for (auto c : m_converters) {
+//        c.attach()
+//    }
+//    using Render = Property::Render;
+//    switch (m_render) {
+//    case Render::Label:
+//        return c.getText();
+//    case Render::Slider:
+//        return c.getValue();
+//    default:
+//        return QVariant();
+//    }
+    return QVariant();
+}
+
+void WidgetData::setTitle(const QString &text)
+{
+    m_title = text;
+    notifyAttrChange(Property::title);
+}
+
+void WidgetData::setFlags(Property::Flags flags)
+{
+    m_flags = flags;
+    notifyAttrChange(Property::flags);
+}
+
 void WidgetData::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement());
 
     bool ok;
-    mType = strToType(xml.name(), ok);
+    m_type = strToType(xml.name(), ok);
     Q_ASSERT(ok);
 
     QXmlStreamAttributes attrs = xml.attributes();
     for (auto it = attrs.cbegin(); it != attrs.cend(); ++it) {
         bool ok;
         QMetaEnum meta = Property::propertyEnum();
-        int keyint = meta.keyToValue(it->name().toLatin1().data(), &ok);
+        int key = meta.keyToValue(it->name().toLatin1().data(), &ok);
         if (ok) {
-            mPropertiesOrder.append(keyint);
-            setAttr(keyint, it->value().toString(), XmlRole);
+            m_propertiesOrder.append(key);
+            setAttrFromXml(key, it->value().toString());
         } else {
             qWarning() << "unknown attribute" << it->name();
+            m_otherAttributes[it->name().toString()] = it->value().toString();
         }
     }
 
     while (nextXmlChild(xml)) {
         // qDebug() << "child" << xml.tokenString() << xml.name() << xml.text();
         if (xml.isStartElement()) {
-            if (mType == Screen) {
+            if (m_type == Screen) {
                 bool ok;
                 strToType(xml.name(), ok);
                 if (ok) {
@@ -215,21 +728,22 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
             } else if (xml.name() == "convert") {
                 Converter c;
                 c.fromXml(xml);
-                mConverters.append(c);
+                m_converters.append(c);
             } else {
                 xml.skipCurrentElement();
             }
         }
     }
 
-    if (mType == Widget) {
+    if (m_type == Widget) {
         MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
-            QString screen = ptr->self()->getAttr(Property::name, Roles::DataRole).toString();
-            QString widget = getAttr(Property::name, Roles::DataRole).toString();
-            Preview p = SkinRepository::screens()->getPreview(screen, widget);
-            setAttr(Property::previewRender, p.render, Roles::GraphicsRole);
-            setAttr(Property::previewValue, p.value, Roles::XmlRole);
+            QString screen = ptr->self()->name();
+            if (m_model) {
+                Preview p = m_model->getPreview(screen, name());
+                m_previewRender = p.render;
+                m_previewValue = p.value;
+            }
         }
     }
 }
@@ -238,22 +752,20 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement(typeStr());
 
-    for (auto it = mPropertiesOrder.begin(); it != mPropertiesOrder.end(); ++it) {
-        const int key = *it;
-        if (mAdapters.contains(key)) {
-            QString value = getAttr(key, XmlRole).toString();
-            QString name = Property::propertyEnum().valueToKey(key);
-            if (!value.isNull() && !value.isEmpty())
-                xml.writeAttribute(name, value);
-        }
+    for (const int key: m_propertiesOrder) {
+        auto it = reflection.find(key);
+        QString value = it.value()->getStr(*this);
+        QString name = Property::propertyEnum().valueToKey(key);
+        if (!value.isNull())
+            xml.writeAttribute(name, value);
     }
-    for (auto it = mAdapters.begin(); it != mAdapters.end(); ++it) {
+    for (auto it = reflection.cbegin(); it != reflection.cend(); ++it) {
         const int key = it.key();
         if (key > Property::preview)
             continue;
-        if (mPropertiesOrder.contains(key))
+        if (m_propertiesOrder.contains(key))
             continue;
-        QString value = getAttr(key, XmlRole).toString();
+        QString value = it.value()->getStr(*this);
         QString name = Property::propertyEnum().valueToKey(key);
         if (!value.isNull())
             xml.writeAttribute(name, value);
@@ -262,115 +774,115 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
     for (int i = 0; i < childCount(); ++i) {
         child(i)->toXml(xml);
     }
-    for (const Converter& item : mConverters) {
+    for (const Converter& item : m_converters) {
         item.toXml(xml);
     }
 
     xml.writeEndElement();
 }
 
+//using Widget = WidgetData;
+//// Position
+//template<> PositionAttr Widget::get<PositionAttr>(int k) const { return position(); }
+//template<> void Widget::set<PositionAttr>(int k, const PositionAttr &p) { setPosition(p); }
+//// Size
+//template<> SizeAttr Widget::get<SizeAttr>(int k) const { return size(); }
+//template<> void Widget::set<SizeAttr>(int k, const SizeAttr &sz) { setSize(sz); }
+//// Color
+//template<> ColorAttr WidgetData::get<ColorAttr>(int k) const { return color(k); }
+//template<> void Widget::set<ColorAttr>(int k, const ColorAttr &col) { setColor(k, col); }
+
+
+QVariant WidgetData::getAttr(int key) const
+{
+    auto it = reflection.find(key);
+    if (it != reflection.cend()) {
+        return (*it)->get(*this);
+    } else {
+        return QVariant();
+    }
+//    auto k = Property::PropertyEnum(key);
+//    switch (k) {
+//    case Property::size:
+//        return QVariant::fromValue(size());
+//    case Property::position:
+//        return QVariant::fromValue(position());
+//    default:
+//        // Other properties are stored in container
+//        return AttrContainer::getVarinat(k);
+//    }
+}
+
+bool WidgetData::setAttr(int key, const QVariant &value)
+{
+    auto it = reflection.find(key);
+    if (it != reflection.cend()) {
+        (*it)->set(*this, value);
+        return value.canConvert((*it)->type());
+    }
+    return false;
+//    auto k = Property::PropertyEnum(key);
+//    switch (k) {
+//    case Property::position:
+//        setPosition(qvariant_cast<PositionAttr>(value));
+//        break;
+//    case Property::size:
+//        setSize(qvariant_cast<SizeAttr>(value));
+//        break;
+//    default:
+//        return AttrContainer::setVariant(k, value);
+//    }
+    //    return true;
+}
+
 void WidgetData::onColorChanged(const QString& name, QRgb value)
 {
-    for (auto it = begin(); it != end(); ++it) {
-        if (it.value().type() == qMetaTypeId<ColorAttr>()) {
-            ColorAttr old = qvariant_cast<ColorAttr>(it.value());
-            if (old.getName() == name) {
-                // TODO: use given rgba value
-                // FIXME: this is bad
-                setAttr(it.key(), ColorAttr(old.getName()));
-                notifyAttrChange(it.key());
-            }
+    for (auto it = m_colors.begin(); it != m_colors.end(); ++it) {
+        ColorAttr& col = *it;
+        if (col.name() == name) {
+            col.updateValue(value);
+            notifyAttrChange(it.key());
         }
     }
+//    for (auto it = begin(); it != end(); ++it) {
+//        if (it.value().type() == qMetaTypeId<ColorAttr>()) {
+//            ColorAttr old = qvariant_cast<ColorAttr>(it.value());
+//            if (old.getName() == name) {
+//                // TODO: use given rgba value
+//                // FIXME: this is bad
+////                setAttr(it.key(), ColorAttr(name));
+//                notifyAttrChange(it.key());
+//            }
+//        }
+//    }
 }
 
 void WidgetData::onFontChanged(const QString& name, const Font& value)
 {
-    for (auto it = begin(); it != end(); ++it) {
-        if (it.value().type() == qMetaTypeId<FontAttr>()) {
-            if (qvariant_cast<FontAttr>(it.value()).name() == name) {
-                notifyAttrChange(it.key());
-            }
-        }
-    }
+    notifyAttrChange(Property::font);
+//    for (auto it = begin(); it != end(); ++it) {
+//        if (it.value().type() == qMetaTypeId<FontAttr>()) {
+//            if (qvariant_cast<FontAttr>(it.value()).name() == name) {
+//                notifyAttrChange(it.key());
+//            }
+//        }
+//    }
 }
 
-void WidgetData::buildPropertiesTree()
+void WidgetData::sizeChanged()
 {
-    typedef TextAttr PixmapAttr; // TODO: fix this quick and dirty hack
-
-    auto global = new AttrGroupItem("Global");
-    // qDebug() << global->data(Qt::DisplayRole);
-    mRoot->appendChild(global);
-    addProperty<TextAttr>(Property::name, global);
-    addProperty<PositionAttr>(Property::position, global);
-    addProperty<SizeAttr>(Property::size, global);
-    addProperty<IntegerAttr>(Property::zPosition, global);
-    addProperty<ColorAttr>(Property::foregroundColor, global);
-    addProperty<ColorAttr>(Property::backgroundColor, global);
-    addProperty<IntegerAttr>(Property::transparent, global);
-    addProperty<ColorAttr>(Property::borderColor, global);
-    addProperty<IntegerAttr>(Property::borderWidth, global);
-
-    auto text = new AttrGroupItem("Label");
-    mRoot->appendChild(text);
-    addProperty<TextAttr>(Property::text, text);
-    addProperty<FontAttr>(Property::font, text);
-    addProperty<VAlignAttr>(Property::valign, text);
-    addProperty<HAlignAttr>(Property::halign, text);
-    addProperty<ColorAttr>(Property::shadowColor, text);
-    addProperty<TextAttr>(Property::shadowOffset, text);
-
-    auto pixmap = new AttrGroupItem("Pixmap");
-    mRoot->appendChild(pixmap);
-    addProperty<TextAttr>(Property::pixmap, pixmap);
-    addProperty<AlphatestAttr>(Property::alphatest, pixmap);
-    addProperty<IntegerAttr>(Property::scale, pixmap);
-
-    auto screen = new AttrGroupItem("Screen");
-    mRoot->appendChild(screen);
-    addProperty<TextAttr>(Property::title, screen);
-    addProperty<FlagsAttr>(Property::flags, screen);
-
-    auto listbox = new AttrGroupItem("Listbox");
-    mRoot->appendChild(listbox);
-    addProperty<IntegerAttr>(Property::itemHeight, listbox);
-    addProperty<PixmapAttr>(Property::selectionPixmap, listbox);
-    addProperty<ScrollbarModeAttr>(Property::scrollbarMode, listbox);
-    addProperty<IntegerAttr>(Property::enableWrapAround, listbox);
-    addProperty<ColorAttr>(Property::foregroundColorSelected, listbox);
-    addProperty<ColorAttr>(Property::backgroundColorSelected, listbox);
-
-    auto slider = new AttrGroupItem("Slider");
-    mRoot->appendChild(slider);
-    addProperty<PixmapAttr>(Property::sliderPixmap, slider);
-    addProperty<PixmapAttr>(Property::backgroundPixmap, slider);
-    addProperty<OrientationAttr>(Property::orientation, slider);
-
-    auto gauge = new AttrGroupItem("PositionGauge");
-    mRoot->appendChild(gauge);
-    addProperty<PixmapAttr>(Property::pointer, gauge);
-    addProperty<PixmapAttr>(Property::seek_pointer, gauge);
-
-    auto widget = new AttrGroupItem("Widget");
-    mRoot->appendChild(widget);
-    addProperty<RenderAttr>(Property::render, widget);
-    addProperty<TextAttr>(Property::source, widget);
-    addProperty<RenderAttr>(Property::previewRender, widget);
-    addProperty<VariantAttr>(Property::previewValue, widget);
-
-    //	mPosition = static_cast<PositionItem*>(getAttrPtr(Property::position));
-    //	mSize = static_cast<SizeItem*>(getAttrPtr(Property::size));
+    notifyAttrChange(Property::size);
+    for (int i = 0; i < childCount(); ++i) {
+        child(i)->parentSizeChanged();
+    }
 }
 
 void WidgetData::parentSizeChanged()
 {
-    auto pos = getAttr<PositionAttr>(Property::position);
-    if (pos.isRelative()) {
+    if (m_position.isRelative()) {
         notifyAttrChange(Property::position);
     }
-    auto size = getAttr<SizeAttr>(Property::size);
-    if (size.isRelative()) {
+    if (m_size.isRelative()) {
         notifyAttrChange(Property::size);
         for (int i = 0; i < childCount(); ++i) {
             child(i)->parentSizeChanged();
@@ -380,6 +892,16 @@ void WidgetData::parentSizeChanged()
 
 void WidgetData::notifyAttrChange(int key)
 {
-    emit attrChanged(key);
-    SkinRepository::screens()->widgetAttrHasChanged(this, key);
+    if (m_model) {
+        m_model->widgetAttrHasChanged(this, key);
+    }
 }
+
+void WidgetData::setAttrFromXml(int key, const QString &str)
+{
+    auto it = reflection.find(key);
+    if (it != reflection.cend()) {
+        (*it)->setFromStr(*this, str);
+    }
+}
+
