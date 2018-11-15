@@ -50,6 +50,9 @@ MoveWidgetCommand::MoveWidgetCommand(WidgetData *widget, QPointF pos)
     , m_point(pos)
     , m_pos(m_widget->position())
 {
+    setText(QString("Move %1,%2")
+            .arg(pos.toPoint().x())
+            .arg(pos.toPoint().y()));
 }
 
 void MoveWidgetCommand::redo()
@@ -76,6 +79,9 @@ ResizeWidgetCommand::ResizeWidgetCommand(WidgetData *widget, QSizeF size)
     , m_size(size)
     , m_value(m_widget->size())
 {
+    setText(QString("Resize %1x%2")
+            .arg(size.toSize().width())
+            .arg(size.toSize().height()));
 }
 
 void ResizeWidgetCommand::redo()
