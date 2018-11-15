@@ -46,6 +46,7 @@ public:
     QString previewFilePath();
 
 signals:
+    void filePathChanged(const QString &path);
 
 private slots:
 

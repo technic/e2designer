@@ -54,10 +54,12 @@ bool SkinRepository::loadFile(const QString& path)
 
     mScreensModel->loadPreviews(previewFilePath());
 
-    QFile file(mDirectory.filePath("skin.xml"));
+    QString skinFile = mDirectory.filePath("skin.xml");
+    QFile file(skinFile);
     bool ok = file.open(QIODevice::ReadOnly);
     if (!ok)
         return false;
+    emit filePathChanged(skinFile);
     ok = fromStream(&file);
     file.close();
 

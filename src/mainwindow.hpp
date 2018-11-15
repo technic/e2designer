@@ -37,6 +37,7 @@ private slots:
     bool save();
     bool saveAs();
     void about();
+    void setTitle(const QString &skinPath);
 
     void addSkinItem(int type);
     void addWidget();

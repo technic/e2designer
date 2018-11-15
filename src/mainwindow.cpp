@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget* parent)
         setWindowModified(!clean);
     });
 
+    connect(&SkinRepository::instance(), &SkinRepository::filePathChanged, this, &MainWindow::setTitle);
+
     ui->propView->setModel(mPropertiesModel);
     ui->propView->setIndentation(5);
 
@@ -208,6 +210,11 @@ void MainWindow::about()
                           "<li>Shift + Arrow keys - presize move object<li>"
                           "<li>Ctrl + Left mouse click - multiple selection<li>"
                           "</ul>"));
+}
+
+void MainWindow::setTitle(const QString &skinPath)
+{
+    setWindowTitle(QString("%1[*] - %2").arg(skinPath).arg(QCoreApplication::applicationName()));
 }
 
 void MainWindow::addSkinItem(int type)
