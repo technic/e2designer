@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>e2designer</string>
+   <string>e2designer [*]</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonTextBesideIcon</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -150,6 +150,9 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
     <addaction name="actionAddWidget"/>
     <addaction name="actionDeleteWidget"/>
     <addaction name="actionAddLabel"/>
@@ -189,6 +192,18 @@
    <addaction name="separator"/>
    <addaction name="actionAddWidget"/>
    <addaction name="actionDeleteWidget"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QUndoView" name="undoListView"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -311,6 +326,16 @@
     <string>Delete Widget</string>
    </property>
   </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -323,6 +348,11 @@
    <class>CodeEditor</class>
    <extends>QPlainTextEdit</extends>
    <header>editor/codeeditor.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>QUndoView</class>
+   <extends>QListView</extends>
+   <header>QUndoView</header>
   </customwidget>
  </customwidgets>
  <resources/>

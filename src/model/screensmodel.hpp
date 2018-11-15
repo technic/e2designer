@@ -90,6 +90,9 @@ public:
 //        return setWidgetAttr(index, key, QVariant::fromValue(value));
 //    }
 
+    // Access undo model
+    QUndoStack *undoStack() const { return mCommander; }
+
     // Move and resize widget
     void resizeWidget(const QModelIndex &index, const QSize &size);
     void moveWidget(const QModelIndex &index, const QPoint &pos);

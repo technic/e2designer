@@ -51,6 +51,13 @@ MainWindow::MainWindow(QWidget* parent)
     //	// accept dnd actions only from it self
     //	ui->treeView->setDragDropMode(QAbstractItemView::InternalMove);
 
+    // Undo stack
+    auto undoStack = SkinRepository::screens()->undoStack();
+    ui->undoListView->setStack(undoStack);
+    connect(undoStack, &QUndoStack::cleanChanged, this, [=](bool clean) {
+        setWindowModified(!clean);
+    });
+
     ui->propView->setModel(mPropertiesModel);
     ui->propView->setIndentation(5);
 
@@ -203,11 +210,6 @@ void MainWindow::about()
                           "</ul>"));
 }
 
-void MainWindow::skinWasModified()
-{
-    //??? Add fact that we modified in status bar
-}
-
 void MainWindow::addSkinItem(int type)
 {
     // FIXME: is m_view always athorative?
@@ -280,6 +282,12 @@ void MainWindow::editFonts()
 void MainWindow::createActions()
 {
     // Connect actions
+    auto undoStack = SkinRepository::screens()->undoStack();
+    connect(ui->actionUndo, &QAction::triggered, undoStack, &QUndoStack::undo);
+    connect(ui->actionRedo, &QAction::triggered, undoStack, &QUndoStack::redo);
+    connect(undoStack, &QUndoStack::canUndoChanged, ui->actionUndo, &QAction::setEnabled);
+    connect(undoStack, &QUndoStack::canRedoChanged, ui->actionRedo, &QAction::setEnabled);
+
     connect(ui->actionNew, &QAction::triggered, this, &MainWindow::newSkin);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::save);
@@ -405,6 +413,5 @@ bool MainWindow::confirmClose()
 
 bool MainWindow::isModified()
 {
-    // TODO
-    return false;
+    return !SkinRepository::screens()->undoStack()->isClean();
 }

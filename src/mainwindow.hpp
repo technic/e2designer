@@ -37,7 +37,6 @@ private slots:
     bool save();
     bool saveAs();
     void about();
-    void skinWasModified();
 
     void addSkinItem(int type);
     void addWidget();
