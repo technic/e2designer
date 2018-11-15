@@ -310,6 +310,7 @@ void ScreensModel::clear()
     QModelIndex rootIndex;
     removeRows(0, rowCount(rootIndex), rootIndex);
     endResetModel();
+    mCommander->clear();
 }
 
 void ScreensModel::appendFromXml(QXmlStreamReader& xml)
