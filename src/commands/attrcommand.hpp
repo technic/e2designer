@@ -16,8 +16,8 @@ class AttrCommand : public QUndoCommand
 {
 public:
     AttrCommand(WidgetData *m_widget, int key, QVariant value, QUndoCommand *parent = nullptr);
-    void redo() override;
-    void undo() override;
+    void redo() final;
+    void undo() final;
 private:
     WidgetData *m_widget;
     int m_key;
