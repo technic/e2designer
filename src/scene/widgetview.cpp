@@ -374,7 +374,7 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
     case ItemSelectedHasChanged:
         if (isSelected() && scene()) {
             // Init selector at widget position and track its resize signals
-            connect(selector, &RectSelector::rectChnaged, this, &WidgetView::setSelectorRect);
+            connect(selector, &RectSelector::rectChanged, this, &WidgetView::setSelectorRect);
             selector->setSceneRect(mapRectToScene(rect()));
             selector->setEnabled(true);
             selector->setVisible(true);
@@ -389,7 +389,7 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
             selector->setVisible(false);
             setFlag(ItemIsFocusable, false);
             setFlag(ItemIsMovable, false);
-            disconnect(mScreen->selector(), &RectSelector::rectChnaged, this,
+            disconnect(mScreen->selector(), &RectSelector::rectChanged, this,
                        &WidgetView::setSelectorRect);
         }
         break;

@@ -70,7 +70,7 @@ void RectSelector::resize(const QRectF& rectangle)
         h->setFlag(ItemSendsGeometryChanges, true);
     }
 
-    emit rectChnaged(mapRectToScene(r));
+    emit rectChanged(mapRectToScene(r));
 }
 
 void RectSelector::updateHandlesPos()

@@ -34,7 +34,7 @@ public:
     void resize(const QRectF& rectangle);
 
 signals:
-    void rectChnaged(QRectF globrect);
+    void rectChanged(QRectF globrect);
 
 private:
     void updateHandlesPos();
