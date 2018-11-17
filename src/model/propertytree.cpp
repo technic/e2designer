@@ -201,7 +201,7 @@ template<class Enum>
 QVariant EnumItem<Enum>::data(int role) const
 {
     auto attr = [this]() -> EnumAttr<Enum> {
-      Enum x = widget().getAttr(key()).value<Enum>();
+      Enum x = widget().getAttr(key()).template value<Enum>();
       return EnumAttr<Enum>(x);
     };
     switch (role) {
