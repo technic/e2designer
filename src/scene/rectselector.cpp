@@ -39,9 +39,6 @@ void RectSelector::resize(const QRectF& rectangle)
         dw = rectangle.width() - r.width();
         r.adjust(-dw, 0., +dw, 0.);
         break;
-    default:
-        Q_ASSERT(false);
-        break;
     }
     qreal dh;
     switch (m_yanchor) {
@@ -53,9 +50,6 @@ void RectSelector::resize(const QRectF& rectangle)
     case Coordinate::Type::Center:
         dh = rectangle.height() - r.height();
         r.adjust(0., -dh, 0., +dh);
-        break;
-    default:
-        Q_ASSERT(false);
         break;
     }
 
