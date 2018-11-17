@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->graphicsView->setScene(mView->scene());
 
     // Setup default editors
-    QItemEditorFactory* factory = new QItemEditorFactory();
+    auto* factory = new QItemEditorFactory();
 
     auto* colorCreator = new QStandardItemEditorCreator<ColorListBox>();
     factory->registerEditor(QVariant::Color, colorCreator);
@@ -130,8 +130,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    if (mView)
-        delete mView;
+    delete mView;
     delete ui;
 }
 

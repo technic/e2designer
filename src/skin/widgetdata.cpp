@@ -27,7 +27,7 @@ public:
     virtual int type() const = 0;
     virtual QString getStr(const Widget &w) = 0;
     virtual void setFromStr(Widget &w, const QString &str) = 0;
-    virtual ~AbstractReflection() {}
+    virtual ~AbstractReflection() = default;
 };
 
 template<typename V> using Getter = V (Widget::*)() const;
@@ -110,6 +110,7 @@ ReflectionKey<T, GetterKey, SetterKey>* makeReflectionKey(int k, GetterKey g, Se
 }
 
 class WidgetReflection {
+    Q_DISABLE_COPY(WidgetReflection)
 public:
     WidgetReflection();
 

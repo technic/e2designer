@@ -211,7 +211,7 @@ void ColorListWindow::addDefault()
     int i = 0;
     do {
         auto c = Color(QString("Untitled%1").arg(i), QRgb());
-        ok = SkinRepository::instance().colors()->append(c);
+        ok = mModel->append(c);
         i++;
     } while (!ok);
 }
@@ -221,7 +221,7 @@ void ColorListWindow::add()
     const QString name = ui->name->text();
     if (confirmAdd(name)) {
         Color c = Color(ui->name->text(), currentColor());
-        SkinRepository::instance().colors()->append(c);
+        mModel->append(c);
     }
 }
 

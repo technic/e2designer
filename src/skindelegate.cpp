@@ -11,7 +11,7 @@ QWidget* SkinDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
     QVariant data = index.data(Qt::EditRole);
     switch (data.type()) {
     case QVariant::StringList: {
-        QComboBox* editor = new QComboBox(parent);
+        auto* editor = new QComboBox(parent);
         editor->addItems(data.toStringList());
         return editor;
     }
@@ -36,7 +36,7 @@ void SkinDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
         // current coresponds to DisplayRole
         // list coresponds to EditRole
         QString current = index.data(Qt::DisplayRole).toString();
-        QComboBox* box = static_cast<QComboBox*>(editor);
+        auto* box = static_cast<QComboBox*>(editor);
         box->setCurrentIndex(box->findText(current));
         break;
     }
@@ -52,7 +52,7 @@ void SkinDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
     QVariant data = index.data(Qt::EditRole);
     switch (data.type()) {
     case QVariant::StringList: {
-        QComboBox* box = static_cast<QComboBox*>(editor);
+        auto* box = static_cast<QComboBox*>(editor);
         QString value = box->currentText();
         model->setData(index, value, Qt::EditRole);
         break;

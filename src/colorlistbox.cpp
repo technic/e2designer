@@ -19,7 +19,7 @@ void ColorListBox::populateList()
 {
     auto* colors = SkinRepository::colors();
     for (int i = 0; i < colors->rowCount(); ++i) {
-        Color color = colors->itemAt(i);
+        const Color &color = colors->itemAt(i);
         insertItem(i, color.name());
         setItemData(i, QColor::fromRgba(color.value()), Qt::DecorationRole);
     }
