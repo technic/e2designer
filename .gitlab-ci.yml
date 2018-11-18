@@ -13,23 +13,24 @@ format:
     - git diff --exit-code
   allow_failure: true
 
+before_script:
+  # disable grep and exec part of the script
+  - sed -i '/^TEST/d' /opt/qt511/bin/qt511-env.sh
+  - . /opt/qt511/bin/qt511-env.sh
+  - which qmake
+  - qmake --version
+  - g++ --version
+  - mkdir -p ccache
+  - export CCACHE_BASEDIR=${PWD}
+  - export CCACHE_DIR=${PWD}/ccache
+  - env
+
 build:
   stage: build
-  before_script:
-    # disable grep and exec part of script
-    - sed -i '/^TEST/d' /opt/qt511/bin/qt511-env.sh
-    - . /opt/qt511/bin/qt511-env.sh
-    - mkdir -p ccache
-    - export CCACHE_BASEDIR=${PWD}
-    - export CCACHE_DIR=${PWD}/ccache
-    - env
   script:
     - mkdir -p build
     - pushd build
-    - which qmake
-    - qmake --version
-    - g++ --version
-    - qmake .. "QMAKE_CXX=ccache g++"
+    - qmake .. "QMAKE_CXX = ccache g++"
     - make
     - make -C app INSTALL_ROOT=$(pwd)/appdir install
     - find appdir
@@ -46,14 +47,13 @@ build:
 test:
   stage: test
   script:
-  - apt-get update && apt-get -y install fuse curl make file g++ qt5-qmake qt5-default
   - mkdir -p build && cd build
-  - which qmake
-  - qmake --version
-  - g++ --version
-  - qmake .. "CONFIG += test"
+  - qmake .. "QMAKE_CXX = ccache g++"
   - make
-  - ./tests
+  - make check
+  cache:
+    paths:
+      - ccache/
 
 deploy-AppImage:
   stage: deploy
