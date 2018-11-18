@@ -133,7 +133,7 @@ private slots:
 
         colors->append(Color("red", colRed.rgba()));
 
-        widgets->insertRows(0, 1);
+        widgets->insertRows(0, 2);
         auto i0 = widgets->index(0, 0);
         auto i1 = widgets->index(1, 0);
         auto col = ColorAttr(QString("red"));
