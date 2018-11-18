@@ -7,4 +7,5 @@ SUBDIRS = \
 app.depends += src
 tests.depends += src
 
-DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml .gitignore
+DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml .gitignore \
+    docker/Dockerfile
