@@ -1,4 +1,7 @@
-image: ubuntu:bionic
+image: registry.gitlab.com/technic93/e2designer:latest
+
+# To run tests with local image use
+# gitlab-runner exec docker --docker-pull-policy="if-not-present" <command>
 
 format:
   stage: build
@@ -12,14 +15,21 @@ format:
 
 build:
   stage: build
+  before_script:
+    # disable grep and exec part of script
+    - sed -i '/^TEST/d' /opt/qt511/bin/qt511-env.sh
+    - . /opt/qt511/bin/qt511-env.sh
+    - mkdir -p ccache
+    - export CCACHE_BASEDIR=${PWD}
+    - export CCACHE_DIR=${PWD}/ccache
+    - env
   script:
-    - apt-get update && apt-get -y install fuse curl make file g++ qt5-qmake qt5-default
     - mkdir -p build
     - pushd build
     - which qmake
     - qmake --version
     - g++ --version
-    - qmake ..
+    - qmake .. "QMAKE_CXX=ccache g++"
     - make
     - make -C app INSTALL_ROOT=$(pwd)/appdir install
     - find appdir
@@ -31,7 +41,7 @@ build:
       - build/*.AppImage
   cache:
     paths:
-      - "build/*.o"
+      - ccache/
 
 test:
   stage: test
@@ -48,6 +58,5 @@ test:
 deploy-AppImage:
   stage: deploy
   script:
-    - apt-get update && apt-get -y install curl git
     - export VERSION=$(git describe)
     - curl -T build/e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY https://api.bintray.com/content/technic/e2designer/e2designer/$VERSION/e2designer-$VERSION-x86_64.AppImage
