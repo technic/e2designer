@@ -123,6 +123,39 @@ private slots:
         QCOMPARE(spy.first().at(1), Property::transparent);
     }
 
+    void test_colorPalleteSignals() {
+        auto colors = new ColorsModel(this);
+        auto fonts = new FontsModel(this);
+        auto widgets = new ScreensModel(colors, fonts, this);
+
+        auto colRed = QColor(Qt::red);
+        auto colDarkRed = QColor(Qt::darkRed);
+
+        colors->append(Color("red", colRed.rgba()));
+
+        widgets->insertRows(0, 1);
+        auto i0 = widgets->index(0, 0);
+        auto i1 = widgets->index(1, 0);
+        auto col = ColorAttr(QString("red"));
+        for (auto& i : {i0, i1}) {
+            bool ok = widgets->setWidgetAttr(i, Property::foregroundColor, QVariant::fromValue(col));
+            QVERIFY(ok);
+        }
+
+        // Tell model to send notifications about our widget
+        WidgetObserverRegistrator reg{widgets, i0};
+        QSignalSpy spy(widgets, &ScreensModel::widgetChanged);
+
+        colors->setData(colors->index(0, ColorsModel::ColumnColor), QVariant::fromValue(colDarkRed));
+
+        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.first().at(0), i0);
+        QCOMPARE(spy.first().at(1), Property::foregroundColor);
+
+        QCOMPARE(widgets->widget(i0).color(Property::foregroundColor).getColor(),  colDarkRed);
+        QCOMPARE(widgets->widget(i1).color(Property::foregroundColor).getColor(),  colDarkRed);
+    }
+
 //    void test_PropertiesModel() {
 //        auto colors = new ColorsModel(this);
 //        auto fonts = new FontsModel(this);
