@@ -132,6 +132,7 @@ private:
 
 class WidgetObserverRegistrator
 {
+    Q_DISABLE_COPY(WidgetObserverRegistrator)
 public:
     WidgetObserverRegistrator(ScreensModel *model, const QModelIndex& index);
     void setIndex(const QModelIndex& index);
