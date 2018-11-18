@@ -152,8 +152,8 @@ private slots:
         QCOMPARE(spy.first().at(0), i0);
         QCOMPARE(spy.first().at(1), Property::foregroundColor);
 
-        QCOMPARE(widgets->widget(i0).color(Property::foregroundColor).getColor(),  colDarkRed);
-        QCOMPARE(widgets->widget(i1).color(Property::foregroundColor).getColor(),  colDarkRed);
+        QCOMPARE(widgets->widget(i0).color(Property::foregroundColor).getColor(), colDarkRed);
+        QCOMPARE(widgets->widget(i1).color(Property::foregroundColor).getColor(), colDarkRed);
     }
 
 //    void test_PropertiesModel() {
