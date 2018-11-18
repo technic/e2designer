@@ -17,8 +17,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-PRECOMPILED_HEADER = stable.hpp
-CONFIG += precompile_header warn_on
+CONFIG(pch) {
+    PRECOMPILED_HEADER = stable.hpp
+    CONFIG += precompile_header
+}
+
+CONFIG += warn_on
 
 include(../Qt-Color-Widgets/color_widgets.pri)
 DEFINES += QTCOLORWIDGETS_STATICALLY_LINKED
