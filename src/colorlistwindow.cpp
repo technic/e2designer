@@ -132,8 +132,7 @@ void ColorListWindow::updateColorWidgets(const QColor &col)
 
     // Hex editor
 
-    if (ui->edit_hex->isModified())
-        ui->edit_hex->setColor(col);
+    ui->edit_hex->setColor(col);
 
     // Push changes to model
     qDebug() << "changed" << color();
