@@ -23,7 +23,6 @@ before_script:
   - mkdir -p ccache
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/ccache
-  - env
 
 build:
   stage: build
