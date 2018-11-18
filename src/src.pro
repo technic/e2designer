@@ -114,6 +114,7 @@ HEADERS += \
     skin/positionattr.hpp \
     skin/enumattr.hpp \
     skin/converter.hpp \
+    model/propertytree.hpp \
     skin/offsetattr.hpp \
     base/meta.hpp
 
