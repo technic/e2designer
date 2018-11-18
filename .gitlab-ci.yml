@@ -23,6 +23,7 @@ before_script:
   - mkdir -p ccache
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/ccache
+  - ccache -sz
 
 build:
   stage: build
@@ -31,6 +32,7 @@ build:
     - pushd build
     - qmake .. "QMAKE_CXX = ccache g++"
     - make
+    - ccache -s
     - make -C app INSTALL_ROOT=$(pwd)/appdir install
     - find appdir
     - curl -fsSL -o linuxdeployqt https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
