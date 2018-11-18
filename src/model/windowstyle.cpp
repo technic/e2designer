@@ -7,8 +7,8 @@ void WindowStyleTitle::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "title");
 
-    position.fromStr(xml.attributes().value("offset").toString());
-    font.fromStr(xml.attributes().value("font").toString());
+    position = PositionAttr(xml.attributes().value("offset").toString());
+    font = FontAttr(xml.attributes().value("font").toString());
     xml.skipCurrentElement();
 }
 
@@ -30,7 +30,7 @@ void WindowStyleColor::fromXml(QXmlStreamReader& xml)
     Q_ASSERT(xml.isStartElement() && xml.name() == "color");
 
     name = xml.attributes().value("name").toString();
-    color.fromStr(xml.attributes().value("color").toString(), true);
+    color = ColorAttr(xml.attributes().value("color").toString(), true);
     xml.skipCurrentElement();
 }
 
