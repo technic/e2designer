@@ -8,4 +8,4 @@ app.depends += src
 tests.depends += src
 
 DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml .gitignore \
-    docker/Dockerfile
+    docker/Dockerfile docker-push.sh
