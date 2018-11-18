@@ -336,7 +336,9 @@ void ScreensModel::toXml(QXmlStreamWriter& xml)
 
 const WidgetData &ScreensModel::widget(const QModelIndex &index) const
 {
-    return *static_cast<WidgetData *>(index.internalPointer());
+    if (!index.isValid())
+        qWarning() << "You asked for a widget at bad index!";
+    return *indexToItem(index);
 }
 
 QVariant ScreensModel::widgetAttr(const QModelIndex& index, int key) const
@@ -441,7 +443,7 @@ void ScreensModel::onFontChanged(const QString &name, const Font &value)
 	}
 }
 
-ScreensModel::Item *ScreensModel::indexToItem(const QModelIndex &index)
+ScreensModel::Item *ScreensModel::indexToItem(const QModelIndex &index) const
 {
     if (index.isValid()) {
         Q_ASSERT(index.model() == this);

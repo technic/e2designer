@@ -116,7 +116,7 @@ public slots:
     void onFontChanged(const QString &name, const Font &value);
 
 private:
-    Item *indexToItem(const QModelIndex &index);
+    Item *indexToItem(const QModelIndex &index) const;
     static Item* castItem(const QModelIndex& index);
 
 	QHash<QPersistentModelIndex, int> m_observers;
