@@ -3,6 +3,10 @@ image: registry.gitlab.com/technic93/e2designer:latest
 # To run tests with local image use
 # gitlab-runner exec docker --docker-pull-policy="if-not-present" <command>
 
+variables:
+    BINTRAY_ZSYNC: bintray-zsync|technic|e2designer|e2designer
+    BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
+
 format:
   stage: build
   before_script:
@@ -37,10 +41,14 @@ build:
     - find appdir
     - curl -fsSL -o linuxdeployqt https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
     - chmod a+x linuxdeployqt
-    - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -appimage
+    - curl -fsSL -o appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+    - chmod a+x appimagetool
+    - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -bundle-non-qt-libs
+    - ./appimagetool -u "$BINTRAY_ZSYNC|e2designer-_latestVersion-x86_64.AppImage.zsync" appdir
   artifacts:
     paths:
       - build/*.AppImage
+      - build/*.AppImage.zsync
   cache:
     paths:
       - ccache/
@@ -60,4 +68,5 @@ deploy-AppImage:
   stage: deploy
   script:
     - export VERSION=$(git describe)
-    - curl -T build/e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY https://api.bintray.com/content/technic/e2designer/e2designer/$VERSION/e2designer-$VERSION-x86_64.AppImage
+    - curl -T build/e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
+    - curl -T build/e2designer-x86_64.AppImage.zsync -u technic:$BINTRAY_API_KEY $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
