@@ -162,23 +162,5 @@ public:
 };
 using HAlign = PropertyHAlign::Enum;
 
-// Roles to be used in QtModels
-
-enum Roles {
-    UserRole = Qt::UserRole,
-    // Roles for scene
-//    GraphicsRole,
-    AnchorRole,
-    // Role for QComboxBox
-//    StringListRole,
-    //	// Role to select editor
-    //	RoleDelegate, // TODO
-    // Role to get type()
-//    WidgetTypeRole,
-    // Role to store in XML
-    XmlRole,
-//    DataRole,
-};
-
 
 #endif // ENUMS_HPP

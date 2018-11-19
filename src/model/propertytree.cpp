@@ -176,8 +176,6 @@ QVariant ColorItem::data(int role) const
         return widget().color(key()).getColor();
     case Qt::DisplayRole:
         return widget().color(key()).toString();
-    case Roles::XmlRole:
-        return widget().color(key()).toXml();
     default:
         return AttrItem::data(role);
     }
@@ -188,8 +186,6 @@ QVariant ColorItem::convert(const QVariant &value, int role)
     switch (role) {
     case Qt::EditRole:
         return QVariant::fromValue(ColorAttr(qvariant_cast<QColor>(value)));
-    case Roles::XmlRole:
-        return QVariant::fromValue(ColorAttr(value.toString(), true));
     default:
         return AttrItem::convert(value, role);
     }
@@ -207,8 +203,6 @@ QVariant EnumItem<Enum>::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
         return attr().toStr(false);
-    case Roles::XmlRole:
-        return attr().toStr(true);
     case Qt::EditRole: {
         AttrType a = attr();
         return QVariant::fromValue(SkinEnumList(a.toStr(false), a.toStrList()));
@@ -224,8 +218,6 @@ QVariant EnumItem<Enum>::convert(const QVariant& value, int role)
     switch (role) {
     case Qt::EditRole:
         return QVariant::fromValue(AttrType(qvariant_cast<SkinEnumList>(value).first).value());
-    case Roles::XmlRole:
-        return QVariant::fromValue(AttrType(value.toString()).value());
     default:
         return AttrItem::convert(value, role);
     }
@@ -238,7 +230,6 @@ QVariant FontItem::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-    case Roles::XmlRole:
         return widget().font().toStr();
     default:
         return AttrItem::data(role);
@@ -249,7 +240,6 @@ QVariant FontItem::convert(const QVariant& value, int role)
 {
     switch (role) {
     case Qt::EditRole:
-    case Roles::XmlRole:
         return QVariant::fromValue(FontAttr(value.toString()));
     default:
         return AttrItem::convert(value, role);
@@ -265,14 +255,6 @@ QVariant IntegerItem::data(int role) const
     case Qt::DisplayRole:
     case Qt::EditRole:
         return widget().getAttr(key()).toInt();
-    case Roles::XmlRole: {
-        int value = widget().getAttr(key()).toInt();
-        if (value != 0) {
-            return QString("%1").arg(value);
-        } else {
-            return QString();
-        }
-    }
     default:
         return AttrItem::data(role);
     }
@@ -282,7 +264,6 @@ QVariant IntegerItem::convert(const QVariant& value, int role)
 {
     switch (role) {
     case Qt::EditRole:
-    case Roles::XmlRole:
         return value.toInt();
     default:
         return AttrItem::convert(value, role);
@@ -300,7 +281,6 @@ QVariant PixmapItem::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-    case Roles::XmlRole:
         return "";
     default:
         return AttrItem::data(role);
@@ -312,7 +292,6 @@ QVariant PixmapItem::convert(const QVariant& value, int role)
     // TODO: implement!
     switch (role) {
     case Qt::EditRole:
-    case Roles::XmlRole:
         return false;
     default:
         return AttrItem::convert(value, role);
@@ -335,7 +314,6 @@ QVariant PositionItem::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-    case Roles::XmlRole:
         return widget().position().toStr();
     default:
         return AttrItem::data(role);
@@ -345,7 +323,6 @@ QVariant PositionItem::data(int role) const
 QVariant PositionItem::convert(const QVariant& value, int role)
 {
     switch (role) {
-    case Roles::XmlRole:
     case Qt::EditRole:
         return QVariant::fromValue(PositionAttr(value.toString()));
     default:
@@ -415,7 +392,6 @@ QVariant SizeItem::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-    case Roles::XmlRole:
         return widget().size().toStr();
     default:
         return AttrItem::data(role);
@@ -426,7 +402,6 @@ QVariant SizeItem::convert(const QVariant& value, int role)
 {
     switch (role) {
     case Qt::EditRole:
-    case Roles::XmlRole:
         return QVariant::fromValue(SizeAttr(value.toString()));
     default:
         return AttrItem::convert(value, role);
@@ -440,7 +415,6 @@ QVariant TextItem::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-    case Roles::XmlRole:
         return widget().getAttr(key());
     default:
         return AttrItem::data(role);
@@ -450,8 +424,7 @@ QVariant TextItem::data(int role) const
 QVariant TextItem::convert(const QVariant& value, int role)
 {
     switch (role) {
-    case Qt::EditRole:
-    case Roles::XmlRole: {
+    case Qt::EditRole: {
         auto str = value.toString();
         if (str.isEmpty())
             str.clear();
@@ -469,7 +442,6 @@ QVariant VariantItem::data(int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::EditRole:
-    case Roles::XmlRole:
         return widget().getAttr(key()).toString();
     default:
         return AttrItem::data(role);
@@ -480,7 +452,6 @@ QVariant VariantItem::convert(const QVariant& value, int role)
 {
     switch (role) {
     case Qt::EditRole:
-    case Roles::XmlRole:
         return value;
     default:
         return AttrItem::convert(value, role);
