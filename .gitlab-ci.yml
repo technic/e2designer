@@ -4,8 +4,27 @@ image: registry.gitlab.com/technic93/e2designer:latest
 # gitlab-runner exec docker --docker-pull-policy="if-not-present" <command>
 
 variables:
+    UBUNTU_IMAGE: registry.gitlab.com/technic93/e2designer:latest
     BINTRAY_ZSYNC: bintray-zsync|technic|e2designer|e2designer
     BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
+
+stages:
+  - images
+  - build
+  - test
+  - deploy
+
+image-ubuntu:
+  stage: images
+  image: docker:git
+  services:
+    - docker:dind
+  script:
+    - cd docker
+    - docker login -u $CI_DEPLOY_USER -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker build --pull -t $UBUNTU_IMAGE .
+    - docker push $UBUNTU_IMAGE
+  when: manual
 
 format:
   stage: build
