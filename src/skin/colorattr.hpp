@@ -20,7 +20,6 @@ public:
     const QString& name() const { return mName; }
     void setColorName(const QString& name);
 
-    QString toStr(bool invertAlpha = true) const;
     QString toString() const { return toStr(false); }
     inline QString toXml() const { return toStr(true); }
     bool fromStr(const QString& str, bool invertAlpha = false);
@@ -29,6 +28,8 @@ public:
     void updateValue(QRgb value);
 
 private:
+    QString toStr(bool invertAlpha) const;
+
     QString mName;
     QRgb mValue;
     bool mDefined;
@@ -36,7 +37,7 @@ private:
 Q_DECLARE_METATYPE(ColorAttr);
 
 inline QString serialize(const ColorAttr &color) {
-    return color.toStr();
+    return color.toXml();
 }
 inline void deserialize(const QString &str, ColorAttr &color) {
     color = ColorAttr(str);

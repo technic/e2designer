@@ -175,9 +175,9 @@ QVariant ColorItem::data(int role) const
     case Qt::EditRole:
         return widget().color(key()).getColor();
     case Qt::DisplayRole:
-        return widget().color(key()).toStr(false);
+        return widget().color(key()).toString();
     case Roles::XmlRole:
-        return widget().color(key()).toStr(true);
+        return widget().color(key()).toXml();
     default:
         return AttrItem::data(role);
     }

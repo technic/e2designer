@@ -38,7 +38,7 @@ void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("color");
     xml.writeAttribute("name", name);
-    xml.writeAttribute("color", color.toStr(true));
+    xml.writeAttribute("color", color.toXml());
     xml.writeEndElement();
 }
 
