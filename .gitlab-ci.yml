@@ -23,7 +23,7 @@ image-ubuntu:
     - echo building $UBUNTU_IMAGE ...
   script:
     - cd docker
-    - docker login -u $CI_DEPLOY_USER -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
     - docker build --pull -t $UBUNTU_IMAGE .
     - docker push $UBUNTU_IMAGE
   when: manual
