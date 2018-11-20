@@ -20,10 +20,11 @@ image-ubuntu:
   services:
     - docker:dind
   before_script:
+    - docker info
     - echo building $UBUNTU_IMAGE ...
   script:
     - cd docker
-    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.example.com
     - docker build --pull -t $UBUNTU_IMAGE .
     - docker push $UBUNTU_IMAGE
   when: manual
