@@ -19,6 +19,7 @@ FontListWindow::~FontListWindow()
 {
     delete ui;
 }
+
 void FontListWindow::remove()
 {
     QList<int> rows;
