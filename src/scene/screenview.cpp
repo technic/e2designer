@@ -132,8 +132,8 @@ void ScreenView::deleteSelected()
     // I only delete last clicked one
     QGraphicsItem* item = mScene->selectedItems().last();
     // FIXME: size check
-    if (item->type() == WidgetView::Type) {
-        WidgetView* w = static_cast<WidgetView*>(item);
+    auto w = qgraphicsitem_cast<WidgetView*>(item);
+    if (w) {
         QModelIndex i = w->modelIndex();
         mModel->removeRow(i.row(), i.parent());
     } else {
@@ -228,15 +228,15 @@ void ScreenView::onSceneSelectionChanged()
         }
     }
     for (auto *item: mScene->selectedItems()) {
-        if (item->type() != WidgetView::Type)
-            continue;
-        WidgetView *w = static_cast<WidgetView*>(item);
-        mSelectionModel->select(makeRowSelection(w->modelIndex()), QItemSelectionModel::Select);
+        auto w = qgraphicsitem_cast<WidgetView*>(item);
+        if (w) {
+            mSelectionModel->select(makeRowSelection(w->modelIndex()), QItemSelectionModel::Select);
+        }
     }
     if (!mScene->selectedItems().empty()) {
         auto *item = mScene->selectedItems().back();
-        if (item->type() == WidgetView::Type) {
-            WidgetView *w = static_cast<WidgetView*>(item);
+        auto w = qgraphicsitem_cast<WidgetView*>(item);
+        if (w) {
             mSelectionModel->setCurrentIndex(w->modelIndex(), QItemSelectionModel::NoUpdate);
         }
     }
