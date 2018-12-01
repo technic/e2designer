@@ -5,9 +5,6 @@
 #include <QColor>
 #include <QString>
 
-using IntegerAttr = int;
-using TextAttr = QString;
-
 QString serialize(int value);
 void deserialize(const QString& str, int& value);
 
