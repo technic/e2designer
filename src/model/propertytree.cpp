@@ -173,7 +173,7 @@ QVariant ColorItem::data(int role) const
     switch (role) {
     case Qt::DecorationRole:
     case Qt::EditRole:
-        return widget().color(key()).getColor();
+        return widget().getQColor(key());
     case Qt::DisplayRole:
         return widget().color(key()).toString();
     default:

@@ -112,15 +112,17 @@ Preview ScreensTree::getPreview(const QString& screen, const QString& widget) co
 
 // ScreensModel
 
-ScreensModel::ScreensModel(ColorsModel *colors, FontsModel *fonts, QObject* parent)
+ScreensModel::ScreensModel(ColorsModel& colors, FontsModel& fonts, QObject* parent)
     : QAbstractItemModel(parent)
+    , m_colorsModel(colors)
+    , m_fontsModel(fonts)
     , mRoot(new WidgetData())
     , mCommander(new QUndoStack(this))
 {
     mCommander->setUndoLimit(100);
     mRoot->setModel(this);
-    connect(colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
-    connect(fonts, &FontsModel::valueChanged, this, &ScreensModel::onFontChanged);
+    connect(&colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
+    connect(&fonts, &FontsModel::valueChanged, this, &ScreensModel::onFontChanged);
 }
 
 ScreensModel::~ScreensModel()
@@ -379,7 +381,9 @@ void ScreensModel::moveWidget(const QModelIndex &index, const QPoint &pos)
 void ScreensModel::registerObserver(const QModelIndex& index) {
     if (!index.isValid())
         return;
-    m_observers[index]++;
+    if (m_observers[index]++ == 0) {
+        indexToItem(index)->updateCache();
+    }
 }
 
 void ScreensModel::unregisterObserver(const QModelIndex& index) {

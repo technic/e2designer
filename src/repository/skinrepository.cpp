@@ -8,7 +8,7 @@ SkinRepository::SkinRepository(QObject* parent)
     : QObject(parent)
     , mColors(new ColorsModel(this))
     , mFonts(new FontsModel(this))
-    , mScreensModel(new ScreensModel(mColors, mFonts, this))
+    , mScreensModel(new ScreensModel(*mColors, *mFonts, this))
 {
 }
 

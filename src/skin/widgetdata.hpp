@@ -87,6 +87,7 @@ public:
     // Colors
     ColorAttr color(int key) const;
     void setColor(int key, const ColorAttr &color);
+    QColor getQColor(int key) const;
     // Pixmaps
     PixmapAttr pixmap(int key) const;
     void setPixmap(int key, const PixmapAttr &p);
@@ -175,6 +176,7 @@ public:
 //private slots:
     void onColorChanged(const QString& name, QRgb value);
     void onFontChanged(const QString& name, const Font& value);
+    void updateCache();
 
 private:
     void sizeChanged();
@@ -232,7 +234,7 @@ private:
     QVariant m_previewValue;
 
     // named by key
-    QHash<int, ColorAttr> m_colors;
+    QHash<int, CachedColor> m_colors;
     QHash<int, PixmapAttr> m_pixmaps;
     QHash<int, bool> m_switches;
 

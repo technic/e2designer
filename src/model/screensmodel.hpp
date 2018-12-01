@@ -39,7 +39,7 @@ class ScreensModel : public QAbstractItemModel, public ScreensTree
     Q_OBJECT
 
 public:
-    explicit ScreensModel(ColorsModel *colors, FontsModel *fonts, QObject* parent = Q_NULLPTR);
+    explicit ScreensModel(ColorsModel& colors, FontsModel& fonts, QObject* parent = Q_NULLPTR);
     ~ScreensModel() override;
 
     //	typedef MixinTreeNode<WidgetData> Item;
@@ -90,6 +90,10 @@ public:
 //        return setWidgetAttr(index, key, QVariant::fromValue(value));
 //    }
 
+    // Access asosiated fonts and colors
+    const ColorsModel& colors() const { return m_colorsModel; };
+    const FontsModel& fonts() const { return m_fontsModel; }
+
     // Access undo model
     QUndoStack *undoStack() const { return mCommander; }
 
@@ -123,6 +127,10 @@ private:
 
     // QTimer* m_timer;
     // QTime m_lastShot;
+
+    // ref
+    ColorsModel& m_colorsModel;
+    FontsModel& m_fontsModel;
 
     // own
     WidgetData* mRoot;

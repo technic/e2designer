@@ -426,6 +426,11 @@ void WidgetData::setColor(int key, const ColorAttr &color)
     notifyAttrChange(key);
 }
 
+QColor WidgetData::getQColor(int key) const
+{
+    return m_colors[key].getQColor();
+}
+
 void WidgetData::setFont(const FontAttr &font)
 {
     m_font = font;
@@ -724,7 +729,7 @@ bool WidgetData::setAttr(int key, const QVariant &value)
 void WidgetData::onColorChanged(const QString& name, QRgb value)
 {
     for (auto it = m_colors.begin(); it != m_colors.end(); ++it) {
-        ColorAttr& col = *it;
+        auto& col = *it;
         if (col.name() == name) {
             col.updateValue(value);
             notifyAttrChange(it.key());
@@ -752,7 +757,20 @@ void WidgetData::onFontChanged(const QString& name, const Font& value)
 //                notifyAttrChange(it.key());
 //            }
 //        }
-//    }
+    //    }
+}
+
+void WidgetData::updateCache()
+{
+    // Widget must be attached to the model
+    if (!m_model) {
+        return;
+    }
+    for (auto it = m_colors.begin(); it != m_colors.end(); ++it) {
+        auto& col = *it;
+        col.reload(m_model->colors());
+    }
+    // TODO: fonts?
 }
 
 void WidgetData::sizeChanged()

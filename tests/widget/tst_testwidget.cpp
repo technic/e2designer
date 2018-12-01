@@ -54,9 +54,8 @@ private slots:
         WidgetData w;
         ColorAttr col(Qt::red);
         w.setColor(Property::backgroundColor, col);
-        QVERIFY(w.color(Property::backgroundColor).getColor() == Qt::red);
-        QVERIFY(w.getAttr(Property::backgroundColor).value<ColorAttr>()
-                .getColor() == Qt::red);
+        QVERIFY(w.color(Property::backgroundColor).value() == Qt::red);
+        QVERIFY(w.getAttr(Property::backgroundColor).value<ColorAttr>().value() == Qt::red);
     }
     void test_alphatest() {
         WidgetData w;
@@ -81,7 +80,7 @@ private slots:
         QVERIFY(w.alphatest() == Alphatest::blend);
         QVERIFY(w.position() == PositionAttr(10, 20));
         QVERIFY(w.size() == SizeAttr(100, 300));
-        QVERIFY(w.color(Property::backgroundColor).getColor() == QColor(Qt::red));
+        QVERIFY(w.color(Property::backgroundColor).value() == QColor(Qt::red));
     }
 
     void test_tree() {
@@ -107,7 +106,7 @@ private slots:
     void test_modelSignal() {
         auto colors = new ColorsModel(this);
         auto fonts = new FontsModel(this);
-        auto widgets = new ScreensModel(colors, fonts, this);
+        auto widgets = new ScreensModel(*colors, *fonts, this);
 
         widgets->insertRows(0, 1);
         auto i = widgets->index(0, 0);
@@ -126,7 +125,7 @@ private slots:
     void test_colorPalleteSignals() {
         auto colors = new ColorsModel(this);
         auto fonts = new FontsModel(this);
-        auto widgets = new ScreensModel(colors, fonts, this);
+        auto widgets = new ScreensModel(*colors, *fonts, this);
 
         auto colRed = QColor(Qt::red);
         auto colDarkRed = QColor(Qt::darkRed);
@@ -143,7 +142,7 @@ private slots:
         }
 
         // Tell model to send notifications about our widget
-        WidgetObserverRegistrator reg{widgets, i0};
+        WidgetObserverRegistrator r0{widgets, i0};
         QSignalSpy spy(widgets, &ScreensModel::widgetChanged);
 
         colors->setData(colors->index(0, ColorsModel::ColumnColor), QVariant::fromValue(colDarkRed));
@@ -151,9 +150,10 @@ private slots:
         QCOMPARE(spy.count(), 1);
         QCOMPARE(spy.first().at(0), i0);
         QCOMPARE(spy.first().at(1), Property::foregroundColor);
+        QCOMPARE(widgets->widget(i0).getQColor(Property::foregroundColor), colDarkRed);
 
-        QCOMPARE(widgets->widget(i0).color(Property::foregroundColor).getColor(), colDarkRed);
-        QCOMPARE(widgets->widget(i1).color(Property::foregroundColor).getColor(), colDarkRed);
+        WidgetObserverRegistrator r1{widgets, i1};
+        QCOMPARE(widgets->widget(i1).getQColor(Property::foregroundColor), colDarkRed);
     }
 
 //    void test_PropertiesModel() {

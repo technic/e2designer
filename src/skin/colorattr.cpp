@@ -1,57 +1,68 @@
 #include "colorattr.hpp"
 #include "base/meta.hpp"
-#include "repository/skinrepository.hpp"
+#include "model/colorsmodel.hpp"
 #include <QColor>
 
 ColorAttr::ColorAttr()
     : mName()
     , mValue(0)
-    , mDefined(false)
+    , m_state(State::Null)
 {
 }
 ColorAttr::ColorAttr(const QColor& color)
-    : ColorAttr()
+    : mName()
+    , mValue(color.rgba())
+    , m_state(State::Fixed)
 {
-    setColor(color);
 }
+
 ColorAttr::ColorAttr(const QString& str, bool invertAlpha)
     : ColorAttr()
 {
-    fromStr(str, invertAlpha);
-}
-
-QColor ColorAttr::getColor() const
-{
-    if (mDefined) {
-        return QColor::fromRgba(mValue);
+    if (str.length() > 0 && str[0] == '#') {
+        QColor color(str);
+        if (color.isValid()) {
+            if (invertAlpha) {
+                // enigma2 representation is inverted
+                // 255=transparent, 0=opaque
+                color.setAlpha(255 - color.alpha());
+            }
+            mValue = color.rgba();
+            m_state = State::Fixed;
+        }
     } else {
-        return QColor();
+        mName = str;
+        m_state = State::Named;
     }
 }
-void ColorAttr::setColor(const QColor& color)
+
+const QColor ColorAttr::value() const
 {
-    // FIXME!
-    mName = SkinRepository::colors()->getName(color.rgba());
-//    mName = QString();
-    mValue = color.rgba();
-    mDefined = true;
+    if (m_state == State::Fixed)
+        return QColor::fromRgba(mValue);
+    else
+        return qRgb(0, 0, 0);
 }
 
-void ColorAttr::setColorName(const QString& name)
+const QString& ColorAttr::name() const
 {
-    mName = name;
-    mDefined = !name.isEmpty();
-    reload();
+    return mName;
+}
+
+void ColorAttr::setRawValue(QRgb value)
+{
+    Q_ASSERT(m_state == State::Named);
+    mValue = value;
 }
 
 QString ColorAttr::toStr(bool invertAlpha) const
 {
-    if (!mDefined) {
+    if (m_state == State::Null) {
         return QString();
     }
 
-    if (mName.isEmpty()) {
-        QColor color = getColor();
+    if (m_state == State::Fixed) {
+        QColor color = value();
         if (invertAlpha) {
             // enigma2 representation is inverted
             // 255=transparent, 0=opaque
@@ -63,40 +74,33 @@ QString ColorAttr::toStr(bool invertAlpha) const
     }
 }
 
-bool ColorAttr::fromStr(const QString& str, bool invertAlpha)
-{
-    if (str.length() > 0 && str[0] == '#') {
-        mName = QString();
-        QColor color(str);
-        if (color.isValid()) {
-            if (invertAlpha) {
-                // enigma2 representation is inverted
-                // 255=transparent, 0=opaque
-                color.setAlpha(255 - color.alpha());
-            }
-            mValue = color.rgba();
-            mDefined = true;
-        } else {
-            mValue = qRgb(0, 0, 0);
-            mDefined = false;
-        }
-    } else {
-        setColorName(str);
-    }
-    return mDefined;
-}
-
-void ColorAttr::reload()
-{
-    if (!mName.isEmpty()) {
-        mValue = SkinRepository::colors()->getValue(mName).value();
-    }
-}
-
-void ColorAttr::updateValue(QRgb value)
-{
-    Q_ASSERT(!mName.isEmpty());
-    mValue = value;
-}
-
 static ConverterRegistrator cr(&ColorAttr::toString);
+
+// CachedColor
+
+CachedColor::CachedColor(const ColorAttr &other)
+    : ColorAttr(other)
+{
+}
+
+QColor CachedColor::getQColor() const
+{
+    if (state() != State::Null) {
+        return QColor::fromRgba(getRawValue());
+    } else {
+        return QColor();
+    }
+}
+
+void CachedColor::reload(const ColorsModel& model)
+{
+    if (state() == State::Named) {
+        setRawValue(model.getValue(name()).value());
+    }
+}
+
+void CachedColor::updateValue(QRgb value)
+{
+    setRawValue(value);
+}
+

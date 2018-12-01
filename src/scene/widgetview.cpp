@@ -128,17 +128,17 @@ void WidgetView::updateAttribute(int key)
 //        m_scale = value.toInt();
 //        break;
     case Property::backgroundColor:
-        m_background_color = w.color(key).getColor();
+        m_background_color = w.getQColor(key);
         if (!m_background_color.isValid()) {
             auto &style = SkinRepository::styles()->getStyle(mScreen->outputId());
-            m_background_color = style.getColorAttr(WindowStyle::Background).getColor();
+            // m_background_color = style.getColorAttr(WindowStyle::Background).getColor();
         }
         break;
     case Property::foregroundColor:
-        m_foreground_color = w.color(key).getColor();
+        m_foreground_color = w.getQColor(key);
         if (!m_foreground_color.isValid()) {
             auto &style = SkinRepository::styles()->getStyle(mScreen->outputId());
-            m_foreground_color = style.getColorAttr(WindowStyle::LabelForeground).getColor();
+            // m_foreground_color = style.getColorAttr(WindowStyle::LabelForeground).getColor();
             qDebug() << m_foreground_color;
         }
         break;
@@ -241,7 +241,7 @@ void WidgetView::paintBorder(QPainter* painter, const WidgetData &w)
     if (bw > r.width() || bw > r.height())
         return;
 
-    QBrush brush(w.color(Property::borderColor).getColor());
+    QBrush brush(w.getQColor(Property::borderColor));
     auto fillRect = [&painter, &brush](qreal x, qreal y, qreal w, qreal h) {
         painter->fillRect(QRectF(x, y, w, h), brush);
     };
