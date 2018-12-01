@@ -327,13 +327,13 @@ void WidgetData::setType(WidgetType type)
 QString WidgetData::typeStr() const
 {
     switch (m_type) {
-    case Screen:
+    case WidgetType::Screen:
         return "screen";
-    case Widget:
+    case WidgetType::Widget:
         return "widget";
-    case Label:
+    case WidgetType::Label:
         return "eLabel";
-    case Pixmap:
+    case WidgetType::Pixmap:
         return "ePixmap";
     }
 }
