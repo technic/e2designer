@@ -22,6 +22,10 @@ CONFIG(pch) {
     CONFIG += precompile_header
 }
 
+*msvc* { # Visual studio spec filter
+    QMAKE_CXXFLAGS += -MP
+}
+
 CONFIG += warn_on
 
 include(../Qt-Color-Widgets/color_widgets.pri)
