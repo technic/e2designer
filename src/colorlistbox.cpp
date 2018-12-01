@@ -6,6 +6,7 @@ ColorListBox::ColorListBox(QWidget* parent)
 {
     populateList();
 }
+
 QColor ColorListBox::color() const
 {
     return qvariant_cast<QColor>(itemData(currentIndex(), Qt::DecorationRole));
@@ -15,11 +16,12 @@ void ColorListBox::setColor(QColor color)
 {
     setCurrentIndex(findData(color, Qt::DecorationRole));
 }
+
 void ColorListBox::populateList()
 {
     auto* colors = SkinRepository::colors();
     for (int i = 0; i < colors->rowCount(); ++i) {
-        const Color &color = colors->itemAt(i);
+        const Color& color = colors->itemAt(i);
         insertItem(i, color.name());
         setItemData(i, QColor::fromRgba(color.value()), Qt::DecorationRole);
     }
