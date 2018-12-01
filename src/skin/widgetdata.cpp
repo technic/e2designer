@@ -293,37 +293,6 @@ void WidgetData::setType(WidgetType type)
 //    emit typeChanged(m_type);
 }
 
-
-//void WidgetData::connectNotify(const QMetaMethod& signal)
-//{
-//    if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
-//        if (mConnectedCount == 0) {
-//            connect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
-//                    &WidgetData::onColorChanged);
-//            connect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
-//                    &WidgetData::onFontChanged);
-//        }
-//        mConnectedCount++;
-//    }
-//}
-
-//void WidgetData::disconnectNotify(const QMetaMethod& signal)
-//{
-    //    return;
-//    if (signal == QMetaMethod::fromSignal(&WidgetData::attrChanged)) {
-//        mConnectedCount--;
-//        if (mConnectedCount == 0) {
-//            // use singleShot workaround to avoid deadlocks
-//            QTimer::singleShot(0, [this]() {
-//                disconnect(SkinRepository::colors(), &ColorsModel::valueChanged, this,
-//                           &WidgetData::onColorChanged);
-//                disconnect(SkinRepository::fonts(), &FontsModel::valueChanged, this,
-//                           &WidgetData::onFontChanged);
-//            });
-//        }
-//    }
-//}
-
 QString WidgetData::typeStr() const
 {
     switch (m_type) {
@@ -672,18 +641,6 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-//using Widget = WidgetData;
-//// Position
-//template<> PositionAttr Widget::get<PositionAttr>(int k) const { return position(); }
-//template<> void Widget::set<PositionAttr>(int k, const PositionAttr &p) { setPosition(p); }
-//// Size
-//template<> SizeAttr Widget::get<SizeAttr>(int k) const { return size(); }
-//template<> void Widget::set<SizeAttr>(int k, const SizeAttr &sz) { setSize(sz); }
-//// Color
-//template<> ColorAttr WidgetData::get<ColorAttr>(int k) const { return color(k); }
-//template<> void Widget::set<ColorAttr>(int k, const ColorAttr &col) { setColor(k, col); }
-
-
 QVariant WidgetData::getAttr(int key) const
 {
     auto it = reflection.find(key);
@@ -692,16 +649,6 @@ QVariant WidgetData::getAttr(int key) const
     } else {
         return QVariant();
     }
-//    auto k = Property::PropertyEnum(key);
-//    switch (k) {
-//    case Property::size:
-//        return QVariant::fromValue(size());
-//    case Property::position:
-//        return QVariant::fromValue(position());
-//    default:
-//        // Other properties are stored in container
-//        return AttrContainer::getVarinat(k);
-//    }
 }
 
 bool WidgetData::setAttr(int key, const QVariant &value)
@@ -712,18 +659,6 @@ bool WidgetData::setAttr(int key, const QVariant &value)
         return value.canConvert((*it)->type());
     }
     return false;
-//    auto k = Property::PropertyEnum(key);
-//    switch (k) {
-//    case Property::position:
-//        setPosition(qvariant_cast<PositionAttr>(value));
-//        break;
-//    case Property::size:
-//        setSize(qvariant_cast<SizeAttr>(value));
-//        break;
-//    default:
-//        return AttrContainer::setVariant(k, value);
-//    }
-    //    return true;
 }
 
 void WidgetData::onColorChanged(const QString& name, QRgb value)
@@ -735,29 +670,12 @@ void WidgetData::onColorChanged(const QString& name, QRgb value)
             notifyAttrChange(it.key());
         }
     }
-//    for (auto it = begin(); it != end(); ++it) {
-//        if (it.value().type() == qMetaTypeId<ColorAttr>()) {
-//            ColorAttr old = qvariant_cast<ColorAttr>(it.value());
-//            if (old.getName() == name) {
-//                // TODO: use given rgba value
-//                // FIXME: this is bad
-////                setAttr(it.key(), ColorAttr(name));
-//                notifyAttrChange(it.key());
-//            }
-//        }
-//    }
 }
 
 void WidgetData::onFontChanged(const QString& name, const Font& value)
 {
     notifyAttrChange(Property::font);
-//    for (auto it = begin(); it != end(); ++it) {
-//        if (it.value().type() == qMetaTypeId<FontAttr>()) {
-//            if (qvariant_cast<FontAttr>(it.value()).name() == name) {
-//                notifyAttrChange(it.key());
-//            }
-//        }
-    //    }
+    // TODO: update
 }
 
 void WidgetData::updateCache()
