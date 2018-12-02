@@ -57,7 +57,7 @@ void Dimension::parseInt(int value, int parent_size)
 
 bool Dimension::isRelative() const
 {
-    return false;
+    return m_type != Type::Number;
 }
 
 
