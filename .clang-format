@@ -18,9 +18,6 @@ ColumnLimit: 100
 # Translation comments are also excluded
 CommentPragmas: "^!|^:"
 
-# We want a space between the type and the star for pointer types
-PointerBindsToType: false
-
 # We want to break before the operators, but not before a '='
 BreakBeforeBinaryOperators: NonAssignment
 
@@ -57,6 +54,5 @@ SortIncludes: false
 # macros for which the opening brace stays attached
 ForEachMacros:   [ foreach, Q_FOREACH, BOOST_FOREACH, forever, Q_FOREVER, QBENCHMARK, QBENCHMARK_ONCE ]
 
-
-# Modifications
-PointerAlignment: Left
+# Can be usefull when using dummy comments to enforce line break
+AlignTrailingComments: true
