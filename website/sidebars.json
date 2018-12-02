@@ -1,0 +1,16 @@
+{
+  "docs": {
+    "Getting Started": [ 
+	   "Installation",
+	   "AddingAppImageUpdaterBridge"
+    ],
+    "Guides" : [
+	   "AppImageDeltaRevisionerExample"
+    ],
+    "API" : [
+	   "AppImageUpdaterBridgeErrorCodes",
+	   "AppImageUpdaterBridgeStatusCodes",
+	   "ClassAppImageDeltaRevisioner"
+    ]
+  }
+}
