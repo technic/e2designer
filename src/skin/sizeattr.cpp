@@ -4,10 +4,8 @@
 #include <QDebug>
 
 Dimension::Dimension()
+    : m_type(Type::Number), m_value(0)
 {
-    // default
-    m_type = Type::Number;
-    m_value = 0;
 }
 
 Dimension::Dimension(int px)
