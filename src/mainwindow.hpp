@@ -12,8 +12,14 @@
 #include "model/propertiesmodel.hpp"
 #include "scene/screenview.hpp"
 
+// Forward declarations
+
 namespace Ui {
 class MainWindow;
+}
+
+namespace AppImageUpdaterBridge {
+class AppImageUpdaterDialog;
 }
 
 class MainWindow : public QMainWindow
@@ -49,6 +55,8 @@ private slots:
     void editColors();
     void editFonts();
 
+    void checkUpdates();
+
 private:
     // menu and toolbar
     void createActions();
@@ -57,6 +65,8 @@ private:
     // shows save before close dialog
     bool confirmClose();
     bool isModified();
+    // AppImage
+    QString appImagePath();
 
     Ui::MainWindow* ui;
 
@@ -66,6 +76,8 @@ private:
 
     // QObject owned
     PropertiesModel* mPropertiesModel;
+    AppImageUpdaterBridge::AppImageUpdaterDialog* m_updater;
+
 
     //	QSortFilterProxyModel *m_topfilter;
     //	QSortFilterProxyModel *m_headerfilter;

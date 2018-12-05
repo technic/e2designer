@@ -31,6 +31,8 @@ CONFIG += warn_on
 include(../Qt-Color-Widgets/color_widgets.pri)
 DEFINES += QTCOLORWIDGETS_STATICALLY_LINKED
 
+include(../AppImageUpdaterBridge/AppImageUpdaterBridge.pri)
+
 SOURCES += \
     mainwindow.cpp \
     skindelegate.cpp \

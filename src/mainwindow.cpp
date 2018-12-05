@@ -22,12 +22,16 @@
 #include "listbox.hpp"
 #include "model/colorsmodel.hpp"
 #include "repository/skinrepository.hpp"
+#include <AppImageUpdaterBridge>
+
+using namespace AppImageUpdaterBridge;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , mView(new ScreenView(SkinRepository::screens()))
     , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
+    , m_updater(new AppImageUpdaterDialog(0, this))
 {
     ui->setupUi(this);
     readSettings();
@@ -285,6 +289,21 @@ void MainWindow::editFonts()
     fontsWindow->show();
 }
 
+void MainWindow::checkUpdates()
+{    auto fileName = appImagePath();
+    if (fileName.isEmpty()) {
+        qWarning() << "Can't update! Are you running AppImage?";
+        return;
+    }
+    m_updater->setAppImage(fileName);
+    m_updater->setShowLog(true);
+    m_updater->setShowBeforeStarted(true);
+    m_updater->setShowErrorDialog(true);
+    m_updater->setShowFinishDialog(true);
+    m_updater->setShowNoUpdateDialog(true);
+    m_updater->init();
+}
+
 void MainWindow::createActions()
 {
     // Connect actions
@@ -308,6 +327,12 @@ void MainWindow::createActions()
 
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
     connect(ui->actionAboutQt, &QAction::triggered, this, &QApplication::aboutQt);
+
+    connect(ui->actionCheckForUpdates, &QAction::triggered, this, &MainWindow::checkUpdates);
+    if (appImagePath().isEmpty()) {
+        ui->actionCheckForUpdates->setEnabled(false);
+        ui->actionCheckForUpdates->setVisible(false);
+    }
 
     ui->actionWidget_borders->setChecked(mView->haveBorders());
     connect(ui->actionWidget_borders, &QAction::triggered, mView, &ScreenView::displayBorders);
@@ -423,4 +448,11 @@ bool MainWindow::confirmClose()
 bool MainWindow::isModified()
 {
     return !SkinRepository::screens()->undoStack()->isClean();
+}
+
+QString MainWindow::appImagePath()
+{
+    auto str = qgetenv("APPIMAGE");
+    qDebug() << "APPIMAGE" << str;
+    return str;
 }

@@ -5,7 +5,7 @@
 
 INCLUDEPATH += $$PWD
 CONFIG += static
-QT += widgets
+QT += widgets network
 
 # Sets the win32 output dir WINDIR
 CONFIG(debug, debug|release) {
