@@ -22,7 +22,10 @@
 #include "listbox.hpp"
 #include "model/colorsmodel.hpp"
 #include "repository/skinrepository.hpp"
+
+#ifdef APPIMAGE_UPDATE
 #include <AppImageUpdaterBridge>
+#endif
 
 using namespace AppImageUpdaterBridge;
 
@@ -31,7 +34,9 @@ MainWindow::MainWindow(QWidget* parent)
     , ui(new Ui::MainWindow)
     , mView(new ScreenView(SkinRepository::screens()))
     , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
+#ifdef APPIMAGE_UPDATE
     , m_updater(new AppImageUpdaterDialog(0, this))
+#endif
 {
     ui->setupUi(this);
     readSettings();
@@ -290,7 +295,9 @@ void MainWindow::editFonts()
 }
 
 void MainWindow::checkUpdates()
-{    auto fileName = appImagePath();
+{
+#ifdef APPIMAGE_UPDATE
+    auto fileName = appImagePath();
     if (fileName.isEmpty()) {
         qWarning() << "Can't update! Are you running AppImage?";
         return;
@@ -302,6 +309,7 @@ void MainWindow::checkUpdates()
     m_updater->setShowFinishDialog(true);
     m_updater->setShowNoUpdateDialog(true);
     m_updater->init();
+#endif
 }
 
 void MainWindow::createActions()
