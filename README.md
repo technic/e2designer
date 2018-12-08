@@ -39,6 +39,10 @@ make
 GPLv3
 
 # Credits
+Libraries:
+[Qt-Color-Widgets](https://github.com/mbasaglia/Qt-Color-Widgets)
+[AppImageUpdaterBridge](https://github.com/antony-jr/AppImageUpdaterBridge)
+
 Application icon made by [Picol](https://www.flaticon.com/authors/picol)
 from [Flaticon](https://www.flaticon.com/)
 and is licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/).
