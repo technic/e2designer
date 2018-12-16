@@ -13,7 +13,6 @@
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
-QVariant tableFind(QVector<QString>);
 
 template<typename T>
 T strToEnum(const QString& str) {
@@ -26,7 +25,6 @@ T strToEnum(const QString& str) {
         return static_cast<T>(meta.value(0));
     }
 }
-
 
 template<typename T>
 QString enumToStr(T value) {
