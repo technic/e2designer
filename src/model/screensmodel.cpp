@@ -396,8 +396,8 @@ void ScreensModel::unregisterObserver(const QModelIndex& index) {
             m_observers.erase(it);
 		}
     } else {
-        qWarning() << "observers map corrupted";	
-	}
+        qWarning() << "observers map corrupted";
+    }
 }
 
 void ScreensModel::widgetAttrHasChanged(const WidgetData* widget, int attrKey)
@@ -436,7 +436,7 @@ void ScreensModel::onColorChanged(const QString &name, QRgb value)
     for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
         auto* w = indexToItem(it.key());
         w->onColorChanged(name, value);
-	}
+    }
 }
 
 void ScreensModel::onFontChanged(const QString &name, const Font &value)
@@ -444,7 +444,7 @@ void ScreensModel::onFontChanged(const QString &name, const Font &value)
     for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
         auto* w = indexToItem(it.key());
         w->onFontChanged(name, value);
-	}
+    }
 }
 
 ScreensModel::Item *ScreensModel::indexToItem(const QModelIndex &index) const
