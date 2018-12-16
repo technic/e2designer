@@ -7,30 +7,104 @@
 #include <QMetaEnum>
 #include <QDebug>
 #include <QDateTime>
+#include <memory>
+#include "base/singleton.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
 QVariant tableFind(QVector<QString>);
 
-class Converter
-{
+template<typename T>
+T strToEnum(const QString& str) {
+    QMetaEnum meta = QMetaEnum::fromType<T>();
+    bool ok;
+    int value = meta.keyToValue(str.toLatin1().data(), &ok);
+    if (ok) {
+        return static_cast<T>(value);
+    } else {
+        return static_cast<T>(meta.value(0));
+    }
+}
+
+
+template<typename T>
+QString enumToStr(T value) {
+    return QMetaEnum::fromType<T>().valueToKey(value);
+}
+
+
+class Source {
 public:
-    void fromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml) const;
-//    QVariant convert(QString source);
-
-    const QString& arg() { return m_text; }
-
+    Source() : _parent(nullptr) {}
+    // Interface for returning values
     virtual QString getText() { return QString(); }
     virtual int getValue() { return 0; }
     virtual bool getBoolean() { return false; }
     virtual int getTime() { return 0; }
+    virtual QVariant getVariant(const QString& key) { Q_UNUSED(key); return QVariant(); }
+
+    // Parent - child relation
+    void attach(Source *parent);
+    Source* parent() const { return _parent; }
+private:
+    Source* _parent;
+};
+
+class MockSource: public Source {
+public:
+    MockSource() {}
+    MockSource(QXmlStreamReader& xml);
+    QVariant getVariant(const QString& key) final;
+    void setValue(const QString& key, const QVariant &value);
+private:
+    QHash<QString, QVariant> _values;
+};
+
+class MockSourceFactory: public SingletonMixin<MockSourceFactory> {
+public:
+    MockSourceFactory();
+    void loadXml(const QString& path);
+    Source* getReference(const QString& name);  // FIXME: should return const
+private:
+    static QString readName(QXmlStreamReader& xml);
+    QHash<QString, MockSource> _sources;
+};
+
+
+class Converter: public Source
+{
+public:
+    static std::unique_ptr<Converter> createFromXml(QXmlStreamReader& xml);
+
+    Converter() {}
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
+    const QString& arg() const { return m_text; }
+    void setArg(const QString& arg);
+    const QString& type() const { return m_type; }
+
 protected:
-    Converter *parent;
+    QVariant askParent() { return askParent(m_text); }
+    QVariant askParent(const QString& arg);
+    // Called when argument changes
+    virtual void parseArgument() {};
+
 private:
     QString m_type;
     QString m_text;
+};
+
+class ConverterFactory: public SingletonMixin<ConverterFactory> {
+public:
+    ConverterFactory();
+    template<typename T>
+    void registerObject();
+    std::unique_ptr<Converter> createConverterByName(const QString &name);
+private:
+    // Constructor functions map
+    using Constructor = Converter* (*)();
+    QHash<QByteArray, Constructor> _constructors;
 };
 
 
@@ -43,11 +117,12 @@ public:
         Reference,
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return QMetaEnum::fromType<Arg>().valueToKey(m_type);
+    QString getText() final {
+        return askParent().toString();
     }
-    QString getText(const QString &source) {
-        return tableFind({source, argStr()}).toString();
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
     }
 private:
     Arg m_type;
@@ -63,14 +138,15 @@ public:
         EndTime,
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return QMetaEnum::fromType<Arg>().valueToKey(m_type);
+    QString getText() final {
+        return askParent().toString();
     }
-    QString getText(const QString &source) {
-        return tableFind({source, argStr()}).toString();
+    int getTime() final {
+        return askParent().toInt();
     }
-    int getTime(const QString &source) {
-        return tableFind({source, argStr()}).toInt();
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
     }
 private:
     Arg m_type;
@@ -92,88 +168,10 @@ public:
     };
     Q_ENUM(Arg);
     static constexpr int pts = 90000;
-
-    ServicePosition()
-        : Converter()
-    {
-        QVector<Arg> vec;
-        for (auto s: arg().splitRef(',')) {
-            auto meta = QMetaEnum::fromType<Arg>();
-            bool ok;
-            int k = meta.keyToValue(s.toLatin1().data(), &ok);
-            if (ok) {
-                vec.push_back(Arg(k));
-            } else {
-                qWarning() << "Unknown parameter" << s;
-            }
-        }
-        if (!vec.isEmpty()) {
-            m_type = vec[0];
-        } else {
-            m_type = Length;
-            qWarning() << "No type specified";
-        }
-        detailed = vec.indexOf(Detailed) >= 0;
-        negate = vec.indexOf(Negate) >= 0;
-        showHours = vec.indexOf(ShowHours) >= 0;
-        showNoSeconds = vec.indexOf(ShowNoSeconds) >= 0;
-    }
-    QString argStr() const {
-        return argStr(m_type);
-    }
-    QString argStr(Arg type) const {
-        return QMetaEnum::fromType<Arg>().valueToKey(type);
-    }
-    QString getText(const QString &source) {
-        int t = 0;
-        switch (m_type) {
-        case Length:
-        case Position:
-            t = tableFind({source, argStr()}).toInt();
-            break;
-        case Remaining:
-            t = tableFind({source, argStr(Length)}).toInt();
-            t -= tableFind({source, argStr(Position)}).toInt();
-            break;
-        default:
-            qWarning() << "!!!";
-        }
-        if (!detailed)
-            t /= pts;
-        if (negate)
-            t = -t;
-
-        QString str;
-
-        if (!detailed) {
-            if (showHours) {
-                if (showNoSeconds) {
-                    return str.sprintf("%d:%02d", t / 3600, (t % 3600) / 60);
-                } else {
-                    return str.sprintf("%d:%02d:%02d", t / 3600, (t % 3600) / 60, t % 60);
-                }
-            } else {
-                if (showNoSeconds) {
-                    return str.sprintf("%d", t / 60);
-                } else {
-                    return str.sprintf("%d:%02d", t / 60, t % 60);
-                }
-            }
-        } else {
-            int ms = t * 1000 / pts;
-            t /= pts;
-            if (showHours) {
-                return str.sprintf("%d:%02d:%02d:%03d", t / 3600, (t % 3600) / 60, t % 60, ms % 1000);
-            } else {
-                return str.sprintf("%d:%02d:%03d", t / 60, t % 60, ms % 1000);
-            }
-        }
-        return "???";
-    }
-    int getTime(const QString &source) {
-        return tableFind({source, argStr()}).toInt();
-    }
-
+    QString getText() final;
+    int getTime() final;
+protected:
+    void parseArgument() final;
 private:
     bool detailed;
     bool negate;
@@ -196,38 +194,12 @@ public:
         Sid
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return QMetaEnum::fromType<Arg>().valueToKey(m_type);
-    }
-    bool getBoolean(const QString &source) {
-        switch (m_type) {
-        case HasTeletext:
-        case IsMultichannel:
-        case IsCrypted:
-        case IsWidescreen:
-        case SubservicesAvailable:
-            return tableFind({source, argStr()}).toBool();
-        default:
-            return false;
-        }
-    }
-    QString getText(const QString &source) {
-        switch (m_type) {
-        case VideoWidth:
-        case VideoHeight:
-            return tableFind({source, argStr()}).toString();
-        default:
-            return QString();
-        }
-    }
-    int getValue(const QString &source) {
-        switch (m_type) {
-        case VideoWidth:
-        case VideoHeight:
-            return tableFind({source, argStr()}).toInt();
-        default:
-            return -1;
-        }
+    bool getBoolean() final;
+    QString getText() final;
+    int getValue() final;
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
     }
 private:
     Arg m_type;
@@ -241,54 +213,15 @@ public:
         BER, SNR, AGC, SNRdB, NUMBER, TYPE, LOCK
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return argStr(m_type);
-    }
-    QString argStr(Arg type) const {
-        return QMetaEnum::fromType<Arg>().valueToKey(type);
-    }
-    bool getBoolean(const QString &source) {
-        switch (m_type) {
-        case LOCK:
-            return tableFind({source, argStr()}).toBool();
-        default:
-            return tableFind({source, argStr()}).toInt() > 0;
-        }
-    }
-    QString getText(const QString &source) {
-        switch (m_type) {
-        case BER:
-            return tableFind({source, argStr()}).toString();
-        case AGC:
-        case SNR:
-            return tableFind({source, argStr()}).toString() + "%";
-        case SNRdB:
-            return tableFind({source, argStr(SNR)}).toString() + "%";
-        case TYPE: {
-            int tuner = tableFind({source, argStr()}).toInt();
-            switch (tuner) {
-            case 0: return "DVB-S";
-            case 1: return "DVB-C";
-            case 2: return "DVB-T";
-            default: return "DVB-?";
-            }
-        }
-        default:
-            return QString();
-        }
-    }
-    int getValue(const QString &source) {
-        switch (m_type) {
-        case AGC:
-        case SNR:
-        case BER:
-        case TYPE:
-        case NUMBER:
-            return tableFind({source, argStr()}).toInt();
-        default:
-            return 0;
-        }
-    }
+//    QString argStr() const {
+//        return argStr(m_type);
+//    }
+//    QString argStr(Arg type) const {
+//        return QMetaEnum::fromType<Arg>().valueToKey(type);
+//    }
+    bool getBoolean() final;
+    QString getText() final;
+    int getValue() final;
 private:
     Arg m_type;
 };
@@ -304,12 +237,7 @@ public:
         ID
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return QMetaEnum::fromType<Arg>().valueToKey(m_type);
-    }
-    QString getText(const QString &source) {
-        return tableFind({source, argStr()}).toString();
-    }
+    QString getText() final { return askParent().toString(); }
 private:
     Arg m_type;
 };
@@ -326,18 +254,15 @@ public:
         Progress,
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return QMetaEnum::fromType<Arg>().valueToKey(m_type);
-    }
-    int getTime(const QString &source) {
+    int getTime() final {
         if (m_type != Progress) {
-            return tableFind({source, argStr()}).toInt();
+            return askParent().toInt();
         }
         return -1;
     }
-    int getValue(const QString &source) {
+    int getValue() final {
         if (m_type == Progress) {
-            return tableFind({source, argStr()}).toInt();
+            return askParent().toInt();
         }
         return -1;
     }
@@ -356,14 +281,14 @@ public:
     QString argStr() const {
         return QMetaEnum::fromType<Arg>().valueToKey(m_type);
     }
-    bool getBoolean(const QString &source) {
-        return tableFind({source, argStr()}).toInt() > 0;
+    bool getBoolean() final {
+        return askParent().toInt() > 0;
     }
-    QString getText(const QString &source) {
-        return tableFind({source, argStr()}).toString();
+    QString getText() final {
+        return askParent().toString();
     }
-    int getValue(const QString &source) {
-        return tableFind({source, argStr()}).toInt();
+    int getValue() final {
+        return askParent().toInt();
     }
 private:
     Arg m_type;
@@ -373,28 +298,31 @@ private:
 class ValueBitTest : public Converter {
     Q_GADGET
 public:
-    ValueBitTest() {
-        testValue = arg().toInt();
+    bool getBoolean() {
+        int value = parent()->getValue();
+        return (value & _testValue) == _testValue;
     }
-    int value();
-    bool getBoolean(const QString &source) {
-        return (value() & testValue) == testValue;
+protected:
+    void parseArgument() final {
+        _testValue = arg().toInt();
     }
 private:
-    int testValue;
+    int _testValue;
 };
 
 
 class ValueRange : public Converter {
+    Q_GADGET
 public:
-    ValueRange() {
+    bool getBoolean() final {
+        int value = parent()->getValue();
+        return lower <= value && value <= upper;
+    }
+protected:
+    void parseArgument() final {
         auto list = arg().splitRef(",");
         lower = list[0].toInt();
         upper = list[1].toInt();
-    }
-    int value();
-    bool getBoolean(const QString &source) {
-        return lower <= value() && value() <= upper;
     }
 private:
     int lower;
@@ -414,64 +342,9 @@ public:
         Format,
     };
     Q_ENUM(Arg);
-    ClockToText()
-        : Converter()
-    {
-        auto meta = QMetaEnum::fromType<Arg>();
-        bool ok;
-        m_type = meta.keyToValue(arg().toLatin1().data(), &ok);
-        auto prefix = QStringLiteral("Format");
-        if (!ok && arg().startsWith(prefix)) {
-            m_format = arg().section(':', 2);
-            m_type = Format;
-        }
-        m_format
-            .replace("%a", "ddd").replace("%A", "dddd")
-            .replace("%b", "MMM").replace("%B", "MMMM")
-            .replace("%c", "ddd MMM d HH:mm:ss yyyy")
-            .replace("%d", "dd").replace("%D", "MM/dd/yy")
-            .replace("%e", "dd")
-            .replace("%F", "yyyy-MM-dd").replace("%g", "yy").replace("%G", "yyyy")
-            .replace("%H", "HH").replace("%h", "MMM")
-            .replace("%I", "hh")
-            .replace("%j", "DDD")
-            .replace("%k", "HH").replace("%l", "hh")
-            .replace("%m", "MM").replace("%M", "mm")
-            .replace("%n", "\n").replace("%p", "a")
-            .replace("%P", "a").replace("%r", "hh:mm:ss a")
-            .replace("%R", "HH:mm").replace("%S", "ss")
-            .replace("%t", "\t").replace("%T", "HH:mm:ss")
-            .replace("%V", "ww")
-            .replace("%X", "HH:mm:ss").replace("%x", "MM/dd/yy")
-            .replace("%y", "yy").replace("%Y", "yyyy")
-            .replace("%Z", "z").replace("%z", "Z")
-            .replace("%%", "%");
-    }
-    QString getText(const QString &source) {
-        qint64 t = tableFind({source, "time"}).toInt();
-        if (t == -1) {
-            t = QDateTime::currentDateTime().toSecsSinceEpoch();
-        }
-        if (m_type == InMinutes) {
-            return QString::number(t / 60);
-        } else if (m_type == AsLenght) {
-            return QString().sprintf("%d:%02d", t / 60, t % 60);
-        }
-        auto date = QDateTime::currentDateTime();
-        switch (m_type) {
-        case WithSeconds:
-            return date.toString("hh:mm:ss");
-        case Default:
-            return date.toString();
-        case Date:
-            return date.toString("dddd MMM dd, yyyy");
-        case Format: {
-            return date.toString(m_format);
-        }
-        default:
-            return "???";
-        }
-    }
+    QString getText() final;
+protected:
+    void parseArgument() final;
 private:
     int m_type;
     QString m_format;
@@ -488,20 +361,7 @@ public:
         InSeconds,
     };
     Q_ENUM(Arg);
-    QString getText(const QString &source) {
-        int t = 10;
-        switch (m_type) {
-        case WithSeconds:
-            return QString().sprintf("%d:%02d:%02d", t / 3600, (t % 3600) / 60, t % 60);
-        case NoSeconds:
-            return QString().sprintf("%d:%02d", t / 3600, (t % 3600) / 60);
-        case InSeconds:
-            return QString::number(t);
-        case Default:
-        default:
-            return QString("%1 min").arg(t / 60);
-        }
-    }
+    QString getText() final;
 private:
     int m_type;
 };
@@ -515,13 +375,9 @@ public:
         InPercent
     };
     Q_ENUM(Arg);
-    QString getText(const QString &source) {
-        if (m_type == InPercent) {
-            return QString("%1 %").arg(m_value * 100 / m_range);
-        } else {
-            return QString("%1 / %2").arg(m_value, m_range);
-        }
-    }
+    QString getText() final;
+protected:
+    void parseArgument() final;
 private:
     int m_value;
     int m_range;

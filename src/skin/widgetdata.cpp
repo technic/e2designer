@@ -521,21 +521,36 @@ void WidgetData::setPreviewValue(const QVariant &value)
     notifyAttrChange(Property::previewValue);
 }
 
-QVariant WidgetData::scenePreview()
+QVariant WidgetData::scenePreview() const
 {
-//    for (auto c : m_converters) {
-//        c.attach()
-//    }
-//    using Render = Property::Render;
-//    switch (m_render) {
-//    case Render::Label:
-//        return c.getText();
-//    case Render::Slider:
-//        return c.getValue();
-//    default:
-//        return QVariant();
-//    }
-    return QVariant();
+    if (this->source().isNull()) {
+        return previewValue();
+    }
+    auto source = MockSourceFactory::instance().getReference(this->source());
+    if (!source) {
+        return previewValue();
+    }
+
+    for (size_t i = 0; i < m_converters.size(); ++i) {
+        if (i < 1) {
+            m_converters[i]->attach(source);
+        } else {
+            m_converters[i]->attach(m_converters[i-1].get());
+        }
+    }
+    Source* finalSource = source;
+    if (m_converters.size() >= 0) {
+        finalSource = m_converters.back().get();
+    }
+    using R = Property::Render;
+    switch (m_render) {
+    case R::Label:
+        return finalSource->getText();
+    case R::Slider:
+        return finalSource->getValue();
+    default:
+        return QVariant();
+    }
 }
 
 void WidgetData::setTitle(const QString &text)
@@ -586,9 +601,17 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
                     xml.skipCurrentElement();
                 }
             } else if (xml.name() == "convert") {
-                Converter c;
-                c.fromXml(xml);
-                m_converters.append(c);
+                auto name = xml.attributes().value("type");
+                std::unique_ptr<Converter> converter;
+                if (!name.isNull()) {
+                    converter = ConverterFactory::instance().createConverterByName(name.toString());
+                }
+                if (!converter) {
+                    // Fallback to default implementation
+                    converter = std::make_unique<Converter>();
+                }
+                converter->fromXml(xml);
+                m_converters.push_back(std::move(converter));
             } else {
                 xml.skipCurrentElement();
             }
@@ -634,8 +657,8 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
     for (int i = 0; i < childCount(); ++i) {
         child(i)->toXml(xml);
     }
-    for (const Converter& item : m_converters) {
-        item.toXml(xml);
+    for (auto& item : qAsConst(m_converters)) {
+        item->toXml(xml);
     }
 
     xml.writeEndElement();

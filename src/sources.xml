@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Adopted from https://github.com/iMaxxx/OpenSkin-Designer -->
+<sources>
+  <source>
+    <name>global.CurrentTime</name>
+    <entries>
+      <!-- -1 corresponds to current timestamp -->
+      <entry name='time' value='-1' type='int'/>
+    </entries>
+  </source>
+
+  <source>
+    <name>session.CurrentService</name>
+    <entries>
+      <entry name='Name'        value='BBC World'     type='string'/>
+      <entry name='Provider'    value='BBC Provider'  type='string'/>
+      <entry name='Reference'   value='BBC Reference' type='string'/>
+
+      <entry name='VideoWidth'     value='1280' type='int'/>
+      <entry name='VideoHeight'    value='720'  type='int'/>
+
+      <entry name='HasTeletext'             value='true'  type='bool'/>
+      <entry name='IsMultichannel'          value='false' type='bool'/>
+      <entry name='IsCrypted'               value='false' type='bool'/>
+      <entry name='IsWidescreen'            value='true'  type='bool'/>
+      <entry name='SubservicesAvailable'    value='false' type='bool'/>
+
+      <entry name='Length'     value='59400000' type='int'/>
+      <entry name='Position'   value='40000000' type='int'/>
+    </entries>
+  </source>
+
+  <source>
+    <name>session.Event_Now</name>
+    <name>parent.ServiceEvent</name>
+    <entries>
+      <entry name='Name'    value='Current Program' type='string'/>
+
+      <entry name='StartTime' value='8000' type='int'/>
+      <entry name='EndTime'   value='9000' type='int'/>
+      <entry name='Remaining' value='600'  type='int'/>
+      <entry name='Duration'  value='600'  type='int'/>
+      <entry name='Progress'  value='80'   type='int'/>
+    </entries>
+  </source>
+
+  <source>
+    <name>session.Event_Next</name>
+    <entries>
+      <entry name='Name'    value='Next Program' type='string'/>
+
+      <entry name='StartTime' value='9000' type='int'/>
+      <entry name='EndTime'   value='10000' type='int'/>
+      <entry name='Remaining' value='600'  type='int'/>
+      <entry name='Duration'  value='3600'  type='int'/>
+      <entry name='Progress'  value='80'   type='int'/>
+    </entries>
+  </source>
+
+  <source>
+    <name>session.FrontendStatus</name>
+    <name>Frontend</name>
+    <name>session.TunerInfo</name>
+    <name>session.FrontendInfo</name>
+    <name>FrontendInfo</name>
+    <entries>
+      <entry name='BER'  value='0'      type='int'/>
+      <entry name='SNR'  value='95'     type='int'/>
+      <entry name='AGC'  value='90'     type='int'/>
+      <entry name='LOCK' value='false'  type='bool'/>
+      <!-- -1 tofallbakc to snr -->
+      <entry name='SNRdB' value='-1'    type='int'/>
+      <entry name='NUMBER'   value='1'   type='int'/>
+      <!-- 0 s 1 c 3 t -1 unknown -->
+      <entry name='TYPE'    value='0'   type='int'/>
+      <entry name='tunerusemask'  value='3'   type='int'/>
+    </entries>
+  </source>
+
+  <source>
+    <name>ServiceEvent</name>
+    <name>Service</name>
+    <entries>
+      <entry name='time_sec' value='-2' type='int'/>
+      <entry name='service_name'  value='BBC World' type='string'/>
+      <entry name='event_name'  value='Living today' type='string'/>
+      <entry name='Description'  value='Leaflets and phone messages ...' type='string'/>
+      <entry name='ExtendedDescription'  value='Leaflets and phone messages in Arabic urged Gaza residents to keep away from sites linked to Hamas, ...' type='string'/>
+      <entry name='StartTime'  value='9000'   type='int'/>
+      <entry name='EndTime'  value='10000'   type='int'/>
+      <entry name='Remaining'  value='600'   type='int'/>
+      <entry name='MovieInfo'  value='Good Wife'   type='string'/>
+      <entry name='Duration'  value='3600'   type='int'/>
+      <entry name='Progress'  value='80'   type='int'/>
+    </entries>
+  </source>
+
+  <source>
+    <name>Event</name>
+    <entries>
+      <entry name='service_name'  value='BBC Prime' type='string'/>
+      <entry name='event_name'  value='Living tomorrow' type='string'/>
+      <entry name='Description'  value='Leaflets and phone messages ...' type='string'/>
+      <entry name='ExtendedDescription'  value='Leaflets and phone messages in Arabic urged Gaza residents to keep away from sites linked to Hamas, ...' type='string'/>
+      <entry name='StartTime'  value='9000'   type='int'/>
+      <entry name='EndTime'  value='10000'   type='int'/>
+      <entry name='Remaining'  value='600'   type='int'/>
+      <entry name='Duration"'  value='3600'   type='int'/>
+      <entry name='Progress'  value='80'   type='int'/>
+    </entries>
+  </source>
+
+</sources>

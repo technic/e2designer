@@ -132,6 +132,9 @@ FORMS += \
     ui/colorlistwindow.ui \
     ui/fontlistwindow.ui
 
+RESOURCES += \
+    data.qrc
+
 unix {
     target.path = /usr/lib
     INSTALLS += target

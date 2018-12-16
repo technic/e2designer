@@ -13,6 +13,7 @@
 #include "offsetattr.hpp"
 #include <QRgb>
 #include <QVariant>
+#include <vector>
 
 
 class QXmlStreamReader;
@@ -146,8 +147,7 @@ public:
     void setPreviewValue(const QVariant &value);
     // Render to use on scene
     Property::Render sceneRender() const;
-    //
-    QVariant scenePreview();
+    QVariant scenePreview() const;
 
     // Screen
     QString title() const { return m_title; }
@@ -241,7 +241,7 @@ private:
     // Other
     WidgetType m_type;
     QVector<int> m_propertiesOrder;
-    QVector<Converter> m_converters;
+    std::vector<std::unique_ptr<Converter>> m_converters;
     ScreensModel* m_model;
     QMap<QString, QString> m_otherAttributes;
 };

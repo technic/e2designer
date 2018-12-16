@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     widget \
-    attr
+    attr \
+    converter
