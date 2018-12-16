@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     parser.addPositionalArgument("file", "the skin.xml file to open.");
     parser.process(app);
 
+    Q_INIT_RESOURCE(resources);
     MainWindow window;
     if (!parser.positionalArguments().isEmpty())
         window.openFile(parser.positionalArguments().first());
