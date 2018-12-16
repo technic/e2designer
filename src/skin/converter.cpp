@@ -426,7 +426,7 @@ int FrontendInfo::getValue() {
 }
 
 QString RemainingToText::getText() {
-    int t = 10;
+    int t = parent()->getTime();
     switch (m_type) {
     case WithSeconds:
         return QString().sprintf("%d:%02d:%02d", t / 3600, (t % 3600) / 60, t % 60);
@@ -441,14 +441,16 @@ QString RemainingToText::getText() {
 }
 
 QString ProgressToText::getText() {
+    int value = parent()->getValue();
+    int range = parent()->getRange();
     if (m_type == InPercent) {
-        return QString("%1 %").arg(m_value * 100 / m_range);
+        return QString("%1 %").arg(value * 100 / range);
     } else {
-        return QString("%1 / %2").arg(m_value, m_range);
+        return QString("%1 / %2").arg(value, range);
     }
 }
 
 void ProgressToText::parseArgument()
 {
-
+    m_type = strToEnum<Arg>(arg());
 }

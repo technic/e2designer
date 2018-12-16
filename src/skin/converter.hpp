@@ -38,6 +38,7 @@ public:
     // Interface for returning values
     virtual QString getText() { return QString(); }
     virtual int getValue() { return 0; }
+    virtual int getRange() { return 100; }
     virtual bool getBoolean() { return false; }
     virtual int getTime() { return 0; }
     virtual QVariant getVariant(const QString& key) { Q_UNUSED(key); return QVariant(); }
@@ -109,6 +110,7 @@ class ServiceName : public Converter {
 public:
     enum Arg {
         Name,
+        Number,
         Provider,
         Reference,
     };
@@ -209,15 +211,13 @@ public:
         BER, SNR, AGC, SNRdB, NUMBER, TYPE, LOCK
     };
     Q_ENUM(Arg);
-//    QString argStr() const {
-//        return argStr(m_type);
-//    }
-//    QString argStr(Arg type) const {
-//        return QMetaEnum::fromType<Arg>().valueToKey(type);
-//    }
     bool getBoolean() final;
     QString getText() final;
     int getValue() final;
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
+    }
 private:
     Arg m_type;
 };
@@ -234,6 +234,10 @@ public:
     };
     Q_ENUM(Arg);
     QString getText() final { return askParent().toString(); }
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
+    }
 private:
     Arg m_type;
 };
@@ -261,6 +265,10 @@ public:
             return askParent().toInt();
         }
         return -1;
+    }
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
     }
 private:
     Arg m_type;
@@ -358,6 +366,10 @@ public:
     };
     Q_ENUM(Arg);
     QString getText() final;
+protected:
+    void parseArgument() final {
+        m_type = strToEnum<Arg>(arg());
+    }
 private:
     int m_type;
 };
@@ -375,8 +387,6 @@ public:
 protected:
     void parseArgument() final;
 private:
-    int m_value;
-    int m_range;
     int m_type;
 };
 
