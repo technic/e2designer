@@ -73,8 +73,6 @@ private:
 class Converter: public Source
 {
 public:
-    static std::unique_ptr<Converter> createFromXml(QXmlStreamReader& xml);
-
     Converter() {}
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
