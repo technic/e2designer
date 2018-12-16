@@ -45,10 +45,10 @@ private slots:
         file.close();
     }
 
-    void test_allProperties()
-    {
+//    void test_allProperties()
+//    {
 
-    }
+//    }
 
     void test_color() {
         WidgetData w;
