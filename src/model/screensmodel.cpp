@@ -528,11 +528,11 @@ WidgetObserverRegistrator::WidgetObserverRegistrator(ScreensModel* model, const 
     m_model->registerObserver(index);
 }
 
-void WidgetObserverRegistrator::setIndex(const QModelIndex& index) 
+void WidgetObserverRegistrator::setIndex(const QModelIndex& index)
 {
-	m_model->unregisterObserver(m_index);
+    m_model->unregisterObserver(m_index);
     m_index = index;
-	m_model->registerObserver(m_index);
+    m_model->registerObserver(m_index);
 }
 
 WidgetObserverRegistrator::~WidgetObserverRegistrator()
