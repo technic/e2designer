@@ -1,1 +1,4 @@
-<widget name="test1" position="10,20" size="100,300" alphatest="blend" backgroundColor="#00ff0000" />
+<widget name="test1" position="10,20" size="100,300" alphatest="blend" backgroundColor="#00ff0000"
+    source="global.CurrentTime" render="Label">
+    <convert type="ClockToText">Default</convert>
+<widget/>

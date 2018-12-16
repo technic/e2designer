@@ -1,5 +1,6 @@
 #include <QtTest>
 #include <QMetaProperty>
+#include <QDateTime>
 #include <iostream>
 #include "skin/enums.hpp"
 #include "skin/positionattr.hpp"
@@ -167,6 +168,18 @@ private slots:
 //        xml.readNextStartElement();
 //        QFAIL("TODO");
 //    }
+
+    void test_converter() {
+        QFile file(QFINDTESTDATA("widget.xml"));
+        qDebug() << file;
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        QXmlStreamReader xml(&file);
+        xml.readNextStartElement();
+        WidgetData w;
+        w.fromXml(xml);
+
+        QCOMPARE(w.scenePreview().toString(), QDateTime::currentDateTime().toString("h:mm"));
+    }
 };
 
 QTEST_APPLESS_MAIN(TestWidget)
