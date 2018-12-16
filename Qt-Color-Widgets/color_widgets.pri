@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Color Widgets.  If not, see <http://www.gnu.org/licenses/>.
 
-CONFIG += c++11
+CONFIG += c++14
 
 INCLUDEPATH += $$PWD/src $$PWD/include
 
