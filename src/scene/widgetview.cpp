@@ -265,7 +265,7 @@ void WidgetView::paintLabel(QPainter* painter, const WidgetData &w)
     }
     QString text = w.text();
     if (text.isNull()) {
-        text = w.previewValue().toString();
+        text = w.scenePreview().toString();
     }
     painter->setPen(m_foreground_color);
     painter->setFont(w.font().getFont());
@@ -292,7 +292,7 @@ void WidgetView::paintPixmap(QPainter* painter, const WidgetData &w)
 
 void WidgetView::paintSlider(QPainter* painter, const WidgetData &w)
 {
-    int percent = qBound(0, w.previewValue().toInt(), 100);
+    int percent = qBound(0, w.scenePreview().toInt(), 100);
     QRect r = rect().toRect();
     if (w.orientation() == Property::orHorizontal) {
         r.setWidth(r.width() * percent / 100);
