@@ -198,8 +198,8 @@ std::unique_ptr<Converter> ConverterFactory::createConverterByName(const QString
 {
     auto it = _constructors.find(name.toLatin1());
     if (it != _constructors.end()) {
-        Constructor f = *it;
-        return std::unique_ptr<Converter>(std::invoke(f));
+        Constructor function = *it;
+        return std::unique_ptr<Converter>((*function)());
     } else {
         return nullptr;
     }
