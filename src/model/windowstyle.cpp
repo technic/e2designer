@@ -47,6 +47,7 @@ void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 WindowStyle::WindowStyle()
 {
 }
+
 void WindowStyle::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "windowstyle");
