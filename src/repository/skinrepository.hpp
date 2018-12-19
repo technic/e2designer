@@ -52,10 +52,12 @@ private slots:
 
 private:
     ColorsModel* mColors;
+    ColorRolesModel mRoles;
     FontsModel* mFonts;
     ScreensModel* mScreensModel;
     VideoOutputRepository mOutputRepository;
     WindowStylesList mWindowStyles;
+    WindowStyle defaultStyle;
     QDir mDirectory;
 };
 

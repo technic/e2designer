@@ -2,6 +2,7 @@
 #define SCREENSMODEL_H
 
 #include "skin/widgetdata.hpp"
+#include "model/windowstyle.hpp"
 #include <QAbstractItemModel>
 #include <QUndoStack>
 
@@ -32,6 +33,7 @@ protected:
 };
 
 class ColorsModel;
+class ColorRolesModel;
 class FontsModel;
 
 class ScreensModel : public QAbstractItemModel, public ScreensTree
@@ -39,7 +41,8 @@ class ScreensModel : public QAbstractItemModel, public ScreensTree
     Q_OBJECT
 
 public:
-    explicit ScreensModel(ColorsModel& colors, FontsModel& fonts, QObject* parent = Q_NULLPTR);
+    explicit ScreensModel(ColorsModel& colors, ColorRolesModel& roles,
+                          FontsModel& fonts, QObject* parent = Q_NULLPTR);
     ~ScreensModel() override;
 
     //	typedef MixinTreeNode<WidgetData> Item;
@@ -93,6 +96,7 @@ public:
     // Access asosiated fonts and colors
     const ColorsModel& colors() const { return m_colorsModel; };
     const FontsModel& fonts() const { return m_fontsModel; }
+    const ColorRolesModel& roles() const { return m_colorRolesModel; }
 
     // Access undo model
     QUndoStack *undoStack() const { return mCommander; }
@@ -117,6 +121,7 @@ public slots:
     void widgetAttrHasChanged(const WidgetData* widget, int attrKey);
     //
     void onColorChanged(const QString &name, QRgb value);
+    void onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value);
     void onFontChanged(const QString &name, const Font &value);
 
 private:
@@ -130,6 +135,7 @@ private:
 
     // ref
     ColorsModel& m_colorsModel;
+    ColorRolesModel& m_colorRolesModel;
     FontsModel& m_fontsModel;
 
     // own

@@ -133,6 +133,10 @@ public:
     }
 };
 
+namespace enums {
+
+}
+
 // separate this because of namespace conflict
 class PropertyVAlign : public QObject
 {

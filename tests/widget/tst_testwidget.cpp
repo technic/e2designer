@@ -10,6 +10,7 @@
 
 #include "model/propertiesmodel.hpp"
 #include "model/colorsmodel.hpp"
+#include "model/windowstyle.hpp"
 #include "model/screensmodel.hpp"
 #include "model/fontsmodel.hpp"
 
@@ -106,8 +107,9 @@ private slots:
 
     void test_modelSignal() {
         auto colors = new ColorsModel(this);
+        auto colorRoles = new ColorRolesModel(*colors, this);
         auto fonts = new FontsModel(this);
-        auto widgets = new ScreensModel(*colors, *fonts, this);
+        auto widgets = new ScreensModel(*colors, *colorRoles, *fonts, this);
 
         widgets->insertRows(0, 1);
         auto i = widgets->index(0, 0);
@@ -125,8 +127,9 @@ private slots:
 
     void test_colorPalleteSignals() {
         auto colors = new ColorsModel(this);
+        auto colorRoles = new ColorRolesModel(*colors, this);
         auto fonts = new FontsModel(this);
-        auto widgets = new ScreensModel(*colors, *fonts, this);
+        auto widgets = new ScreensModel(*colors, *colorRoles, *fonts, this);
 
         auto colRed = QColor(Qt::red);
         auto colDarkRed = QColor(Qt::darkRed);

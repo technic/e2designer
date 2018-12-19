@@ -11,6 +11,7 @@
 #include "fontattr.hpp"
 #include "colorattr.hpp"
 #include "offsetattr.hpp"
+#include "model/windowstyle.hpp"
 #include <QRgb>
 #include <QVariant>
 #include <vector>
@@ -175,6 +176,7 @@ public:
 
 //private slots:
     void onColorChanged(const QString& name, QRgb value);
+    void onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value);
     void onFontChanged(const QString& name, const Font& value);
     void updateCache();
 

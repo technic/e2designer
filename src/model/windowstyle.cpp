@@ -1,5 +1,8 @@
 #include "windowstyle.hpp"
+#include "colorsmodel.hpp"
+#include "base/meta.hpp"
 #include <QMetaEnum>
+#include <QColor>
 
 // WindowStyleTitle
 
@@ -29,7 +32,7 @@ void WindowStyleColor::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "color");
 
-    name = xml.attributes().value("name").toString();
+    role = strToEnum<ColorRole>(xml.attributes().value("name").toString());
     color = ColorAttr(xml.attributes().value("color").toString(), true);
     xml.skipCurrentElement();
 }
@@ -37,7 +40,7 @@ void WindowStyleColor::fromXml(QXmlStreamReader& xml)
 void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("color");
-    xml.writeAttribute("name", name);
+    xml.writeAttribute("name", enumToStr(role));
     xml.writeAttribute("color", color.toXml());
     xml.writeEndElement();
 }
@@ -45,6 +48,7 @@ void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 // WindowStyle
 
 WindowStyle::WindowStyle()
+    : m_colors(roleCount())
 {
 }
 
@@ -54,7 +58,7 @@ void WindowStyle::fromXml(QXmlStreamReader& xml)
 
     m_type = xml.attributes().value("type").toString();
     m_id = xml.attributes().value("id").toInt();
-    m_colors.clear();
+    m_colors = QVector<WindowStyleColor>(roleCount());
 
     while (nextXmlChild(xml)) {
         if (xml.isStartElement()) {
@@ -87,18 +91,8 @@ void WindowStyle::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-ColorAttr WindowStyle::getColorAttr(WindowStyle::ColorRole role) const
-{
-    // FIXME: optimize it!
-    auto metaEnum = QMetaEnum::fromType<ColorRole>();
-    for (const auto &c : m_colors) {
-        bool ok;
-        int k = metaEnum.keyToValue(c.name.toLatin1().data(), &ok);
-        if (ok && k == role) {
-            return c.color;
-        }
-    }
-    return ColorAttr();
+int WindowStyle::roleCount() {
+    return QMetaEnum::fromType<WindowStyleColor::ColorRole>().keyCount();
 }
 
 // WindowStylesList
@@ -118,4 +112,63 @@ void WindowStylesList::toXml(QXmlStreamWriter& xml) const
 void WindowStylesList::emitValueChanged(const QString &name, const WindowStyle &value) const
 {
     emit styleChanged(name, value);
+}
+
+// ColorRolesModel
+
+ColorRolesModel::ColorRolesModel(ColorsModel &colors, QObject *parent)
+    : QObject(parent)
+    , _style(nullptr)
+    , _colors(colors)
+{
+}
+
+void ColorRolesModel::setStlye(WindowStyle *style)
+{
+    // We are connected and have to disconnect
+    if (_style && !style) {
+        disconnect(&_colors, &ColorsModel::valueChanged, this, &ColorRolesModel::onColorValueChanged);
+    }
+    // We are not connected and have to connect
+    if (!_style && style) {
+        connect(&_colors, &ColorsModel::valueChanged, this, &ColorRolesModel::onColorValueChanged);
+    }
+    _style = style;
+    reload();
+}
+
+QColor ColorRolesModel::getQColor(ColorRole role) const
+{
+    if (_style) {
+        // FIXME: optimize it!
+        for (const auto &c : _style->m_colors) {
+            if (c.role == role) {
+                return c.color.getQColor();
+            }
+        }
+    }
+    return QColor();
+}
+
+void ColorRolesModel::onColorValueChanged(const QString &name, QRgb value)
+{
+    Q_ASSERT(_style);
+    for (auto& item : _style->m_colors) {
+        if (item.color.name() == name) {
+            item.color.updateValue(value);
+            emit colorChanged(item.role, value);
+        }
+    }
+}
+
+void ColorRolesModel::reload()
+{
+    // Reload cache
+    if (!_style) {
+        return;
+    }
+    for (auto& item : _style->m_colors) {
+        item.color.reload(_colors);
+        emit colorChanged(item.role, item.color.value().rgba());
+    }
 }

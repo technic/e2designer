@@ -5,6 +5,7 @@
 #include <QXmlStreamWriter>
 
 #include "model/colorsmodel.hpp"
+#include "model/windowstyle.hpp"
 #include "model/fontsmodel.hpp"
 #include "model/screensmodel.hpp"
 #include "repository/skinrepository.hpp"
@@ -397,7 +398,19 @@ void WidgetData::setColor(int key, const ColorAttr &color)
 
 QColor WidgetData::getQColor(int key) const
 {
-    return m_colors[key].getQColor();
+    if (m_colors[key].isDefined()) {
+        return m_colors[key].getQColor();
+    } else if (m_model) {
+        switch (key) {
+        case Property::foregroundColor:
+        case Property::backgroundColor:
+            return m_model->roles().getQColor(WindowStyleColor::ColorRole::Background);
+        default:
+            return QColor();
+        }
+    } else {
+        return QColor();
+    }
 }
 
 void WidgetData::setFont(const FontAttr &font)
@@ -692,6 +705,19 @@ void WidgetData::onColorChanged(const QString& name, QRgb value)
             col.updateValue(value);
             notifyAttrChange(it.key());
         }
+    }
+}
+
+void WidgetData::onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value)
+{
+    using Role = WindowStyleColor::ColorRole;
+    switch (role) {
+    case Role::Background:
+        return notifyAttrChange(Property::backgroundColor);
+    case Role::LabelForeground:
+        return notifyAttrChange(Property::foregroundColor);
+    default:
+        return;
     }
 }
 
