@@ -1,6 +1,7 @@
 #include "screensmodel.hpp"
 #include "commands/attrcommand.hpp"
 #include "repository/skinrepository.hpp"
+#include "model/windowstyle.hpp"
 #include <QUndoStack>
 
 // ScreensTree
@@ -112,9 +113,10 @@ Preview ScreensTree::getPreview(const QString& screen, const QString& widget) co
 
 // ScreensModel
 
-ScreensModel::ScreensModel(ColorsModel& colors, FontsModel& fonts, QObject* parent)
+ScreensModel::ScreensModel(ColorsModel& colors, ColorRolesModel &roles, FontsModel& fonts, QObject* parent)
     : QAbstractItemModel(parent)
     , m_colorsModel(colors)
+    , m_colorRolesModel(roles)
     , m_fontsModel(fonts)
     , mRoot(new WidgetData())
     , mCommander(new QUndoStack(this))
@@ -122,6 +124,7 @@ ScreensModel::ScreensModel(ColorsModel& colors, FontsModel& fonts, QObject* pare
     mCommander->setUndoLimit(100);
     mRoot->setModel(this);
     connect(&colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
+    connect(&roles, &ColorRolesModel::colorChanged, this, &ScreensModel::onStyledColorChanged);
     connect(&fonts, &FontsModel::valueChanged, this, &ScreensModel::onFontChanged);
 }
 
@@ -436,6 +439,14 @@ void ScreensModel::onColorChanged(const QString &name, QRgb value)
     for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
         auto* w = indexToItem(it.key());
         w->onColorChanged(name, value);
+    }
+}
+
+void ScreensModel::onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value)
+{
+    for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
+        auto* w = indexToItem(it.key());
+        w->onStyledColorChanged(role, value);
     }
 }
 

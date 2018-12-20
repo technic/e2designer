@@ -7,6 +7,7 @@
 #include "borderset.hpp"
 #include "repository/xmlnode.hpp"
 #include "model/namedlist.hpp"
+#include <QMetaEnum>
 
 class WindowStyleTitle
 {
@@ -20,27 +21,12 @@ public:
 
 class WindowStyleColor
 {
-public:
-    void fromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml) const;
-
-    QString name;
-    ColorAttr color;
-};
-
-class WindowStyle : public XmlData
-{
     Q_GADGET
 public:
-    WindowStyle();
-
-    QString name() const { return QString::number(m_id); }
-    using Value = WindowStyle;
-
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    enum ColorRole  {
+    enum class ColorRole  {
         Background,
         LabelForeground,
         ListboxBackground,
@@ -56,7 +42,23 @@ public:
     };
     Q_ENUM(ColorRole)
 
-    ColorAttr getColorAttr(ColorRole role) const;
+    ColorRole role;
+    CachedColor color;
+};
+
+class WindowStyle : public XmlData
+{
+    Q_GADGET
+    friend class ColorRolesModel;
+public:
+    WindowStyle();
+
+    QString name() const { return QString::number(m_id); }
+    using Value = WindowStyle;
+
+    void fromXml(QXmlStreamReader& xml);
+    void toXml(QXmlStreamWriter& xml) const;
+    static int roleCount();
 
 private:
     QString m_type;
@@ -65,6 +67,7 @@ private:
     QVector<WindowStyleColor> m_colors;
     BorderSet m_borderSet;
 };
+
 
 class WindowStylesList : public QObject, public NamedList<WindowStyle>
 {
@@ -81,6 +84,28 @@ signals:
     void styleChanged(const QString &name, const WindowStyle &value) const;
 protected:
     void emitValueChanged(const QString &name, const WindowStyle &value) const final;
+};
+
+
+class ColorsModel;
+
+class ColorRolesModel : public QObject
+{
+    Q_OBJECT
+    using ColorRole = WindowStyleColor::ColorRole;
+public:
+    ColorRolesModel(ColorsModel& colors, QObject* parent = nullptr);
+    void setStlye(WindowStyle* style);
+    QColor getQColor(ColorRole role) const;
+signals:
+    void colorChanged(WindowStyleColor::ColorRole role, QRgb value);
+private slots:
+    void onColorValueChanged(const QString& name, QRgb value);
+private:
+    void reload();
+    // ref
+    WindowStyle* _style;
+    ColorsModel& _colors;
 };
 
 #endif // WINDOWSTYLE_H
