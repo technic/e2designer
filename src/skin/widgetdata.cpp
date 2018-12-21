@@ -403,6 +403,7 @@ QColor WidgetData::getQColor(int key) const
     } else if (m_model) {
         switch (key) {
         case Property::foregroundColor:
+            return m_model->roles().getQColor(WindowStyleColor::ColorRole::LabelForeground);
         case Property::backgroundColor:
             return m_model->roles().getQColor(WindowStyleColor::ColorRole::Background);
         default:

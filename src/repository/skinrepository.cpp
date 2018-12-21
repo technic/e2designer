@@ -118,6 +118,7 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
 
     mScreensModel->clear();
     mOutputRepository.clear();
+    mRoles.setStlye(nullptr);
     mWindowStyles.clear();
     mColors->removeRows(0, mColors->rowCount());
     mFonts->removeRows(0, mFonts->rowCount());
@@ -148,6 +149,11 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
                 xml.skipCurrentElement();
             }
         }
+    }
+
+    if (mWindowStyles.itemsCount() > 0) {
+        defaultStyle = mWindowStyles.itemAt(0);
+        mRoles.setStlye(&defaultStyle);
     }
 }
 

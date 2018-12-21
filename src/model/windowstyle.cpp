@@ -95,6 +95,27 @@ int WindowStyle::roleCount() {
     return QMetaEnum::fromType<WindowStyleColor::ColorRole>().keyCount();
 }
 
+ColorAttr WindowStyle::getColor(WindowStyleColor::ColorRole role)
+{
+    for (auto& item : m_colors) {
+        if (item.role == role) {
+            return item.color;
+        }
+    }
+    return ColorAttr();
+}
+
+void WindowStyle::setColor(WindowStyleColor::ColorRole role, ColorAttr color)
+{
+    for (auto& item : m_colors) {
+        if (item.role == role) {
+            item.color = color;
+            return;
+        }
+    }
+    m_colors.append(WindowStyleColor{role, color});
+}
+
 // WindowStylesList
 
 void WindowStylesList::append(WindowStyle style)

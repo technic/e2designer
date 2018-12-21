@@ -60,6 +60,9 @@ public:
     void toXml(QXmlStreamWriter& xml) const;
     static int roleCount();
 
+    ColorAttr getColor(WindowStyleColor::ColorRole role);
+    void setColor(WindowStyleColor::ColorRole role, ColorAttr color);
+
 private:
     QString m_type;
     int m_id;

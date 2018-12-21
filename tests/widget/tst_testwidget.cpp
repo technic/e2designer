@@ -183,6 +183,35 @@ private slots:
 
         QCOMPARE(w.scenePreview().toString(), QDateTime::currentDateTime().toString("h:mm"));
     }
+
+    void test_ColorRoles() {
+        auto colors = new ColorsModel(this);
+        auto colorRoles = new ColorRolesModel(*colors, this);
+        auto fonts = new FontsModel(this);
+        auto widgets = new ScreensModel(*colors, *colorRoles, *fonts, this);
+        WindowStyle style;
+        colorRoles->setStlye(&style);
+
+        using Role = WindowStyleColor::ColorRole;
+        style.setColor(Role::Background, ColorAttr(Qt::red));
+
+        widgets->insertRows(0, 1);
+        auto index = widgets->index(0, 0);
+        WidgetObserverRegistrator reg{widgets, index};
+        QCOMPARE(widgets->widget(index).getQColor(Property::backgroundColor), Qt::red);
+
+        style.setColor(Role::LabelForeground, ColorAttr(QString("green")));
+        colors->append(Color(QString("green"), QColor(Qt::green).rgba()));
+        QCOMPARE(widgets->widget(index).getQColor(Property::foregroundColor), Qt::green);
+
+        QSignalSpy spy(widgets, &ScreensModel::widgetChanged);
+        colors->setData(colors->index(0, ColorsModel::ColumnColor), QColor(Qt::darkGreen));
+        QCOMPARE(spy.count(), 1);
+        QCOMPARE(spy.first().at(0), index);
+        QCOMPARE(spy.first().at(1), Property::foregroundColor);
+        QCOMPARE(widgets->widget(index).getQColor(Property::foregroundColor), Qt::darkGreen);
+    }
+
 };
 
 QTEST_APPLESS_MAIN(TestWidget)
