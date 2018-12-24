@@ -59,7 +59,7 @@ build:
     - mkdir -p build
     - pushd build
     - qmake .. "QMAKE_CXX = ccache g++"
-    - make
+    - scan-build -o report make
     - ccache -s
     - make -C app INSTALL_ROOT=$(pwd)/appdir install
     - find appdir
@@ -73,6 +73,7 @@ build:
     paths:
       - build/*.AppImage
       - build/*.AppImage.zsync
+      - report/
   cache:
     paths:
       - ccache/
