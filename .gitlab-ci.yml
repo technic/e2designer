@@ -5,7 +5,8 @@ image: registry.gitlab.com/technic93/e2designer:latest
 
 variables:
     UBUNTU_IMAGE: registry.gitlab.com/technic93/e2designer:latest
-    BINTRAY_ZSYNC: bintray-zsync|technic|e2designer|e2designer
+    BINTRAY_USER: technic
+    BINTRAY_REPO: e2designer
     BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
 
 stages:
@@ -50,6 +51,7 @@ before_script:
   - export CCACHE_BASEDIR=${PWD}
   - export CCACHE_DIR=${PWD}/ccache
   - ccache -sz
+  - export VERSION=$(git describe)
 
 build:
   stage: build
@@ -66,7 +68,7 @@ build:
     - curl -fsSL -o appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
     - chmod a+x appimagetool
     - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -bundle-non-qt-libs
-    - ./appimagetool -u "$BINTRAY_ZSYNC|e2designer-_latestVersion-x86_64.AppImage.zsync" appdir
+    - ./appimagetool -n --bintray-user $BINTRAY_USER --bintray-repo $BINTRAY_REPO -v appdir
   artifacts:
     paths:
       - build/*.AppImage
@@ -106,6 +108,5 @@ test:
 deploy-AppImage:
   stage: deploy
   script:
-    - export VERSION=$(git describe)
     - curl -T build/e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
     - curl -T build/e2designer-x86_64.AppImage.zsync -u technic:$BINTRAY_API_KEY $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
