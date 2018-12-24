@@ -19,7 +19,7 @@ Portable builds:
 
 # Build dependencies
 
-System with C++14 support and Qt version 5.10.
+System with C++14 support and Qt version 5.11.
 
 # Compile from sources
 
