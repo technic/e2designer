@@ -1,7 +1,7 @@
 image: registry.gitlab.com/technic93/e2designer:latest
 
 # To run tests with local image use
-# gitlab-runner exec docker --docker-pull-policy="if-not-present" <command>
+# gitlab-runner exec docker --docker-pull-policy="if-not-present" --docker-privileged <command>
 
 variables:
     UBUNTU_IMAGE: registry.gitlab.com/technic93/e2designer:latest
