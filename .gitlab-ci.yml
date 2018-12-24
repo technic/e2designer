@@ -108,5 +108,7 @@ test:
 deploy-AppImage:
   stage: deploy
   script:
-    - curl -T build/e2designer-x86_64.AppImage -u technic:$BINTRAY_API_KEY $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
-    - curl -T build/e2designer-x86_64.AppImage.zsync -u technic:$BINTRAY_API_KEY $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
+    - curl -T build/e2designer-$VERSION-x86_64.AppImage -u technic:$BINTRAY_API_KEY
+      $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
+    - curl -T build/e2designer--$VERSION-x86_64.AppImage.zsync -u technic:$BINTRAY_API_KEY
+      $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
