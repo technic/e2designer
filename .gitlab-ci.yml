@@ -41,8 +41,6 @@ format:
   allow_failure: true
 
 before_script:
-  # disable grep and exec part of the script
-  - sed -i '/^TEST/d' /opt/qt511/bin/qt511-env.sh
   - . /opt/qt511/bin/qt511-env.sh
   - which qmake
   - qmake --version
