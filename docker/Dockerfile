@@ -11,7 +11,7 @@ RUN echo "source /opt/qt511/bin/qt511-env.sh" >> $HOME/.bashrc
 
 RUN apt-get install -y fuse ccache zsync
 
-RUN apt-get install -y clang-6.0 clang-format-6.0 clang-tidy-6.0 bear python-yaml \
+RUN apt-get install -y clang-6.0 clang-format-6.0 clang-tidy-6.0 clang-tools-6.0 bear python-yaml \
  && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 100 \
  && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-6.0 100 \
  && update-alternatives --install /usr/bin/run-clang-tidy.py run-clang-tidy.py /usr/bin/run-clang-tidy-6.0.py 100 \
