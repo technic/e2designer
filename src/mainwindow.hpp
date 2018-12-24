@@ -56,6 +56,7 @@ private slots:
     void editFonts();
 
     void checkUpdates();
+    void setEditorText(const QModelIndex& index);
 
 private:
     // menu and toolbar

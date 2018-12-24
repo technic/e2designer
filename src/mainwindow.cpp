@@ -164,6 +164,8 @@ void MainWindow::onCurrentSelectionChanged(const QModelIndex& index, const QMode
     qDebug() << "current changed" << index;
     mPropertiesModel->setWidget(index);
     ui->propView->expandAll();
+
+    setEditorText(index);
 }
 
 void MainWindow::newSkin()
@@ -310,6 +312,16 @@ void MainWindow::checkUpdates()
     m_updater->setShowNoUpdateDialog(true);
     m_updater->init();
 #endif
+}
+
+void MainWindow::setEditorText(const QModelIndex& index)
+{
+    QString str;
+    QXmlStreamWriter xml(&str);
+    xml.setAutoFormatting(true);
+    xml.setAutoFormattingIndent(2);
+    SkinRepository::screens()->widget(index).toXml(xml);
+    ui->textEdit->document()->setPlainText(str);
 }
 
 void MainWindow::createActions()
