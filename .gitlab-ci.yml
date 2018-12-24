@@ -71,7 +71,7 @@ build:
     paths:
       - build/*.AppImage
       - build/*.AppImage.zsync
-      - report/
+      - report
   cache:
     paths:
       - ccache/
