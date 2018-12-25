@@ -182,7 +182,7 @@ Qt::ItemFlags ColorsModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool ColorsModel::append(Color c)
+bool ColorsModel::append(const Color& c)
 {
     if (canInsertItem(c)) {
         beginInsertRows(QModelIndex(), itemsCount(), itemsCount());

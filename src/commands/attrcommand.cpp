@@ -1,7 +1,7 @@
 #include "attrcommand.hpp"
 #include "skin/widgetdata.hpp"
 
-AttrCommand::AttrCommand(WidgetData *widget, int key, QVariant value, QUndoCommand *parent)
+AttrCommand::AttrCommand(WidgetData *widget, int key, const QVariant& value, QUndoCommand *parent)
     : QUndoCommand(parent)
     , m_widget(widget)
     , m_key(key)
@@ -13,7 +13,7 @@ AttrCommand::AttrCommand(WidgetData *widget, int key, QVariant value, QUndoComma
     Q_ASSERT(Property::propertyEnum().value(index) == key);
 
     const QString name(Property::propertyEnum().key(index));
-    setText(QString("%1 = %2").arg(name).arg(value.toString()));
+    setText(QString("%1 = %2").arg(name, value.toString()));
 }
 
 void AttrCommand::redo()

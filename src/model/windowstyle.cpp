@@ -105,7 +105,7 @@ ColorAttr WindowStyle::getColor(WindowStyleColor::ColorRole role)
     return ColorAttr();
 }
 
-void WindowStyle::setColor(WindowStyleColor::ColorRole role, ColorAttr color)
+void WindowStyle::setColor(WindowStyleColor::ColorRole role, const ColorAttr& color)
 {
     for (auto& item : m_colors) {
         if (item.role == role) {

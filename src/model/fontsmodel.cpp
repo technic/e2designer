@@ -8,7 +8,7 @@
 
 // Font
 
-Font::Font(QString name, QString fileName)
+Font::Font(const QString &name, const QString &fileName)
     : mName(name)
     , mFileName(fileName)
     , mFontId(-1)
@@ -198,7 +198,7 @@ Qt::ItemFlags FontsModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool FontsModel::append(Font f)
+bool FontsModel::append(const Font &f)
 {
     if (canInsertItem(f)) {
         beginInsertRows(QModelIndex(), itemsCount(), itemsCount());

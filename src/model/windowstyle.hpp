@@ -61,7 +61,7 @@ public:
     static int roleCount();
 
     ColorAttr getColor(WindowStyleColor::ColorRole role);
-    void setColor(WindowStyleColor::ColorRole role, ColorAttr color);
+    void setColor(WindowStyleColor::ColorRole role, const ColorAttr& color);
 
 private:
     QString m_type;

@@ -63,7 +63,7 @@ public:
     bool setType(int type);
     void setType(WidgetType type);
     QString typeStr() const;
-    static WidgetType strToType(QStringRef str, bool& ok);
+    static WidgetType strToType(const QStringRef& str, bool& ok);
 
     // size
     SizeAttr size() const { return m_size; }

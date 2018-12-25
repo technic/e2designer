@@ -14,6 +14,7 @@ Coordinate::Coordinate(Type type, int value)
 }
 
 Coordinate::Coordinate(const QString &str)
+    : Coordinate()
 {
     parseStr(str);
 }

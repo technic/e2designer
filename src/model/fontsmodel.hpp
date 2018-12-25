@@ -14,7 +14,7 @@ class QXmlStreamWriter;
 class Font
 {
 public:
-    Font(QString name = QString(), QString fileName = QString());
+    Font(const QString& name = QString(), const QString& fileName = QString());
 
     // Base
     QString name() const { return mName; }
@@ -76,7 +76,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     // Add data:
-    bool append(Font f);
+    bool append(const Font& f);
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;

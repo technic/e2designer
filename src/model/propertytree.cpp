@@ -110,9 +110,8 @@ void PropertyTree::add(int k, AttrItem *parent)
 // AttrItem
 
 AttrItem::AttrItem(int key)
-    : MixinTreeNode<AttrItem>()
-    , mKey(key)
-	, m_tree(nullptr)
+    : mKey(key)
+    , m_tree(nullptr)
 {
 }
 

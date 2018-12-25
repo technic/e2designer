@@ -91,13 +91,13 @@ void ScreenView::setScreen(QModelIndex index)
     mWidgets.clear();
 
     mRoot = normalizeIndex(index);
-    WidgetView* screen = new WidgetView(this, mRoot, nullptr);
+    auto* screen = new WidgetView(this, mRoot, nullptr);
     mWidgets[mRoot] = screen;
     mScene->addItem(screen);
 
     for (int i = 0; i < mModel->rowCount(mRoot); ++i) {
         QModelIndex widgetIndex = mModel->index(i, ScreensModel::ColumnElement, mRoot);
-        WidgetView* view = new WidgetView(this, widgetIndex, screen);
+        auto* view = new WidgetView(this, widgetIndex, screen);
         Q_ASSERT(!mWidgets.contains(widgetIndex));
         mWidgets[widgetIndex] = view;
     }
@@ -198,7 +198,7 @@ void ScreenView::onRowsInserted(const QModelIndex& parent, int first, int last)
 
     for (int i = first; i <= last; ++i) {
         QModelIndex windex = mModel->index(i, 0, parent);
-        WidgetView* view = new WidgetView(this, windex, screen);
+        auto* view = new WidgetView(this, windex, screen);
         Q_ASSERT(!mWidgets.contains(windex));
         mWidgets[windex] = view;
     }

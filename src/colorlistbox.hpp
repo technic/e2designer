@@ -12,7 +12,7 @@ public:
     ColorListBox(QWidget* parent = nullptr);
 
     QColor color() const;
-    void setColor(QColor color);
+    void setColor(const QColor& color);
 
 private:
     void populateList();

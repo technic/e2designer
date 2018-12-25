@@ -15,7 +15,7 @@ QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model);
 class AttrCommand : public QUndoCommand
 {
 public:
-    AttrCommand(WidgetData *m_widget, int key, QVariant value, QUndoCommand *parent = nullptr);
+    AttrCommand(WidgetData *m_widget, int key, const QVariant& value, QUndoCommand *parent = nullptr);
     void redo() final;
     void undo() final;
 private:

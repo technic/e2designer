@@ -199,7 +199,7 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
+    auto* widget = static_cast<WidgetData*>(index.internalPointer());
 
     switch (role) {
     case Qt::DisplayRole:
@@ -233,7 +233,7 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
     if (!index.isValid())
         return false;
 
-    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
+    auto* widget = static_cast<WidgetData*>(index.internalPointer());
 
     switch (role) {
     case Qt::EditRole:
@@ -324,7 +324,7 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
 
     beginInsertRows(QModelIndex(), mRoot->childCount(), mRoot->childCount());
 
-    WidgetData* w = new WidgetData();
+    auto* w = new WidgetData();
     w->setModel(this);
     w->fromXml(xml);
     mRoot->appendChild(w);
@@ -351,7 +351,7 @@ QVariant ScreensModel::widgetAttr(const QModelIndex& index, int key) const
     if (!index.isValid())
         return QVariant();
 
-    WidgetData* widget = static_cast<WidgetData*>(index.internalPointer());
+    auto* widget = static_cast<WidgetData*>(index.internalPointer());
     return widget->getAttr(key);
 }
 

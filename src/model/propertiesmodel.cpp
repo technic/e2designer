@@ -17,15 +17,14 @@ PropertiesModel::PropertiesModel(ScreensModel *model, QObject* parent)
 }
 
 PropertiesModel::~PropertiesModel()
-{
-}
+= default;
 
 void PropertiesModel::setWidget(const QModelIndex &index)
 {
     beginResetModel();
     mIndex = index;
     if (mIndex.isValid()) {
-        mTree.reset(new PropertyTree(&mModel->widget(mIndex)));
+        mTree = std::make_unique<PropertyTree>(&mModel->widget(mIndex));
         mRoot = mTree->root();
     } else {
         mTree.reset();
@@ -122,7 +121,7 @@ QVariant PropertiesModel::data(const QModelIndex& index, int role) const
 
     Q_ASSERT(hasIndex(index.row(), index.column(), parent(index)));
 
-    AttrItem* attr = static_cast<AttrItem*>(index.internalPointer());
+    auto* attr = static_cast<AttrItem*>(index.internalPointer());
 
     switch (index.column()) {
     case ColumnKey:
@@ -159,7 +158,7 @@ Qt::ItemFlags PropertiesModel::flags(const QModelIndex& index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    AttrItem* attr = static_cast<AttrItem*>(index.internalPointer());
+    auto* attr = static_cast<AttrItem*>(index.internalPointer());
 
     if (index.column() == ColumnKey || attr->key() == Property::invalid) {
         return Qt::ItemIsEnabled;

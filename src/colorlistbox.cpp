@@ -12,7 +12,7 @@ QColor ColorListBox::color() const
     return qvariant_cast<QColor>(itemData(currentIndex(), Qt::DecorationRole));
 }
 
-void ColorListBox::setColor(QColor color)
+void ColorListBox::setColor(const QColor& color)
 {
     setCurrentIndex(findData(color, Qt::DecorationRole));
 }

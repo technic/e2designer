@@ -11,7 +11,6 @@ class TestAttr : public QObject
     Q_OBJECT
 public:
     TestAttr();
-    ~TestAttr();
 
 private slots:
     void test_size() {
@@ -65,11 +64,6 @@ private slots:
 };
 
 TestAttr::TestAttr()
-{
-
-}
-
-TestAttr::~TestAttr()
 {
 
 }

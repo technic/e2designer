@@ -214,8 +214,7 @@ static WidgetReflection reflection;
 // WidgetData
 
 WidgetData::WidgetData()
-    : MixinTreeNode<WidgetData>()
-    , m_zValue(0)
+    : m_zValue(0)
     , m_transparent(false)
     , m_borderWidth(0)
     , m_alphatest(Property::Alphatest::off)
@@ -308,7 +307,7 @@ QString WidgetData::typeStr() const
     }
 }
 
-WidgetData::WidgetType WidgetData::strToType(QStringRef str, bool& ok)
+WidgetData::WidgetType WidgetData::strToType(const QStringRef &str, bool& ok)
 {
     ok = true;
     if (str == "screen") {
@@ -608,7 +607,7 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
                 bool ok;
                 strToType(xml.name(), ok);
                 if (ok) {
-                    WidgetData* widget = new WidgetData();
+                    auto* widget = new WidgetData();
                     appendChild(widget);
                     widget->fromXml(xml);
                 } else {

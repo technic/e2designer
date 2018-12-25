@@ -7,7 +7,7 @@ XmlData::XmlData()
 }
 bool XmlData::nextXmlChild(QXmlStreamReader& xml)
 {
-    typedef QXmlStreamReader::TokenType TokenType;
+    using TokenType = QXmlStreamReader::TokenType;
 
     while (true) {
         TokenType t = xml.readNext();

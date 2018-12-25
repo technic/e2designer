@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget* parent)
     , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 #ifdef APPIMAGE_UPDATE
     , m_updater(new AppImageUpdaterDialog(0, this))
+#else
+    , m_updater(nullptr)
 #endif
 {
     ui->setupUi(this);
@@ -224,7 +226,7 @@ void MainWindow::about()
 
 void MainWindow::setTitle(const QString &skinPath)
 {
-    setWindowTitle(QString("%1[*] - %2").arg(skinPath).arg(QCoreApplication::applicationName()));
+    setWindowTitle(QString("%1[*] - %2").arg(skinPath, QCoreApplication::applicationName()));
 }
 
 void MainWindow::addSkinItem(int type)
@@ -259,7 +261,7 @@ void MainWindow::addLabel()
 }
 void MainWindow::addScreen()
 {
-    auto &model = *SkinRepository::instance().screens();
+    auto &model = *SkinRepository::screens();
     // TODO: should model provide more friendly interface?
     QModelIndex root;
     model.insertRow(model.rowCount(root), root);

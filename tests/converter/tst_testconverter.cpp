@@ -9,7 +9,6 @@ class TestConverter : public QObject
 
 public:
     TestConverter() {}
-    ~TestConverter() {}
 
 private slots:
     void initTestCase() {

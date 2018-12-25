@@ -274,7 +274,7 @@ QString ClockToText::getText() {
 
 void ServicePosition::parseArgument() {
     QVector<Arg> vec;
-    for (auto s: arg().splitRef(',')) {
+    for (const auto& s: arg().splitRef(',')) {
         auto meta = QMetaEnum::fromType<Arg>();
         bool ok;
         int k = meta.keyToValue(s.toLatin1().data(), &ok);
