@@ -1,4 +1,4 @@
-QT += core widgets xml
+QT += core widgets xml svg
 
 TARGET = src
 TEMPLATE = lib
