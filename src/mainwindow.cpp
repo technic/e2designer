@@ -289,6 +289,9 @@ void MainWindow::setEditorText(const QModelIndex& index)
     xml.setAutoFormatting(true);
     xml.setAutoFormattingIndent(2);
     SkinRepository::screens()->widget(index).toXml(xml);
+    if (str.startsWith('\n')) {
+        str.remove(0, 1);
+    }
     ui->textEdit->document()->setPlainText(str);
 }
 
