@@ -552,7 +552,7 @@ QVariant WidgetData::scenePreview() const
         }
     }
     Source* finalSource = source;
-    if (m_converters.size() >= 0) {
+    if (m_converters.size() > 0) {
         finalSource = m_converters.back().get();
     }
     using R = Property::Render;
