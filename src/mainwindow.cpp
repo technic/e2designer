@@ -103,40 +103,6 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onCurrentSelectionChanged);
-
-    // TEST!!!
-
-    //    editColors();
-
-    //	SkinRepository::instance().colors()->append(Color(QString("red"), 0));
-    //	SkinRepository::instance().colors()->append(Color("green", qRgb(0, 255,
-    // 0)));
-
-    /*
-    quintptr p;
-
-    WidgetData *d = new WidgetData();
-    p = quintptr(d);
-    qDebug() << p;
-    p = quintptr(static_cast<MixinTreeNode<WidgetData>*>(d));
-    qDebug() << p;
-
-    AttrAdapter *a = new AttrGroupAdapater("lol");
-    p = quintptr(a);
-    qDebug() << p;
-    p = quintptr(static_cast<AttrAdapter*>(a));
-    qDebug() << p;
-    p = quintptr(static_cast<MixinTreeNode<AttrAdapter>*>(a));
-    qDebug() << p;
-
-    void *ptr = reinterpret_cast<void*>(p);
-    p = quintptr(static_cast<AttrAdapter*>(ptr));
-    qDebug() << p;
-    p = quintptr(static_cast<AttrAdapter*>(
-                      static_cast<MixinTreeNode<AttrAdapter>*>(ptr)
-                      ));
-    qDebug() << p;
-    */
 }
 
 MainWindow::~MainWindow()
