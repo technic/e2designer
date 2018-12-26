@@ -66,6 +66,7 @@ build:
     - curl -fsSL -o appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
     - chmod a+x appimagetool
     - ./linuxdeployqt appdir/usr/share/applications/e2designer.desktop -bundle-non-qt-libs
+      -extra-plugins=iconengines,imageformats
     - ./appimagetool -n --bintray-user $BINTRAY_USER --bintray-repo $BINTRAY_REPO -v appdir
   artifacts:
     paths:
