@@ -129,6 +129,7 @@ void WidgetView::updateAttribute(int key)
 //        break;
     case Property::backgroundColor:
         m_background_color = w.getQColor(key);
+        break;
     case Property::foregroundColor:
         m_foreground_color = w.getQColor(key);
         break;
