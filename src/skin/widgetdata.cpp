@@ -392,7 +392,10 @@ ColorAttr WidgetData::color(int key) const
 void WidgetData::setColor(int key, const ColorAttr &color)
 {
     m_colors[key] = color;
-    notifyAttrChange(key);
+    if (m_model) {
+        m_colors[key].reload(m_model->colors());
+        notifyAttrChange(key);
+    }
 }
 
 QColor WidgetData::getQColor(int key) const
