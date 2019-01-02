@@ -184,7 +184,7 @@ QVariant ColorItem::convert(const QVariant &value, int role)
 {
     switch (role) {
     case Qt::EditRole:
-        return QVariant::fromValue(ColorAttr(qvariant_cast<QColor>(value)));
+        return QVariant::fromValue(ColorAttr(qvariant_cast<QString>(value)));
     default:
         return AttrItem::convert(value, role);
     }

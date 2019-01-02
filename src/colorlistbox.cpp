@@ -7,14 +7,14 @@ ColorListBox::ColorListBox(QWidget* parent)
     populateList();
 }
 
-QColor ColorListBox::color() const
+QString ColorListBox::color() const
 {
-    return qvariant_cast<QColor>(itemData(currentIndex(), Qt::DecorationRole));
+    return currentText();
 }
 
-void ColorListBox::setColor(const QColor& color)
+void ColorListBox::setColor(const QString& color)
 {
-    setCurrentIndex(findData(color, Qt::DecorationRole));
+    setCurrentIndex(findText(color));
 }
 
 void ColorListBox::populateList()

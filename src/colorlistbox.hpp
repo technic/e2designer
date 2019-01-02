@@ -6,13 +6,13 @@
 class ColorListBox : public QComboBox
 {
     Q_OBJECT
-    Q_PROPERTY(QColor color READ color WRITE setColor USER true)
+    Q_PROPERTY(QString color READ color WRITE setColor USER true)
 
 public:
     ColorListBox(QWidget* parent = nullptr);
 
-    QColor color() const;
-    void setColor(const QColor& color);
+    QString color() const;
+    void setColor(const QString& color);
 
 private:
     void populateList();
