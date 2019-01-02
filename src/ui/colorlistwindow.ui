@@ -46,6 +46,40 @@
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="upButton">
+          <property name="toolTip">
+           <string>Move selected item up</string>
+          </property>
+          <property name="text">
+           <string>Move up</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../resources.qrc">
+            <normaloff>:/icons/icons/baseline-keyboard_arrow_up-24px.svg</normaloff>:/icons/icons/baseline-keyboard_arrow_up-24px.svg</iconset>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="downButton">
+          <property name="toolTip">
+           <string>Move selected item donw</string>
+          </property>
+          <property name="text">
+           <string>Move down</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../../resources.qrc">
+            <normaloff>:/icons/icons/baseline-keyboard_arrow_down-24px.svg</normaloff>:/icons/icons/baseline-keyboard_arrow_down-24px.svg</iconset>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -432,7 +466,9 @@
   <tabstop>spin_saturation</tabstop>
   <tabstop>spin_value</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>spin_red</sender>

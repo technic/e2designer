@@ -29,6 +29,10 @@ protected:
     bool appendItem(T item) { return insertItem(mItems.count(), item); }
     bool canRemoveItems(int position, int count);
     bool removeItems(int position, int count);
+    QVector<T> takeItems(int position, int count);
+
+    bool canMoveItems(int sourcePosition, int count, int destinationPosition);
+    bool moveItems(int sourcePosition, int count, int destinationPosition);
 
 public:
     bool contains(const QString& name) const;
@@ -113,6 +117,52 @@ bool NamedList<T>::removeItems(int position, int count)
         for (int i = 0; i < count; ++i) {
             emitValueChanged(mItems[position].name(), T());
             mItems.removeAt(position);
+        }
+        return true;
+    }
+    return false;
+}
+
+template<class T>
+QVector<T> NamedList<T>::takeItems(int position, int count)
+{
+    if (canRemoveItems(position, count)) {
+        QVector<T> result;
+        result.reserve(count);
+        for (int i = 0; i < count; ++i) {
+            emitValueChanged(mItems[position].name, T());
+            result.append(mItems.takeAt(position));
+        }
+        return result;
+    }
+    return QVector<T>();
+}
+
+template<class T>
+bool NamedList<T>::canMoveItems(int sourcePosition, int count, int destinationPosition)
+{
+    bool overlap = destinationPosition >= sourcePosition
+        && destinationPosition <= sourcePosition + count;
+    if (sourcePosition >= 0 && sourcePosition + count <= mItems.size()
+        && destinationPosition >= 0 && destinationPosition <= mItems.size()
+        && !overlap) {
+        return true;
+    }
+    return false;
+}
+
+template<class T>
+bool NamedList<T>::moveItems(int sourcePosition, int count, int destinationPosition)
+{
+    if (canMoveItems(sourcePosition, count, destinationPosition)) {
+        QVector<T> tmp = mItems.mid(sourcePosition, count);
+        for (int i = 0; i < count; ++i) {
+            mItems.insert(destinationPosition + i, tmp[i]);
+        }
+        if (destinationPosition < sourcePosition) {
+            mItems.remove(sourcePosition + count, count);
+        } else {
+            mItems.remove(sourcePosition, count);
         }
         return true;
     }

@@ -19,12 +19,11 @@ ColorListWindow::ColorListWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-    //    connect(ui->addButton, &QPushButton::clicked, this,
-    //    &ColorListWindow::add);
+
     connect(ui->removeButton, &QPushButton::clicked, this, &ColorListWindow::remove);
-    //    connect(ui->renameButton, &QPushButton::clicked, this,
-    //    &ColorListWindow::rename);
     connect(ui->newButton, &QPushButton::clicked, this, &ColorListWindow::addDefault);
+    connect(ui->upButton, &QToolButton::clicked, this, &ColorListWindow::moveUp);
+    connect(ui->downButton, &QToolButton::clicked, this, &ColorListWindow::moveDown);
 
     connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, this,
             &ColorListWindow::currentChanged);
@@ -226,6 +225,20 @@ void ColorListWindow::rename()
         QModelIndex index = mModel->index(mCurrentIndex.row(), ColorsModel::ColumnName);
         mModel->setData(index, name);
     }
+}
+
+void ColorListWindow::moveUp()
+{
+    auto index = ui->tableView->selectionModel()->currentIndex();
+    // parent is same, thus we move rows before destination index
+    mModel->moveRow(index.parent(), index.row(), index.parent(), index.row() - 1);
+}
+
+void ColorListWindow::moveDown()
+{
+    auto index = ui->tableView->selectionModel()->currentIndex();
+    // parent is same, thus we move rows before destination index
+    mModel->moveRow(index.parent(), index.row(), index.parent(), index.row() + 2);
 }
 
 void ColorListWindow::currentChanged(const QModelIndex& current, const QModelIndex& previous)

@@ -7,5 +7,7 @@
         <file>icons/baseline-save-24px.svg</file>
         <file>icons/baseline-undo-24px.svg</file>
         <file>icons/folder-open.svg</file>
+        <file>icons/baseline-keyboard_arrow_down-24px.svg</file>
+        <file>icons/baseline-keyboard_arrow_up-24px.svg</file>
     </qresource>
 </RCC>

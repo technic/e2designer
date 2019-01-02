@@ -44,6 +44,9 @@ private slots:
     void addDefault();
     void rename();
 
+    void moveUp();
+    void moveDown();
+
     void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 
 

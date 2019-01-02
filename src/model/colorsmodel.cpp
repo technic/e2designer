@@ -204,6 +204,23 @@ bool ColorsModel::removeRows(int row, int count, const QModelIndex& parent)
     return false;
 }
 
+bool ColorsModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
+                           const QModelIndex& destinationParent, int destinationChild)
+{
+    if (!canMoveItems(sourceRow, count, destinationChild)) {
+        return false;
+    }
+    bool allowed = beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1,
+                                 destinationParent, destinationChild);
+    if (!allowed) {
+        qWarning() << "Requested move is not allowed!";
+        return false;
+    }
+    moveItems(sourceRow, count, destinationChild);
+    endMoveRows();
+    return true;
+}
+
 void ColorsModel::fromXml(QXmlStreamReader& xml)
 {
     beginResetModel();
