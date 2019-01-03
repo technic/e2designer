@@ -2,9 +2,10 @@ TEMPLATE = subdirs
 SUBDIRS = \
     tests \
     src \
-    app
+    app \
+    git-version
 
-app.depends += src
+app.depends += src git-version
 tests.depends += src
 
 DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml .gitignore \

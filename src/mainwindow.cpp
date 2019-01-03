@@ -179,7 +179,8 @@ bool MainWindow::saveAs()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("e2designer"),
+    QMessageBox::about(this, QString("%1 %2").arg(tr("e2designer"),
+                                                  QCoreApplication::applicationVersion()),
                        tr("The <b>e2designer</b> allows you to edit enigma2 "
                           "skins in a nice way"
                           "<br>Usefull hints:"

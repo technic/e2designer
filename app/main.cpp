@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "gitversion.hpp"
 #include <QApplication>
 #include <QCommandLineParser>
 
@@ -7,7 +8,7 @@ int main(int argc, char* argv[])
     QApplication app(argc, argv);
     QCoreApplication::setOrganizationName("e2designer");
     QCoreApplication::setApplicationName("e2designer");
-    QCoreApplication::setApplicationVersion("0.0.1"); // TODO: get from git tag
+    QCoreApplication::setApplicationVersion(Git::version);
     QCommandLineParser parser;
     parser.setApplicationDescription(QCoreApplication::applicationName());
     parser.addHelpOption();
