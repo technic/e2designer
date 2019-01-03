@@ -63,6 +63,7 @@ public:
     const QString& arg() const { return m_text; }
     void setArg(const QString& arg);
     const QString& type() const { return m_type; }
+    virtual ~Converter() {};
 
 protected:
     QVariant askParent() { return askParent(m_text); }
