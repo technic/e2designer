@@ -77,6 +77,18 @@ public:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     void clear();
 
+    bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
+                  const QModelIndex& destinationParent, int destinationChild) override;
+
+    // Drag and drop:
+
+    /// Returns ownership according to Qt documentation
+    QMimeData* mimeData(const QModelIndexList& indexes) const override;
+    bool dropMimeData(const QMimeData* data, Qt::DropAction action,
+                      int row, int column, const QModelIndex& parent) override;
+    Qt::DropActions supportedDropActions() const override;
+
+
     // Xml:
     void appendFromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml);
@@ -127,6 +139,11 @@ public slots:
 private:
     Item *indexToItem(const QModelIndex &index) const;
     static Item* castItem(const QModelIndex& index);
+
+    bool isValidMove(const QModelIndex& sourceParent, int sourceRow, int count,
+                     const QModelIndex& destinationParent, int destinationChild) const;
+    void encodeRows(const QModelIndexList &indexes, QDataStream &stream) const;
+    QVector<QModelIndex> decodeRows(QDataStream &stream) const;
 
 	QHash<QPersistentModelIndex, int> m_observers;
 

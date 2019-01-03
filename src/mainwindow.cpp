@@ -55,12 +55,12 @@ MainWindow::MainWindow(QWidget* parent)
     Q_UNUSED(highlighter);
 
     ui->treeView->setModel(SkinRepository::screens());
-    //	ui->treeView->setDragEnabled(true);
+    ui->treeView->setDragEnabled(true);
     //	ui->treeView->setDropIndicatorShown(true);
-    //	ui->treeView->setAcceptDrops(true);
+    ui->treeView->setAcceptDrops(true);
     //	ui->treeView->setDefaultDropAction(Qt::MoveAction);
     //	// accept dnd actions only from it self
-    //	ui->treeView->setDragDropMode(QAbstractItemView::InternalMove);
+    ui->treeView->setDragDropMode(QAbstractItemView::InternalMove);
 
     // Undo stack
     auto undoStack = SkinRepository::screens()->undoStack();

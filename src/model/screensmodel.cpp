@@ -3,6 +3,8 @@
 #include "repository/skinrepository.hpp"
 #include "model/windowstyle.hpp"
 #include <QUndoStack>
+#include <QMimeData>
+#include <QByteArray>
 
 // ScreensTree
 
@@ -261,14 +263,14 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
 Qt::ItemFlags ScreensModel::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
-        return Qt::NoItemFlags;
+        return Qt::ItemIsDropEnabled;  // Drops to the root item
+
+    auto commonFlags = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled;
 
     if (index.column() == ColumnElement) {
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled
-            | Qt::ItemIsDropEnabled;
+        return commonFlags | Qt::ItemIsDropEnabled;
     } else {
-        return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsDragEnabled
-            | Qt::ItemIsDropEnabled;
+        return commonFlags | Qt::ItemIsEditable;
     }
 }
 
@@ -316,6 +318,78 @@ void ScreensModel::clear()
     removeRows(0, rowCount(rootIndex), rootIndex);
     endResetModel();
     mCommander->clear();
+}
+
+bool ScreensModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
+                            const QModelIndex& destinationParent, int destinationChild)
+{
+    if (!isValidMove(sourceParent, sourceRow, count, destinationParent, destinationChild)) {
+        return false;
+    }
+
+    auto *source = indexToItem(sourceParent);
+    auto *destination = indexToItem(destinationParent);
+
+    if (beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1,
+                      destinationParent, destinationChild)) {
+        auto items = source->takeChildren(sourceRow, count);
+        if (source == destination && sourceRow < destinationChild) {
+            destinationChild -= count;
+        }
+        destination->insertChildren(destinationChild, items);
+        endMoveRows();
+        return true;
+    }
+    return false;
+}
+
+QMimeData*ScreensModel::mimeData(const QModelIndexList& indexes) const
+{
+    if (indexes.count() <= 0)
+        return nullptr;
+
+    auto types = mimeTypes();
+    Q_ASSERT(types.count() > 0);
+    QString format = types.at(0);
+
+    // Store list of row indexes in the QMimeData
+    QMimeData* data = new QMimeData();
+    QByteArray encoded;
+    QDataStream stream(&encoded, QIODevice::WriteOnly);
+    encodeRows(indexes, stream);
+    data->setData(format, encoded);
+    return data;
+}
+
+bool ScreensModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
+                                int row, int column, const QModelIndex& parent)
+{
+    if (action == Qt::IgnoreAction)
+        return true;
+    if (action != Qt::MoveAction)
+        return false;
+
+    auto types = mimeTypes();
+    Q_ASSERT(types.count() > 0);
+    QString format = types.at(0);
+
+    // Decode list of row indexes to move within the model
+    Q_UNUSED(column);
+    QByteArray encoded = data->data(format);
+    QDataStream stream(&encoded, QIODevice::ReadOnly);
+    QVector<QModelIndex> rows = decodeRows(stream);
+
+    bool ok = true;
+    for (auto index: qAsConst(rows)) {
+        ok |= moveRow(index.parent(), index.row(), parent, row);
+    }
+    // Default implemententation removes successfully moved out rows, return false to disable it.
+    return false;
+}
+
+Qt::DropActions ScreensModel::supportedDropActions() const
+{
+    return Qt::MoveAction | Qt::CopyAction;
 }
 
 void ScreensModel::appendFromXml(QXmlStreamReader& xml)
@@ -472,6 +546,44 @@ ScreensModel::Item* ScreensModel::castItem(const QModelIndex& index)
 {
     Q_ASSERT(index.isValid());
     return static_cast<Item*>(index.internalPointer());
+}
+
+bool ScreensModel::isValidMove(const QModelIndex& sourceParent, int sourceRow, int count,
+                               const QModelIndex& destinationParent, int destinationChild) const
+{
+    if (sourceRow >= 0 && sourceRow + count <= rowCount(sourceParent)
+        && destinationChild >= 0 && destinationChild <= rowCount(destinationParent)) {
+        bool overlap = (sourceParent == destinationParent)
+            && (destinationChild >= sourceRow && destinationChild <= sourceRow + count);
+        return !overlap;
+    }
+    return false;
+}
+
+void ScreensModel::encodeRows(const QModelIndexList& indexes, QDataStream& stream) const
+{
+    QVector<QModelIndex> rows;
+    for (const auto& index : indexes) {
+        auto rowIndex = index.sibling(index.row(), 0);
+        if (!rows.contains(rowIndex)) {
+            rows.append(rowIndex);
+        }
+    }
+    for (const auto& index : rows) {
+        stream << index.row() << index.internalId();
+    }
+}
+
+QVector<QModelIndex> ScreensModel::decodeRows(QDataStream& stream) const
+{
+    QVector<QModelIndex> rows;
+    while (!stream.atEnd()) {
+        int r;
+        quintptr i;
+        stream >> r >> i;
+        rows.append(createIndex(r, 0, i));
+    }
+    return rows;
 }
 
 void ScreensModel::updatePreviewMap()
