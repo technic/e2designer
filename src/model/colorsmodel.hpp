@@ -88,6 +88,13 @@ public:
     bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
                   const QModelIndex& destinationParent, int destinationChild) override;
 
+    // Drag and drop
+    /// Returns ownership according to Qt documentation
+    QMimeData* mimeData(const QModelIndexList& indexes) const override;
+    bool dropMimeData(const QMimeData* data, Qt::DropAction action,
+                      int row, int column, const QModelIndex& parent) override;
+    Qt::DropActions supportedDropActions() const override;
+
     // Xml:
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
@@ -106,6 +113,9 @@ protected:
     void emitValueChanged(const QString& name, const Color& value) const final;
 
 private:
+    void encodeRows(const QModelIndexList &indexes, QDataStream &stream) const;
+    QList<int> decodeRows(QDataStream &stream) const;
+
 };
 
 #endif // COLORSMODEL_H

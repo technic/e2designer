@@ -1,6 +1,8 @@
 #include "colorsmodel.hpp"
 #include <QColor>
 #include <QDebug>
+#include <QMimeData>
+#include <QDataStream>
 
 // Color
 
@@ -175,9 +177,11 @@ bool ColorsModel::setData(const QModelIndex& index, const QVariant& value, int r
 
 Qt::ItemFlags ColorsModel::flags(const QModelIndex& index) const
 {
-    Qt::ItemFlags flags = Qt::ItemIsEnabled;
+    Qt::ItemFlags flags = Qt::ItemIsEnabled | Qt::ItemIsDragEnabled | Qt::ItemIsSelectable;
+    if (!index.isValid())
+        flags |= Qt::ItemIsDropEnabled;
     if (index.column() != ColumnColor) {
-        flags |= Qt::ItemIsEditable | Qt::ItemIsSelectable;
+        flags |= Qt::ItemIsEditable;
     }
     return flags;
 }
@@ -251,6 +255,56 @@ bool ColorsModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int c
     return true;
 }
 
+QMimeData* ColorsModel::mimeData(const QModelIndexList& indexes) const
+{
+    if (indexes.count() <= 0)
+        return nullptr;
+
+    auto types = mimeTypes();
+    Q_ASSERT(types.count() > 0);
+    QString format = types.at(0);
+
+    // Store list of rows in the QMimeData
+    QMimeData* data = new QMimeData();
+    QByteArray encoded;
+    QDataStream stream(&encoded, QIODevice::WriteOnly);
+    encodeRows(indexes, stream);
+    data->setData(format, encoded);
+    return data;
+}
+
+bool ColorsModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
+                               int row, int column, const QModelIndex& parent)
+{
+    if (action == Qt::IgnoreAction)
+        return true;
+    if (action != Qt::MoveAction)
+        return false;
+
+    auto types = mimeTypes();
+    Q_ASSERT(types.count() > 0);
+    QString format = types.at(0);
+
+    // Decode list of rows to move within the model
+    Q_UNUSED(column);
+    QByteArray encoded = data->data(format);
+    QDataStream stream(&encoded, QIODevice::ReadOnly);
+    QList<int> rows = decodeRows(stream);
+
+    bool ok = true;
+    auto root = QModelIndex();
+    for (auto sRow: qAsConst(rows)) {
+        ok |= moveRows(root, sRow, 1, parent, row);
+    }
+    // Default implemententation removes successfully moved out rows, return false to disable it.
+    return false;
+}
+
+Qt::DropActions ColorsModel::supportedDropActions() const
+{
+    return Qt::MoveAction | Qt::CopyAction;
+}
+
 void ColorsModel::fromXml(QXmlStreamReader& xml)
 {
     beginResetModel();
@@ -265,4 +319,29 @@ void ColorsModel::toXml(QXmlStreamWriter& xml) const
 void ColorsModel::emitValueChanged(const QString& name, const Color& value) const
 {
     emit valueChanged(name, value.value());
+}
+
+void ColorsModel::encodeRows(const QModelIndexList& indexes, QDataStream& stream) const
+{
+    QList<int> rows;
+    for (const auto& index : qAsConst(indexes)) {
+        auto r = index.row();
+        if (!rows.contains(r)) {
+            rows.append(r);
+        }
+    }
+    for (const int r : rows) {
+        stream << r;
+    }
+}
+
+QList<int> ColorsModel::decodeRows(QDataStream& stream) const
+{
+    QList<int> rows;
+    while (!stream.atEnd()) {
+        int r;
+        stream >> r;
+        rows.append(r);
+    }
+    return rows;
 }

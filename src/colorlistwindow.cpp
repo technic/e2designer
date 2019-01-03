@@ -30,6 +30,8 @@ ColorListWindow::ColorListWindow(QWidget* parent)
 
     ui->tableView->setModel(mModel);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView->setDragDropMode(QAbstractItemView::InternalMove);
+    ui->tableView->setDropIndicatorShown(true);
 
     // Color selectors
     using namespace color_widgets;
