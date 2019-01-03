@@ -182,6 +182,17 @@ Qt::ItemFlags ColorsModel::flags(const QModelIndex& index) const
     return flags;
 }
 
+bool ColorsModel::insert(int row, const Color& c)
+{
+    if (canInsertItem(c)) {
+        beginInsertRows(QModelIndex(), row, row);
+        insertItem(row, c);
+        endInsertRows();
+        return true;
+    }
+    return false;
+}
+
 bool ColorsModel::append(const Color& c)
 {
     if (canInsertItem(c)) {
@@ -191,6 +202,25 @@ bool ColorsModel::append(const Color& c)
         return true;
     }
     return false;
+}
+
+/// Insert blank items to the table
+bool ColorsModel::insertRows(int row, int count, const QModelIndex& parent)
+{
+    // Can only insert to root
+    if (parent.isValid()) {
+        return false;
+    }
+    if (row < 0 || row > rowCount(parent)) {
+        return false;
+    }
+    beginInsertRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; ++i) {
+        bool ok = insertItem(row, Color());
+        Q_ASSERT(ok);
+    }
+    endInsertRows();
+    return true;
 }
 
 bool ColorsModel::removeRows(int row, int count, const QModelIndex& parent)

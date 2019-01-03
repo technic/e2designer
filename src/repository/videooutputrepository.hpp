@@ -37,6 +37,7 @@ public:
     typedef VideoOutputData Value;
     VideoOutputData value() const { return VideoOutputData{size(), m_bpp}; }
     QString name() const { return QString::number(m_id); }
+    bool isNull() const { return m_id == -1; }
 
 private:
     int m_xres;

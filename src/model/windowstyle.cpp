@@ -48,7 +48,8 @@ void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 // WindowStyle
 
 WindowStyle::WindowStyle()
-    : m_colors(roleCount())
+    : m_id(-1)
+    , m_colors(roleCount())
 {
 }
 
@@ -175,7 +176,7 @@ void ColorRolesModel::onColorValueChanged(const QString &name, QRgb value)
 {
     Q_ASSERT(_style);
     for (auto& item : _style->m_colors) {
-        if (item.color.name() == name) {
+        if (!name.isNull() && item.color.name() == name) {
             item.color.updateValue(value);
             emit colorChanged(item.role, value);
         }

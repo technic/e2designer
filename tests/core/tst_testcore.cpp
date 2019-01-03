@@ -15,6 +15,7 @@ public:
     Item(const QString &name, int value)
         : _name(name), _value(value) {}
     QString name() const { return _name; }
+    bool isNull() const { return _name.isNull(); }
 
     bool operator==(const Item &other) const {
         return other._name == _name && other._value == _value;

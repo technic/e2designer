@@ -54,6 +54,8 @@ public:
     WindowStyle();
 
     QString name() const { return QString::number(m_id); }
+    bool isNull() const { return m_id == -1; }
+
     using Value = WindowStyle;
 
     void fromXml(QXmlStreamReader& xml);

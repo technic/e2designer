@@ -6,7 +6,7 @@
 /**
  * @brief Stores list of (key, value) pairs
  * the order of keys is preserved
- * only unique key names are allowed
+ * only unique key names are allowed, except unlimited number of null items
  * provides list like and map like interfaces
  * This is a helper class, mutating methods declared as protected
  */
@@ -84,7 +84,8 @@ bool NamedList<T>::setItemValue(int i, const typename T::Value& value)
 template <typename T>
 bool NamedList<T>::canInsertItem(const T &item)
 {
-    if (contains(item.name())) {
+    // Allow to have multiple null items
+    if (!item.isNull() && contains(item.name())) {
         return false;
     }
     return true;
@@ -130,7 +131,7 @@ QVector<T> NamedList<T>::takeItems(int position, int count)
         QVector<T> result;
         result.reserve(count);
         for (int i = 0; i < count; ++i) {
-            emitValueChanged(mItems[position].name, T());
+            emitValueChanged(mItems[position].name(), T());
             result.append(mItems.takeAt(position));
         }
         return result;

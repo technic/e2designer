@@ -19,6 +19,7 @@ public:
     // Base
     QString name() const { return mName; }
     QString value() const { return mFileName; }
+    bool isNull() const { return mName.isNull(); }
     QFont font() const;
 
     // Xml

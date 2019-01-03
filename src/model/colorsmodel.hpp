@@ -19,6 +19,7 @@ public:
 
     QString name() const { return mName; }
     QRgb value() const { return mValue; }
+    bool isNull() const { return mName.isNull(); }
     QString valueStr() const;
 
     void fromXml(QXmlStreamReader& xml);
@@ -76,7 +77,10 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     // Add data:
+    bool insert(int row, const Color& c);
     bool append(const Color& c);
+
+    bool insertRows(int row, int count, const QModelIndex& parent) override;
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
