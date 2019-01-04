@@ -71,7 +71,7 @@ private slots:
 
     void test_xml() {
         QFile file(QFINDTESTDATA("widget.xml"));
-        qDebug() << file;
+        qDebug() << file.fileName();
         QVERIFY(file.open(QIODevice::ReadOnly));
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
@@ -87,7 +87,7 @@ private slots:
 
     void test_tree() {
         QFile file(QFINDTESTDATA("widget.xml"));
-        qDebug() << file;
+        qDebug() << file.fileName();
 
         QVERIFY(file.open(QIODevice::ReadOnly));
         QXmlStreamReader xml(&file);
@@ -174,7 +174,7 @@ private slots:
 
     void test_converter() {
         QFile file(QFINDTESTDATA("widget.xml"));
-        qDebug() << file;
+        qDebug() << file.fileName();
         QVERIFY(file.open(QIODevice::ReadOnly));
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
