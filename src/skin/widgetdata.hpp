@@ -248,29 +248,5 @@ private:
     QMap<QString, QString> m_otherAttributes;
 };
 
-// Template methods implementation
-//template<typename T>
-//T WidgetData::getAttr(int key) const
-//{
-//        return AttrContainer::getAttr<T>(key);
-//}
-
-//template<typename T>
-//bool WidgetData::setAttr(int key, const T &value)
-//{
-//    bool changed = AttrContainer::setAttr(key, value);
-//    if (changed) {
-//        notifyAttrChange(key);
-//        switch (key) {
-//        case Property::size:
-//            for (int i = 0; i < childCount(); ++i) {
-//                // TODO: test
-//                child(i)->parentSizeChanged();
-//            }
-//        }
-//    }
-//    return changed;
-//}
-
 
 #endif // WIDGETDATA_H
