@@ -593,9 +593,9 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
     for (auto it = attrs.cbegin(); it != attrs.cend(); ++it) {
         bool ok;
         QMetaEnum meta = Property::propertyEnum();
+        m_propertiesOrder.append(it->name().toString());
         int key = meta.keyToValue(it->name().toLatin1().data(), &ok);
         if (ok) {
-            m_propertiesOrder.append(key);
             setAttrFromXml(key, it->value().toString());
         } else {
             qWarning() << "unknown attribute" << it->name();
@@ -651,10 +651,17 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement(typeStr());
 
-    for (const int key: m_propertiesOrder) {
-        auto it = reflection.find(key);
-        QString value = it.value()->getStr(*this);
-        QString name = Property::propertyEnum().valueToKey(key);
+    QMetaEnum meta = Property::propertyEnum();
+    for (const QString &name: m_propertiesOrder) {
+        bool ok;
+        int key = meta.keyToValue(name.toLatin1().data(), &ok);
+        QString value;
+        if (ok) {
+            auto it = reflection.find(key);
+            value = it.value()->getStr(*this);
+        } else {
+            value = m_otherAttributes.value(name);
+        }
         if (!value.isNull())
             xml.writeAttribute(name, value);
     }
@@ -662,12 +669,18 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
         const int key = it.key();
         if (key > Property::preview)
             continue;
-        if (m_propertiesOrder.contains(key))
+        if (m_propertiesOrder.contains(meta.valueToKey(key)))
             continue;
         QString value = it.value()->getStr(*this);
         QString name = Property::propertyEnum().valueToKey(key);
         if (!value.isNull())
             xml.writeAttribute(name, value);
+    }
+    for (auto it = m_otherAttributes.cbegin(); it != m_otherAttributes.cend(); ++it) {
+        if (!m_propertiesOrder.contains(it.key())) {
+            if (!it.value().isNull())
+                xml.writeAttribute(it.key(), it.value());
+        }
     }
 
     for (int i = 0; i < childCount(); ++i) {

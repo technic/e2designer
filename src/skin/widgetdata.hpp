@@ -242,7 +242,7 @@ private:
 
     // Other
     WidgetType m_type;
-    QVector<int> m_propertiesOrder;
+    QVector<QString> m_propertiesOrder;
     std::vector<std::unique_ptr<Converter>> m_converters;
     ScreensModel* m_model;
     QMap<QString, QString> m_otherAttributes;
