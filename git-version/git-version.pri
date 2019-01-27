@@ -24,8 +24,14 @@ else {
 message(Using executable $${TOOLFILE})
 
 VERSION_FILE = $$OUT_PWD/gitversion.cpp
+message(Store version in $${VERSION_FILE})
+
 versiontarget.target = $$VERSION_FILE
-versiontarget.commands = $${TOOLFILE} -C "$$_PRO_FILE_PWD_" "$${VERSION_FILE}"
+win32 {
+    # Change directory to QTDIR where required dll's are located
+    versiontarget.commands += $$QMAKE_CD "$(QTDIR)\bin" &&
+}
+versiontarget.commands += $${TOOLFILE} -C "$$_PRO_FILE_PWD_" "$${VERSION_FILE}"
 versiontarget.depends = FORCE
 QMAKE_EXTRA_TARGETS += versiontarget
 
