@@ -24,10 +24,10 @@ public:
     using Alphatest = Property::Alphatest;
 
 private slots:
-    void generate_code() {
+    void generate_code()
+    {
         auto const fileName = QStringLiteral("funcs.cpp");
-        qDebug() << "Generated code is in"
-                 << QDir::current().filePath(fileName);
+        qDebug() << "Generated code is in" << QDir::current().filePath(fileName);
         QFile file(fileName);
         bool ok = file.open(QIODevice::WriteOnly);
         QVERIFY(ok);
@@ -41,25 +41,26 @@ private slots:
             QString name = metaEnum.key(i);
             QString capName(name);
             capName[0] = capName[0].toUpper();
-            ts << QString("add(p::%1, &w::%1, &w::set%2);").arg(name, capName)
-               << endl;
+            ts << QString("add(p::%1, &w::%1, &w::set%2);").arg(name, capName) << endl;
         }
         file.close();
     }
 
-//    void test_allProperties()
-//    {
+    //    void test_allProperties()
+    //    {
 
-//    }
+    //    }
 
-    void test_color() {
+    void test_color()
+    {
         WidgetData w;
         ColorAttr col(Qt::red);
         w.setColor(Property::backgroundColor, col);
         QVERIFY(w.color(Property::backgroundColor).value() == Qt::red);
         QVERIFY(w.getAttr(Property::backgroundColor).value<ColorAttr>().value() == Qt::red);
     }
-    void test_alphatest() {
+    void test_alphatest()
+    {
         WidgetData w;
         Alphatest alpha(Alphatest::on);
         w.setAlphatest(alpha);
@@ -69,7 +70,8 @@ private slots:
         QVERIFY(w.alphatest() == Alphatest::blend);
     }
 
-    void test_xml() {
+    void test_xml()
+    {
         QFile file(QFINDTESTDATA("widget.xml"));
         qDebug() << file.fileName();
         QVERIFY(file.open(QIODevice::ReadOnly));
@@ -85,7 +87,8 @@ private slots:
         QVERIFY(w.color(Property::backgroundColor).value() == QColor(Qt::red));
     }
 
-    void test_tree() {
+    void test_tree()
+    {
         QFile file(QFINDTESTDATA("widget.xml"));
         qDebug() << file.fileName();
 
@@ -97,15 +100,13 @@ private slots:
         w.fromXml(xml);
 
         PropertyTree tree(&w);
-        QVERIFY(tree.getItemPtr(Property::position)->data(Qt::DisplayRole)
-                == "10,20");
-        QVERIFY(tree.getItemPtr(Property::size)->data(Qt::DisplayRole)
-                == "100,300");
-        QVERIFY(tree.getItemPtr(Property::alphatest)->data(Qt::DisplayRole)
-                == "blend");
+        QVERIFY(tree.getItemPtr(Property::position)->data(Qt::DisplayRole) == "10,20");
+        QVERIFY(tree.getItemPtr(Property::size)->data(Qt::DisplayRole) == "100,300");
+        QVERIFY(tree.getItemPtr(Property::alphatest)->data(Qt::DisplayRole) == "blend");
     }
 
-    void test_modelSignal() {
+    void test_modelSignal()
+    {
         auto colors = new ColorsModel(this);
         auto colorRoles = new ColorRolesModel(*colors, this);
         auto fonts = new FontsModel(this);
@@ -125,7 +126,8 @@ private slots:
         QCOMPARE(spy.first().at(1), Property::transparent);
     }
 
-    void test_colorPalleteSignals() {
+    void test_colorPalleteSignals()
+    {
         auto colors = new ColorsModel(this);
         auto colorRoles = new ColorRolesModel(*colors, this);
         auto fonts = new FontsModel(this);
@@ -140,39 +142,42 @@ private slots:
         auto i0 = widgets->index(0, 0);
         auto i1 = widgets->index(1, 0);
         auto col = ColorAttr(QString("red"));
-        for (auto& i : {i0, i1}) {
-            bool ok = widgets->setWidgetAttr(i, Property::foregroundColor, QVariant::fromValue(col));
+        for (auto& i : { i0, i1 }) {
+            bool ok =
+              widgets->setWidgetAttr(i, Property::foregroundColor, QVariant::fromValue(col));
             QVERIFY(ok);
         }
 
         // Tell model to send notifications about our widget
-        WidgetObserverRegistrator r0{widgets, i0};
+        WidgetObserverRegistrator r0{ widgets, i0 };
         QSignalSpy spy(widgets, &ScreensModel::widgetChanged);
 
-        colors->setData(colors->index(0, ColorsModel::ColumnColor), QVariant::fromValue(colDarkRed));
+        colors->setData(colors->index(0, ColorsModel::ColumnColor),
+                        QVariant::fromValue(colDarkRed));
 
         QCOMPARE(spy.count(), 1);
         QCOMPARE(spy.first().at(0), i0);
         QCOMPARE(spy.first().at(1), Property::foregroundColor);
         QCOMPARE(widgets->widget(i0).getQColor(Property::foregroundColor), colDarkRed);
 
-        WidgetObserverRegistrator r1{widgets, i1};
+        WidgetObserverRegistrator r1{ widgets, i1 };
         QCOMPARE(widgets->widget(i1).getQColor(Property::foregroundColor), colDarkRed);
     }
 
-//    void test_PropertiesModel() {
-//        auto colors = new ColorsModel(this);
-//        auto fonts = new FontsModel(this);
-//        auto widgets = new ScreensModel(colors, fonts, this);
+    //    void test_PropertiesModel() {
+    //        auto colors = new ColorsModel(this);
+    //        auto fonts = new FontsModel(this);
+    //        auto widgets = new ScreensModel(colors, fonts, this);
 
-//        QFile file(QFINDTESTDATA("widget.xml"));
-//        QVERIFY(file.open(QIODevice::ReadOnly));
-//        QXmlStreamReader xml(&file);
-//        xml.readNextStartElement();
-//        QFAIL("TODO");
-//    }
+    //        QFile file(QFINDTESTDATA("widget.xml"));
+    //        QVERIFY(file.open(QIODevice::ReadOnly));
+    //        QXmlStreamReader xml(&file);
+    //        xml.readNextStartElement();
+    //        QFAIL("TODO");
+    //    }
 
-    void test_converter() {
+    void test_converter()
+    {
         QFile file(QFINDTESTDATA("widget.xml"));
         qDebug() << file.fileName();
         QVERIFY(file.open(QIODevice::ReadOnly));
@@ -184,7 +189,8 @@ private slots:
         QCOMPARE(w.scenePreview().toString(), QDateTime::currentDateTime().toString("h:mm"));
     }
 
-    void test_ColorRoles() {
+    void test_ColorRoles()
+    {
         auto colors = new ColorsModel(this);
         auto colorRoles = new ColorRolesModel(*colors, this);
         auto fonts = new FontsModel(this);
@@ -197,7 +203,7 @@ private slots:
 
         widgets->insertRows(0, 1);
         auto index = widgets->index(0, 0);
-        WidgetObserverRegistrator reg{widgets, index};
+        WidgetObserverRegistrator reg{ widgets, index };
         QCOMPARE(widgets->widget(index).getQColor(Property::backgroundColor), Qt::red);
 
         style.setColor(Role::LabelForeground, ColorAttr(QString("green")));
@@ -211,7 +217,6 @@ private slots:
         QCOMPARE(spy.first().at(1), Property::foregroundColor);
         QCOMPARE(widgets->widget(index).getQColor(Property::foregroundColor), Qt::darkGreen);
     }
-
 };
 
 QTEST_APPLESS_MAIN(TestWidget)

@@ -13,13 +13,19 @@ public:
     TestContainer() {}
     ~TestContainer() {}
 
-    enum {
-        size, pos, color, text
+    enum
+    {
+        size,
+        pos,
+        color,
+        text
     };
 
-    class SampleContainer : public AttrContainer {
+    class SampleContainer : public AttrContainer
+    {
     public:
-        SampleContainer() {
+        SampleContainer()
+        {
             addAttr<SizeAttr>(size);
             addAttr<PositionAttr>(pos);
             addAttr<ColorAttr>(color);
@@ -28,7 +34,8 @@ public:
     };
 
 private slots:
-    void test_set() {
+    void test_set()
+    {
         auto p1 = PositionAttr(7, 8);
         c.setAttr(pos, p1);
         QVERIFY(c.getAttr<PositionAttr>(pos) == p1);
@@ -38,7 +45,8 @@ private slots:
         QVERIFY(c.getAttr<QString>(text) == s1);
     }
 
-    void test_badSet() {
+    void test_badSet()
+    {
         auto p1 = c.getAttr<PositionAttr>(pos);
         c.setAttr(pos, 200);
         c.setAttr(pos, QString("bar"));

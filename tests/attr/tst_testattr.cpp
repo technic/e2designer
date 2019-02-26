@@ -13,7 +13,8 @@ public:
     TestAttr();
 
 private slots:
-    void test_size() {
+    void test_size()
+    {
         SizeAttr sz;
         QVERIFY(sz.isRelative() == false);
 
@@ -22,13 +23,15 @@ private slots:
         QVERIFY(serialize(sz) == "100,200");
     }
 
-    void test_position() {
+    void test_position()
+    {
         PositionAttr pos("50,70");
         QVERIFY(pos.x().value() == 50 && pos.y().value() == 70);
         QVERIFY(serialize(pos) == "50,70");
     }
 
-    void test_bool() {
+    void test_bool()
+    {
         bool b;
 
         deserialize(QString(), b);
@@ -40,7 +43,8 @@ private slots:
         QVERIFY(serialize(b) == "1");
     }
 
-    void test_int() {
+    void test_int()
+    {
         int a;
         deserialize(QString(), a);
         QVERIFY(a == 0);
@@ -51,7 +55,8 @@ private slots:
         QVERIFY(serialize(a) == "-40");
     }
 
-    void test_enum() {
+    void test_enum()
+    {
         using Alphatest = Property::Alphatest;
         Alphatest a;
         deserialize("on", a);
@@ -63,10 +68,7 @@ private slots:
     }
 };
 
-TestAttr::TestAttr()
-{
-
-}
+TestAttr::TestAttr() {}
 
 QTEST_APPLESS_MAIN(TestAttr)
 
