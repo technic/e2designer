@@ -10,4 +10,5 @@ tests.depends += src
 
 DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml .gitignore \
     .clang-format \
+    misc/e2designer.desktop \
     docker/Dockerfile docker-push.sh
