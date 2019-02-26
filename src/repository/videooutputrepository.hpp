@@ -9,7 +9,8 @@
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
-struct VideoOutputData {
+struct VideoOutputData
+{
     QSize resolution;
     int bpp;
 };
@@ -22,8 +23,7 @@ public:
         , m_yres(0)
         , m_bpp(0)
         , m_id(-1)
-    {
-    }
+    {}
     // Xml
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
@@ -35,7 +35,7 @@ public:
     int id() const { return m_id; }
 
     typedef VideoOutputData Value;
-    VideoOutputData value() const { return VideoOutputData{size(), m_bpp}; }
+    VideoOutputData value() const { return VideoOutputData{ size(), m_bpp }; }
     QString name() const { return QString::number(m_id); }
     bool isNull() const { return m_id == -1; }
 
@@ -55,16 +55,14 @@ public:
     void addFromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    inline VideoOutput getOutput(int id = 0) const {
-        return getValue(QString::number(id));
-    }
+    inline VideoOutput getOutput(int id = 0) const { return getValue(QString::number(id)); }
     void clear() { removeItems(0, itemsCount()); }
 
 signals:
-    void valueChanged(int id, const VideoOutput &output) const;
+    void valueChanged(int id, const VideoOutput& output) const;
 
 protected:
-    void emitValueChanged(const QString &name, const VideoOutput &value) const final;
+    void emitValueChanged(const QString& name, const VideoOutput& value) const final;
 };
 
 #endif // VIDEOOUTPUTREPOSITORY_H

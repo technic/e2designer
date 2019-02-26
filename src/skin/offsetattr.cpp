@@ -4,10 +4,13 @@
 #include <QStringRef>
 
 OffsetAttr::OffsetAttr(int x, int y)
-    : m_x(x), m_y(y) {}
+    : m_x(x)
+    , m_y(y)
+{}
 
-OffsetAttr::OffsetAttr(const QString &str)
-    : m_x(0), m_y(0)
+OffsetAttr::OffsetAttr(const QString& str)
+    : m_x(0)
+    , m_y(0)
 {
     auto list = str.splitRef(",");
     if (list.size() == 2) {
@@ -23,4 +26,3 @@ QString OffsetAttr::toStr() const
     }
     return QString("%1,%2").arg(m_x).arg(m_y);
 }
-

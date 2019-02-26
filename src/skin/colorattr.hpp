@@ -8,7 +8,8 @@
 class ColorAttr
 {
 public:
-    enum class State {
+    enum class State
+    {
         Null,
         Fixed,
         Named,
@@ -43,25 +44,23 @@ Q_DECLARE_METATYPE(ColorAttr);
 
 class ColorsModel;
 
-class CachedColor: public ColorAttr
+class CachedColor : public ColorAttr
 {
 public:
     CachedColor() {}
-    CachedColor(const ColorAttr &other);
+    CachedColor(const ColorAttr& other);
     QColor getQColor() const;
     void reload(const ColorsModel& model);
     void updateValue(QRgb value);
 };
 
-
-inline QString serialize(const ColorAttr &color) {
+inline QString serialize(const ColorAttr& color)
+{
     return color.toXml();
 }
-inline void deserialize(const QString &str, ColorAttr &color) {
+inline void deserialize(const QString& str, ColorAttr& color)
+{
     color = ColorAttr(str);
 }
-
-
-
 
 #endif // COLORATTR_HPP

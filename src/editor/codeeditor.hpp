@@ -31,8 +31,7 @@ public:
     LineNumberArea(CodeEditor* editor)
         : QWidget(editor)
         , m_editor(editor)
-    {
-    }
+    {}
     QSize sizeHint() const override { return QSize(m_editor->lineNumberAreaWidth(), 0); }
 
 protected:

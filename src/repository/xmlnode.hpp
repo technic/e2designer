@@ -23,8 +23,7 @@ class RawXmlElement : public XmlData
 public:
     RawXmlElement()
         : XmlData()
-    {
-    }
+    {}
     void toXml(QXmlStreamWriter& xml) const;
     void fromXml(QXmlStreamReader& xml);
 

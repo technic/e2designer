@@ -50,8 +50,7 @@ void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 WindowStyle::WindowStyle()
     : m_id(-1)
     , m_colors(roleCount())
-{
-}
+{}
 
 void WindowStyle::fromXml(QXmlStreamReader& xml)
 {
@@ -92,7 +91,8 @@ void WindowStyle::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-int WindowStyle::roleCount() {
+int WindowStyle::roleCount()
+{
     return QMetaEnum::fromType<WindowStyleColor::ColorRole>().keyCount();
 }
 
@@ -114,7 +114,7 @@ void WindowStyle::setColor(WindowStyleColor::ColorRole role, const ColorAttr& co
             return;
         }
     }
-    m_colors.append(WindowStyleColor{role, color});
+    m_colors.append(WindowStyleColor{ role, color });
 }
 
 // WindowStylesList
@@ -131,25 +131,27 @@ void WindowStylesList::toXml(QXmlStreamWriter& xml) const
     }
 }
 
-void WindowStylesList::emitValueChanged(const QString &name, const WindowStyle &value) const
+void WindowStylesList::emitValueChanged(const QString& name, const WindowStyle& value) const
 {
     emit styleChanged(name, value);
 }
 
 // ColorRolesModel
 
-ColorRolesModel::ColorRolesModel(ColorsModel &colors, QObject *parent)
+ColorRolesModel::ColorRolesModel(ColorsModel& colors, QObject* parent)
     : QObject(parent)
     , _style(nullptr)
     , _colors(colors)
-{
-}
+{}
 
-void ColorRolesModel::setStlye(WindowStyle *style)
+void ColorRolesModel::setStlye(WindowStyle* style)
 {
     // We are connected and have to disconnect
     if (_style && !style) {
-        disconnect(&_colors, &ColorsModel::valueChanged, this, &ColorRolesModel::onColorValueChanged);
+        disconnect(&_colors,
+                   &ColorsModel::valueChanged,
+                   this,
+                   &ColorRolesModel::onColorValueChanged);
     }
     // We are not connected and have to connect
     if (!_style && style) {
@@ -163,7 +165,7 @@ QColor ColorRolesModel::getQColor(ColorRole role) const
 {
     if (_style) {
         // FIXME: optimize it!
-        for (const auto &c : _style->m_colors) {
+        for (const auto& c : _style->m_colors) {
             if (c.role == role) {
                 return c.color.getQColor();
             }
@@ -172,7 +174,7 @@ QColor ColorRolesModel::getQColor(ColorRole role) const
     return QColor();
 }
 
-void ColorRolesModel::onColorValueChanged(const QString &name, QRgb value)
+void ColorRolesModel::onColorValueChanged(const QString& name, QRgb value)
 {
     Q_ASSERT(_style);
     for (auto& item : _style->m_colors) {

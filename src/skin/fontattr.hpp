@@ -10,8 +10,7 @@ public:
     FontAttr()
         : mName()
         , mSize(0)
-    {
-    }
+    {}
     FontAttr(const QString& str)
         : FontAttr()
     {
@@ -28,12 +27,13 @@ private:
 };
 Q_DECLARE_METATYPE(FontAttr);
 
-inline QString serialize(const FontAttr &font) {
+inline QString serialize(const FontAttr& font)
+{
     return font.toStr();
 }
-inline void deserialize(const QString &str, FontAttr &font) {
+inline void deserialize(const QString& str, FontAttr& font)
+{
     font = FontAttr(str);
 }
-
 
 #endif // FONTATTR_HPP

@@ -14,47 +14,56 @@
 class QXmlStreamReader;
 class QXmlStreamWriter;
 
-
-class Source {
+class Source
+{
 public:
-    Source() : _parent(nullptr) {}
+    Source()
+        : _parent(nullptr)
+    {}
     // Interface for returning values
     virtual QString getText() { return QString(); }
     virtual int getValue() { return 0; }
     virtual int getRange() { return 100; }
     virtual bool getBoolean() { return false; }
     virtual int getTime() { return 0; }
-    virtual QVariant getVariant(const QString& key) { Q_UNUSED(key); return QVariant(); }
+    virtual QVariant getVariant(const QString& key)
+    {
+        Q_UNUSED(key);
+        return QVariant();
+    }
 
     // Parent - child relation
-    void attach(Source *parent);
+    void attach(Source* parent);
     Source* parent() const { return _parent; }
+
 private:
     Source* _parent;
 };
 
-class MockSource: public Source {
+class MockSource : public Source
+{
 public:
     MockSource() {}
     MockSource(QXmlStreamReader& xml);
     QVariant getVariant(const QString& key) final;
-    void setValue(const QString& key, const QVariant &value);
+    void setValue(const QString& key, const QVariant& value);
+
 private:
     QHash<QString, QVariant> _values;
 };
 
-class MockSourceFactory: public SingletonMixin<MockSourceFactory> {
+class MockSourceFactory : public SingletonMixin<MockSourceFactory>
+{
 public:
     MockSourceFactory();
     void loadXml(const QString& path);
-    Source* getReference(const QString& name);  // FIXME: should return const
+    Source* getReference(const QString& name); // FIXME: should return const
 private:
     static QString readName(QXmlStreamReader& xml);
     QHash<QString, MockSource> _sources;
 };
 
-
-class Converter: public Source
+class Converter : public Source
 {
 public:
     Converter() {}
@@ -63,82 +72,81 @@ public:
     const QString& arg() const { return m_text; }
     void setArg(const QString& arg);
     const QString& type() const { return m_type; }
-    virtual ~Converter() {};
+    virtual ~Converter(){};
 
 protected:
     QVariant askParent() { return askParent(m_text); }
     QVariant askParent(const QString& arg);
     // Called when argument changes
-    virtual void parseArgument() {};
+    virtual void parseArgument(){};
 
 private:
     QString m_type;
     QString m_text;
 };
 
-class ConverterFactory: public SingletonMixin<ConverterFactory> {
+class ConverterFactory : public SingletonMixin<ConverterFactory>
+{
 public:
     ConverterFactory();
     template<typename T>
     void registerObject();
-    std::unique_ptr<Converter> createConverterByName(const QString &name);
+    std::unique_ptr<Converter> createConverterByName(const QString& name);
+
 private:
     // Constructor functions map
     using Constructor = Converter* (*)();
     QHash<QByteArray, Constructor> _constructors;
 };
 
-
-class ServiceName : public Converter {
+class ServiceName : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Name,
         Number,
         Provider,
         Reference,
     };
     Q_ENUM(Arg);
-    QString getText() final {
-        return askParent().toString();
-    }
+    QString getText() final { return askParent().toString(); }
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     Arg m_type;
 };
 
-
-class ServiceTime : public Converter {
+class ServiceTime : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Duration,
         StartTime,
         EndTime,
     };
     Q_ENUM(Arg);
-    QString getText() final {
-        return askParent().toString();
-    }
-    int getTime() final {
-        return askParent().toInt();
-    }
+    QString getText() final { return askParent().toString(); }
+    int getTime() final { return askParent().toInt(); }
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     Arg m_type;
 };
 
-
-class ServicePosition : public Converter {
+class ServicePosition : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Length,
         Position,
         Remaining,
@@ -152,8 +160,10 @@ public:
     static constexpr int pts = 90000;
     QString getText() final;
     int getTime() final;
+
 protected:
     void parseArgument() final;
+
 private:
     bool detailed;
     bool negate;
@@ -162,55 +172,72 @@ private:
     Arg m_type;
 };
 
-
-class ServiceInfo : public Converter {
+class ServiceInfo : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         HasTeletext,
-        IsMultichannel, IsCrypted, IsWidescreen,
+        IsMultichannel,
+        IsCrypted,
+        IsWidescreen,
         SubservicesAvailable,
-        VideoWidth, VideoHeight,
-        AudioPid, VideoPid, PcrPid, PmtPid, TxtPid,
-        TsId, OnId,
+        VideoWidth,
+        VideoHeight,
+        AudioPid,
+        VideoPid,
+        PcrPid,
+        PmtPid,
+        TxtPid,
+        TsId,
+        OnId,
         Sid
     };
     Q_ENUM(Arg);
     bool getBoolean() final;
     QString getText() final;
     int getValue() final;
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     Arg m_type;
 };
 
-
-class FrontendInfo : public Converter {
+class FrontendInfo : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
-        BER, SNR, AGC, SNRdB, NUMBER, TYPE, LOCK
+    enum Arg
+    {
+        BER,
+        SNR,
+        AGC,
+        SNRdB,
+        NUMBER,
+        TYPE,
+        LOCK
     };
     Q_ENUM(Arg);
     bool getBoolean() final;
     QString getText() final;
     int getValue() final;
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     Arg m_type;
 };
 
-
-class EventName : public Converter {
+class EventName : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Name,
         Description,
         ExtendedDescription,
@@ -218,19 +245,20 @@ public:
     };
     Q_ENUM(Arg);
     QString getText() final { return askParent().toString(); }
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     Arg m_type;
 };
 
-
-class EventTime : public Converter {
+class EventTime : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         StartTime,
         EndTime,
         Remaining,
@@ -238,90 +266,92 @@ public:
         Progress,
     };
     Q_ENUM(Arg);
-    int getTime() final {
+    int getTime() final
+    {
         if (m_type != Progress) {
             return askParent().toInt();
         }
         return -1;
     }
-    int getValue() final {
+    int getValue() final
+    {
         if (m_type == Progress) {
             return askParent().toInt();
         }
         return -1;
     }
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     Arg m_type;
 };
 
-
-class TunerInfo : public Converter {
+class TunerInfo : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         TunerUseMask,
     };
     Q_ENUM(Arg);
-    QString argStr() const {
-        return QMetaEnum::fromType<Arg>().valueToKey(m_type);
-    }
-    bool getBoolean() final {
-        return askParent().toInt() > 0;
-    }
-    QString getText() final {
-        return askParent().toString();
-    }
-    int getValue() final {
-        return askParent().toInt();
-    }
+    QString argStr() const { return QMetaEnum::fromType<Arg>().valueToKey(m_type); }
+    bool getBoolean() final { return askParent().toInt() > 0; }
+    QString getText() final { return askParent().toString(); }
+    int getValue() final { return askParent().toInt(); }
+
 private:
     Arg m_type;
 };
 
-
-class ValueBitTest : public Converter {
+class ValueBitTest : public Converter
+{
     Q_GADGET
 public:
-    bool getBoolean() {
+    bool getBoolean()
+    {
         int value = parent()->getValue();
         return (value & _testValue) == _testValue;
     }
+
 protected:
-    void parseArgument() final {
-        _testValue = arg().toInt();
-    }
+    void parseArgument() final { _testValue = arg().toInt(); }
+
 private:
     int _testValue;
 };
 
-
-class ValueRange : public Converter {
+class ValueRange : public Converter
+{
     Q_GADGET
 public:
-    bool getBoolean() final {
+    bool getBoolean() final
+    {
         int value = parent()->getValue();
         return lower <= value && value <= upper;
     }
+
 protected:
-    void parseArgument() final {
+    void parseArgument() final
+    {
         auto list = arg().splitRef(",");
         lower = list[0].toInt();
         upper = list[1].toInt();
     }
+
 private:
     int lower;
     int upper;
 };
 
-
-class ClockToText : public Converter {
+class ClockToText : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Default,
         WithSeconds,
         InMinutes,
@@ -331,18 +361,21 @@ public:
     };
     Q_ENUM(Arg);
     QString getText() final;
+
 protected:
     void parseArgument() final;
+
 private:
     int m_type;
     QString m_format;
 };
 
-
-class RemainingToText : public Converter {
+class RemainingToText : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Default,
         WithSeconds,
         NoSeconds,
@@ -350,29 +383,31 @@ public:
     };
     Q_ENUM(Arg);
     QString getText() final;
+
 protected:
-    void parseArgument() final {
-        m_type = strToEnum<Arg>(arg());
-    }
+    void parseArgument() final { m_type = strToEnum<Arg>(arg()); }
+
 private:
     int m_type;
 };
 
-
-class ProgressToText : public Converter {
+class ProgressToText : public Converter
+{
     Q_GADGET
 public:
-    enum Arg {
+    enum Arg
+    {
         Default,
         InPercent
     };
     Q_ENUM(Arg);
     QString getText() final;
+
 protected:
     void parseArgument() final;
+
 private:
     int m_type;
 };
-
 
 #endif // CONVERTER_HPP

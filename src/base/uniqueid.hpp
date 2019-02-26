@@ -9,8 +9,7 @@ class UniqueId
 public:
     UniqueId()
         : mId(getNextId())
-    {
-    }
+    {}
     // TODO: release id from possible id pool
     ~UniqueId() {}
     // copy has new id
@@ -31,8 +30,7 @@ public:
 
     UniqueId(UniqueId&& other)
         : mId(other.mId)
-    {
-    }
+    {}
     UniqueId& operator=(const UniqueId&& other)
     {
         // prevent self-move

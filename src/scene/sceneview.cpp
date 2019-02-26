@@ -4,8 +4,7 @@
 
 SceneView::SceneView(QWidget* parent)
     : QGraphicsView(parent)
-{
-}
+{}
 void SceneView::wheelEvent(QWheelEvent* event)
 {
     if (event->modifiers() & Qt::ControlModifier) {

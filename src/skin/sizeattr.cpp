@@ -4,14 +4,14 @@
 #include <QDebug>
 
 Dimension::Dimension()
-    : m_type(Type::Number), m_value(0)
-{
-}
+    : m_type(Type::Number)
+    , m_value(0)
+{}
 
 Dimension::Dimension(int px)
-    : m_type(Type::Number), m_value(px)
-{
-}
+    : m_type(Type::Number)
+    , m_value(px)
+{}
 
 void Dimension::parseStr(const QString& str)
 {
@@ -60,14 +60,12 @@ bool Dimension::isRelative() const
     return m_type != Type::Number;
 }
 
-
 // SizeAttr
 
 SizeAttr::SizeAttr(Dimension w, Dimension h)
     : mWidth(w)
     , mHeight(h)
-{
-}
+{}
 
 QSize SizeAttr::getSize(const WidgetData& widget) const
 {
@@ -98,4 +96,3 @@ void SizeAttr::fromStr(const QString& str)
 }
 
 static ConverterRegistrator cr(&SizeAttr::toStr);
-

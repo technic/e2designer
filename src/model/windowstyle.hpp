@@ -26,7 +26,8 @@ public:
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    enum class ColorRole  {
+    enum class ColorRole
+    {
         Background,
         LabelForeground,
         ListboxBackground,
@@ -50,6 +51,7 @@ class WindowStyle : public XmlData
 {
     Q_GADGET
     friend class ColorRolesModel;
+
 public:
     WindowStyle();
 
@@ -73,7 +75,6 @@ private:
     BorderSet m_borderSet;
 };
 
-
 class WindowStylesList : public QObject, public NamedList<WindowStyle>
 {
     Q_OBJECT
@@ -81,16 +82,14 @@ public:
     void append(WindowStyle style);
     // Xml:
     void toXml(QXmlStreamWriter& xml) const;
-    inline const WindowStyle getStyle(int id) {
-        return getValue(QString::number(id));
-    }
+    inline const WindowStyle getStyle(int id) { return getValue(QString::number(id)); }
     void clear() { removeItems(0, itemsCount()); }
 signals:
-    void styleChanged(const QString &name, const WindowStyle &value) const;
-protected:
-    void emitValueChanged(const QString &name, const WindowStyle &value) const final;
-};
+    void styleChanged(const QString& name, const WindowStyle& value) const;
 
+protected:
+    void emitValueChanged(const QString& name, const WindowStyle& value) const final;
+};
 
 class ColorsModel;
 
@@ -98,6 +97,7 @@ class ColorRolesModel : public QObject
 {
     Q_OBJECT
     using ColorRole = WindowStyleColor::ColorRole;
+
 public:
     ColorRolesModel(ColorsModel& colors, QObject* parent = nullptr);
     void setStlye(WindowStyle* style);
@@ -106,6 +106,7 @@ signals:
     void colorChanged(WindowStyleColor::ColorRole role, QRgb value);
 private slots:
     void onColorValueChanged(const QString& name, QRgb value);
+
 private:
     void reload();
     // ref

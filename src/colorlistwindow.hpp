@@ -24,7 +24,7 @@ public:
 
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     QColor color();
-    void setColor(const QColor &color);
+    void setColor(const QColor& color);
 
 signals:
     void colorChanged();
@@ -38,7 +38,7 @@ public slots:
     void setAlpha();
 
 private slots:
-	// Colors model
+    // Colors model
     void remove();
     void add();
     void addDefault();
@@ -49,8 +49,7 @@ private slots:
 
     void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 
-
-    void updateColorWidgets(const QColor &col);
+    void updateColorWidgets(const QColor& col);
 
 private:
     QRgb currentColor() const;

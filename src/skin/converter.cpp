@@ -13,7 +13,6 @@ void Source::attach(Source* parent)
     _parent = parent;
 }
 
-
 // Converter
 
 void Converter::fromXml(QXmlStreamReader& xml)
@@ -55,7 +54,7 @@ QVariant Converter::askParent(const QString& arg)
     return QVariant();
 }
 
-//std::unique_ptr<Converter> Converter::createConverterByName(const QString& name)
+// std::unique_ptr<Converter> Converter::createConverterByName(const QString& name)
 //{
 //    auto id = QMetaType::type(name.toUtf8());
 //    if (id == QMetaType::UnknownType) {
@@ -63,7 +62,6 @@ QVariant Converter::askParent(const QString& arg)
 //    }
 //    return std::unique_ptr<Converter>(static_cast<Converter*>(QMetaType::create(id));
 //}
-
 
 // MockSource
 
@@ -146,7 +144,7 @@ void MockSourceFactory::loadXml(const QString& path)
         }
 
         // FIXME: not memory efficient
-        for (auto& name: qAsConst(names)) {
+        for (auto& name : qAsConst(names)) {
             _sources[name] = source;
         }
     }
@@ -173,7 +171,6 @@ QString MockSourceFactory::readName(QXmlStreamReader& xml)
     }
     return name;
 }
-
 
 // ConverterFactory
 
@@ -213,7 +210,6 @@ void ConverterFactory::registerObject()
     _constructors[mo->className()] = []() -> Converter* { return new T(); };
 }
 
-
 void ClockToText::parseArgument()
 {
     auto meta = QMetaEnum::fromType<Arg>();
@@ -224,29 +220,45 @@ void ClockToText::parseArgument()
         m_format = arg().section(':', 1);
         m_type = Format;
     }
-    m_format.replace("%a", "ddd").replace("%A", "dddd")
-            .replace("%b", "MMM").replace("%B", "MMMM")
-            .replace("%c", "ddd MMM d HH:mm:ss yyyy")
-            .replace("%d", "dd").replace("%D", "MM/dd/yy")
-            .replace("%e", "dd")
-            .replace("%F", "yyyy-MM-dd").replace("%g", "yy").replace("%G", "yyyy")
-            .replace("%H", "HH").replace("%h", "MMM")
-            .replace("%I", "hh")
-            .replace("%j", "DDD")
-            .replace("%k", "HH").replace("%l", "hh")
-            .replace("%m", "MM").replace("%M", "mm")
-            .replace("%n", "\n").replace("%p", "a")
-            .replace("%P", "a").replace("%r", "hh:mm:ss a")
-            .replace("%R", "HH:mm").replace("%S", "ss")
-            .replace("%t", "\t").replace("%T", "HH:mm:ss")
-            .replace("%V", "ww")
-            .replace("%X", "HH:mm:ss").replace("%x", "MM/dd/yy")
-            .replace("%y", "yy").replace("%Y", "yyyy")
-            .replace("%Z", "z").replace("%z", "Z")
-            .replace("%%", "%");
+    m_format.replace("%a", "ddd")
+      .replace("%A", "dddd")
+      .replace("%b", "MMM")
+      .replace("%B", "MMMM")
+      .replace("%c", "ddd MMM d HH:mm:ss yyyy")
+      .replace("%d", "dd")
+      .replace("%D", "MM/dd/yy")
+      .replace("%e", "dd")
+      .replace("%F", "yyyy-MM-dd")
+      .replace("%g", "yy")
+      .replace("%G", "yyyy")
+      .replace("%H", "HH")
+      .replace("%h", "MMM")
+      .replace("%I", "hh")
+      .replace("%j", "DDD")
+      .replace("%k", "HH")
+      .replace("%l", "hh")
+      .replace("%m", "MM")
+      .replace("%M", "mm")
+      .replace("%n", "\n")
+      .replace("%p", "a")
+      .replace("%P", "a")
+      .replace("%r", "hh:mm:ss a")
+      .replace("%R", "HH:mm")
+      .replace("%S", "ss")
+      .replace("%t", "\t")
+      .replace("%T", "HH:mm:ss")
+      .replace("%V", "ww")
+      .replace("%X", "HH:mm:ss")
+      .replace("%x", "MM/dd/yy")
+      .replace("%y", "yy")
+      .replace("%Y", "yyyy")
+      .replace("%Z", "z")
+      .replace("%z", "Z")
+      .replace("%%", "%");
 }
 
-QString ClockToText::getText() {
+QString ClockToText::getText()
+{
     qint64 t = askParent("time").toInt();
     if (t == -1) {
         t = QDateTime::currentDateTime().toSecsSinceEpoch();
@@ -272,9 +284,10 @@ QString ClockToText::getText() {
     }
 }
 
-void ServicePosition::parseArgument() {
+void ServicePosition::parseArgument()
+{
     QVector<Arg> vec;
-    for (const auto& s: arg().splitRef(',')) {
+    for (const auto& s : arg().splitRef(',')) {
         auto meta = QMetaEnum::fromType<Arg>();
         bool ok;
         int k = meta.keyToValue(s.toLatin1().data(), &ok);
@@ -296,7 +309,8 @@ void ServicePosition::parseArgument() {
     showNoSeconds = vec.indexOf(ShowNoSeconds) >= 0;
 }
 
-QString ServicePosition::getText() {
+QString ServicePosition::getText()
+{
     int t = 0;
     switch (m_type) {
     case Length:
@@ -343,11 +357,13 @@ QString ServicePosition::getText() {
     return "???";
 }
 
-int ServicePosition::getTime() {
+int ServicePosition::getTime()
+{
     return askParent().toInt();
 }
 
-bool ServiceInfo::getBoolean() {
+bool ServiceInfo::getBoolean()
+{
     switch (m_type) {
     case HasTeletext:
     case IsMultichannel:
@@ -360,7 +376,8 @@ bool ServiceInfo::getBoolean() {
     }
 }
 
-QString ServiceInfo::getText() {
+QString ServiceInfo::getText()
+{
     switch (m_type) {
     case VideoWidth:
     case VideoHeight:
@@ -370,7 +387,8 @@ QString ServiceInfo::getText() {
     }
 }
 
-int ServiceInfo::getValue() {
+int ServiceInfo::getValue()
+{
     switch (m_type) {
     case VideoWidth:
     case VideoHeight:
@@ -380,7 +398,8 @@ int ServiceInfo::getValue() {
     }
 }
 
-bool FrontendInfo::getBoolean() {
+bool FrontendInfo::getBoolean()
+{
     switch (m_type) {
     case LOCK:
         return askParent().toBool();
@@ -389,7 +408,8 @@ bool FrontendInfo::getBoolean() {
     }
 }
 
-QString FrontendInfo::getText() {
+QString FrontendInfo::getText()
+{
     switch (m_type) {
     case BER:
         return askParent().toString();
@@ -401,10 +421,14 @@ QString FrontendInfo::getText() {
     case TYPE: {
         int tuner = askParent().toInt();
         switch (tuner) {
-        case 0: return "DVB-S";
-        case 1: return "DVB-C";
-        case 2: return "DVB-T";
-        default: return "DVB-?";
+        case 0:
+            return "DVB-S";
+        case 1:
+            return "DVB-C";
+        case 2:
+            return "DVB-T";
+        default:
+            return "DVB-?";
         }
     }
     default:
@@ -412,7 +436,8 @@ QString FrontendInfo::getText() {
     }
 }
 
-int FrontendInfo::getValue() {
+int FrontendInfo::getValue()
+{
     switch (m_type) {
     case AGC:
     case SNR:
@@ -425,7 +450,8 @@ int FrontendInfo::getValue() {
     }
 }
 
-QString RemainingToText::getText() {
+QString RemainingToText::getText()
+{
     int t = parent()->getTime();
     switch (m_type) {
     case WithSeconds:
@@ -440,7 +466,8 @@ QString RemainingToText::getText() {
     }
 }
 
-QString ProgressToText::getText() {
+QString ProgressToText::getText()
+{
     int value = parent()->getValue();
     int range = parent()->getRange();
     if (m_type == InPercent) {

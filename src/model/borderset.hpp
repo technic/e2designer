@@ -12,7 +12,10 @@ class QXmlStreamWriter;
 class Border : public XmlData
 {
 public:
-    enum { bpInvalid = -1 };
+    enum
+    {
+        bpInvalid = -1
+    };
 
     Border();
 
@@ -31,7 +34,10 @@ private:
 class BorderSet : public XmlData
 {
 public:
-    enum { bsInvalid = -1 };
+    enum
+    {
+        bsInvalid = -1
+    };
 
     BorderSet();
 

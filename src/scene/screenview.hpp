@@ -47,16 +47,16 @@ private slots:
     void onSceneSelectionChanged();
 
     // Selection Model
-    void setCurrentWidget(const QModelIndex &current, const QModelIndex &previous);
-    void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
+    void setCurrentWidget(const QModelIndex& current, const QModelIndex& previous);
+    void updateSelection(const QItemSelection& selected, const QItemSelection& deselected);
 
     // Outputs
-    void onOutputChanged(int id, const VideoOutput &output);
-    void setSceneSize(const QSize &size);
+    void onOutputChanged(int id, const VideoOutput& output);
+    void setSceneSize(const QSize& size);
 
 private:
-    QModelIndex normalizeIndex(const QModelIndex &index) const;
-    QItemSelection makeRowSelection(const QModelIndex &index);
+    QModelIndex normalizeIndex(const QModelIndex& index) const;
+    QItemSelection makeRowSelection(const QModelIndex& index);
     //	bool isInOurView(QModelIndex index);
     const int mOutputId = 0;
 

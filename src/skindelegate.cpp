@@ -3,9 +3,9 @@
 
 SkinDelegate::SkinDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
-{
-}
-QWidget* SkinDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option,
+{}
+QWidget* SkinDelegate::createEditor(QWidget* parent,
+                                    const QStyleOptionViewItem& option,
                                     const QModelIndex& index) const
 {
     QVariant data = index.data(Qt::EditRole);
@@ -16,12 +16,12 @@ QWidget* SkinDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem&
         return editor;
     }
 
-    //	case You need regex:
-    //		QLineEdit *edit = new QLineEdit(parent);
-    //		QRegExp rx("\\w*,\\w*");
-    //		Q_ASSERT(rx.isValid());
-    //		QValidator *v = new QRegExpValidator(rx, edit);
-    //		edit->setValidator(v);
+        //	case You need regex:
+        //		QLineEdit *edit = new QLineEdit(parent);
+        //		QRegExp rx("\\w*,\\w*");
+        //		Q_ASSERT(rx.isValid());
+        //		QValidator *v = new QRegExpValidator(rx, edit);
+        //		edit->setValidator(v);
 
     default:
         return QStyledItemDelegate::createEditor(parent, option, index);
@@ -46,7 +46,8 @@ void SkinDelegate::setEditorData(QWidget* editor, const QModelIndex& index) cons
     }
 }
 
-void SkinDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
+void SkinDelegate::setModelData(QWidget* editor,
+                                QAbstractItemModel* model,
                                 const QModelIndex& index) const
 {
     QVariant data = index.data(Qt::EditRole);
@@ -63,7 +64,8 @@ void SkinDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
     }
 }
 
-void SkinDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option,
+void SkinDelegate::updateEditorGeometry(QWidget* editor,
+                                        const QStyleOptionViewItem& option,
                                         const QModelIndex& index) const
 {
     editor->setGeometry(option.rect);

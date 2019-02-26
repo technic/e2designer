@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QPalette>
 
-PropertyTree::PropertyTree(const WidgetData *widget)
+PropertyTree::PropertyTree(const WidgetData* widget)
     : m_widget(widget)
     , m_root(new AttrGroupItem())
 {
@@ -69,7 +69,7 @@ PropertyTree::PropertyTree(const WidgetData *widget)
     add<VariantItem>(Property::previewValue, widgetItem);
 }
 
-AttrItem *PropertyTree::getItemPtr(const int key) const
+AttrItem* PropertyTree::getItemPtr(const int key) const
 {
     auto it = m_adapters.find(key);
     if (it != m_adapters.end()) {
@@ -84,21 +84,21 @@ PropertyTree::~PropertyTree()
     delete m_root;
 }
 
-const WidgetData &PropertyTree::widget()
+const WidgetData& PropertyTree::widget()
 {
     Q_ASSERT(m_widget);
     return *m_widget;
 }
 
-void PropertyTree::setWidget(const WidgetData *widget)
+void PropertyTree::setWidget(const WidgetData* widget)
 {
     m_widget = widget;
 }
 
 template<typename T>
-void PropertyTree::add(int k, AttrItem *parent)
+void PropertyTree::add(int k, AttrItem* parent)
 {
-    auto *item = new T(k);
+    auto* item = new T(k);
     item->setRoot(this);
     parent->appendChild(item);
     if (k != Property::invalid) {
@@ -112,10 +112,9 @@ void PropertyTree::add(int k, AttrItem *parent)
 AttrItem::AttrItem(int key)
     : mKey(key)
     , m_tree(nullptr)
-{
-}
+{}
 
-void AttrItem::setRoot(PropertyTree *tree)
+void AttrItem::setRoot(PropertyTree* tree)
 {
     m_tree = tree;
 }
@@ -137,7 +136,8 @@ QVariant AttrItem::data(int role) const
 }
 QVariant AttrItem::convert(const QVariant& value, int role)
 {
-    Q_UNUSED(role); Q_UNUSED(value);
+    Q_UNUSED(role);
+    Q_UNUSED(value);
     return QVariant();
 }
 
@@ -180,7 +180,7 @@ QVariant ColorItem::data(int role) const
     }
 }
 
-QVariant ColorItem::convert(const QVariant &value, int role)
+QVariant ColorItem::convert(const QVariant& value, int role)
 {
     switch (role) {
     case Qt::EditRole:
@@ -196,8 +196,8 @@ template<class Enum>
 QVariant EnumItem<Enum>::data(int role) const
 {
     auto attr = [this]() -> EnumAttr<Enum> {
-      Enum x = widget().getAttr(key()).template value<Enum>();
-      return EnumAttr<Enum>(x);
+        Enum x = widget().getAttr(key()).template value<Enum>();
+        return EnumAttr<Enum>(x);
     };
     switch (role) {
     case Qt::DisplayRole:
@@ -211,7 +211,7 @@ QVariant EnumItem<Enum>::data(int role) const
     }
 }
 
-template <class Enum>
+template<class Enum>
 QVariant EnumItem<Enum>::convert(const QVariant& value, int role)
 {
     switch (role) {
@@ -245,7 +245,6 @@ QVariant FontItem::convert(const QVariant& value, int role)
     }
 }
 
-
 // IntegerItem
 
 QVariant IntegerItem::data(int role) const
@@ -272,7 +271,8 @@ QVariant IntegerItem::convert(const QVariant& value, int role)
 // PixmapItem
 
 PixmapItem::PixmapItem(int key)
-    : AttrItem(key) {}
+    : AttrItem(key)
+{}
 
 QVariant PixmapItem::data(int role) const
 {
@@ -335,7 +335,7 @@ QVariant PositionItem::CoordinateItem::data(int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
-    case Qt::EditRole: {        
+    case Qt::EditRole: {
         switch (axis) {
         case AxisName::X:
             return widget().position().x().value();
@@ -353,7 +353,7 @@ QVariant PositionItem::CoordinateItem::convert(const QVariant& value, int role)
     switch (role) {
     case Qt::EditRole: {
         auto coord = Coordinate(value.toString());
-        const PositionAttr &pos = widget().position();
+        const PositionAttr& pos = widget().position();
         PositionAttr newPos;
         switch (axis) {
         case AxisName::X:
@@ -456,6 +456,3 @@ QVariant VariantItem::convert(const QVariant& value, int role)
         return AttrItem::convert(value, role);
     }
 }
-
-
-

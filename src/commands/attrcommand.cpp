@@ -1,7 +1,7 @@
 #include "attrcommand.hpp"
 #include "skin/widgetdata.hpp"
 
-AttrCommand::AttrCommand(WidgetData *widget, int key, const QVariant& value, QUndoCommand *parent)
+AttrCommand::AttrCommand(WidgetData* widget, int key, const QVariant& value, QUndoCommand* parent)
     : QUndoCommand(parent)
     , m_widget(widget)
     , m_key(key)
@@ -45,7 +45,7 @@ QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model)
     return idx;
 }
 
-MoveWidgetCommand::MoveWidgetCommand(WidgetData *widget, QPointF pos)
+MoveWidgetCommand::MoveWidgetCommand(WidgetData* widget, QPointF pos)
     : m_widget(widget)
     , m_point(pos)
     , m_pos(m_widget->position())
@@ -63,12 +63,12 @@ void MoveWidgetCommand::undo()
     m_widget->setPosition(m_pos);
 }
 
-bool MoveWidgetCommand::mergeWith(const QUndoCommand *other)
+bool MoveWidgetCommand::mergeWith(const QUndoCommand* other)
 {
     if (id() != other->id()) {
         return false;
     }
-    auto otherCommand = static_cast<const MoveWidgetCommand *>(other);
+    auto otherCommand = static_cast<const MoveWidgetCommand*>(other);
     if (otherCommand->m_widget == m_widget) {
         m_point = otherCommand->m_point;
         updateText();
@@ -79,12 +79,10 @@ bool MoveWidgetCommand::mergeWith(const QUndoCommand *other)
 
 void MoveWidgetCommand::updateText()
 {
-    setText(QString("Move %1,%2")
-            .arg(m_point.toPoint().x())
-            .arg(m_point.toPoint().y()));
+    setText(QString("Move %1,%2").arg(m_point.toPoint().x()).arg(m_point.toPoint().y()));
 }
 
-ResizeWidgetCommand::ResizeWidgetCommand(WidgetData *widget, QSizeF size)
+ResizeWidgetCommand::ResizeWidgetCommand(WidgetData* widget, QSizeF size)
     : m_widget(widget)
     , m_size(size)
     , m_value(m_widget->size())
@@ -102,12 +100,12 @@ void ResizeWidgetCommand::undo()
     m_widget->setSize(m_value);
 }
 
-bool ResizeWidgetCommand::mergeWith(const QUndoCommand *other)
+bool ResizeWidgetCommand::mergeWith(const QUndoCommand* other)
 {
     if (id() != other->id()) {
         return false;
     }
-    auto otherCommand = static_cast<const ResizeWidgetCommand *>(other);
+    auto otherCommand = static_cast<const ResizeWidgetCommand*>(other);
     if (otherCommand->m_widget == m_widget) {
         m_size = otherCommand->m_size;
         updateText();
@@ -118,7 +116,5 @@ bool ResizeWidgetCommand::mergeWith(const QUndoCommand *other)
 
 void ResizeWidgetCommand::updateText()
 {
-    setText(QString("Resize %1x%2")
-            .arg(m_size.toSize().width())
-            .arg(m_size.toSize().height()));
+    setText(QString("Resize %1x%2").arg(m_size.toSize().width()).arg(m_size.toSize().height()));
 }

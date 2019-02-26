@@ -11,7 +11,7 @@
  * Use it by CRTP pattern as
  * class MyNode: public MixinTreeNode<MyNode>
  */
-template <typename T>
+template<typename T>
 class MixinTreeNode
 {
     // alias
@@ -78,7 +78,11 @@ public:
         T* operator->() { return node()->self(); }
 
     private:
-        enum BeginEnd { Begin, End };
+        enum BeginEnd
+        {
+            Begin,
+            End
+        };
         Iterator(Node* root, BeginEnd type);
         inline Node* node();
 
@@ -100,14 +104,14 @@ private:
 // Implementation
 // MixinTreeNode
 
-template <typename T>
+template<typename T>
 MixinTreeNode<T>::~MixinTreeNode()
 {
     qDeleteAll(mChilds);
     mChilds.clear();
 }
 
-template <typename T>
+template<typename T>
 int MixinTreeNode<T>::myIndex() const
 {
     // FIXME: not that smart way to find index
@@ -117,14 +121,14 @@ int MixinTreeNode<T>::myIndex() const
     return -1;
 }
 
-template <typename T>
+template<typename T>
 int MixinTreeNode<T>::indexOf(const T* child) const
 {
     // I believe that indexOf() doesn't modify the object
     return mChilds.indexOf(const_cast<T*>(child));
 }
 
-template <typename T>
+template<typename T>
 bool MixinTreeNode<T>::insertChild(int position, T* child)
 {
     if (position < 0 || position > mChilds.count()) {
@@ -135,7 +139,7 @@ bool MixinTreeNode<T>::insertChild(int position, T* child)
     return true;
 }
 
-template <typename T>
+template<typename T>
 bool MixinTreeNode<T>::insertChildren(int position, QVector<T*> list)
 {
     if (position < 0 || position > mChilds.count()) {
@@ -149,7 +153,7 @@ bool MixinTreeNode<T>::insertChildren(int position, QVector<T*> list)
     return true;
 }
 
-template <typename T>
+template<typename T>
 bool MixinTreeNode<T>::removeChildren(int position, int count)
 {
     if (position < 0 || position + count > mChilds.size()) {
@@ -161,7 +165,7 @@ bool MixinTreeNode<T>::removeChildren(int position, int count)
     return true;
 }
 
-template <typename T>
+template<typename T>
 QVector<T*> MixinTreeNode<T>::takeChildren(int position, int count)
 {
     if (position < 0 || position + count > mChilds.size()) {
@@ -179,7 +183,7 @@ QVector<T*> MixinTreeNode<T>::takeChildren(int position, int count)
 // Implementation
 // MixinTreeNode::Iterator
 
-template <typename T>
+template<typename T>
 MixinTreeNode<T>::Iterator::Iterator(Node* root, BeginEnd type)
     : pNode(root)
 {
@@ -192,7 +196,7 @@ MixinTreeNode<T>::Iterator::Iterator(Node* root, BeginEnd type)
     }
 }
 
-template <typename T>
+template<typename T>
 typename MixinTreeNode<T>::Iterator& MixinTreeNode<T>::Iterator::operator++()
 {
     if (pStack.empty())
@@ -206,7 +210,7 @@ typename MixinTreeNode<T>::Iterator& MixinTreeNode<T>::Iterator::operator++()
     return *this;
 }
 
-template <typename T>
+template<typename T>
 typename MixinTreeNode<T>::Node* MixinTreeNode<T>::Iterator::node()
 {
     if (!pStack.empty()) {

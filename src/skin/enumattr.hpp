@@ -9,7 +9,7 @@
 /**
  * @brief Attribute represented by enum
  */
-template <class Enum>
+template<class Enum>
 class EnumAttr
 {
 public:
@@ -27,14 +27,15 @@ private:
 };
 
 template<class T, typename = typename std::enable_if<std::is_enum<T>::value>::type>
-inline QString serialize(T value) {
+inline QString serialize(T value)
+{
     return EnumAttr<T>(value).toStr();
 }
 template<class T, typename = typename std::enable_if<std::is_enum<T>::value>::type>
-inline void deserialize(const QString &str, T &value) {
+inline void deserialize(const QString& str, T& value)
+{
     value = EnumAttr<T>(str).value();
 }
-
 
 typedef EnumAttr<PropertyVAlign::Enum> VAlignAttr;
 Q_DECLARE_METATYPE(VAlignAttr);
@@ -56,6 +57,5 @@ Q_DECLARE_METATYPE(RenderAttr);
 
 typedef EnumAttr<Property::Flags> FlagsAttr;
 Q_DECLARE_METATYPE(FlagsAttr);
-
 
 #endif // ENUMATTR_HPP

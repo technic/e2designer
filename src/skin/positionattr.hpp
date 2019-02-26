@@ -15,14 +15,17 @@
 class Coordinate
 {
 public:
-    enum class Type {
+    enum class Type
+    {
         Pixel,
         Percent,
         Center,
     };
-    Coordinate(int px) : Coordinate(Type::Pixel, px) {}
+    Coordinate(int px)
+        : Coordinate(Type::Pixel, px)
+    {}
     explicit Coordinate(Type type = Type::Pixel, int value = 0);
-    explicit Coordinate(const QString &str);
+    explicit Coordinate(const QString& str);
 
     inline Type type() const { return m_type; }
     inline int value() const { return m_value; }
@@ -38,7 +41,8 @@ public:
     /// Depends on parent or on size
     bool isRelative() const;
 
-    inline bool operator==(const Coordinate &other) {
+    inline bool operator==(const Coordinate& other)
+    {
         return m_type == other.m_type && m_value == other.m_value;
     }
 
@@ -46,7 +50,6 @@ private:
     Type m_type;
     int m_value;
 };
-
 
 class WidgetData;
 
@@ -56,10 +59,10 @@ class PositionAttr
 {
 public:
     PositionAttr() {}
-    PositionAttr(const Coordinate &x, const Coordinate &y);
+    PositionAttr(const Coordinate& x, const Coordinate& y);
     PositionAttr(const QString& str) { fromStr(str); }
-    inline const Coordinate &x() const { return mX; }
-    inline const Coordinate &y() const { return mY; }
+    inline const Coordinate& x() const { return mX; }
+    inline const Coordinate& y() const { return mY; }
     bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
     QPoint toPoint(const WidgetData& widget) const;
     void setPoint(const WidgetData& widget, const QPoint& pos);
@@ -67,21 +70,20 @@ public:
     QString toStr() const;
     void fromStr(const QString& str);
 
-    inline bool operator==(const PositionAttr &other) {
-        return mX == other.mX && mY == other.mY;
-    }
+    inline bool operator==(const PositionAttr& other) { return mX == other.mX && mY == other.mY; }
 
 private:
     Coordinate mX, mY;
 };
 Q_DECLARE_METATYPE(PositionAttr);
 
-inline QString serialize(const PositionAttr &pos) {
+inline QString serialize(const PositionAttr& pos)
+{
     return pos.toStr();
 }
-inline void deserialize(const QString &str, PositionAttr &pos) {
+inline void deserialize(const QString& str, PositionAttr& pos)
+{
     pos = PositionAttr(str);
 }
-
 
 #endif // POSITIONATTR_HPP

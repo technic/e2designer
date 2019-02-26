@@ -54,7 +54,8 @@ class ColorsModel : public QAbstractTableModel, public ColorsList
 public:
     explicit ColorsModel(QObject* parent = nullptr);
 
-    enum {
+    enum
+    {
         ColumnName,
         ColumnValue,
         ColumnColor,
@@ -62,7 +63,8 @@ public:
     };
 
     // Header:
-    QVariant headerData(int section, Qt::Orientation orientation,
+    QVariant headerData(int section,
+                        Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
@@ -85,14 +87,20 @@ public:
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
 
-    bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
-                  const QModelIndex& destinationParent, int destinationChild) override;
+    bool moveRows(const QModelIndex& sourceParent,
+                  int sourceRow,
+                  int count,
+                  const QModelIndex& destinationParent,
+                  int destinationChild) override;
 
     // Drag and drop
     /// Returns ownership according to Qt documentation
     QMimeData* mimeData(const QModelIndexList& indexes) const override;
-    bool dropMimeData(const QMimeData* data, Qt::DropAction action,
-                      int row, int column, const QModelIndex& parent) override;
+    bool dropMimeData(const QMimeData* data,
+                      Qt::DropAction action,
+                      int row,
+                      int column,
+                      const QModelIndex& parent) override;
     Qt::DropActions supportedDropActions() const override;
 
     // Xml:
@@ -113,9 +121,8 @@ protected:
     void emitValueChanged(const QString& name, const Color& value) const final;
 
 private:
-    void encodeRows(const QModelIndexList &indexes, QDataStream &stream) const;
-    QList<int> decodeRows(QDataStream &stream) const;
-
+    void encodeRows(const QModelIndexList& indexes, QDataStream& stream) const;
+    QList<int> decodeRows(QDataStream& stream) const;
 };
 
 #endif // COLORSMODEL_H

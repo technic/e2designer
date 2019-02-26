@@ -8,36 +8,44 @@
 #include <QPoint>
 #include <QSize>
 
-
 QVector<int> pathFromIndex(QModelIndex idx);
 QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model);
 
 class AttrCommand : public QUndoCommand
 {
 public:
-    AttrCommand(WidgetData *m_widget, int key, const QVariant& value, QUndoCommand *parent = nullptr);
+    AttrCommand(WidgetData* m_widget,
+                int key,
+                const QVariant& value,
+                QUndoCommand* parent = nullptr);
     void redo() final;
     void undo() final;
+
 private:
-    WidgetData *m_widget;
+    WidgetData* m_widget;
     int m_key;
     QVariant m_oldValue;
     QVariant m_value;
 };
 
-enum { MoveCommandId, ResizeCommandId };
+enum
+{
+    MoveCommandId,
+    ResizeCommandId
+};
 
 class MoveWidgetCommand : public QUndoCommand
 {
 public:
-    MoveWidgetCommand(WidgetData *widget, QPointF pos);
+    MoveWidgetCommand(WidgetData* widget, QPointF pos);
     int id() const final { return MoveCommandId; }
     void redo() final;
     void undo() final;
-    bool mergeWith(const QUndoCommand *other) final;
+    bool mergeWith(const QUndoCommand* other) final;
+
 private:
     void updateText();
-    WidgetData *m_widget;
+    WidgetData* m_widget;
     QPointF m_point;
     PositionAttr m_pos;
 };
@@ -45,14 +53,15 @@ private:
 class ResizeWidgetCommand : public QUndoCommand
 {
 public:
-    ResizeWidgetCommand(WidgetData *widget, QSizeF size);
+    ResizeWidgetCommand(WidgetData* widget, QSizeF size);
     int id() const final { return ResizeCommandId; }
     void redo() final;
     void undo() final;
-    bool mergeWith(const QUndoCommand *other) final;
+    bool mergeWith(const QUndoCommand* other) final;
+
 private:
     void updateText();
-    WidgetData *m_widget;
+    WidgetData* m_widget;
     QSizeF m_size;
     SizeAttr m_value;
 };

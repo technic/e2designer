@@ -8,17 +8,20 @@ class OffsetAttr
 {
 public:
     explicit OffsetAttr(int x = 0, int y = 0);
-    OffsetAttr(const QString &str);
+    OffsetAttr(const QString& str);
     QString toStr() const;
+
 private:
     int m_x, m_y;
 };
 Q_DECLARE_METATYPE(OffsetAttr)
 
-inline QString serialize(OffsetAttr offset) {
+inline QString serialize(OffsetAttr offset)
+{
     return offset.toStr();
 }
-inline void deserialize(const QString &str, OffsetAttr &offset) {
+inline void deserialize(const QString& str, OffsetAttr& offset)
+{
     offset = OffsetAttr(str);
 }
 

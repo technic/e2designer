@@ -15,19 +15,26 @@ class PropertiesModel : public QAbstractItemModel
 public:
     typedef AttrItem Item;
 
-    explicit PropertiesModel(ScreensModel *model, QObject* parent = Q_NULLPTR);
+    explicit PropertiesModel(ScreensModel* model, QObject* parent = Q_NULLPTR);
     ~PropertiesModel() override;
 
-    enum { ColumnKey, ColumnValue, ColumnsCount };
+    enum
+    {
+        ColumnKey,
+        ColumnValue,
+        ColumnsCount
+    };
 
-    void setWidget(const QModelIndex &index);
+    void setWidget(const QModelIndex& index);
 
     // Header:
-    QVariant headerData(int section, Qt::Orientation orientation,
+    QVariant headerData(int section,
+                        Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
-    QModelIndex index(int row, int column,
+    QModelIndex index(int row,
+                      int column,
                       const QModelIndex& parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex& index) const override;
 
@@ -42,7 +49,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
 private slots:
-    void onAttributeChanged(const QModelIndex &index, int key);
+    void onAttributeChanged(const QModelIndex& index, int key);
     void onModelAboutToBeReset();
 
 private:
@@ -50,7 +57,7 @@ private:
     AttrItem mDummyRoot;
     std::unique_ptr<PropertyTree> mTree;
     AttrItem* mRoot;
-    ScreensModel *mModel;
+    ScreensModel* mModel;
     QPersistentModelIndex mIndex;
     QScopedPointer<WidgetObserverRegistrator> mObserver;
 };

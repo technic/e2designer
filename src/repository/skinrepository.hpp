@@ -32,7 +32,7 @@ public:
     static FontsModel* fonts() { return instance().mFonts; }
     static ScreensModel* screens() { return instance().mScreensModel; }
     static VideoOutputRepository* outputs() { return &instance().mOutputRepository; }
-    static WindowStylesList *styles() { return &instance().mWindowStyles; }
+    static WindowStylesList* styles() { return &instance().mWindowStyles; }
     QSize outputSize() const;
     inline QDir dir() const { return mDirectory; }
     QString resolveFilename(const QString& path) const;
@@ -46,7 +46,7 @@ public:
     QString previewFilePath();
 
 signals:
-    void filePathChanged(const QString &path);
+    void filePathChanged(const QString& path);
 
 private slots:
 

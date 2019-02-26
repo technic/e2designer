@@ -35,8 +35,8 @@ WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
         updateAttribute(i);
     }
 
-//    connect(&SkinRepository::screens()->widget(index), &WidgetData::attrChanged, this,
-//            &WidgetView::setAttribute);
+    //    connect(&SkinRepository::screens()->widget(index), &WidgetData::attrChanged, this,
+    //            &WidgetView::setAttribute);
 
     showBorder(mScreen->haveBorders());
 }
@@ -79,10 +79,10 @@ void WidgetView::updateAttribute(int key)
         return;
     FlagSetter fs(&mRectChange);
 
-    auto &w = mModel->widget(mData);
+    auto& w = mModel->widget(mData);
 
     // To be removed
-//    QVariant value = mModel->widget(mData).getAttr(key);
+    //    QVariant value = mModel->widget(mData).getAttr(key);
 
     switch (key) {
     case Property::position: {
@@ -109,56 +109,56 @@ void WidgetView::updateAttribute(int key)
     case Property::zPosition:
         setZValue(w.zPosition());
         break;
-//    case Property::transparent:
-//        m_transparent = value.toInt();
-//        break;
-//    case Property::text:
-//        m_text = value.toString();
-//        break;
-//    case Property::font:
-//        m_font = qvariant_cast<QFont>(value);
-//        break;
+        //    case Property::transparent:
+        //        m_transparent = value.toInt();
+        //        break;
+        //    case Property::text:
+        //        m_text = value.toString();
+        //        break;
+        //    case Property::font:
+        //        m_font = qvariant_cast<QFont>(value);
+        //        break;
     case Property::pixmap:
         m_pixmap = QPixmap(SkinRepository::instance().resolveFilename(w.pixmap(key)));
         break;
-//    case Property::alphatest:
-//        m_alphatest = value.toInt();
-//        break;
-//    case Property::scale:
-//        m_scale = value.toInt();
-//        break;
+        //    case Property::alphatest:
+        //        m_alphatest = value.toInt();
+        //        break;
+        //    case Property::scale:
+        //        m_scale = value.toInt();
+        //        break;
     case Property::backgroundColor:
         m_background_color = w.getQColor(key);
         break;
     case Property::foregroundColor:
         m_foreground_color = w.getQColor(key);
         break;
-//    case Property::valign:
-//        m_valign = value.toInt();
-//        break;
-//    case Property::halign:
-//        m_halign = value.toInt();
-//        break;
-//    case Property::borderColor:
-//        m_border_color = qvariant_cast<QColor>(value);
-//        break;
-//    case Property::borderWidth:
-//        m_border_width = value.toInt();
-//        break;
-//    case Property::orientation:
-//        m_orientation = value.toInt();
-//        break;
-//    case Property::render:
-//        m_render = value.toInt();
-//        break;
-//    case Property::previewRender:
-//        m_preview_render = value.toInt();
-//        break;
-//    case Property::previewValue:
-//        m_preview = value;
-//        break;
-//    default:
-//        return;
+        //    case Property::valign:
+        //        m_valign = value.toInt();
+        //        break;
+        //    case Property::halign:
+        //        m_halign = value.toInt();
+        //        break;
+        //    case Property::borderColor:
+        //        m_border_color = qvariant_cast<QColor>(value);
+        //        break;
+        //    case Property::borderWidth:
+        //        m_border_width = value.toInt();
+        //        break;
+        //    case Property::orientation:
+        //        m_orientation = value.toInt();
+        //        break;
+        //    case Property::render:
+        //        m_render = value.toInt();
+        //        break;
+        //    case Property::previewRender:
+        //        m_preview_render = value.toInt();
+        //        break;
+        //    case Property::previewValue:
+        //        m_preview = value;
+        //        break;
+        //    default:
+        //        return;
     }
     update();
 }
@@ -177,7 +177,7 @@ void WidgetView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     // no blending in the OSD layer
     painter->setCompositionMode(QPainter::CompositionMode_Source);
 
-    auto &w = mModel->widget(mData);
+    auto& w = mModel->widget(mData);
 
     int render;
     switch (m_type) {
@@ -223,7 +223,7 @@ void WidgetView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     QGraphicsRectItem::paint(painter, option, widget);
 }
 
-void WidgetView::paintBorder(QPainter* painter, const WidgetData &w)
+void WidgetView::paintBorder(QPainter* painter, const WidgetData& w)
 {
     int bw = w.borderWidth();
     if (!(bw > 0))
@@ -242,13 +242,13 @@ void WidgetView::paintBorder(QPainter* painter, const WidgetData &w)
     fillRect(r.right() - bw, r.y() + bw, bw, r.height() - bw);
 }
 
-void WidgetView::paintScreen(QPainter* painter, const WidgetData &w)
+void WidgetView::paintScreen(QPainter* painter, const WidgetData& w)
 {
     if (!w.transparent())
         painter->fillRect(rect(), QBrush(m_background_color));
 }
 
-void WidgetView::paintLabel(QPainter* painter, const WidgetData &w)
+void WidgetView::paintLabel(QPainter* painter, const WidgetData& w)
 {
     if (!w.transparent()) {
         //		painter->setCompositionMode(QPainter::CompositionMode_Difference);
@@ -263,13 +263,12 @@ void WidgetView::paintLabel(QPainter* painter, const WidgetData &w)
     painter->drawText(rect(), w.halign() | w.valign() | Qt::TextWordWrap, text);
 }
 
-void WidgetView::paintPixmap(QPainter* painter, const WidgetData &w)
+void WidgetView::paintPixmap(QPainter* painter, const WidgetData& w)
 {
     painter->save();
 
-    if (w.alphatest() == Property::Alphatest::blend
-            || w.alphatest() == Property::Alphatest::on
-            || m_pixmap.isNull()) {
+    if (w.alphatest() == Property::Alphatest::blend || w.alphatest() == Property::Alphatest::on ||
+        m_pixmap.isNull()) {
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
 
@@ -281,7 +280,7 @@ void WidgetView::paintPixmap(QPainter* painter, const WidgetData &w)
     painter->restore();
 }
 
-void WidgetView::paintSlider(QPainter* painter, const WidgetData &w)
+void WidgetView::paintSlider(QPainter* painter, const WidgetData& w)
 {
     int percent = qBound(0, w.scenePreview().toInt(), 100);
     QRect r = rect().toRect();
@@ -380,7 +379,9 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
             selector->setVisible(false);
             setFlag(ItemIsFocusable, false);
             setFlag(ItemIsMovable, false);
-            disconnect(mScreen->selector(), &RectSelector::rectChanged, this,
+            disconnect(mScreen->selector(),
+                       &RectSelector::rectChanged,
+                       this,
                        &WidgetView::setSelectorRect);
         }
         break;

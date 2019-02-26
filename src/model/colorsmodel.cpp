@@ -9,8 +9,7 @@
 Color::Color(const QString& name, QRgb value)
     : mName(name)
     , mValue(value)
-{
-}
+{}
 QString Color::valueStr() const
 {
     return QColor::fromRgba(mValue).name(QColor::HexArgb);
@@ -83,8 +82,7 @@ void ColorsList::toXml(QXmlStreamWriter& xml) const
 ColorsModel::ColorsModel(QObject* parent)
     : QAbstractTableModel(parent)
     , ColorsList()
-{
-}
+{}
 QVariant ColorsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -130,7 +128,7 @@ QVariant ColorsModel::data(const QModelIndex& index, int role) const
             return itemAt(index.row()).valueStr();
         case ColumnColor:
             if (role == Qt::EditRole)
-				return QColor::fromRgba(itemAt(index.row()).value());
+                return QColor::fromRgba(itemAt(index.row()).value());
         }
         break;
     case Qt::BackgroundColorRole:
@@ -166,8 +164,7 @@ bool ColorsModel::setData(const QModelIndex& index, const QVariant& value, int r
         }
     }
     if (changed) {
-        auto sibling = [index](int col) {
-            return index.sibling(index.row(), col); };
+        auto sibling = [index](int col) { return index.sibling(index.row(), col); };
         emit dataChanged(sibling(ColumnName), sibling(ColumnName));
         emit dataChanged(sibling(ColumnValue), sibling(ColumnValue));
         emit dataChanged(sibling(ColumnColor), sibling(ColumnColor));
@@ -238,14 +235,17 @@ bool ColorsModel::removeRows(int row, int count, const QModelIndex& parent)
     return false;
 }
 
-bool ColorsModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
-                           const QModelIndex& destinationParent, int destinationChild)
+bool ColorsModel::moveRows(const QModelIndex& sourceParent,
+                           int sourceRow,
+                           int count,
+                           const QModelIndex& destinationParent,
+                           int destinationChild)
 {
     if (!canMoveItems(sourceRow, count, destinationChild)) {
         return false;
     }
-    bool allowed = beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1,
-                                 destinationParent, destinationChild);
+    bool allowed = beginMoveRows(
+      sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild);
     if (!allowed) {
         qWarning() << "Requested move is not allowed!";
         return false;
@@ -273,8 +273,11 @@ QMimeData* ColorsModel::mimeData(const QModelIndexList& indexes) const
     return data;
 }
 
-bool ColorsModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
-                               int row, int column, const QModelIndex& parent)
+bool ColorsModel::dropMimeData(const QMimeData* data,
+                               Qt::DropAction action,
+                               int row,
+                               int column,
+                               const QModelIndex& parent)
 {
     if (action == Qt::IgnoreAction)
         return true;
@@ -293,7 +296,7 @@ bool ColorsModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
 
     bool ok = true;
     auto root = QModelIndex();
-    for (auto sRow: qAsConst(rows)) {
+    for (auto sRow : qAsConst(rows)) {
         ok |= moveRows(root, sRow, 1, parent, row);
     }
     // Default implemententation removes successfully moved out rows, return false to disable it.

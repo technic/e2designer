@@ -14,7 +14,8 @@ protected:
     void highlightBlock(const QString& text) override;
 
 private:
-    enum {
+    enum
+    {
         Normal = -1, // default
         Element,
         AttrName,

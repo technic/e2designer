@@ -14,12 +14,12 @@ class FlagSetter
     Q_DISABLE_COPY(FlagSetter)
 
 public:
-    FlagSetter(bool *flag);
+    FlagSetter(bool* flag);
     ~FlagSetter();
 
 private:
     bool m_previous_value;
-    bool *m_flag;
+    bool* m_flag;
 };
 
 #endif // FLAGSETTER_HPP

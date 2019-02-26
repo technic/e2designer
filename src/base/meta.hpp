@@ -11,13 +11,15 @@
 struct ConverterRegistrator
 {
     template<typename Function>
-    ConverterRegistrator(Function f) {
+    ConverterRegistrator(Function f)
+    {
         QMetaType::registerConverter(f);
     }
 };
 
 template<typename T>
-T strToEnum(const QString& str) {
+T strToEnum(const QString& str)
+{
     QMetaEnum meta = QMetaEnum::fromType<T>();
     bool ok;
     int value = meta.keyToValue(str.toLatin1().data(), &ok);
@@ -29,7 +31,8 @@ T strToEnum(const QString& str) {
 }
 
 template<typename T>
-QString enumToStr(T value) {
+QString enumToStr(T value)
+{
     return QMetaEnum::fromType<T>().valueToKey(static_cast<int>(value));
 }
 

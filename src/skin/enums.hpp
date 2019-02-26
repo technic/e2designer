@@ -1,7 +1,6 @@
 #ifndef ENUMS_HPP
 #define ENUMS_HPP
 
-
 #include <QMetaEnum>
 #include <QString>
 
@@ -14,7 +13,8 @@ class Property : public QObject
     // for enum
     Q_GADGET
 public:
-    enum PropertyEnum {
+    enum PropertyEnum
+    {
         // key not assigned
         invalid = -1,
         // widget
@@ -68,20 +68,23 @@ public:
     };
     Q_ENUM(PropertyEnum)
 
-    enum Alphatest {
+    enum Alphatest
+    {
         off,
         on,
         blend,
     };
     Q_ENUM(Alphatest)
 
-    enum Orientation {
+    enum Orientation
+    {
         orHorizontal,
         orVertical,
     };
     Q_ENUM(Orientation)
 
-    enum ScrollbarMode {
+    enum ScrollbarMode
+    {
         showNever,
         showOnDemand,
         showAlways,
@@ -89,7 +92,8 @@ public:
     };
     Q_ENUM(ScrollbarMode)
 
-    enum Render {
+    enum Render
+    {
         Widget,
         Screen,
         Label,
@@ -101,20 +105,23 @@ public:
     };
     Q_ENUM(Render)
 
-    enum Flags {
+    enum Flags
+    {
         wfBorder,
         wfNoBorder,
     };
     Q_ENUM(Flags)
 
-    enum BorderSet {
+    enum BorderSet
+    {
         bsWindow,
         bsButton,
         bsListboxEntry,
     };
     Q_ENUM(BorderSet)
 
-    enum BorderPosition {
+    enum BorderPosition
+    {
         bpTopLeft,
         bpTop,
         bpTopRight,
@@ -133,9 +140,7 @@ public:
     }
 };
 
-namespace enums {
-
-}
+namespace enums {}
 
 // separate this because of namespace conflict
 class PropertyVAlign : public QObject
@@ -143,7 +148,8 @@ class PropertyVAlign : public QObject
     // for enum
     Q_GADGET
 public:
-    enum Enum {
+    enum Enum
+    {
         top = Qt::AlignTop,
         bottom = Qt::AlignBottom,
         center = Qt::AlignVCenter,
@@ -157,7 +163,8 @@ class PropertyHAlign : public QObject
     // for enum
     Q_GADGET
 public:
-    enum Enum {
+    enum Enum
+    {
         left = Qt::AlignLeft,
         right = Qt::AlignRight,
         center = Qt::AlignHCenter,
@@ -165,6 +172,5 @@ public:
     Q_ENUM(Enum)
 };
 using HAlign = PropertyHAlign::Enum;
-
 
 #endif // ENUMS_HPP

@@ -8,7 +8,7 @@
 
 // Font
 
-Font::Font(const QString &name, const QString &fileName)
+Font::Font(const QString& name, const QString& fileName)
     : mName(name)
     , mFileName(fileName)
     , mFontId(-1)
@@ -106,8 +106,7 @@ void FontsList::toXml(QXmlStreamWriter& xml) const
 
 FontsModel::FontsModel(QObject* parent)
     : QAbstractTableModel(parent)
-{
-}
+{}
 QVariant FontsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
@@ -198,7 +197,7 @@ Qt::ItemFlags FontsModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool FontsModel::append(const Font &f)
+bool FontsModel::append(const Font& f)
 {
     if (canInsertItem(f)) {
         beginInsertRows(QModelIndex(), itemsCount(), itemsCount());

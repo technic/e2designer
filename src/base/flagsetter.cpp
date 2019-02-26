@@ -1,7 +1,8 @@
 #include "flagsetter.hpp"
 
-FlagSetter::FlagSetter(bool *flag)
-    : m_previous_value(*flag), m_flag(flag)
+FlagSetter::FlagSetter(bool* flag)
+    : m_previous_value(*flag)
+    , m_flag(flag)
 {
     *m_flag = true;
 }

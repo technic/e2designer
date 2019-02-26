@@ -2,5 +2,4 @@
 
 PixmapStorage::PixmapStorage(QObject* parent)
     : QObject(parent)
-{
-}
+{}

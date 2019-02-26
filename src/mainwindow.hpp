@@ -43,7 +43,7 @@ private slots:
     bool save();
     bool saveAs();
     void about();
-    void setTitle(const QString &skinPath);
+    void setTitle(const QString& skinPath);
 
     void addSkinItem(int type);
     void addWidget();
@@ -78,7 +78,6 @@ private:
     // QObject owned
     PropertiesModel* mPropertiesModel;
     AppImageUpdaterBridge::AppImageUpdaterDialog* m_updater;
-
 
     //	QSortFilterProxyModel *m_topfilter;
     //	QSortFilterProxyModel *m_headerfilter;

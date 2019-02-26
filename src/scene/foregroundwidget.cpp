@@ -1,7 +1,8 @@
 #include "foregroundwidget.hpp"
 #include <QPainter>
 
-void ForegroundWidget::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+void ForegroundWidget::paint(QPainter* painter,
+                             const QStyleOptionGraphicsItem* option,
                              QWidget* widget)
 {
     // no blending in the OSD layer

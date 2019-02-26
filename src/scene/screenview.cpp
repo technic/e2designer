@@ -26,8 +26,10 @@ ScreenView::ScreenView(ScreensModel* model)
 
     // set inital scene size and subscribe to changes
     setSceneSize(SkinRepository::outputs()->getOutput(mOutputId).size());
-    connect(SkinRepository::outputs(), &VideoOutputRepository::valueChanged,
-            this, &ScreenView::onOutputChanged);
+    connect(SkinRepository::outputs(),
+            &VideoOutputRepository::valueChanged,
+            this,
+            &ScreenView::onOutputChanged);
 
     mSelector->setZValue(1000.);
     mSelector->setPen(Qt::NoPen);
@@ -41,14 +43,14 @@ ScreenView::ScreenView(ScreensModel* model)
     connect(mScene, &QGraphicsScene::selectionChanged, this, &ScreenView::onSceneSelectionChanged);
 }
 
-void ScreenView::onOutputChanged(int id, const VideoOutput &output)
+void ScreenView::onOutputChanged(int id, const VideoOutput& output)
 {
     if (id == mOutputId) {
         setSceneSize(output.size());
     }
 }
 
-void ScreenView::setSceneSize(const QSize &size)
+void ScreenView::setSceneSize(const QSize& size)
 {
     mScene->setSceneRect(0, 0, size.width(), size.height());
     mBackgroundRect->setRect(0, 0, size.width(), size.height());
@@ -59,17 +61,15 @@ void ScreenView::setSceneSize(const QSize &size)
     mBackground->setTransform(QTransform::fromScale(sw, sh));
 }
 
-QModelIndex ScreenView::normalizeIndex(const QModelIndex &index) const
+QModelIndex ScreenView::normalizeIndex(const QModelIndex& index) const
 {
     return index.sibling(index.row(), ScreensModel::ColumnElement);
 }
 
-QItemSelection ScreenView::makeRowSelection(const QModelIndex &index)
+QItemSelection ScreenView::makeRowSelection(const QModelIndex& index)
 {
-    return QItemSelection(
-            index.sibling(index.row(), 0),
-            index.sibling(index.row(), mModel->columnCount(index.parent()) - 1)
-    );
+    return QItemSelection(index.sibling(index.row(), 0),
+                          index.sibling(index.row(), mModel->columnCount(index.parent()) - 1));
 }
 
 void ScreenView::setScreen(QModelIndex index)
@@ -112,18 +112,26 @@ void ScreenView::setSelectionModel(QItemSelectionModel* model)
     }
     // disconnect from old model
     if (mSelectionModel) {
-        disconnect(mSelectionModel, &QItemSelectionModel::currentChanged,
-                   this, &ScreenView::setCurrentWidget);
-        disconnect(mSelectionModel, &QItemSelectionModel::selectionChanged,
-                   this, &ScreenView::updateSelection);
+        disconnect(mSelectionModel,
+                   &QItemSelectionModel::currentChanged,
+                   this,
+                   &ScreenView::setCurrentWidget);
+        disconnect(mSelectionModel,
+                   &QItemSelectionModel::selectionChanged,
+                   this,
+                   &ScreenView::updateSelection);
     }
     mSelectionModel = model;
     // connect to new model
     if (mSelectionModel) {
-        connect(mSelectionModel, &QItemSelectionModel::currentChanged,
-                this, &ScreenView::setCurrentWidget);
-        connect(mSelectionModel, &QItemSelectionModel::selectionChanged,
-                this, &ScreenView::updateSelection);
+        connect(mSelectionModel,
+                &QItemSelectionModel::currentChanged,
+                this,
+                &ScreenView::setCurrentWidget);
+        connect(mSelectionModel,
+                &QItemSelectionModel::selectionChanged,
+                this,
+                &ScreenView::updateSelection);
     }
 }
 
@@ -149,7 +157,7 @@ void ScreenView::displayBorders(bool display)
     }
 }
 
-void ScreenView::onWidgetChanged(const QModelIndex &index, int key)
+void ScreenView::onWidgetChanged(const QModelIndex& index, int key)
 {
     auto it = mWidgets.find(index);
     if (it != mWidgets.end()) {
@@ -221,20 +229,20 @@ void ScreenView::onSceneSelectionChanged()
 
     FlagSetter fs(&mDisableSelectionSlots);
 
-    for (auto index: mSelectionModel->selectedIndexes()) {
+    for (auto index : mSelectionModel->selectedIndexes()) {
         auto it = mWidgets.find(index);
         if (it != mWidgets.end() && !(*it)->isSelected()) {
             mSelectionModel->select(makeRowSelection(index), QItemSelectionModel::Deselect);
         }
     }
-    for (auto *item: mScene->selectedItems()) {
+    for (auto* item : mScene->selectedItems()) {
         auto w = qgraphicsitem_cast<WidgetView*>(item);
         if (w) {
             mSelectionModel->select(makeRowSelection(w->modelIndex()), QItemSelectionModel::Select);
         }
     }
     if (!mScene->selectedItems().empty()) {
-        auto *item = mScene->selectedItems().back();
+        auto* item = mScene->selectedItems().back();
         auto w = qgraphicsitem_cast<WidgetView*>(item);
         if (w) {
             mSelectionModel->setCurrentIndex(w->modelIndex(), QItemSelectionModel::NoUpdate);
@@ -242,15 +250,14 @@ void ScreenView::onSceneSelectionChanged()
     }
 }
 
-void ScreenView::setCurrentWidget(const QModelIndex &current, const QModelIndex &previous)
+void ScreenView::setCurrentWidget(const QModelIndex& current, const QModelIndex& previous)
 {
     if (mDisableSelectionSlots)
         return;
 
     // previous widget should be in the scene
     if (previous.isValid()) {
-        qDebug() << "previous in the scene:"
-                 << mWidgets.contains(normalizeIndex(previous));
+        qDebug() << "previous in the scene:" << mWidgets.contains(normalizeIndex(previous));
     }
     // find parent Screen
     QModelIndex index = current;
@@ -268,19 +275,18 @@ void ScreenView::setCurrentWidget(const QModelIndex &current, const QModelIndex 
     mWidgets[normalizeIndex(current)]->setSelected(true);
 }
 
-
-void ScreenView::updateSelection(const QItemSelection &selected, const QItemSelection &deselected)
+void ScreenView::updateSelection(const QItemSelection& selected, const QItemSelection& deselected)
 {
     if (mDisableSelectionSlots)
         return;
 
-    for (QModelIndex index: deselected.indexes()) {
+    for (QModelIndex index : deselected.indexes()) {
         auto it = mWidgets.find(index);
         if (it != mWidgets.end()) {
             (*it)->setSelected(false);
         }
     }
-    for (QModelIndex index: selected.indexes()) {
+    for (QModelIndex index : selected.indexes()) {
         auto it = mWidgets.find(index);
         if (it != mWidgets.end()) {
             (*it)->setSelected(true);

@@ -7,14 +7,12 @@ ColorAttr::ColorAttr()
     : mName()
     , mValue(0)
     , m_state(State::Null)
-{
-}
+{}
 ColorAttr::ColorAttr(const QColor& color)
     : mName()
     , mValue(color.rgba())
     , m_state(State::Fixed)
-{
-}
+{}
 
 ColorAttr::ColorAttr(const QString& str, bool invertAlpha)
     : ColorAttr()
@@ -78,10 +76,9 @@ static ConverterRegistrator cr(&ColorAttr::toString);
 
 // CachedColor
 
-CachedColor::CachedColor(const ColorAttr &other)
+CachedColor::CachedColor(const ColorAttr& other)
     : ColorAttr(other)
-{
-}
+{}
 
 QColor CachedColor::getQColor() const
 {
@@ -103,4 +100,3 @@ void CachedColor::updateValue(QRgb value)
 {
     setRawValue(value);
 }
-

@@ -3,9 +3,7 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-VideoOutputRepository::VideoOutputRepository()
-{
-}
+VideoOutputRepository::VideoOutputRepository() {}
 void VideoOutputRepository::addFromXml(QXmlStreamReader& xml)
 {
     VideoOutput out;
@@ -20,7 +18,7 @@ void VideoOutputRepository::toXml(QXmlStreamWriter& xml) const
     }
 }
 
-void VideoOutputRepository::emitValueChanged(const QString &name, const VideoOutput &value) const
+void VideoOutputRepository::emitValueChanged(const QString& name, const VideoOutput& value) const
 {
     Q_UNUSED(name);
     emit valueChanged(value.id(), value);

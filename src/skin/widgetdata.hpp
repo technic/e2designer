@@ -16,7 +16,6 @@
 #include <QVariant>
 #include <vector>
 
-
 class QXmlStreamReader;
 class QXmlStreamWriter;
 class ScreensModel;
@@ -41,8 +40,8 @@ public:
 
     // expose tree functions
     using Base::child;
-    using Base::myIndex;
     using Base::childCount;
+    using Base::myIndex;
 
     // override tree functions to manage model pointer
     // takes ownership
@@ -56,7 +55,13 @@ public:
     void setModel(ScreensModel* model);
 
     // Widget tag
-    enum WidgetType { Screen, Widget, Label, Pixmap };
+    enum WidgetType
+    {
+        Screen,
+        Widget,
+        Label,
+        Pixmap
+    };
     Q_ENUM(WidgetType)
 
     WidgetType type() const { return m_type; }
@@ -67,13 +72,13 @@ public:
 
     // size
     SizeAttr size() const { return m_size; }
-    void resize(const QSizeF &size);
-    void setSize(const SizeAttr &size);
+    void resize(const QSizeF& size);
+    void setSize(const SizeAttr& size);
 
     // postion
     PositionAttr position() const { return m_position; }
-    void move(const QPointF &pos);
-    void setPosition(const PositionAttr &pos);
+    void move(const QPointF& pos);
+    void setPosition(const PositionAttr& pos);
 
     // Access to absolute size and position
     QPoint absolutePosition() const;
@@ -88,18 +93,18 @@ public:
 
     // Colors
     ColorAttr color(int key) const;
-    void setColor(int key, const ColorAttr &color);
+    void setColor(int key, const ColorAttr& color);
     QColor getQColor(int key) const;
     // Pixmaps
     PixmapAttr pixmap(int key) const;
-    void setPixmap(int key, const PixmapAttr &p);
+    void setPixmap(int key, const PixmapAttr& p);
     // Booleans
     bool hasFlag(int key) const;
     void setFlag(int key, bool value);
 
     // Font
     FontAttr font() const { return m_font; }
-    void setFont(const FontAttr &font);
+    void setFont(const FontAttr& font);
 
     // Borders
     int borderWidth() const { return m_borderWidth; }
@@ -107,13 +112,13 @@ public:
 
     // Label
     QString text() const { return m_text; }
-    void setText(const QString &text);
+    void setText(const QString& text);
     PropertyHAlign::Enum halign() const { return m_halign; }
     void setHalign(PropertyHAlign::Enum align);
     PropertyVAlign::Enum valign() const { return m_valign; }
     void setValign(PropertyVAlign::Enum align);
     OffsetAttr shadowOffset() const { return m_shadowOffset; }
-    void setShadowOffset(const OffsetAttr &offset);
+    void setShadowOffset(const OffsetAttr& offset);
     bool noWrap() const { return m_noWrap; }
     void setNoWrap(bool value);
 
@@ -135,24 +140,24 @@ public:
 
     // Widget
     QString name() const { return m_name; }
-    void setName(const QString &name);
+    void setName(const QString& name);
     Property::Render render() const { return m_render; }
     void setRender(Property::Render render);
     QString source() const { return m_source; }
-    void setSource(const QString &source);
+    void setSource(const QString& source);
 
     // Widget preview
     Property::Render previewRender() const { return m_previewRender; }
     void setPreviewRender(Property::Render render);
     QVariant previewValue() const { return m_previewValue; }
-    void setPreviewValue(const QVariant &value);
+    void setPreviewValue(const QVariant& value);
     // Render to use on scene
     Property::Render sceneRender() const;
     QVariant scenePreview() const;
 
     // Screen
     QString title() const { return m_title; }
-    void setTitle(const QString &text);
+    void setTitle(const QString& text);
     Property::Flags flags() const { return m_flags; }
     void setFlags(Property::Flags flags);
 
@@ -162,19 +167,19 @@ public:
 
     // Attribute get/set QVariant methods
     QVariant getAttr(int key) const;
-    bool setAttr(int key, const QVariant &value);
+    bool setAttr(int key, const QVariant& value);
 
     // Required for the optimisation:
     // only widgets which are viewed by someone
     // listen to color/font changed signals
-//    void connectNotify(const QMetaMethod& signal) override;
-//    void disconnectNotify(const QMetaMethod& signal) override;
+    //    void connectNotify(const QMetaMethod& signal) override;
+    //    void disconnectNotify(const QMetaMethod& signal) override;
 
-//signals:
-//    void attrChanged(int key);
-//    void typeChanged(WidgetType type);
+    // signals:
+    //    void attrChanged(int key);
+    //    void typeChanged(WidgetType type);
 
-//private slots:
+    // private slots:
     void onColorChanged(const QString& name, QRgb value);
     void onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value);
     void onFontChanged(const QString& name, const Font& value);
@@ -184,7 +189,7 @@ private:
     void sizeChanged();
     void parentSizeChanged();
     void notifyAttrChange(int key);
-    void setAttrFromXml(int key, const QString &str);
+    void setAttrFromXml(int key, const QString& str);
 
     // Size and position
     Size m_size;
@@ -194,11 +199,11 @@ private:
     QString m_name;
     int m_zValue;
     bool m_transparent;
-//    ColorAttr m_borderColor;
+    //    ColorAttr m_borderColor;
     int m_borderWidth;
 
     // Pixmap
-//    PixmapAttr m_pixmap;
+    //    PixmapAttr m_pixmap;
     Property::Alphatest m_alphatest;
     int m_scale;
 
@@ -207,7 +212,7 @@ private:
     FontAttr m_font;
     PropertyVAlign::Enum m_valign;
     PropertyHAlign::Enum m_halign;
-//    ColorAttr m_shadowColor;
+    //    ColorAttr m_shadowColor;
     OffsetAttr m_shadowOffset;
     bool m_noWrap;
 
@@ -217,14 +222,14 @@ private:
 
     // List
     int m_itemHeight;
-//    PixmapAttr m_selectionPixmap;
-//    bool m_selectionDisabled;
+    //    PixmapAttr m_selectionPixmap;
+    //    bool m_selectionDisabled;
     Property::ScrollbarMode m_scrollbarMode;
-//    bool m_enableWrapAround;
+    //    bool m_enableWrapAround;
 
     // Slider
-//    PixmapAttr m_sliderPixmap;
-//    PixmapAttr m_backgroundPixmap;
+    //    PixmapAttr m_sliderPixmap;
+    //    PixmapAttr m_backgroundPixmap;
     Property::Orientation m_orientation;
 
     // Widget
@@ -247,6 +252,5 @@ private:
     ScreensModel* m_model;
     QMap<QString, QString> m_otherAttributes;
 };
-
 
 #endif // WIDGETDATA_H

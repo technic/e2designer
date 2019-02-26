@@ -18,87 +18,109 @@
 #include <type_traits>
 #include <typeinfo>
 
-
 using Widget = WidgetData;
 
-class AbstractReflection {
+class AbstractReflection
+{
 public:
-    virtual QVariant get(const Widget &w) = 0;
-    virtual void set(Widget &w, const QVariant &v) = 0;
+    virtual QVariant get(const Widget& w) = 0;
+    virtual void set(Widget& w, const QVariant& v) = 0;
     virtual int type() const = 0;
-    virtual QString getStr(const Widget &w) = 0;
-    virtual void setFromStr(Widget &w, const QString &str) = 0;
+    virtual QString getStr(const Widget& w) = 0;
+    virtual void setFromStr(Widget& w, const QString& str) = 0;
     virtual ~AbstractReflection() = default;
 };
 
-template<typename V> using Getter = V (Widget::*)() const;
-template<typename V> using Setter = void (Widget::*)(const V&);
-template<typename V> using SetterValue = void (Widget::*)(V);
+template<typename V>
+using Getter = V (Widget::*)() const;
+template<typename V>
+using Setter = void (Widget::*)(const V&);
+template<typename V>
+using SetterValue = void (Widget::*)(V);
 
-template<typename V> using GetterKey = V (Widget::*)(int) const;
-template<typename V> using SetterKey = void (Widget::*)(int, const V&);
-template<typename V> using SetterKeyValue = void (Widget::*)(int, V);
-
+template<typename V>
+using GetterKey = V (Widget::*)(int) const;
+template<typename V>
+using SetterKey = void (Widget::*)(int, const V&);
+template<typename V>
+using SetterKeyValue = void (Widget::*)(int, V);
 
 template<typename T, typename Getter, typename Setter>
 class Reflection : public AbstractReflection
 {
 public:
     Reflection(Getter get_method, Setter set_method)
-        : m_getter(get_method), m_setter(set_method) {}
+        : m_getter(get_method)
+        , m_setter(set_method)
+    {}
 
-    QVariant get(const Widget &w) final {
+    QVariant get(const Widget& w) final
+    {
         const T& t = (w.*m_getter)();
         return QVariant::fromValue(t);
     }
-    void set(Widget &w, const QVariant &v) final {
+    void set(Widget& w, const QVariant& v) final
+    {
         const T& t = v.value<T>();
         (w.*m_setter)(t);
     }
-    QString getStr(const Widget &w) final {
+    QString getStr(const Widget& w) final
+    {
         const T& t = (w.*m_getter)();
         return serialize(t);
     }
-    void setFromStr(Widget &w, const QString &str) final {
+    void setFromStr(Widget& w, const QString& str) final
+    {
         T t;
         deserialize(str, t);
         (w.*m_setter)(t);
     }
     int type() const final { return qMetaTypeId<T>(); }
+
 private:
     Getter m_getter;
     Setter m_setter;
 };
 
 template<typename T, typename Getter, typename Setter>
-Reflection<T, Getter, Setter>* makeReflection(Getter g, Setter s) {
+Reflection<T, Getter, Setter>* makeReflection(Getter g, Setter s)
+{
     return new Reflection<T, Getter, Setter>(g, s);
 }
 
 template<typename T, typename GetterKey, typename SetterKey>
-class ReflectionKey : public AbstractReflection {
+class ReflectionKey : public AbstractReflection
+{
 public:
     ReflectionKey(int key, GetterKey get_method, SetterKey set_method)
-        : m_key(key), m_getter(get_method), m_setter(set_method) {}
+        : m_key(key)
+        , m_getter(get_method)
+        , m_setter(set_method)
+    {}
 
-    QVariant get(const Widget &w) final {
+    QVariant get(const Widget& w) final
+    {
         const T& t = (w.*m_getter)(m_key);
         return QVariant::fromValue(t);
     }
-    void set(Widget &w, const QVariant &v) final {
+    void set(Widget& w, const QVariant& v) final
+    {
         const T& t = v.value<T>();
         (w.*m_setter)(m_key, t);
     }
-    QString getStr(const Widget &w) final {
+    QString getStr(const Widget& w) final
+    {
         const T& t = (w.*m_getter)(m_key);
         return serialize(t);
     }
-    void setFromStr(Widget &w, const QString &str) final {
+    void setFromStr(Widget& w, const QString& str) final
+    {
         T t;
         deserialize(str, t);
         (w.*m_setter)(m_key, t);
     }
     int type() const final { return qMetaTypeId<T>(); }
+
 private:
     int m_key;
     GetterKey m_getter;
@@ -106,38 +128,42 @@ private:
 };
 
 template<typename T, typename GetterKey, typename SetterKey>
-ReflectionKey<T, GetterKey, SetterKey>* makeReflectionKey(int k, GetterKey g, SetterKey s) {
+ReflectionKey<T, GetterKey, SetterKey>* makeReflectionKey(int k, GetterKey g, SetterKey s)
+{
     return new ReflectionKey<T, GetterKey, SetterKey>(k, g, s);
 }
 
-class WidgetReflection {
+class WidgetReflection
+{
     Q_DISABLE_COPY(WidgetReflection)
 public:
     WidgetReflection();
 
     template<typename T>
-    void add(int k, Getter<T> g, Setter<T> s) {
+    void add(int k, Getter<T> g, Setter<T> s)
+    {
         Q_ASSERT(m_funcs.find(k) == m_funcs.end());
         m_funcs[k] = makeReflection<T>(g, s);
     }
     template<typename T>
-    void add(int k, Getter<T> g, SetterValue<T> s) {
+    void add(int k, Getter<T> g, SetterValue<T> s)
+    {
         Q_ASSERT(m_funcs.find(k) == m_funcs.end());
         m_funcs[k] = makeReflection<T>(g, s);
     }
     template<typename T>
-    void add(int k, GetterKey<T> g, SetterKey<T> s) {
+    void add(int k, GetterKey<T> g, SetterKey<T> s)
+    {
         Q_ASSERT(m_funcs.find(k) == m_funcs.end());
         m_funcs[k] = makeReflectionKey<T>(k, g, s);
     }
     template<typename T>
-    void add(int k, GetterKey<T> g, SetterKeyValue<T> s) {
+    void add(int k, GetterKey<T> g, SetterKeyValue<T> s)
+    {
         Q_ASSERT(m_funcs.find(k) == m_funcs.end());
         m_funcs[k] = makeReflectionKey<T>(k, g, s);
     }
-    ~WidgetReflection() {
-        qDeleteAll(m_funcs);
-    }
+    ~WidgetReflection() { qDeleteAll(m_funcs); }
     using Hash = QHash<int, AbstractReflection*>;
     // Allow iteration
     inline Hash::const_iterator cbegin() const { return m_funcs.cbegin(); }
@@ -145,11 +171,13 @@ public:
     inline Hash::const_iterator find(int key) const { return m_funcs.find(key); }
     // test:
     bool hasAllKeys();
+
 private:
     QHash<int, AbstractReflection*> m_funcs;
 };
 
-WidgetReflection::WidgetReflection() {
+WidgetReflection::WidgetReflection()
+{
     using p = Property;
     using w = WidgetData;
 
@@ -210,7 +238,6 @@ bool WidgetReflection::hasAllKeys()
 
 static WidgetReflection reflection;
 
-
 // WidgetData
 
 WidgetData::WidgetData()
@@ -235,11 +262,9 @@ WidgetData::WidgetData()
     Q_ASSERT(reflection.hasAllKeys());
 }
 
-WidgetData::~WidgetData()
-{
-}
+WidgetData::~WidgetData() {}
 
-bool WidgetData::insertChild(int position, WidgetData *child)
+bool WidgetData::insertChild(int position, WidgetData* child)
 {
     bool inserted = Base::insertChild(position, child);
     if (inserted) {
@@ -248,7 +273,7 @@ bool WidgetData::insertChild(int position, WidgetData *child)
     return inserted;
 }
 
-bool WidgetData::insertChildren(int position, QVector<WidgetData *> list)
+bool WidgetData::insertChildren(int position, QVector<WidgetData*> list)
 {
     bool inserted = Base::insertChildren(position, list);
     if (inserted) {
@@ -259,16 +284,16 @@ bool WidgetData::insertChildren(int position, QVector<WidgetData *> list)
     return inserted;
 }
 
-QVector<WidgetData *> WidgetData::takeChildren(int position, int count)
+QVector<WidgetData*> WidgetData::takeChildren(int position, int count)
 {
     auto list = Base::takeChildren(position, count);
-    for (auto *w : qAsConst(list)) {
+    for (auto* w : qAsConst(list)) {
         w->setModel(nullptr);
     }
     return list;
 }
 
-void WidgetData::setModel(ScreensModel *model)
+void WidgetData::setModel(ScreensModel* model)
 {
     m_model = model;
     for (int i = 0; i < childCount(); ++i) {
@@ -281,7 +306,7 @@ bool WidgetData::setType(int type)
     int typeCount = QMetaEnum::fromType<WidgetType>().keyCount();
     if (type >= 0 && type < typeCount) {
         m_type = static_cast<WidgetType>(type);
-//        emit typeChanged(m_type);
+        //        emit typeChanged(m_type);
         return true;
     }
     return false;
@@ -290,7 +315,7 @@ bool WidgetData::setType(int type)
 void WidgetData::setType(WidgetType type)
 {
     m_type = type;
-//    emit typeChanged(m_type);
+    //    emit typeChanged(m_type);
 }
 
 QString WidgetData::typeStr() const
@@ -307,7 +332,7 @@ QString WidgetData::typeStr() const
     }
 }
 
-WidgetData::WidgetType WidgetData::strToType(const QStringRef &str, bool& ok)
+WidgetData::WidgetType WidgetData::strToType(const QStringRef& str, bool& ok)
 {
     ok = true;
     if (str == "screen") {
@@ -324,25 +349,25 @@ WidgetData::WidgetType WidgetData::strToType(const QStringRef &str, bool& ok)
     }
 }
 
-void WidgetData::resize(const QSizeF &size)
+void WidgetData::resize(const QSizeF& size)
 {
     m_size.setSize(*this, size.toSize());
     sizeChanged();
 }
 
-void WidgetData::setSize(const SizeAttr &size)
+void WidgetData::setSize(const SizeAttr& size)
 {
     m_size = size;
     sizeChanged();
 }
 
-void WidgetData::move(const QPointF &pos)
+void WidgetData::move(const QPointF& pos)
 {
     m_position.setPoint(*this, pos.toPoint());
     notifyAttrChange(Property::position);
 }
 
-void WidgetData::setPosition(const PositionAttr &pos)
+void WidgetData::setPosition(const PositionAttr& pos)
 {
     m_position = pos;
     notifyAttrChange(Property::position);
@@ -360,7 +385,7 @@ QSize WidgetData::selfSize() const
 
 QSize WidgetData::parentSize() const
 {
-    MixinTreeNode<WidgetData> *p = parent();
+    MixinTreeNode<WidgetData>* p = parent();
     if (p && p->isChild()) {
         return p->self()->selfSize();
     } else {
@@ -368,7 +393,8 @@ QSize WidgetData::parentSize() const
     }
 }
 
-void WidgetData::setZPosition(int z) {
+void WidgetData::setZPosition(int z)
+{
     m_zValue = z;
     notifyAttrChange(Property::zPosition);
 }
@@ -389,7 +415,7 @@ ColorAttr WidgetData::color(int key) const
     }
 }
 
-void WidgetData::setColor(int key, const ColorAttr &color)
+void WidgetData::setColor(int key, const ColorAttr& color)
 {
     m_colors[key] = color;
     if (m_model) {
@@ -416,7 +442,7 @@ QColor WidgetData::getQColor(int key) const
     }
 }
 
-void WidgetData::setFont(const FontAttr &font)
+void WidgetData::setFont(const FontAttr& font)
 {
     m_font = font;
     notifyAttrChange(Property::font);
@@ -424,26 +450,29 @@ void WidgetData::setFont(const FontAttr &font)
 
 void WidgetData::setBorderWidth(int px)
 {
-    m_borderWidth = px; notifyAttrChange(Property::borderWidth);
+    m_borderWidth = px;
+    notifyAttrChange(Property::borderWidth);
 }
 
-void WidgetData::setText(const QString &text)
+void WidgetData::setText(const QString& text)
 {
     m_text = text;
     notifyAttrChange(Property::text);
 }
 
-void WidgetData::setHalign(PropertyHAlign::Enum align) {
+void WidgetData::setHalign(PropertyHAlign::Enum align)
+{
     m_halign = align;
     notifyAttrChange(Property::halign);
 }
 
-void WidgetData::setValign(PropertyVAlign::Enum align) {
+void WidgetData::setValign(PropertyVAlign::Enum align)
+{
     m_valign = align;
     notifyAttrChange(Property::valign);
 }
 
-void WidgetData::setShadowOffset(const OffsetAttr &offset)
+void WidgetData::setShadowOffset(const OffsetAttr& offset)
 {
     m_shadowOffset = offset;
     notifyAttrChange(Property::shadowOffset);
@@ -472,7 +501,7 @@ PixmapAttr WidgetData::pixmap(int key) const
     return m_pixmaps[key];
 }
 
-void WidgetData::setPixmap(int key, const PixmapAttr &p)
+void WidgetData::setPixmap(int key, const PixmapAttr& p)
 {
     m_pixmaps[key] = p;
     notifyAttrChange(key);
@@ -507,7 +536,7 @@ void WidgetData::setOrientation(Property::Orientation orientation)
     notifyAttrChange(Property::orientation);
 }
 
-void WidgetData::setName(const QString &name)
+void WidgetData::setName(const QString& name)
 {
     m_name = name;
     notifyAttrChange(Property::name);
@@ -519,7 +548,7 @@ void WidgetData::setRender(Property::Render render)
     notifyAttrChange(Property::render);
 }
 
-void WidgetData::setSource(const QString &source)
+void WidgetData::setSource(const QString& source)
 {
     m_source = source;
     notifyAttrChange(Property::source);
@@ -531,7 +560,7 @@ void WidgetData::setPreviewRender(Property::Render render)
     notifyAttrChange(Property::previewRender);
 }
 
-void WidgetData::setPreviewValue(const QVariant &value)
+void WidgetData::setPreviewValue(const QVariant& value)
 {
     m_previewValue = value;
     notifyAttrChange(Property::previewValue);
@@ -551,7 +580,7 @@ QVariant WidgetData::scenePreview() const
         if (i < 1) {
             m_converters[i]->attach(source);
         } else {
-            m_converters[i]->attach(m_converters[i-1].get());
+            m_converters[i]->attach(m_converters[i - 1].get());
         }
     }
     Source* finalSource = source;
@@ -569,7 +598,7 @@ QVariant WidgetData::scenePreview() const
     }
 }
 
-void WidgetData::setTitle(const QString &text)
+void WidgetData::setTitle(const QString& text)
 {
     m_title = text;
     notifyAttrChange(Property::title);
@@ -652,7 +681,7 @@ void WidgetData::toXml(QXmlStreamWriter& xml) const
     xml.writeStartElement(typeStr());
 
     QMetaEnum meta = Property::propertyEnum();
-    for (const QString &name: m_propertiesOrder) {
+    for (const QString& name : m_propertiesOrder) {
         bool ok;
         int key = meta.keyToValue(name.toLatin1().data(), &ok);
         QString value;
@@ -703,7 +732,7 @@ QVariant WidgetData::getAttr(int key) const
     }
 }
 
-bool WidgetData::setAttr(int key, const QVariant &value)
+bool WidgetData::setAttr(int key, const QVariant& value)
 {
     auto it = reflection.find(key);
     if (it != reflection.cend()) {
@@ -784,11 +813,10 @@ void WidgetData::notifyAttrChange(int key)
     }
 }
 
-void WidgetData::setAttrFromXml(int key, const QString &str)
+void WidgetData::setAttrFromXml(int key, const QString& str)
 {
     auto it = reflection.find(key);
     if (it != reflection.cend()) {
         (*it)->setFromStr(*this, str);
     }
 }
-

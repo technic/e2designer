@@ -4,7 +4,7 @@
 
 // EnumAttr
 
-template <class Enum>
+template<class Enum>
 EnumAttr<Enum>::EnumAttr()
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
@@ -14,7 +14,7 @@ EnumAttr<Enum>::EnumAttr()
         mValue = 0;
 }
 
-template <class Enum>
+template<class Enum>
 EnumAttr<Enum>::EnumAttr(const QString& str)
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
@@ -26,14 +26,14 @@ EnumAttr<Enum>::EnumAttr(const QString& str)
     }
 }
 
-template <class Enum>
+template<class Enum>
 EnumAttr<Enum>::EnumAttr(const int value)
 {
     // TODO: bounds check?
     mValue = value;
 }
 
-template <class Enum>
+template<class Enum>
 QString EnumAttr<Enum>::toStr(bool emptyDefault) const
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
@@ -46,7 +46,7 @@ QString EnumAttr<Enum>::toStr(bool emptyDefault) const
     return QString();
 }
 
-template <class Enum>
+template<class Enum>
 QStringList EnumAttr<Enum>::toStrList() const
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();

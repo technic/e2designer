@@ -6,8 +6,7 @@
 Border::Border()
     : m_bp(bpInvalid)
     , m_fname()
-{
-}
+{}
 void Border::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "pixmap");

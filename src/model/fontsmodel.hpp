@@ -59,10 +59,17 @@ class FontsModel : public QAbstractTableModel, public FontsList
 public:
     explicit FontsModel(QObject* parent = nullptr);
 
-    enum { ColumnName, ColumnFile, ColumnFont, ColumnsCount };
+    enum
+    {
+        ColumnName,
+        ColumnFile,
+        ColumnFont,
+        ColumnsCount
+    };
 
     // Header:
-    QVariant headerData(int section, Qt::Orientation orientation,
+    QVariant headerData(int section,
+                        Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
     // Basic functionality:

@@ -10,7 +10,8 @@ class RectHandle : public QGraphicsRectItem
 public:
     static constexpr int handle_size = 8;
 
-    enum {
+    enum
+    {
         Top = 0x1,
         Bottom = 0x2,
         Left = 0x4,

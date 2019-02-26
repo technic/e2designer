@@ -8,10 +8,14 @@ CodeEditor::CodeEditor(QWidget* parent)
 {
     m_numbers_area = new LineNumberArea(this);
 
-    QObject::connect(this, &QPlainTextEdit::blockCountChanged, this,
+    QObject::connect(this,
+                     &QPlainTextEdit::blockCountChanged,
+                     this,
                      &CodeEditor::updateLineNumberAreaWidth);
     QObject::connect(this, &QPlainTextEdit::updateRequest, this, &CodeEditor::updateLineNumberArea);
-    QObject::connect(this, &QPlainTextEdit::cursorPositionChanged, this,
+    QObject::connect(this,
+                     &QPlainTextEdit::cursorPositionChanged,
+                     this,
                      &CodeEditor::highlightCurrentLine);
 
     updateLineNumberAreaWidth(0);
@@ -31,8 +35,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
             painter.setPen(Qt::black);
-            painter.drawText(0, top, m_numbers_area->width() - 2, fontMetrics().height(),
-                             Qt::AlignRight, number);
+            painter.drawText(
+              0, top, m_numbers_area->width() - 2, fontMetrics().height(), Qt::AlignRight, number);
         }
 
         block = block.next();

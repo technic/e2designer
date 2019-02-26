@@ -3,7 +3,7 @@
 
 #include <QtGlobal>
 
-template <typename T>
+template<typename T>
 class SingletonMixin
 {
     Q_DISABLE_COPY(SingletonMixin)

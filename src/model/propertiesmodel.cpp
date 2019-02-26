@@ -1,7 +1,7 @@
 #include "propertiesmodel.hpp"
 #include "repository/skinrepository.hpp"
 
-PropertiesModel::PropertiesModel(ScreensModel *model, QObject* parent)
+PropertiesModel::PropertiesModel(ScreensModel* model, QObject* parent)
     : QAbstractItemModel(parent)
     , mDummyRoot(Property::invalid)
     , mRoot(&mDummyRoot)
@@ -9,17 +9,17 @@ PropertiesModel::PropertiesModel(ScreensModel *model, QObject* parent)
     , mObserver(new WidgetObserverRegistrator(model, QModelIndex()))
 {
     Q_CHECK_PTR(mModel);
-    connect(mModel, &ScreensModel::widgetChanged,
-            this, &PropertiesModel::onAttributeChanged);
+    connect(mModel, &ScreensModel::widgetChanged, this, &PropertiesModel::onAttributeChanged);
 
-    connect(mModel, &ScreensModel::modelAboutToBeReset,
-            this, &PropertiesModel::onModelAboutToBeReset);
+    connect(mModel,
+            &ScreensModel::modelAboutToBeReset,
+            this,
+            &PropertiesModel::onModelAboutToBeReset);
 }
 
-PropertiesModel::~PropertiesModel()
-= default;
+PropertiesModel::~PropertiesModel() = default;
 
-void PropertiesModel::setWidget(const QModelIndex &index)
+void PropertiesModel::setWidget(const QModelIndex& index)
 {
     beginResetModel();
     mIndex = index;
@@ -32,22 +32,22 @@ void PropertiesModel::setWidget(const QModelIndex &index)
     }
     mObserver->setIndex(index);
 
-//    if (mData != nullptr) {
-//        disconnect(mData, &WidgetData::attrChanged,
-//                   this, &PropertiesModel::onAttributeChanged);
-//        disconnect(mData, &QObject::destroyed,
-//                   this, &PropertiesModel::onWidgetDestroyed);
-//    }
+    //    if (mData != nullptr) {
+    //        disconnect(mData, &WidgetData::attrChanged,
+    //                   this, &PropertiesModel::onAttributeChanged);
+    //        disconnect(mData, &QObject::destroyed,
+    //                   this, &PropertiesModel::onWidgetDestroyed);
+    //    }
 
-//    mData = widget;
+    //    mData = widget;
 
-//    if (mData != nullptr) {
-//        mRoot = mData->adaptersRoot();
-//        connect(mData, &WidgetData::attrChanged, this, &PropertiesModel::onAttributeChanged);
-//        connect(mData, &QObject::destroyed, this, &PropertiesModel::onWidgetDestroyed);
-//    } else {
-//        mRoot = &dummyItem;
-//    }
+    //    if (mData != nullptr) {
+    //        mRoot = mData->adaptersRoot();
+    //        connect(mData, &WidgetData::attrChanged, this, &PropertiesModel::onAttributeChanged);
+    //        connect(mData, &QObject::destroyed, this, &PropertiesModel::onWidgetDestroyed);
+    //    } else {
+    //        mRoot = &dummyItem;
+    //    }
 
     endResetModel();
 }
@@ -138,13 +138,13 @@ bool PropertiesModel::setData(const QModelIndex& index, const QVariant& value, i
     if (!index.isValid())
         return false;
 
-    AttrItem &item = *static_cast<AttrItem*>(index.internalPointer());
+    AttrItem& item = *static_cast<AttrItem*>(index.internalPointer());
 
     switch (index.column()) {
     case ColumnValue: {
-        const QVariant &newValue = item.convert(value, role);
+        const QVariant& newValue = item.convert(value, role);
         if (newValue.isValid()) {
-                mModel->setWidgetAttr(mIndex, item.key(), newValue);
+            mModel->setWidgetAttr(mIndex, item.key(), newValue);
         }
         return true;
     }
@@ -167,11 +167,11 @@ Qt::ItemFlags PropertiesModel::flags(const QModelIndex& index) const
     }
 }
 
-void PropertiesModel::onAttributeChanged(const QModelIndex &index, int key)
+void PropertiesModel::onAttributeChanged(const QModelIndex& index, int key)
 {
     if (index != mIndex)
         return;
-    AttrItem *item = mTree->getItemPtr(key);
+    AttrItem* item = mTree->getItemPtr(key);
     if (item) {
         QModelIndex index = createIndex(item->myIndex(), ColumnValue, item);
         emit dataChanged(index, index);
@@ -185,7 +185,7 @@ void PropertiesModel::onModelAboutToBeReset()
     setWidget(QModelIndex());
 }
 
-//void PropertiesModel::onWidgetDestroyed()
+// void PropertiesModel::onWidgetDestroyed()
 //{
 //    mData = nullptr;
 //    beginResetModel();

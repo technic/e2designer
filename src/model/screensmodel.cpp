@@ -8,7 +8,7 @@
 
 // ScreensTree
 
-void ScreensTree::loadPreviews(const QString &path)
+void ScreensTree::loadPreviews(const QString& path)
 {
     mPreviews.clear();
 
@@ -63,7 +63,7 @@ void ScreensTree::loadPreviews(const QString &path)
     }
 }
 
-void ScreensTree::savePreviews(const QString &path)
+void ScreensTree::savePreviews(const QString& path)
 {
     QFile file(path);
     bool ok = file.open(QIODevice::WriteOnly);
@@ -92,7 +92,7 @@ void ScreensTree::savePreviews(const QString &path)
             xml.writeAttribute("name", w.key());
             xml.writeAttribute("value", valueStr);
             xml.writeAttribute("render", renderStr);
-            xml.writeAttribute("type", "string");  // compatibility
+            xml.writeAttribute("type", "string"); // compatibility
             xml.writeEndElement();
         }
         xml.writeEndElement();
@@ -115,7 +115,10 @@ Preview ScreensTree::getPreview(const QString& screen, const QString& widget) co
 
 // ScreensModel
 
-ScreensModel::ScreensModel(ColorsModel& colors, ColorRolesModel &roles, FontsModel& fonts, QObject* parent)
+ScreensModel::ScreensModel(ColorsModel& colors,
+                           ColorRolesModel& roles,
+                           FontsModel& fonts,
+                           QObject* parent)
     : QAbstractItemModel(parent)
     , m_colorsModel(colors)
     , m_colorRolesModel(roles)
@@ -263,7 +266,7 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
 Qt::ItemFlags ScreensModel::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
-        return Qt::ItemIsDropEnabled;  // Drops to the root item
+        return Qt::ItemIsDropEnabled; // Drops to the root item
 
     auto commonFlags = Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsDragEnabled;
 
@@ -320,18 +323,21 @@ void ScreensModel::clear()
     mCommander->clear();
 }
 
-bool ScreensModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count,
-                            const QModelIndex& destinationParent, int destinationChild)
+bool ScreensModel::moveRows(const QModelIndex& sourceParent,
+                            int sourceRow,
+                            int count,
+                            const QModelIndex& destinationParent,
+                            int destinationChild)
 {
     if (!isValidMove(sourceParent, sourceRow, count, destinationParent, destinationChild)) {
         return false;
     }
 
-    auto *source = indexToItem(sourceParent);
-    auto *destination = indexToItem(destinationParent);
+    auto* source = indexToItem(sourceParent);
+    auto* destination = indexToItem(destinationParent);
 
-    if (beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1,
-                      destinationParent, destinationChild)) {
+    if (beginMoveRows(
+          sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild)) {
         auto items = source->takeChildren(sourceRow, count);
         if (source == destination && sourceRow < destinationChild) {
             destinationChild -= count;
@@ -343,7 +349,7 @@ bool ScreensModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int 
     return false;
 }
 
-QMimeData*ScreensModel::mimeData(const QModelIndexList& indexes) const
+QMimeData* ScreensModel::mimeData(const QModelIndexList& indexes) const
 {
     if (indexes.count() <= 0)
         return nullptr;
@@ -361,8 +367,11 @@ QMimeData*ScreensModel::mimeData(const QModelIndexList& indexes) const
     return data;
 }
 
-bool ScreensModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
-                                int row, int column, const QModelIndex& parent)
+bool ScreensModel::dropMimeData(const QMimeData* data,
+                                Qt::DropAction action,
+                                int row,
+                                int column,
+                                const QModelIndex& parent)
 {
     if (action == Qt::IgnoreAction)
         return true;
@@ -380,7 +389,7 @@ bool ScreensModel::dropMimeData(const QMimeData* data, Qt::DropAction action,
     QVector<QModelIndex> rows = decodeRows(stream);
 
     bool ok = true;
-    for (auto index: qAsConst(rows)) {
+    for (auto index : qAsConst(rows)) {
         ok |= moveRow(index.parent(), index.row(), parent, row);
     }
     // Default implemententation removes successfully moved out rows, return false to disable it.
@@ -413,7 +422,7 @@ void ScreensModel::toXml(QXmlStreamWriter& xml)
     }
 }
 
-const WidgetData &ScreensModel::widget(const QModelIndex &index) const
+const WidgetData& ScreensModel::widget(const QModelIndex& index) const
 {
     if (!index.isValid())
         qWarning() << "You asked for a widget at bad index!";
@@ -431,7 +440,7 @@ QVariant ScreensModel::widgetAttr(const QModelIndex& index, int key) const
 
 bool ScreensModel::setWidgetAttr(const QModelIndex& index, int key, const QVariant& value)
 {
-    auto *widget = indexToItem(index);
+    auto* widget = indexToItem(index);
     if (widget) {
         mCommander->push(new AttrCommand(widget, key, value));
         return true;
@@ -439,23 +448,24 @@ bool ScreensModel::setWidgetAttr(const QModelIndex& index, int key, const QVaria
     return false;
 }
 
-void ScreensModel::resizeWidget(const QModelIndex &index, const QSize &size)
+void ScreensModel::resizeWidget(const QModelIndex& index, const QSize& size)
 {
-    auto *widget = indexToItem(index);
+    auto* widget = indexToItem(index);
     if (widget) {
         mCommander->push(new ResizeWidgetCommand(widget, size));
     }
 }
 
-void ScreensModel::moveWidget(const QModelIndex &index, const QPoint &pos)
+void ScreensModel::moveWidget(const QModelIndex& index, const QPoint& pos)
 {
-    auto *widget = indexToItem(index);
+    auto* widget = indexToItem(index);
     if (widget) {
         mCommander->push(new MoveWidgetCommand(widget, pos));
     }
 }
 
-void ScreensModel::registerObserver(const QModelIndex& index) {
+void ScreensModel::registerObserver(const QModelIndex& index)
+{
     if (!index.isValid())
         return;
     if (m_observers[index]++ == 0) {
@@ -463,15 +473,16 @@ void ScreensModel::registerObserver(const QModelIndex& index) {
     }
 }
 
-void ScreensModel::unregisterObserver(const QModelIndex& index) {
+void ScreensModel::unregisterObserver(const QModelIndex& index)
+{
     if (!index.isValid())
         return;
-	auto it = m_observers.find(index);
+    auto it = m_observers.find(index);
     if (it != m_observers.end()) {
         it.value()--;
         if (it.value() == 0) {
             m_observers.erase(it);
-		}
+        }
     } else {
         qWarning() << "observers map corrupted";
     }
@@ -479,25 +490,25 @@ void ScreensModel::unregisterObserver(const QModelIndex& index) {
 
 void ScreensModel::widgetAttrHasChanged(const WidgetData* widget, int attrKey)
 {
-    QModelIndex index = createIndex(widget->myIndex(), ColumnElement,
-                                    const_cast<WidgetData *>(widget));
+    QModelIndex index =
+      createIndex(widget->myIndex(), ColumnElement, const_cast<WidgetData*>(widget));
     emit widgetChanged(index, attrKey);
 
-//    switch (widget->type()) {
-//    case WidgetData::Label:
-//        if (attrKey != Property::text)
-//            return;
-//        break;
-//    case WidgetData::Pixmap:
-//        if (attrKey != Property::pixmap)
-//            return;
-//        break;
-//    case WidgetData::Screen:
-//    case WidgetData::Widget:
-//        if (attrKey != Property::name)
-//            return;
-//        break;
-//    }
+    //    switch (widget->type()) {
+    //    case WidgetData::Label:
+    //        if (attrKey != Property::text)
+    //            return;
+    //        break;
+    //    case WidgetData::Pixmap:
+    //        if (attrKey != Property::pixmap)
+    //            return;
+    //        break;
+    //    case WidgetData::Screen:
+    //    case WidgetData::Widget:
+    //        if (attrKey != Property::name)
+    //            return;
+    //        break;
+    //    }
     switch (attrKey) {
     case Property::text:
     case Property::name:
@@ -508,7 +519,7 @@ void ScreensModel::widgetAttrHasChanged(const WidgetData* widget, int attrKey)
     }
 }
 
-void ScreensModel::onColorChanged(const QString &name, QRgb value)
+void ScreensModel::onColorChanged(const QString& name, QRgb value)
 {
     for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
         auto* w = indexToItem(it.key());
@@ -524,7 +535,7 @@ void ScreensModel::onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb v
     }
 }
 
-void ScreensModel::onFontChanged(const QString &name, const Font &value)
+void ScreensModel::onFontChanged(const QString& name, const Font& value)
 {
     for (auto it = m_observers.begin(); it != m_observers.end(); ++it) {
         auto* w = indexToItem(it.key());
@@ -532,7 +543,7 @@ void ScreensModel::onFontChanged(const QString &name, const Font &value)
     }
 }
 
-ScreensModel::Item *ScreensModel::indexToItem(const QModelIndex &index) const
+ScreensModel::Item* ScreensModel::indexToItem(const QModelIndex& index) const
 {
     if (index.isValid()) {
         Q_ASSERT(index.model() == this);
@@ -548,13 +559,16 @@ ScreensModel::Item* ScreensModel::castItem(const QModelIndex& index)
     return static_cast<Item*>(index.internalPointer());
 }
 
-bool ScreensModel::isValidMove(const QModelIndex& sourceParent, int sourceRow, int count,
-                               const QModelIndex& destinationParent, int destinationChild) const
+bool ScreensModel::isValidMove(const QModelIndex& sourceParent,
+                               int sourceRow,
+                               int count,
+                               const QModelIndex& destinationParent,
+                               int destinationChild) const
 {
-    if (sourceRow >= 0 && sourceRow + count <= rowCount(sourceParent)
-        && destinationChild >= 0 && destinationChild <= rowCount(destinationParent)) {
-        bool overlap = (sourceParent == destinationParent)
-            && (destinationChild >= sourceRow && destinationChild <= sourceRow + count);
+    if (sourceRow >= 0 && sourceRow + count <= rowCount(sourceParent) && destinationChild >= 0 &&
+        destinationChild <= rowCount(destinationParent)) {
+        bool overlap = (sourceParent == destinationParent) &&
+                       (destinationChild >= sourceRow && destinationChild <= sourceRow + count);
         return !overlap;
     }
     return false;
@@ -602,7 +616,7 @@ void ScreensModel::updatePreviewMap()
     }
 }
 
-void ScreensModel::savePreviewTree(const QString &path)
+void ScreensModel::savePreviewTree(const QString& path)
 {
     // When iterating over QMap order is sorted by name
     // Here walk over the tree structure
@@ -634,7 +648,7 @@ void ScreensModel::savePreviewTree(const QString &path)
             xml.writeAttribute("name", widget->name());
             xml.writeAttribute("value", valueStr);
             xml.writeAttribute("render", renderStr);
-            xml.writeAttribute("type", "string");  // compatibility
+            xml.writeAttribute("type", "string"); // compatibility
             xml.writeEndElement();
         }
         xml.writeEndElement();

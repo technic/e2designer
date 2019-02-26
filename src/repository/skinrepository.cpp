@@ -10,8 +10,7 @@ SkinRepository::SkinRepository(QObject* parent)
     , mRoles(*mColors)
     , mFonts(new FontsModel(this))
     , mScreensModel(new ScreensModel(*mColors, mRoles, *mFonts, this))
-{
-}
+{}
 
 QSize SkinRepository::outputSize() const
 {
@@ -106,8 +105,8 @@ bool SkinRepository::save()
     xml.writeEndDocument();
 
     file.close();
-    //mScreensModel->updatePreviewMap();
-    //mScreensModel->savePreviews(previewFilePath());
+    // mScreensModel->updatePreviewMap();
+    // mScreensModel->savePreviews(previewFilePath());
     mScreensModel->savePreviewTree(previewFilePath());
     return true;
 }

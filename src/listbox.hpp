@@ -12,8 +12,7 @@ class ListBox : public QComboBox
 public:
     ListBox(QWidget* parent = Q_NULLPTR)
         : QComboBox(parent)
-    {
-    }
+    {}
     SkinEnumList list() const;
     void setList(SkinEnumList value);
 };

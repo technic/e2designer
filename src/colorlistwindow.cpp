@@ -19,13 +19,14 @@ ColorListWindow::ColorListWindow(QWidget* parent)
 {
     ui->setupUi(this);
 
-
     connect(ui->removeButton, &QPushButton::clicked, this, &ColorListWindow::remove);
     connect(ui->newButton, &QPushButton::clicked, this, &ColorListWindow::addDefault);
     connect(ui->upButton, &QToolButton::clicked, this, &ColorListWindow::moveUp);
     connect(ui->downButton, &QToolButton::clicked, this, &ColorListWindow::moveDown);
 
-    connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, this,
+    connect(ui->tableView->selectionModel(),
+            &QItemSelectionModel::currentRowChanged,
+            this,
             &ColorListWindow::currentChanged);
 
     ui->tableView->setModel(mModel);
@@ -54,7 +55,9 @@ ColorListWindow::ColorListWindow(QWidget* parent)
     mMapper->setModel(mModel);
     mMapper->addMapping(ui->name, ColorsModel::ColumnName);
     mMapper->addMapping(this, ColorsModel::ColumnColor, "color");
-    connect(ui->tableView->selectionModel(), &QItemSelectionModel::currentRowChanged, mMapper,
+    connect(ui->tableView->selectionModel(),
+            &QItemSelectionModel::currentRowChanged,
+            mMapper,
             &QDataWidgetMapper::setCurrentModelIndex);
     mMapper->toFirst();
     // submit immediately
@@ -71,12 +74,12 @@ void ColorListWindow::updateColorWidgets(const QColor& col)
     FlagSetter fs(&m_updating);
 
     const std::array<QWidget*, 16> widgets = {
-        ui->wheel, ui->edit_hex,
-        ui->slider_red, ui->slider_green, ui->slider_blue,
-        ui->spin_red, ui->spin_green, ui->spin_blue,
-        ui->slider_hue, ui->slider_saturation, ui->slider_value,
-        ui->spin_hue, ui->spin_saturation, ui->spin_value,
-        ui->spin_alpha, ui->slider_alpha
+        ui->wheel,      ui->edit_hex,                            //
+        ui->slider_red, ui->slider_green,      ui->slider_blue,  // RGB
+        ui->spin_red,   ui->spin_green,        ui->spin_blue,    // RGB
+        ui->slider_hue, ui->slider_saturation, ui->slider_value, // HSV
+        ui->spin_hue,   ui->spin_saturation,   ui->spin_value,   // HSV
+        ui->spin_alpha, ui->slider_alpha                         //
     };
     for (auto& w : widgets) {
         w->blockSignals(true);
@@ -166,14 +169,18 @@ void ColorListWindow::setFromWheel()
 
 void ColorListWindow::setRgb()
 {
-    QColor col(ui->slider_red->value(), ui->slider_green->value(), ui->slider_blue->value(),
+    QColor col(ui->slider_red->value(),
+               ui->slider_green->value(),
+               ui->slider_blue->value(),
                ui->slider_alpha->value());
     updateColorWidgets(col);
 }
 void ColorListWindow::setHsv()
 {
-    auto col = QColor::fromHsv(ui->slider_hue->value(), ui->slider_saturation->value(),
-                               ui->slider_value->value(), ui->slider_alpha->value());
+    auto col = QColor::fromHsv(ui->slider_hue->value(),
+                               ui->slider_saturation->value(),
+                               ui->slider_value->value(),
+                               ui->slider_alpha->value());
     updateColorWidgets(col);
 }
 
@@ -259,7 +266,8 @@ bool ColorListWindow::confirmAdd(const QString& name)
     if (!has) {
         return true;
     }
-    int ret = QMessageBox::warning(this, tr("Warning!"),
+    int ret = QMessageBox::warning(this,
+                                   tr("Warning!"),
                                    tr("Color with name '%1' already exists. Overwrite?").arg(name),
                                    QMessageBox::Abort | QMessageBox::Yes);
     return ret == QMessageBox::Yes;

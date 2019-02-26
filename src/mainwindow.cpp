@@ -69,7 +69,10 @@ MainWindow::MainWindow(QWidget* parent)
         setWindowModified(!clean);
     });
 
-    connect(&SkinRepository::instance(), &SkinRepository::filePathChanged, this, &MainWindow::setTitle);
+    connect(&SkinRepository::instance(),
+            &SkinRepository::filePathChanged,
+            this,
+            &MainWindow::setTitle);
 
     ui->propView->setModel(mPropertiesModel);
     ui->propView->setIndentation(5);
@@ -101,8 +104,10 @@ MainWindow::MainWindow(QWidget* parent)
     ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     mView->setSelectionModel(ui->treeView->selectionModel());
 
-    connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
-            this, &MainWindow::onCurrentSelectionChanged);
+    connect(ui->treeView->selectionModel(),
+            &QItemSelectionModel::currentChanged,
+            this,
+            &MainWindow::onCurrentSelectionChanged);
 }
 
 MainWindow::~MainWindow()
@@ -151,8 +156,8 @@ void MainWindow::open()
         QString startdir = settings.value("lastdir").toString();
         //		if (startdir)
         //		QDir::home()
-        const QString fname = QFileDialog::getOpenFileName(this, tr("Open skin"), startdir,
-                                                           tr("Skin file (skin.xml)"));
+        const QString fname =
+          QFileDialog::getOpenFileName(this, tr("Open skin"), startdir, tr("Skin file (skin.xml)"));
         if (!fname.isNull()) {
             QString dir = QFileInfo(fname).absoluteDir().path();
             qDebug() << "opening" << dir;
@@ -179,8 +184,9 @@ bool MainWindow::saveAs()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, QString("%1 %2").arg(tr("e2designer"),
-                                                  QCoreApplication::applicationVersion()),
+    QMessageBox::about(this,
+                       QString("%1 %2").arg(tr("e2designer"),
+                                            QCoreApplication::applicationVersion()),
                        tr("The <b>e2designer</b> allows you to edit enigma2 "
                           "skins in a nice way"
                           "<br>Usefull hints:"
@@ -191,7 +197,7 @@ void MainWindow::about()
                           "</ul>"));
 }
 
-void MainWindow::setTitle(const QString &skinPath)
+void MainWindow::setTitle(const QString& skinPath)
 {
     setWindowTitle(QString("%1[*] - %2").arg(skinPath, QCoreApplication::applicationName()));
 }
@@ -200,7 +206,7 @@ void MainWindow::addSkinItem(int type)
 {
     // FIXME: is m_view always athorative?
     // TODO: should model provide more friendly interface?
-    auto &model = *SkinRepository::screens();
+    auto& model = *SkinRepository::screens();
     QModelIndex screen = mView->currentIndex();
     model.insertRow(model.rowCount(screen), screen);
     QModelIndex widget = model.index(model.rowCount(screen) - 1, 0, screen);
@@ -228,7 +234,7 @@ void MainWindow::addLabel()
 }
 void MainWindow::addScreen()
 {
-    auto &model = *SkinRepository::screens();
+    auto& model = *SkinRepository::screens();
     // TODO: should model provide more friendly interface?
     QModelIndex root;
     model.insertRow(model.rowCount(root), root);
@@ -364,7 +370,7 @@ void MainWindow::createActions()
 
     const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
     QAction* saveAsAct =
-        fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
+      fileMenu->addAction(saveAsIcon, tr("Save &As..."), this, &MainWindow::saveAs);
     saveAsAct->setShortcuts(QKeySequence::SaveAs);
     saveAsAct->setStatusTip(tr("Save the document under a new name"));
 
@@ -423,9 +429,11 @@ bool MainWindow::confirmClose()
         return true;
 
     const QMessageBox::StandardButton ret =
-        QMessageBox::warning(this, tr("Application"), tr("The skin has been modified.\n"
-                                                         "Do you want to save your changes?"),
-                             QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+      QMessageBox::warning(this,
+                           tr("Application"),
+                           tr("The skin has been modified.\n"
+                              "Do you want to save your changes?"),
+                           QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 
     switch (ret) {
     case QMessageBox::Save:

@@ -3,8 +3,7 @@
 BorderView::BorderView(QGraphicsRectItem* parent)
     : QGraphicsRectItem(parent)
     , mBorders(nullptr)
-{
-}
+{}
 void BorderView::setBorderSet(BorderSet* bs)
 {
     mBorders = bs;

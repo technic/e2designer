@@ -10,17 +10,17 @@ QString serialize(int value)
     }
 }
 
-void deserialize(const QString &str, int &value)
+void deserialize(const QString& str, int& value)
 {
     value = str.toInt();
 }
 
-QString serialize(const QString &str)
+QString serialize(const QString& str)
 {
     return str;
 }
 
-void deserialize(const QString &str, QString &value)
+void deserialize(const QString& str, QString& value)
 {
     value = str;
 }
@@ -34,17 +34,17 @@ QString serialize(bool b)
     }
 }
 
-void deserialize(const QString &str, bool &b)
+void deserialize(const QString& str, bool& b)
 {
     b = str.toInt();
 }
 
-QString serialize(const QVariant &value)
+QString serialize(const QVariant& value)
 {
     return value.toString();
 }
 
-void deserialize(const QString &str, QVariant &value)
+void deserialize(const QString& str, QVariant& value)
 {
     value = str;
 }

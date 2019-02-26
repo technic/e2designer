@@ -10,7 +10,7 @@
  * provides list like and map like interfaces
  * This is a helper class, mutating methods declared as protected
  */
-template <class T>
+template<class T>
 class NamedList
 {
 public:
@@ -24,8 +24,8 @@ protected:
     bool setItemName(int i, const QString& name);
     bool setItemValue(int i, const typename T::Value& value);
 
-    bool canInsertItem(const T &item);
-    bool insertItem(int i, const T &item);
+    bool canInsertItem(const T& item);
+    bool insertItem(int i, const T& item);
     bool appendItem(T item) { return insertItem(mItems.count(), item); }
     bool canRemoveItems(int position, int count);
     bool removeItems(int position, int count);
@@ -36,7 +36,7 @@ protected:
 
 public:
     bool contains(const QString& name) const;
-    T getValue(const QString& name, const T &defaultValue = T()) const;
+    T getValue(const QString& name, const T& defaultValue = T()) const;
     QString getName(const typename T::Value value) const;
 
     inline int itemsCount() const { return mItems.count(); }
@@ -55,7 +55,7 @@ private:
 
 // Implementation
 
-template <typename T>
+template<typename T>
 bool NamedList<T>::setItemName(int i, const QString& name)
 {
     if (!isValidIndex(i)) {
@@ -70,7 +70,7 @@ bool NamedList<T>::setItemName(int i, const QString& name)
     return true;
 }
 
-template <typename T>
+template<typename T>
 bool NamedList<T>::setItemValue(int i, const typename T::Value& value)
 {
     if (!isValidIndex(i)) {
@@ -81,8 +81,8 @@ bool NamedList<T>::setItemValue(int i, const typename T::Value& value)
     return true;
 }
 
-template <typename T>
-bool NamedList<T>::canInsertItem(const T &item)
+template<typename T>
+bool NamedList<T>::canInsertItem(const T& item)
 {
     // Allow to have multiple null items
     if (!item.isNull() && contains(item.name())) {
@@ -91,8 +91,8 @@ bool NamedList<T>::canInsertItem(const T &item)
     return true;
 }
 
-template <typename T>
-bool NamedList<T>::insertItem(int i, const T &item)
+template<typename T>
+bool NamedList<T>::insertItem(int i, const T& item)
 {
     if (canInsertItem(item)) {
         mItems.insert(i, item);
@@ -102,7 +102,7 @@ bool NamedList<T>::insertItem(int i, const T &item)
     return false;
 }
 
-template <typename T>
+template<typename T>
 bool NamedList<T>::canRemoveItems(int position, int count)
 {
     if (position < 0 || position + count > mItems.size()) {
@@ -111,7 +111,7 @@ bool NamedList<T>::canRemoveItems(int position, int count)
     return true;
 }
 
-template <typename T>
+template<typename T>
 bool NamedList<T>::removeItems(int position, int count)
 {
     if (canRemoveItems(position, count)) {
@@ -142,11 +142,10 @@ QVector<T> NamedList<T>::takeItems(int position, int count)
 template<class T>
 bool NamedList<T>::canMoveItems(int sourcePosition, int count, int destinationPosition)
 {
-    bool overlap = destinationPosition >= sourcePosition
-        && destinationPosition <= sourcePosition + count;
-    if (sourcePosition >= 0 && sourcePosition + count <= mItems.size()
-        && destinationPosition >= 0 && destinationPosition <= mItems.size()
-        && !overlap) {
+    bool overlap =
+      destinationPosition >= sourcePosition && destinationPosition <= sourcePosition + count;
+    if (sourcePosition >= 0 && sourcePosition + count <= mItems.size() &&
+        destinationPosition >= 0 && destinationPosition <= mItems.size() && !overlap) {
         return true;
     }
     return false;
@@ -170,7 +169,7 @@ bool NamedList<T>::moveItems(int sourcePosition, int count, int destinationPosit
     return false;
 }
 
-template <typename T>
+template<typename T>
 bool NamedList<T>::contains(const QString& name) const
 {
     // TODO: optimization with QHash?
@@ -182,8 +181,8 @@ bool NamedList<T>::contains(const QString& name) const
     return false;
 }
 
-template <typename T>
-T NamedList<T>::getValue(const QString& name, const T &defaultValue) const
+template<typename T>
+T NamedList<T>::getValue(const QString& name, const T& defaultValue) const
 {
     // TODO: optimization with QHash?
     for (const T& item : mItems) {
@@ -193,7 +192,7 @@ T NamedList<T>::getValue(const QString& name, const T &defaultValue) const
     return defaultValue;
 }
 
-template <class T>
+template<class T>
 QString NamedList<T>::getName(const typename T::Value value) const
 {
     for (const T& item : mItems) {

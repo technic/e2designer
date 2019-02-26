@@ -10,10 +10,9 @@
 Coordinate::Coordinate(Type type, int value)
     : m_type(type)
     , m_value(value)
-{
-}
+{}
 
-Coordinate::Coordinate(const QString &str)
+Coordinate::Coordinate(const QString& str)
     : Coordinate()
 {
     parseStr(str);
@@ -69,13 +68,12 @@ bool Coordinate::isRelative() const
     return m_type == Type::Center;
 }
 
-
 // PositionAttr
 
-PositionAttr::PositionAttr(const Coordinate &x, const Coordinate &y)
-    : mX(x), mY(y)
-{
-}
+PositionAttr::PositionAttr(const Coordinate& x, const Coordinate& y)
+    : mX(x)
+    , mY(y)
+{}
 
 QPoint PositionAttr::toPoint(const WidgetData& widget) const
 {

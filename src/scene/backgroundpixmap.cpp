@@ -1,7 +1,8 @@
 #include "backgroundpixmap.hpp"
 #include <QPainter>
 
-void BackgroundPixmap::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
+void BackgroundPixmap::paint(QPainter* painter,
+                             const QStyleOptionGraphicsItem* option,
                              QWidget* widget)
 {
     // BackgroundPixmap emulates the video layer of hardware blitter
@@ -12,7 +13,9 @@ void BackgroundPixmap::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
     QGraphicsPixmapItem::paint(painter, option, widget);
 }
 
-void BackgroundRect::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void BackgroundRect::paint(QPainter* painter,
+                           const QStyleOptionGraphicsItem* option,
+                           QWidget* widget)
 {
     painter->setCompositionMode(QPainter::CompositionMode_Source);
     QGraphicsRectItem::paint(painter, option, widget);
