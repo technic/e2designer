@@ -24,7 +24,7 @@
 #include "repository/skinrepository.hpp"
 
 #ifdef APPIMAGE_UPDATE
-#include <AppImageUpdaterBridge>
+#include <AppImageUpdaterDialog>
 #endif
 
 using namespace AppImageUpdaterBridge;
@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget* parent)
     , mView(new ScreenView(SkinRepository::screens()))
     , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 #ifdef APPIMAGE_UPDATE
-    , m_updater(new AppImageUpdaterDialog(0, this))
+    , m_updater(new AppImageUpdaterDialog(QPixmap(), this))
 #else
     , m_updater(nullptr)
 #endif
@@ -281,10 +281,6 @@ void MainWindow::checkUpdates()
     }
     m_updater->setAppImage(fileName);
     m_updater->setShowLog(true);
-    m_updater->setShowBeforeStarted(true);
-    m_updater->setShowErrorDialog(true);
-    m_updater->setShowFinishDialog(true);
-    m_updater->setShowNoUpdateDialog(true);
     m_updater->init();
 #endif
 }
