@@ -125,7 +125,8 @@ HEADERS += \
     skin/converter.hpp \
     model/propertytree.hpp \
     skin/offsetattr.hpp \
-    base/meta.hpp
+    base/meta.hpp \
+    base/typelist.hpp
 
 FORMS += \
     ui/mainwindow.ui \

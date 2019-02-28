@@ -4,4 +4,5 @@ SUBDIRS += \
     widget \
     attr \
     converter \
-    core
+    core \
+    typelist
