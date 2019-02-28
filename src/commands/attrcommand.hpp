@@ -3,6 +3,7 @@
 
 #include "skin/positionattr.hpp"
 #include "skin/sizeattr.hpp"
+#include "base/typelist.hpp"
 #include <QAbstractItemModel>
 #include <QUndoCommand>
 #include <QPoint>
@@ -10,6 +11,11 @@
 
 QVector<int> pathFromIndex(QModelIndex idx);
 QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model);
+
+class AttrCommand;
+class MoveWidgetCommand;
+class ResizeWidgetCommand;
+using CommandClasses = TypeList<AttrCommand, MoveWidgetCommand, ResizeWidgetCommand>;
 
 class AttrCommand : public QUndoCommand
 {
@@ -28,17 +34,11 @@ private:
     QVariant m_value;
 };
 
-enum
-{
-    MoveCommandId,
-    ResizeCommandId
-};
-
 class MoveWidgetCommand : public QUndoCommand
 {
 public:
     MoveWidgetCommand(WidgetData* widget, QPointF pos);
-    int id() const final { return MoveCommandId; }
+    int id() const final { return CommandClasses::getIndex(this); }
     void redo() final;
     void undo() final;
     bool mergeWith(const QUndoCommand* other) final;
@@ -54,7 +54,7 @@ class ResizeWidgetCommand : public QUndoCommand
 {
 public:
     ResizeWidgetCommand(WidgetData* widget, QSizeF size);
-    int id() const final { return ResizeCommandId; }
+    int id() const final { return CommandClasses::getIndex(this); }
     void redo() final;
     void undo() final;
     bool mergeWith(const QUndoCommand* other) final;

@@ -37,6 +37,12 @@ public:
         static_assert(found, "Type T not found in TypeList");
         return getIndexImpl<T>();
     }
+    template<typename U>
+    static constexpr size_t getIndex(U object)
+    {
+        using type = std::remove_cv_t<std::remove_pointer_t<U>>;
+        return getIndex<type>();
+    }
 };
 
 #endif // TYPELIST_HPP
