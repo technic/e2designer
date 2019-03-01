@@ -204,6 +204,7 @@ bool MainWindow::saveAs()
               tr("Error"),
               tr("Failed to save skin to directory:\n%1\n%2.").arg(path).arg(model.lastError()));
         }
+        return saved;
     }
     return false;
 }
