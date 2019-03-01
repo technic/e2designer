@@ -118,3 +118,44 @@ void ResizeWidgetCommand::updateText()
 {
     setText(QString("Resize %1x%2").arg(m_size.toSize().width()).arg(m_size.toSize().height()));
 }
+
+ChangeRectWidgetCommand::ChangeRectWidgetCommand(WidgetData* widget, QRectF rect)
+    : m_widget(widget)
+    , m_rect(rect)
+    , m_pos(widget->position())
+    , m_size(widget->size())
+{
+    updateText();
+}
+
+void ChangeRectWidgetCommand::redo()
+{
+    m_widget->resize(m_rect.size());
+    m_widget->move(m_rect.topLeft());
+}
+
+void ChangeRectWidgetCommand::undo()
+{
+    m_widget->setSize(m_size);
+    m_widget->setPosition(m_pos);
+}
+
+bool ChangeRectWidgetCommand::mergeWith(const QUndoCommand* other)
+{
+    if (id() != other->id()) {
+        return false;
+    }
+    auto otherCommand = static_cast<const ChangeRectWidgetCommand*>(other);
+    if (otherCommand->m_widget == m_widget) {
+        m_rect = otherCommand->m_rect;
+        updateText();
+        return true;
+    }
+    return false;
+}
+
+void ChangeRectWidgetCommand::updateText()
+{
+    auto r = m_rect.toRect();
+    setText(QString("Resize %1,%2 %3x%4").arg(r.x()).arg(r.y()).arg(r.width()).arg(r.height()));
+}

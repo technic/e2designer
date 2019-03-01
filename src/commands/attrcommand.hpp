@@ -8,6 +8,7 @@
 #include <QUndoCommand>
 #include <QPoint>
 #include <QSize>
+#include <QRectF>
 
 QVector<int> pathFromIndex(QModelIndex idx);
 QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model);
@@ -15,7 +16,9 @@ QModelIndex pathToIndex(QVector<int> path, QAbstractItemModel* model);
 class AttrCommand;
 class MoveWidgetCommand;
 class ResizeWidgetCommand;
-using CommandClasses = TypeList<AttrCommand, MoveWidgetCommand, ResizeWidgetCommand>;
+class ChangeRectWidgetCommand;
+using CommandClasses =
+  TypeList<AttrCommand, MoveWidgetCommand, ResizeWidgetCommand, ChangeRectWidgetCommand>;
 
 class AttrCommand : public QUndoCommand
 {
@@ -64,6 +67,23 @@ private:
     WidgetData* m_widget;
     QSizeF m_size;
     SizeAttr m_value;
+};
+
+class ChangeRectWidgetCommand : public QUndoCommand
+{
+public:
+    ChangeRectWidgetCommand(WidgetData* widget, QRectF rect);
+    int id() const final { return CommandClasses::getIndex(this); }
+    void redo() final;
+    void undo() final;
+    bool mergeWith(const QUndoCommand* other) final;
+
+private:
+    void updateText();
+    WidgetData* m_widget;
+    QRectF m_rect;
+    PositionAttr m_pos;
+    SizeAttr m_size;
 };
 
 #endif // ATTRCOMMAND_H
