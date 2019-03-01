@@ -47,6 +47,8 @@ void WidgetView::setSelectorRect(const QRectF& globrect)
 
     // qDebug() << __func__ << globrect;
 
+    QPoint oldPos = pos().toPoint();
+
     // Widget local coordinates origin is always in the topLeft corener
     setPos(mapToParent(mapFromScene(globrect.topLeft())));
     setRect(0., 0., globrect.width(), globrect.height());
@@ -57,14 +59,23 @@ void WidgetView::setSelectorRect(const QRectF& globrect)
     setFlag(ItemIsMovable, false);
 
     // update data in model
-    commitSizeChange(rect().size().toSize());
-    commitPositionChange(pos().toPoint());
+    if (oldPos == pos().toPoint()) {
+        commitSizeChange(rect().size().toSize());
+    } else {
+        commitRectChange(QRect(pos().toPoint(), rect().size().toSize()));
+    }
 }
 
 void WidgetView::commitSizeChange(const QSize& size)
 {
     FlagSetter fs(&mRectChange);
     mModel->resizeWidget(mData, size);
+}
+
+void WidgetView::commitRectChange(const QRect& rect)
+{
+    FlagSetter fs(&mRectChange);
+    mModel->changeWidgetRect(mData, rect);
 }
 
 void WidgetView::commitPositionChange(const QPoint& point)

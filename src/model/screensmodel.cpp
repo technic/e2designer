@@ -464,6 +464,14 @@ void ScreensModel::moveWidget(const QModelIndex& index, const QPoint& pos)
     }
 }
 
+void ScreensModel::changeWidgetRect(const QModelIndex& index, const QRect& rect)
+{
+    auto* widget = indexToItem(index);
+    if (widget) {
+        mCommander->push(new ChangeRectWidgetCommand(widget, rect));
+    }
+}
+
 void ScreensModel::registerObserver(const QModelIndex& index)
 {
     if (!index.isValid())

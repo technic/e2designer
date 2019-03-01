@@ -101,6 +101,7 @@ private:
 
     void commitPositionChange(const QPoint& point);
     void commitSizeChange(const QSize& size);
+    void commitRectChange(const QRect& rect);
     void paintBorder(QPainter* painter, const WidgetData& w);
     void paintScreen(QPainter* painter, const WidgetData& w);
     void paintLabel(QPainter* painter, const WidgetData& w);

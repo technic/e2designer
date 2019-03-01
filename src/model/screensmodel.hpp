@@ -132,6 +132,7 @@ public:
     // Move and resize widget
     void resizeWidget(const QModelIndex& index, const QSize& size);
     void moveWidget(const QModelIndex& index, const QPoint& pos);
+    void changeWidgetRect(const QModelIndex& index, const QRect& rect);
 
     // widgetChanged only emmited for widgets being observed
     void registerObserver(const QModelIndex& index);
