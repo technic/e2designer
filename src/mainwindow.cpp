@@ -175,11 +175,11 @@ bool MainWindow::save()
     }
     bool saved = model.save();
     if (!saved) {
-        QMessageBox::critical(this,
-                              tr("Error"),
-                              tr("Failed to save skin to directory:\n %1\n %2.")
-                                .arg(model.dir().absolutePath())
-                                .arg(model.lastError()));
+        QMessageBox::warning(this,
+                             tr("Error"),
+                             tr("Failed to save skin to directory:\n%1\n%2.")
+                               .arg(model.dir().absolutePath())
+                               .arg(model.lastError()));
     }
     return saved;
 }
