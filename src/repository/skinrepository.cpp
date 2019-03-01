@@ -39,7 +39,7 @@ QString SkinRepository::resolveFilename(const QString& path) const
     return QString();
 }
 
-bool SkinRepository::loadFile(const QString& path)
+bool SkinRepository::open(const QString& path)
 {
     mDirectory = QDir(path);
     if (!mDirectory.exists()) {

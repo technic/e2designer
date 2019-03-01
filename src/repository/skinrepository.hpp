@@ -37,7 +37,7 @@ public:
     inline QDir dir() const { return mDirectory; }
     QString resolveFilename(const QString& path) const;
 
-    bool loadFile(const QString& path);
+    bool open(const QString& path);
     bool save();
     bool isOpened() const;
 
