@@ -116,6 +116,22 @@ bool SkinRepository::save()
     return true;
 }
 
+bool SkinRepository::saveAs(const QString& path)
+{
+    QDir oldDir = mDirectory;
+    mDirectory = QDir(path);
+    qDebug() << oldDir.absolutePath() << mDirectory.absolutePath();
+    if (oldDir == mDirectory || QFileInfo(mDirectory, "skin.xml").exists()
+        || QFileInfo(mDirectory, "preview.xml").exists()) {
+        return setError("This folder already contains a skin");
+    }
+    bool saved = save();
+    if (!saved) {
+        mDirectory = oldDir;
+    }
+    return saved;
+}
+
 bool SkinRepository::isOpened() const
 {
     // This is default path

@@ -39,6 +39,7 @@ public:
 
     bool open(const QString& path);
     bool save();
+    bool saveAs(const QString& path);
     bool isOpened() const;
 
     bool fromXmlDocument(QXmlStreamReader& xml);

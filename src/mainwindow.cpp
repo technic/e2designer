@@ -186,7 +186,25 @@ bool MainWindow::save()
 
 bool MainWindow::saveAs()
 {
-    // TODO
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+    QString startdir = settings.value("lastdir").toString();
+    const QString path = QFileDialog::getSaveFileName(this,
+                                                      tr("Select new skin folder"),
+                                                      startdir,
+                                                      tr("Skin file (skin.xml)"));
+    if (!path.isNull()) {
+        auto& model = SkinRepository::instance();
+        QString dir = QFileInfo(path).absoluteDir().path();
+        qDebug() << "saving to" << dir;
+        settings.setValue("lastdir", dir);
+        bool saved = model.saveAs(dir);
+        if (!saved) {
+            QMessageBox::warning(
+              this,
+              tr("Error"),
+              tr("Failed to save skin to directory:\n%1\n%2.").arg(path).arg(model.lastError()));
+        }
+    }
     return false;
 }
 
