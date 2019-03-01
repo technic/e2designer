@@ -42,6 +42,7 @@ public:
     {
         using type = std::remove_cv_t<std::remove_pointer_t<U>>;
         return getIndex<type>();
+        Q_UNUSED(object);
     }
 };
 
