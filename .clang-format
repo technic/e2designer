@@ -3,6 +3,7 @@ BasedOnStyle: Mozilla
 AccessModifierOffset: '-4'
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
+BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeInheritanceComma: 'false'
 ColumnLimit: '100'
 ConstructorInitializerIndentWidth: '4'
