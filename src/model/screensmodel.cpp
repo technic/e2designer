@@ -574,10 +574,10 @@ bool ScreensModel::isValidMove(const QModelIndex& sourceParent,
                                const QModelIndex& destinationParent,
                                int destinationChild) const
 {
-    if (sourceRow >= 0 && sourceRow + count <= rowCount(sourceParent) && destinationChild >= 0 &&
-        destinationChild <= rowCount(destinationParent)) {
-        bool overlap = (sourceParent == destinationParent) &&
-                       (destinationChild >= sourceRow && destinationChild <= sourceRow + count);
+    if (sourceRow >= 0 && sourceRow + count <= rowCount(sourceParent) && destinationChild >= 0
+        && destinationChild <= rowCount(destinationParent)) {
+        bool overlap = (sourceParent == destinationParent)
+                       && (destinationChild >= sourceRow && destinationChild <= sourceRow + count);
         return !overlap;
     }
     return false;

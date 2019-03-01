@@ -278,8 +278,8 @@ void WidgetView::paintPixmap(QPainter* painter, const WidgetData& w)
 {
     painter->save();
 
-    if (w.alphatest() == Property::Alphatest::blend || w.alphatest() == Property::Alphatest::on ||
-        m_pixmap.isNull()) {
+    if (w.alphatest() == Property::Alphatest::blend || w.alphatest() == Property::Alphatest::on
+        || m_pixmap.isNull()) {
         painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
 
