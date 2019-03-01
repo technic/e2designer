@@ -18,9 +18,6 @@ class TestWidget : public QObject
 {
     Q_OBJECT
 public:
-    TestWidget() {}
-    ~TestWidget() {}
-
     using Alphatest = Property::Alphatest;
 
 private slots:

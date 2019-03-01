@@ -6,9 +6,6 @@ class TestTypeList : public QObject
     Q_OBJECT
 
 public:
-    TestTypeList() {}
-    ~TestTypeList() {}
-
     class C1;
     class C2;
     using ClassList = TypeList<C1, C2>;

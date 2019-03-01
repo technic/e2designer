@@ -50,10 +50,6 @@ class TestCore : public QObject
 {
     Q_OBJECT
 
-public:
-    TestCore(){};
-    ~TestCore(){};
-
 private slots:
     void test_moveItems()
     {
