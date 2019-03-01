@@ -17,12 +17,6 @@ QSize SkinRepository::outputSize() const
     return mOutputRepository.getOutput(0).size();
 }
 
-// SkinRepository& SkinRepository::instance()
-//{
-//	static SkinRepository self;
-//	return self;
-//}
-
 QString SkinRepository::resolveFilename(const QString& path) const
 {
     if (path.isEmpty()) {
