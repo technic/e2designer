@@ -21,11 +21,11 @@ using CommandClasses =
   TypeList<AttrCommand, MoveWidgetCommand, ResizeWidgetCommand, ChangeRectWidgetCommand>;
 
 template<typename T>
-static inline int getCommandId(const T* object)
+static inline int getCommandId()
 {
+    using type = std::remove_cv_t<std::remove_pointer_t<T>>;
     // It's OK to cast here, because index can not be very large
-    return static_cast<int>(CommandClasses::getIndex<T>());
-    Q_UNUSED(object);
+    return static_cast<int>(CommandClasses::getIndex<type>());
 }
 
 class AttrCommand : public QUndoCommand
@@ -49,7 +49,7 @@ class MoveWidgetCommand : public QUndoCommand
 {
 public:
     MoveWidgetCommand(WidgetData* widget, QPointF pos);
-    int id() const final { return getCommandId(this); }
+    int id() const final { return getCommandId<decltype(this)>(); }
     void redo() final;
     void undo() final;
     bool mergeWith(const QUndoCommand* other) final;
@@ -65,7 +65,7 @@ class ResizeWidgetCommand : public QUndoCommand
 {
 public:
     ResizeWidgetCommand(WidgetData* widget, QSizeF size);
-    int id() const final { return getCommandId(this); }
+    int id() const final { return getCommandId<decltype(this)>(); }
     void redo() final;
     void undo() final;
     bool mergeWith(const QUndoCommand* other) final;
@@ -81,7 +81,7 @@ class ChangeRectWidgetCommand : public QUndoCommand
 {
 public:
     ChangeRectWidgetCommand(WidgetData* widget, QRectF rect);
-    int id() const final { return getCommandId(this); }
+    int id() const final { return getCommandId<decltype(this)>(); }
     void redo() final;
     void undo() final;
     bool mergeWith(const QUndoCommand* other) final;
