@@ -204,7 +204,7 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    auto* widget = static_cast<WidgetData*>(index.internalPointer());
+    auto* widget = static_cast<const WidgetData*>(index.internalPointer());
 
     switch (role) {
     case Qt::DisplayRole:
@@ -246,17 +246,18 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
         case ColumnName:
             switch (widget->type()) {
             case WidgetData::Label:
-                return widget->setAttr(Property::text, value);
+                return setWidgetAttr(index, Property::text, value);
             case WidgetData::Pixmap:
-                return widget->setAttr(Property::pixmap, value);
+                return setWidgetAttr(index, Property::pixmap, value);
             case WidgetData::Screen:
             case WidgetData::Widget:
-                return widget->setAttr(Property::name, value);
+                return setWidgetAttr(index, Property::name, value);
             }
         default:
             return false;
         }
     case ScreensModel::TypeRole:
+        // FIXME: use Commands
         return widget->setType(value.toInt());
     default:
         return false;
