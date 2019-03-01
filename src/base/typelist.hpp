@@ -33,9 +33,9 @@ public:
     template<typename T>
     static constexpr size_t getIndex()
     {
-        constexpr bool found = getIndexImpl<T>() != no_index;
-        static_assert(found, "Type T not found in TypeList");
-        return getIndexImpl<T>();
+        constexpr size_t index = getIndexImpl<T>();
+        static_assert(index != no_index, "Type T not found in TypeList");
+        return index;
     }
     template<typename U>
     static constexpr size_t getIndex(U object)
