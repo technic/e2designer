@@ -379,10 +379,7 @@ QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const 
             selector->setVisible(false);
             setFlag(ItemIsFocusable, false);
             setFlag(ItemIsMovable, false);
-            disconnect(mScreen->selector(),
-                       &RectSelector::rectChanged,
-                       this,
-                       &WidgetView::setSelectorRect);
+            disconnect(selector, &RectSelector::rectChanged, this, &WidgetView::setSelectorRect);
         }
         break;
 
