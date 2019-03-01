@@ -222,8 +222,13 @@ void ScreenView::onModelReset()
     // FIXME
 }
 
+/**
+ * @brief Push scene selection changes to the selectionModel
+ */
 void ScreenView::onSceneSelectionChanged()
 {
+    if (mDisableSelectionSlots)
+        return;
     if (!mSelectionModel)
         return;
 
@@ -255,6 +260,8 @@ void ScreenView::setCurrentWidget(const QModelIndex& current, const QModelIndex&
     if (mDisableSelectionSlots)
         return;
 
+    FlagSetter fs(&mDisableSelectionSlots);
+
     // previous widget should be in the scene
     if (previous.isValid()) {
         qDebug() << "previous in the scene:" << mWidgets.contains(normalizeIndex(previous));
@@ -279,6 +286,8 @@ void ScreenView::updateSelection(const QItemSelection& selected, const QItemSele
 {
     if (mDisableSelectionSlots)
         return;
+
+    FlagSetter fs(&mDisableSelectionSlots);
 
     for (QModelIndex index : deselected.indexes()) {
         auto it = mWidgets.find(index);
