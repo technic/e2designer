@@ -95,10 +95,6 @@ private:
     // don't call setData
     bool mRectChange;
 
-    void initHandles();
-    void setHandlesEnabled(bool enabled);
-    void updateHandlesPos();
-
     void commitPositionChange(const QPoint& point);
     void commitSizeChange(const QSize& size);
     void commitRectChange(const QRect& rect);
