@@ -169,9 +169,17 @@ void MainWindow::open()
 
 bool MainWindow::save()
 {
-    // TODO: exceptions vs return codes?
-    bool saved = SkinRepository::instance().save();
+    auto& model = SkinRepository::instance();
+    if (!model.isOpened()) {
+        return saveAs();
+    }
+    bool saved = model.save();
     if (!saved) {
+        QMessageBox::critical(this,
+                              tr("Error"),
+                              tr("Failed to save skin to directory:\n %1\n %2.")
+                                .arg(model.dir().absolutePath())
+                                .arg(model.lastError()));
     }
     return saved;
 }

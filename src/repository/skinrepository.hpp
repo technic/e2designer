@@ -38,12 +38,15 @@ public:
     QString resolveFilename(const QString& path) const;
 
     bool loadFile(const QString& path);
-    bool fromStream(QIODevice* device);
     bool save();
+    bool isOpened() const;
 
+    bool fromXmlDocument(QXmlStreamReader& xml);
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
     QString previewFilePath();
+
+    QString lastError() const { return mErrorMessage; }
 
 signals:
     void filePathChanged(const QString& path);
@@ -59,6 +62,10 @@ private:
     WindowStylesList mWindowStyles;
     WindowStyle defaultStyle;
     QDir mDirectory;
+
+    // Error handling
+    bool setError(const QString& message);
+    QString mErrorMessage;
 };
 
 #endif // SKINREPOSITORY_H

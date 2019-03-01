@@ -23,7 +23,7 @@ QString SkinRepository::resolveFilename(const QString& path) const
         return QString();
     }
     QDir dir = this->dir();
-    // First assume that file prefix is a our directory name
+    // First assume that file prefix is our directory name
     dir.cdUp();
     if (dir.exists(path)) {
         return dir.filePath(path);
@@ -43,7 +43,7 @@ bool SkinRepository::loadFile(const QString& path)
 {
     mDirectory = QDir(path);
     if (!mDirectory.exists()) {
-        return false;
+        return setError(tr("Directory does not exists"));
     }
 
     mScreensModel->loadPreviews(previewFilePath());
@@ -51,19 +51,27 @@ bool SkinRepository::loadFile(const QString& path)
     QString skinFile = mDirectory.filePath("skin.xml");
     QFile file(skinFile);
     bool ok = file.open(QIODevice::ReadOnly);
-    if (!ok)
-        return false;
+    if (!ok) {
+        return setError(file.errorString());
+    }
     emit filePathChanged(skinFile);
-    ok = fromStream(&file);
+
+    QXmlStreamReader xml(&file);
+    ok = fromXmlDocument(xml);
+    if (!ok) {
+        return setError(xml.errorString());
+    }
+    // Check for read errors
+    if (file.error() != QFileDevice::FileError::NoError) {
+        return setError(file.errorString());
+    }
     file.close();
 
     return ok;
 }
 
-bool SkinRepository::fromStream(QIODevice* device)
+bool SkinRepository::fromXmlDocument(QXmlStreamReader& xml)
 {
-    QXmlStreamReader xml(device);
-
     while (!xml.atEnd()) {
         xml.readNext();
         switch (xml.tokenType()) {
@@ -78,18 +86,23 @@ bool SkinRepository::fromStream(QIODevice* device)
             break;
         }
     }
-    qDebug() << xml.errorString();
-    Q_ASSERT(!xml.hasError());
-    return true; // FIXME
+    // FIXME: should we call setError() here?
+    return !xml.hasError();
 }
 
 bool SkinRepository::save()
 {
-    // FIXME: implement!
+    if (!isOpened()) {
+        setError(tr("Skin directory is not specified"));
+        return false;
+    }
+
     QFile file(mDirectory.filePath("skin.xml"));
     bool ok = file.open(QIODevice::WriteOnly);
-    if (!ok)
+    if (!ok) {
+        setError(file.errorString());
         return false;
+    }
 
     QXmlStreamWriter xml(&file);
     xml.setAutoFormatting(true);
@@ -99,10 +112,14 @@ bool SkinRepository::save()
     xml.writeEndDocument();
 
     file.close();
-    // mScreensModel->updatePreviewMap();
-    // mScreensModel->savePreviews(previewFilePath());
     mScreensModel->savePreviewTree(previewFilePath());
     return true;
+}
+
+bool SkinRepository::isOpened() const
+{
+    // This is default path
+    return mDirectory.path() != ".";
 }
 
 void SkinRepository::fromXml(QXmlStreamReader& xml)
@@ -164,4 +181,16 @@ void SkinRepository::toXml(QXmlStreamWriter& xml) const
 QString SkinRepository::previewFilePath()
 {
     return dir().filePath("preview.xml");
+}
+
+/**
+ * @brief Save error message
+ * @param message that can be displayed to the user
+ * @return always returns false, for use with return statement
+ */
+bool SkinRepository::setError(const QString& message)
+{
+    mErrorMessage = message;
+    qWarning() << "Error occured:" << message;
+    return false;
 }
