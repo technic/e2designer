@@ -262,7 +262,7 @@ QRgb ColorListWindow::currentColor() const
 }
 bool ColorListWindow::confirmAdd(const QString& name)
 {
-    bool has = SkinRepository::colors()->contains(name);
+    bool has = mModel->contains(name);
     if (!has) {
         return true;
     }

@@ -39,7 +39,7 @@ void FontListWindow::addDefault()
     int i = 0;
     do {
         auto f = Font(QString("Untitled%1").arg(i), QString());
-        ok = SkinRepository::fonts()->append(f);
+        ok = mModel->append(f);
         i++;
     } while (!ok);
 }
