@@ -10,8 +10,9 @@ class RectHandle : public QGraphicsRectItem
 public:
     static constexpr int handle_size = 8;
 
-    enum
+    enum HandlePosition
     {
+        None = 0x0,
         Top = 0x1,
         Bottom = 0x2,
         Left = 0x4,
@@ -24,19 +25,17 @@ public:
 
     explicit RectHandle(int position, RectSelector* parent);
     int flag() const { return m_place; }
-    void updatePosition();
+    void updatePosition(const QRectF& r);
 
 protected:
-    /* QGraphicsItem */
+    // QGraphicsItem interface
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
-    QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
-    QPointF restrictPosition(QPointF newPos);
-
-    RectSelector* m_parent;
     int m_place;
+    bool is_moving;
 };
 
 #endif // RECTHANDLE_H

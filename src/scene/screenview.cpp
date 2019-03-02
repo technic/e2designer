@@ -11,7 +11,6 @@ ScreenView::ScreenView(ScreensModel* model)
     , mSelectionModel(nullptr)
     , mDisableSelectionSlots(false)
     , mScene(new QGraphicsScene(this))
-    , mSelector(new RectSelector(nullptr))
     , mBackground(new BackgroundPixmap(QPixmap(":/background.jpg")))
     , mBackgroundRect(new BackgroundRect(QRectF()))
     , m_showBorders(true)
@@ -30,10 +29,6 @@ ScreenView::ScreenView(ScreensModel* model)
             &VideoOutputRepository::valueChanged,
             this,
             &ScreenView::onOutputChanged);
-
-    mSelector->setZValue(1000.);
-    mSelector->setPen(Qt::NoPen);
-    mScene->addItem(mSelector);
 
     connect(mModel, &ScreensModel::widgetChanged, this, &ScreenView::onWidgetChanged);
     connect(mModel, &ScreensModel::rowsAboutToBeRemoved, this, &ScreenView::onRowsAboutToBeRemoved);

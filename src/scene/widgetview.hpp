@@ -15,7 +15,7 @@ class ScreenView;
  * @brief The WidgetView class
  * glue between WidgetItem (data) and GraphicsItem (actual view)
  */
-class WidgetView : public QObject, public QGraphicsRectItem
+class WidgetView : public QObject, public RectSelector
 {
     Q_OBJECT
 public:
@@ -40,13 +40,10 @@ public:
     void showBorder(bool show);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
     void keyPressEvent(QKeyEvent* event) override;
 
-private slots:
-    void setSelectorRect(const QRectF& globrect);
+    void resizeRectEvent(const QRectF& rect) override;
 
 private:
     // refs

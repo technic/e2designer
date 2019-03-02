@@ -21,7 +21,6 @@ public:
     QModelIndex currentIndex() { return mRoot; }
     int outputId() const { return mOutputId; }
     QGraphicsScene* scene() const { return mScene; }
-    RectSelector* selector() const { return mSelector; }
     void setScreen(QModelIndex index);
     ScreensModel* model() const { return mModel; }
 
@@ -71,7 +70,6 @@ private:
     // QObject owned
     QGraphicsScene* mScene;
     // references within mScene
-    RectSelector* mSelector;
     QGraphicsPixmapItem* mBackground;
     QGraphicsRectItem* mBackgroundRect;
     QHash<QPersistentModelIndex, WidgetView*> mWidgets;

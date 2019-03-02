@@ -3,42 +3,24 @@
 
 #include "recthandle.hpp"
 #include "skin/positionattr.hpp"
-#include <QDebug>
 #include <QGraphicsRectItem>
 
-class RectSelector : public QObject, public QGraphicsRectItem
+class RectSelector : public QGraphicsRectItem
 {
-    Q_OBJECT
-
 public:
     RectSelector(QGraphicsItem* parent);
+    void setHandlesVisible(bool visible);
 
-    // functions to initalize initial size and position
+    /// To be called from ::RectHandle::mouseMoveEvent
+    void resizeRect(QPointF p, int handle);
 
-    void setSceneRect(const QRectF& rectangle)
-    {
-        QGraphicsRectItem::setRect(mapRectFromScene(rectangle));
-        updateHandlesPos();
-    }
-
-    void setSize(const QSizeF& size)
-    {
-        QRectF r = rect();
-        r.setSize(size);
-        setRect(r);
-        updateHandlesPos();
-    }
-
+protected:
     void setXanchor(Coordinate::Type anchor) { m_xanchor = anchor; }
     void setYanchor(Coordinate::Type anchor) { m_yanchor = anchor; }
-    void resize(const QRectF& rectangle);
-
-signals:
-    void rectChanged(QRectF globrect);
+    void updateHandlesPos();
+    virtual void resizeRectEvent(const QRectF& r);
 
 private:
-    void updateHandlesPos();
-
     // QGraphicsItem owned
     QList<RectHandle*> m_handles;
 

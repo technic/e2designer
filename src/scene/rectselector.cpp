@@ -1,8 +1,6 @@
 #include "rectselector.hpp"
 #include "skin/positionattr.hpp"
 
-#include <QGraphicsScene>
-
 RectSelector::RectSelector(QGraphicsItem* parent)
     : QGraphicsRectItem(parent)
     , m_xanchor(Coordinate::Type::Pixel)
@@ -16,60 +14,74 @@ RectSelector::RectSelector(QGraphicsItem* parent)
     m_handles.append(new RectHandle(RectHandle::TopRight, this));
     m_handles.append(new RectHandle(RectHandle::BottomLeft, this));
     m_handles.append(new RectHandle(RectHandle::BottomRight, this));
-    setEnabled(false);
-    setVisible(false);
-
-    // interaction is done with RectHandles
-    setFlag(ItemIsMovable, false);
-    setFlag(ItemIsSelectable, false);
+    updateHandlesPos();
+    setHandlesVisible(false);
 }
 
-void RectSelector::resize(const QRectF& rectangle)
+void RectSelector::setHandlesVisible(bool visible)
 {
-    QRectF r = rect();
-
-    qreal dw;
-    switch (m_xanchor) {
-    case Coordinate::Type::Pixel:
-    case Coordinate::Type::Percent:
-        r.setLeft(rectangle.left());
-        r.setRight(rectangle.right());
-        break;
-    case Coordinate::Type::Center:
-        dw = rectangle.width() - r.width();
-        r.adjust(-dw, 0., +dw, 0.);
-        break;
-    }
-    qreal dh;
-    switch (m_yanchor) {
-    case Coordinate::Type::Pixel:
-    case Coordinate::Type::Percent:
-        r.setTop(rectangle.top());
-        r.setBottom(rectangle.bottom());
-        break;
-    case Coordinate::Type::Center:
-        dh = rectangle.height() - r.height();
-        r.adjust(0., -dh, 0., +dh);
-        break;
-    }
-
     for (auto h : m_handles) {
-        h->setFlag(ItemSendsGeometryChanges, false);
+        h->setVisible(visible);
+        h->setEnabled(visible);
     }
+}
 
-    setRect(r);
-    updateHandlesPos();
-
-    for (auto h : m_handles) {
-        h->setFlag(ItemSendsGeometryChanges, true);
+void RectSelector::resizeRect(QPointF p, int handle)
+{
+    QRectF newRect = rect();
+    // Depending on active handle resize rect accordinally
+    // Ensure that left <= right and top <= bottom
+    if (handle & RectHandle::Left) {
+        if (m_xanchor == Coordinate::Type::Center) {
+            newRect.setLeft(qMin(p.x(), rect().center().x()));
+            newRect.setRight(rect().left() - newRect.left());
+        } else {
+            newRect.setLeft(qMin(p.x(), rect().right()));
+        }
     }
-
-    emit rectChanged(mapRectToScene(r));
+    if (handle & RectHandle::Right) {
+        if (m_xanchor == Coordinate::Type::Center) {
+            newRect.setRight(qMax(rect().center().x(), p.x()));
+            newRect.setLeft(rect().left() + rect().right() - newRect.right());
+        } else {
+            newRect.setRight(qMax(rect().left(), p.x()));
+        }
+    }
+    if (handle & RectHandle::Top) {
+        if (m_yanchor == Coordinate::Type::Center) {
+            newRect.setTop(qMin(rect().center().y(), p.y()));
+            newRect.setBottom(rect().bottom() + rect().top() - newRect.top());
+        } else {
+            newRect.setTop(qMin(rect().bottom(), p.y()));
+        }
+    }
+    if (handle & RectHandle::Bottom) {
+        if (m_yanchor == Coordinate::Type::Center) {
+            newRect.setBottom(qMax(p.y(), rect().center().y()));
+            newRect.setTop(rect().top() + rect().bottom() - newRect.bottom());
+        } else {
+            newRect.setBottom(qMax(p.y(), rect().top()));
+        }
+    }
+    if (rect() != newRect) {
+        resizeRectEvent(newRect);
+    }
 }
 
 void RectSelector::updateHandlesPos()
 {
     for (RectHandle* h : m_handles) {
-        h->updatePosition();
+        h->updatePosition(rect());
     }
+}
+
+void RectSelector::resizeRectEvent(const QRectF& r)
+{
+    // Preserve topLeft corner position in local coordinates,
+    // because we want the child graphic items to move along with it for top and left resizing.
+    QRectF newRect = r;
+    setPos(mapToParent(newRect.topLeft() - rect().topLeft()));
+    newRect.translate(rect().topLeft() - newRect.topLeft());
+    setRect(newRect);
+    updateHandlesPos();
 }

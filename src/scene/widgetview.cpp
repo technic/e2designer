@@ -10,7 +10,7 @@
 #include <QTextDocument>
 
 WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
-    : QGraphicsRectItem(parent)
+    : RectSelector(parent)
     , mScreen(view)
     , mModel(view->model())
     , mData(index)
@@ -41,29 +41,20 @@ WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
     showBorder(mScreen->haveBorders());
 }
 
-void WidgetView::setSelectorRect(const QRectF& globrect)
+void WidgetView::resizeRectEvent(const QRectF& r)
 {
     FlagSetter fs(&mRectChange);
 
-    // qDebug() << __func__ << globrect;
-
-    QPoint oldPos = pos().toPoint();
-
-    // Widget local coordinates origin is always in the topLeft corener
-    setPos(mapToParent(mapFromScene(globrect.topLeft())));
-    setRect(0., 0., globrect.width(), globrect.height());
-
-    // Forbid moving during resize,
-    // because when grabing resize handle with mouse
-    // we may also trigger move of the item
-    setFlag(ItemIsMovable, false);
-
     // update data in model
-    if (oldPos == pos().toPoint()) {
-        commitSizeChange(rect().size().toSize());
+    QPoint oldPos = mapRectToParent(rect()).topLeft().toPoint();
+    QPoint p = mapRectToParent(r).topLeft().toPoint();
+    if (oldPos == p) {
+        commitSizeChange(r.size().toSize());
     } else {
-        commitRectChange(QRect(pos().toPoint(), rect().size().toSize()));
+        commitRectChange(mapRectToParent(r).toRect());
     }
+    // update QGraphicsRectItem
+    RectSelector::resizeRectEvent(r);
 }
 
 void WidgetView::commitSizeChange(const QSize& size)
@@ -101,20 +92,14 @@ void WidgetView::updateAttribute(int key)
         setPos(w.absolutePosition() + r.topLeft().toPoint());
         r.moveTopLeft(QPointF(0, 0));
         setRect(r);
-
-        if (isSelected()) {
-            mScreen->selector()->setPos(pos());
-            mScreen->selector()->setRect(rect());
-        }
+        updateHandlesPos();
         break;
     }
     case Property::size: {
         QRectF r = rect();
         r.setSize(w.selfSize());
         setRect(r);
-        if (isSelected()) {
-            mScreen->selector()->setSize(rect().size());
-        }
+        updateHandlesPos();
         break;
     }
     case Property::zPosition:
@@ -306,22 +291,6 @@ void WidgetView::paintSlider(QPainter* painter, const WidgetData& w)
     painter->fillRect(r, QBrush(m_foreground_color));
 }
 
-void WidgetView::mousePressEvent(QGraphicsSceneMouseEvent* event)
-{
-    //    if (event->button() == Qt::LeftButton) {
-    //        emit m_view->selectionChanged(mData);
-    //    }
-    if (isSelected() || event->modifiers() & Qt::ControlModifier) {
-        setFlag(ItemIsMovable, true);
-    }
-    return QGraphicsRectItem::mousePressEvent(event);
-}
-
-void WidgetView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
-{
-    return QGraphicsRectItem::mouseReleaseEvent(event);
-}
-
 void WidgetView::keyPressEvent(QKeyEvent* event)
 {
     qDebug() << "WidgetView keyPressEvent";
@@ -358,42 +327,29 @@ void WidgetView::keyPressEvent(QKeyEvent* event)
 
 QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-    RectSelector* selector = mScreen->selector();
 
     switch (change) {
     case ItemPositionHasChanged:
-        // qDebug() << mRectChange << "pos" << value.toPointF() << rect();
-        // qDebug() << "sel" << selector->pos() << selector->rect();
-        // move is not due to RectSelector action
         if (!mRectChange) {
             QPointF position = value.toPointF();
-            selector->setPos(mapToScene(position));
-            selector->setSceneRect(mapRectToScene(rect()));
-            commitPositionChange(position.toPoint());
+            commitPositionChange((position + rect().topLeft()).toPoint());
         }
         break;
     case ItemSelectedHasChanged:
         if (isSelected() && scene()) {
-            // Init selector at widget position and track its resize signals
-            connect(selector, &RectSelector::rectChanged, this, &WidgetView::setSelectorRect);
-            selector->setSceneRect(mapRectToScene(rect()));
-            selector->setEnabled(true);
-            selector->setVisible(true);
+            setHandlesVisible(true);
             auto pos = mModel->widget(mData).position();
-            selector->setXanchor(pos.x().type());
-            selector->setYanchor(pos.y().type());
+            setXanchor(pos.x().type());
+            setYanchor(pos.y().type());
             setFlag(ItemIsFocusable, true);
+            setFlag(ItemIsMovable, true);
             setFocus();
         } else {
-            // Disable selector and disconnect from signals
-            selector->setEnabled(false);
-            selector->setVisible(false);
+            setHandlesVisible(false);
             setFlag(ItemIsFocusable, false);
             setFlag(ItemIsMovable, false);
-            disconnect(selector, &RectSelector::rectChanged, this, &WidgetView::setSelectorRect);
         }
         break;
-
     case ItemSceneHasChanged:
         //        mSelector->setParentItem(parentItem());
         //        if (mSelector->parentItem() == nullptr) {
