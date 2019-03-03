@@ -1,7 +1,7 @@
 #include "rectselector.hpp"
 #include "skin/positionattr.hpp"
 
-RectSelector::RectSelector(QGraphicsItem* parent)
+ResizableGraphicsRectItem::ResizableGraphicsRectItem(QGraphicsItem* parent)
     : QGraphicsRectItem(parent)
     , m_xanchor(Coordinate::Type::Pixel)
     , m_yanchor(Coordinate::Type::Pixel)
@@ -18,7 +18,7 @@ RectSelector::RectSelector(QGraphicsItem* parent)
     setHandlesVisible(false);
 }
 
-void RectSelector::setHandlesVisible(bool visible)
+void ResizableGraphicsRectItem::setHandlesVisible(bool visible)
 {
     for (auto h : m_handles) {
         h->setVisible(visible);
@@ -26,7 +26,7 @@ void RectSelector::setHandlesVisible(bool visible)
     }
 }
 
-void RectSelector::resizeRect(QPointF p, int handle)
+void ResizableGraphicsRectItem::resizeRect(QPointF p, int handle)
 {
     QRectF newRect = rect();
     // Depending on active handle resize rect accordinally
@@ -68,14 +68,14 @@ void RectSelector::resizeRect(QPointF p, int handle)
     }
 }
 
-void RectSelector::updateHandlesPos()
+void ResizableGraphicsRectItem::updateHandlesPos()
 {
     for (RectHandle* h : m_handles) {
         h->updatePosition(rect());
     }
 }
 
-void RectSelector::resizeRectEvent(const QRectF& r)
+void ResizableGraphicsRectItem::resizeRectEvent(const QRectF& r)
 {
     // Preserve topLeft corner position in local coordinates,
     // because we want the child graphic items to move along with it for top and left resizing.

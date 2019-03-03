@@ -15,7 +15,7 @@ class ScreenView;
  * @brief The WidgetView class
  * glue between WidgetItem (data) and GraphicsItem (actual view)
  */
-class WidgetView : public QObject, public RectSelector
+class WidgetView : public QObject, public ResizableGraphicsRectItem
 {
     Q_OBJECT
 public:

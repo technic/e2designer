@@ -5,7 +5,7 @@
 #include "recthandle.hpp"
 #include "widgetview.hpp"
 
-RectHandle::RectHandle(int position, RectSelector* parent)
+RectHandle::RectHandle(int position, ResizableGraphicsRectItem* parent)
     : QGraphicsRectItem(parent)
     , m_place(position)
     , is_moving(false)
@@ -81,7 +81,7 @@ void RectHandle::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
 {
     if (is_moving) {
         event->accept();
-        auto parent = dynamic_cast<RectSelector*>(parentItem());
+        auto parent = dynamic_cast<ResizableGraphicsRectItem*>(parentItem());
         if (parent) {
             parent->resizeRect(mapToParent(event->pos()), flag());
         } else {

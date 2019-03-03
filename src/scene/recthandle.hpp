@@ -3,7 +3,7 @@
 
 #include <QGraphicsRectItem>
 
-class RectSelector;
+class ResizableGraphicsRectItem;
 
 class RectHandle : public QGraphicsRectItem
 {
@@ -23,7 +23,7 @@ public:
         BottomRight = Bottom | Right
     };
 
-    explicit RectHandle(int position, RectSelector* parent);
+    explicit RectHandle(int position, ResizableGraphicsRectItem* parent);
     int flag() const { return m_place; }
     void updatePosition(const QRectF& r);
 

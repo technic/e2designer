@@ -10,7 +10,7 @@
 #include <QTextDocument>
 
 WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
-    : RectSelector(parent)
+    : ResizableGraphicsRectItem(parent)
     , mScreen(view)
     , mModel(view->model())
     , mData(index)
@@ -54,7 +54,7 @@ void WidgetView::resizeRectEvent(const QRectF& r)
         commitRectChange(mapRectToParent(r).toRect());
     }
     // update QGraphicsRectItem
-    RectSelector::resizeRectEvent(r);
+    ResizableGraphicsRectItem::resizeRectEvent(r);
 }
 
 void WidgetView::commitSizeChange(const QSize& size)

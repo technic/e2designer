@@ -5,10 +5,10 @@
 #include "skin/positionattr.hpp"
 #include <QGraphicsRectItem>
 
-class RectSelector : public QGraphicsRectItem
+class ResizableGraphicsRectItem : public QGraphicsRectItem
 {
 public:
-    RectSelector(QGraphicsItem* parent);
+    ResizableGraphicsRectItem(QGraphicsItem* parent);
     void setHandlesVisible(bool visible);
 
     /// To be called from ::RectHandle::mouseMoveEvent
