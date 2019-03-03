@@ -4,6 +4,11 @@
 #include <limits>
 #include <type_traits>
 
+/**
+ * @brief Keep list of types provided by variadic template arguments.
+ * Provide constexpr function to get index of specific type in the list.
+ */
+
 template<typename... Ts>
 class TypeList
 {
