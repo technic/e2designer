@@ -327,7 +327,6 @@ void WidgetView::keyPressEvent(QKeyEvent* event)
 
 QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
 {
-
     switch (change) {
     case ItemPositionHasChanged:
         if (!mRectChange) {
