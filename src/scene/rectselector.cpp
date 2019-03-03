@@ -34,7 +34,7 @@ void ResizableGraphicsRectItem::resizeRect(QPointF p, int handle)
     if (handle & RectHandle::Left) {
         if (m_xanchor == Coordinate::Type::Center) {
             newRect.setLeft(qMin(p.x(), rect().center().x()));
-            newRect.setRight(rect().left() - newRect.left());
+            newRect.setRight(rect().right() + rect().left() - newRect.left());
         } else {
             newRect.setLeft(qMin(p.x(), rect().right()));
         }
