@@ -43,6 +43,9 @@ void Font::load()
 {
     mFontId = -1;
     QString fname = mFileName;
+    if (fname.isEmpty()) {
+        return;
+    }
     if (SkinRepository::instance().dir().exists(fname)) {
         // add font from skin
         fname = SkinRepository::instance().dir().filePath(fname);

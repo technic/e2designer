@@ -4,7 +4,8 @@
 QFont FontAttr::getFont() const
 {
     QFont f = SkinRepository::fonts()->getValue(mName).font();
-    f.setPixelSize(mSize);
+    if (mSize > 0)
+        f.setPixelSize(mSize);
     return f;
 }
 
