@@ -9,7 +9,9 @@
 #include <QPainter>
 #include <QTextDocument>
 
-WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
+WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* view,
+                                       QModelIndex index,
+                                       WidgetGraphicsItem* parent)
     : ResizableGraphicsRectItem(parent)
     , mScreen(view)
     , mModel(view->model())
@@ -41,7 +43,7 @@ WidgetView::WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent)
     showBorder(mScreen->haveBorders());
 }
 
-void WidgetView::resizeRectEvent(const QRectF& r)
+void WidgetGraphicsItem::resizeRectEvent(const QRectF& r)
 {
     FlagSetter fs(&mRectChange);
 
@@ -57,25 +59,25 @@ void WidgetView::resizeRectEvent(const QRectF& r)
     ResizableGraphicsRectItem::resizeRectEvent(r);
 }
 
-void WidgetView::commitSizeChange(const QSize& size)
+void WidgetGraphicsItem::commitSizeChange(const QSize& size)
 {
     FlagSetter fs(&mRectChange);
     mModel->resizeWidget(mData, size);
 }
 
-void WidgetView::commitRectChange(const QRect& rect)
+void WidgetGraphicsItem::commitRectChange(const QRect& rect)
 {
     FlagSetter fs(&mRectChange);
     mModel->changeWidgetRect(mData, rect);
 }
 
-void WidgetView::commitPositionChange(const QPoint& point)
+void WidgetGraphicsItem::commitPositionChange(const QPoint& point)
 {
     FlagSetter fs(&mRectChange);
     mModel->moveWidget(mData, point);
 }
 
-void WidgetView::updateAttribute(int key)
+void WidgetGraphicsItem::updateAttribute(int key)
 {
     if (mRectChange)
         return;
@@ -159,7 +161,7 @@ void WidgetView::updateAttribute(int key)
     update();
 }
 
-void WidgetView::showBorder(bool show)
+void WidgetGraphicsItem::showBorder(bool show)
 {
     if (show) {
         setPen(QPen(Qt::yellow));
@@ -168,7 +170,9 @@ void WidgetView::showBorder(bool show)
     }
 }
 
-void WidgetView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void WidgetGraphicsItem::paint(QPainter* painter,
+                               const QStyleOptionGraphicsItem* option,
+                               QWidget* widget)
 {
     // no blending in the OSD layer
     painter->setCompositionMode(QPainter::CompositionMode_Source);
@@ -219,7 +223,7 @@ void WidgetView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
     QGraphicsRectItem::paint(painter, option, widget);
 }
 
-void WidgetView::paintBorder(QPainter* painter, const WidgetData& w)
+void WidgetGraphicsItem::paintBorder(QPainter* painter, const WidgetData& w)
 {
     int bw = w.borderWidth();
     if (!(bw > 0))
@@ -238,13 +242,13 @@ void WidgetView::paintBorder(QPainter* painter, const WidgetData& w)
     fillRect(r.right() - bw, r.y() + bw, bw, r.height() - bw);
 }
 
-void WidgetView::paintScreen(QPainter* painter, const WidgetData& w)
+void WidgetGraphicsItem::paintScreen(QPainter* painter, const WidgetData& w)
 {
     if (!w.transparent())
         painter->fillRect(rect(), QBrush(m_background_color));
 }
 
-void WidgetView::paintLabel(QPainter* painter, const WidgetData& w)
+void WidgetGraphicsItem::paintLabel(QPainter* painter, const WidgetData& w)
 {
     if (!w.transparent()) {
         //		painter->setCompositionMode(QPainter::CompositionMode_Difference);
@@ -259,7 +263,7 @@ void WidgetView::paintLabel(QPainter* painter, const WidgetData& w)
     painter->drawText(rect(), w.halign() | w.valign() | Qt::TextWordWrap, text);
 }
 
-void WidgetView::paintPixmap(QPainter* painter, const WidgetData& w)
+void WidgetGraphicsItem::paintPixmap(QPainter* painter, const WidgetData& w)
 {
     painter->save();
 
@@ -276,7 +280,7 @@ void WidgetView::paintPixmap(QPainter* painter, const WidgetData& w)
     painter->restore();
 }
 
-void WidgetView::paintSlider(QPainter* painter, const WidgetData& w)
+void WidgetGraphicsItem::paintSlider(QPainter* painter, const WidgetData& w)
 {
     int percent = qBound(0, w.scenePreview().toInt(), 100);
     QRect r = rect().toRect();
@@ -291,7 +295,7 @@ void WidgetView::paintSlider(QPainter* painter, const WidgetData& w)
     painter->fillRect(r, QBrush(m_foreground_color));
 }
 
-void WidgetView::keyPressEvent(QKeyEvent* event)
+void WidgetGraphicsItem::keyPressEvent(QKeyEvent* event)
 {
     qDebug() << "WidgetView keyPressEvent";
     if (!isSelected()) {
@@ -325,7 +329,8 @@ void WidgetView::keyPressEvent(QKeyEvent* event)
     setPos(pos() + mv);
 }
 
-QVariant WidgetView::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant& value)
+QVariant WidgetGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change,
+                                        const QVariant& value)
 {
     switch (change) {
     case ItemPositionHasChanged:

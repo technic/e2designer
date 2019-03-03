@@ -71,7 +71,7 @@ private:
     // references within mScene
     QGraphicsPixmapItem* mBackground;
     QGraphicsRectItem* mBackgroundRect;
-    QHash<QPersistentModelIndex, WidgetView*> mWidgets;
+    QHash<QPersistentModelIndex, WidgetGraphicsItem*> mWidgets;
 
     bool m_showBorders;
 };

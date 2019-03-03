@@ -1,7 +1,7 @@
 #include <QBrush>
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
-//#include <QGraphicsScene>
+
 #include "recthandle.hpp"
 #include "widgetview.hpp"
 

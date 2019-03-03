@@ -15,11 +15,11 @@ class ScreenView;
  * @brief The WidgetView class
  * glue between WidgetItem (data) and GraphicsItem (actual view)
  */
-class WidgetView : public QObject, public ResizableGraphicsRectItem
+class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem
 {
     Q_OBJECT
 public:
-    WidgetView(ScreenView* view, QModelIndex index, WidgetView* parent);
+    WidgetGraphicsItem(ScreenView* view, QModelIndex index, WidgetGraphicsItem* parent);
 
     enum
     {

@@ -76,7 +76,7 @@ void ScreenView::setScreen(QModelIndex index)
 
     qDebug() << "to delete:" << mWidgets.size();
 
-    WidgetView* oldScreen = mWidgets[mRoot];
+    WidgetGraphicsItem* oldScreen = mWidgets[mRoot];
     if (oldScreen) {
         // All items must be childs of the oldScreen
         mScene->removeItem(oldScreen);
@@ -86,13 +86,13 @@ void ScreenView::setScreen(QModelIndex index)
     mWidgets.clear();
 
     mRoot = normalizeIndex(index);
-    auto* screen = new WidgetView(this, mRoot, nullptr);
+    auto* screen = new WidgetGraphicsItem(this, mRoot, nullptr);
     mWidgets[mRoot] = screen;
     mScene->addItem(screen);
 
     for (int i = 0; i < mModel->rowCount(mRoot); ++i) {
         QModelIndex widgetIndex = mModel->index(i, ScreensModel::ColumnElement, mRoot);
-        auto* view = new WidgetView(this, widgetIndex, screen);
+        auto* view = new WidgetGraphicsItem(this, widgetIndex, screen);
         Q_ASSERT(!mWidgets.contains(widgetIndex));
         mWidgets[widgetIndex] = view;
     }
@@ -135,7 +135,7 @@ void ScreenView::deleteSelected()
     // I only delete last clicked one
     QGraphicsItem* item = mScene->selectedItems().last();
     // FIXME: size check
-    auto w = qgraphicsitem_cast<WidgetView*>(item);
+    auto w = qgraphicsitem_cast<WidgetGraphicsItem*>(item);
     if (w) {
         QModelIndex i = w->modelIndex();
         mModel->removeRow(i.row(), i.parent());
@@ -165,7 +165,7 @@ void ScreenView::onRowsAboutToBeRemoved(const QModelIndex& parent, int first, in
     // check if delete our root
     const int r = mRoot.row();
     if (mRoot.parent() == parent && first <= r && r <= last) {
-        WidgetView* screen = mWidgets[mRoot];
+        WidgetGraphicsItem* screen = mWidgets[mRoot];
         if (screen) {
             mScene->removeItem(screen);
             delete screen;
@@ -178,7 +178,7 @@ void ScreenView::onRowsAboutToBeRemoved(const QModelIndex& parent, int first, in
             Q_ASSERT(mWidgets.contains(index));
 
             if (mWidgets.contains(index)) {
-                WidgetView* w = mWidgets.take(index);
+                WidgetGraphicsItem* w = mWidgets.take(index);
                 // releases ownership
                 mScene->removeItem(w);
                 delete w;
@@ -197,11 +197,11 @@ void ScreenView::onRowsInserted(const QModelIndex& parent, int first, int last)
         return;
 
     // Ok it belongs to our root
-    WidgetView* screen = mWidgets[mRoot];
+    WidgetGraphicsItem* screen = mWidgets[mRoot];
 
     for (int i = first; i <= last; ++i) {
         QModelIndex windex = mModel->index(i, 0, parent);
-        auto* view = new WidgetView(this, windex, screen);
+        auto* view = new WidgetGraphicsItem(this, windex, screen);
         Q_ASSERT(!mWidgets.contains(windex));
         mWidgets[windex] = view;
     }
@@ -236,14 +236,14 @@ void ScreenView::onSceneSelectionChanged()
         }
     }
     for (auto* item : mScene->selectedItems()) {
-        auto w = qgraphicsitem_cast<WidgetView*>(item);
+        auto w = qgraphicsitem_cast<WidgetGraphicsItem*>(item);
         if (w) {
             mSelectionModel->select(makeRowSelection(w->modelIndex()), QItemSelectionModel::Select);
         }
     }
     if (!mScene->selectedItems().empty()) {
         auto* item = mScene->selectedItems().back();
-        auto w = qgraphicsitem_cast<WidgetView*>(item);
+        auto w = qgraphicsitem_cast<WidgetGraphicsItem*>(item);
         if (w) {
             mSelectionModel->setCurrentIndex(w->modelIndex(), QItemSelectionModel::NoUpdate);
         }
