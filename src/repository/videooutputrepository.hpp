@@ -24,6 +24,8 @@ public:
         , m_bpp(0)
         , m_id(-1)
     {}
+    VideoOutput(const QString& id, const VideoOutputData& data);
+
     // Xml
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
@@ -62,6 +64,7 @@ signals:
     void valueChanged(int id, const VideoOutput& output) const;
 
 protected:
+    bool insertRows(int pos, int count);
     void emitValueChanged(const QString& name, const VideoOutput& value) const final;
 };
 

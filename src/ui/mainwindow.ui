@@ -130,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>729</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -161,6 +161,7 @@
     <addaction name="separator"/>
     <addaction name="actionEditColors"/>
     <addaction name="actionEditFonts"/>
+    <addaction name="actionEditOutputs"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -364,6 +365,14 @@
     <string>Check for updates</string>
    </property>
   </action>
+  <action name="actionEditOutputs">
+   <property name="text">
+    <string>Edit &amp;Outputs</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit Video Outputs</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -376,11 +385,6 @@
    <class>CodeEditor</class>
    <extends>QPlainTextEdit</extends>
    <header>editor/codeeditor.hpp</header>
-  </customwidget>
-  <customwidget>
-   <class>QUndoView</class>
-   <extends>QListView</extends>
-   <header>QUndoView</header>
   </customwidget>
  </customwidgets>
  <resources>

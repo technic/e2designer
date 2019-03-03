@@ -54,6 +54,7 @@ private slots:
     void delWidget();
     void editColors();
     void editFonts();
+    void editOutputs();
 
     void checkUpdates();
     void setEditorText(const QModelIndex& index);

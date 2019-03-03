@@ -78,7 +78,10 @@ SOURCES += \
     skin/enumattr.cpp \
     skin/converter.cpp \
     model/propertytree.cpp \
-    skin/offsetattr.cpp
+    skin/offsetattr.cpp \
+    model/outputsmodel.cpp \
+    model/movablelistmodel.cpp \
+    outputslistwindow.cpp
 
 HEADERS += \
     mainwindow.hpp \
@@ -126,12 +129,16 @@ HEADERS += \
     model/propertytree.hpp \
     skin/offsetattr.hpp \
     base/meta.hpp \
-    base/typelist.hpp
+    base/typelist.hpp \
+    model/outputsmodel.hpp \
+    model/movablelistmodel.hpp \
+    outputslistwindow.hpp
 
 FORMS += \
     ui/mainwindow.ui \
     ui/colorlistwindow.ui \
-    ui/fontlistwindow.ui
+    ui/fontlistwindow.ui \
+    ui/outputslistwindow.ui
 
 RESOURCES += \
     data.qrc

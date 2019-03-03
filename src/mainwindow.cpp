@@ -22,6 +22,7 @@
 #include "listbox.hpp"
 #include "model/colorsmodel.hpp"
 #include "repository/skinrepository.hpp"
+#include "outputslistwindow.hpp"
 
 #ifdef APPIMAGE_UPDATE
 #include <AppImageUpdaterDialog>
@@ -298,6 +299,12 @@ void MainWindow::editFonts()
     fontsWindow->show();
 }
 
+void MainWindow::editOutputs()
+{
+    auto outputsWindow = new OutputsListWindow(SkinRepository::outputs(), this);
+    outputsWindow->show();
+}
+
 void MainWindow::checkUpdates()
 {
 #ifdef APPIMAGE_UPDATE
@@ -360,6 +367,7 @@ void MainWindow::createActions()
 
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
     connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);
+    connect(ui->actionEditOutputs, &QAction::triggered, this, &MainWindow::editOutputs);
 }
 
 void MainWindow::readSettings()

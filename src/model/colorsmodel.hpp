@@ -2,6 +2,7 @@
 #define COLORSMODEL_H
 
 #include "namedlist.hpp"
+#include "movablelistmodel.hpp"
 #include "repository/xmlnode.hpp"
 #include <QAbstractTableModel>
 #include <QRgb>
@@ -47,7 +48,7 @@ public:
 /**
  * @brief Provides interface to color pallet used in skin
  */
-class ColorsModel : public QAbstractTableModel, public ColorsList
+class ColorsModel : public MovableListModel, public ColorsList
 {
     Q_OBJECT
 
@@ -79,8 +80,8 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     // Add data:
-    bool insert(int row, const Color& c);
-    bool append(const Color& c);
+    bool insert(int row, const Color& item);
+    bool append(const Color& c) { return insert(itemsCount(), c); }
 
     bool insertRows(int row, int count, const QModelIndex& parent) override;
 
@@ -92,16 +93,6 @@ public:
                   int count,
                   const QModelIndex& destinationParent,
                   int destinationChild) override;
-
-    // Drag and drop
-    /// Returns ownership according to Qt documentation
-    QMimeData* mimeData(const QModelIndexList& indexes) const override;
-    bool dropMimeData(const QMimeData* data,
-                      Qt::DropAction action,
-                      int row,
-                      int column,
-                      const QModelIndex& parent) override;
-    Qt::DropActions supportedDropActions() const override;
 
     // Xml:
     void fromXml(QXmlStreamReader& xml);
@@ -119,10 +110,6 @@ signals:
 
 protected:
     void emitValueChanged(const QString& name, const Color& value) const final;
-
-private:
-    void encodeRows(const QModelIndexList& indexes, QDataStream& stream) const;
-    QList<int> decodeRows(QDataStream& stream) const;
 };
 
 #endif // COLORSMODEL_H

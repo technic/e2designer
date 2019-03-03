@@ -2,6 +2,7 @@
 #define SKINREPOSITORY_H
 
 #include "base/singleton.hpp"
+#include "model/outputsmodel.hpp"
 #include "model/colorsmodel.hpp"
 #include "model/colorsmodel.hpp"
 #include "model/fontsmodel.hpp"
@@ -31,7 +32,7 @@ public:
     static ColorsModel* colors() { return instance().mColors; }
     static FontsModel* fonts() { return instance().mFonts; }
     static ScreensModel* screens() { return instance().mScreensModel; }
-    static VideoOutputRepository* outputs() { return &instance().mOutputRepository; }
+    static OutputsModel* outputs() { return &instance().mOutputRepository; }
     static WindowStylesList* styles() { return &instance().mWindowStyles; }
     QSize outputSize() const;
     inline QDir dir() const { return mDirectory; }
@@ -59,7 +60,7 @@ private:
     ColorRolesModel mRoles;
     FontsModel* mFonts;
     ScreensModel* mScreensModel;
-    VideoOutputRepository mOutputRepository;
+    OutputsModel mOutputRepository;
     WindowStylesList mWindowStyles;
     WindowStyle defaultStyle;
     QDir mDirectory;

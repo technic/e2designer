@@ -24,6 +24,13 @@ void VideoOutputRepository::emitValueChanged(const QString& name, const VideoOut
     emit valueChanged(value.id(), value);
 }
 
+VideoOutput::VideoOutput(const QString& id, const VideoOutputData& data)
+    : m_xres(data.resolution.width())
+    , m_yres(data.resolution.height())
+    , m_bpp(data.bpp)
+    , m_id(id.toInt())
+{}
+
 void VideoOutput::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "output");
