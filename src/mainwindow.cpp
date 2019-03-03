@@ -12,6 +12,7 @@
 #include <QMessageBox>
 #include <QRgb>
 #include <QSettings>
+#include <QStyledItemDelegate>
 #include <QSpinBox>
 #include <QSplitter>
 
@@ -84,21 +85,12 @@ MainWindow::MainWindow(QWidget* parent)
     ui->graphicsView->setScene(mView->scene());
 
     // Setup default editors
+    auto* delegate = new QStyledItemDelegate(this);
     auto* factory = new QItemEditorFactory();
-
-    auto* colorCreator = new QStandardItemEditorCreator<ColorListBox>();
-    factory->registerEditor(QVariant::Color, colorCreator);
-
-    auto* stringCreator = new QStandardItemEditorCreator<QLineEdit>();
-    factory->registerEditor(QVariant::String, stringCreator);
-
-    auto* intCreator = new QStandardItemEditorCreator<QSpinBox>();
-    factory->registerEditor(QVariant::Int, intCreator);
-
-    auto* enumCreator = new QStandardItemEditorCreator<ListBox>();
-    factory->registerEditor(qMetaTypeId<SkinEnumList>(), enumCreator);
-
-    QItemEditorFactory::setDefaultFactory(factory);
+    factory->registerEditor(QVariant::Color, new QStandardItemEditorCreator<ColorListBox>());
+    factory->registerEditor(qMetaTypeId<SkinEnumList>(), new QStandardItemEditorCreator<ListBox>());
+    delegate->setItemEditorFactory(factory);
+    ui->propView->setItemDelegate(delegate);
 
     // Synchronize selections
 
