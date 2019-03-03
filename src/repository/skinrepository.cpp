@@ -113,6 +113,9 @@ bool SkinRepository::save()
 
     file.close();
     mScreensModel->savePreviewTree(previewFilePath());
+
+    // Tell undo model that the state is saved
+    mScreensModel->undoStack()->setClean();
     return true;
 }
 
