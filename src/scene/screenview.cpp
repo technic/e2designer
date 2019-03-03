@@ -297,33 +297,3 @@ void ScreenView::updateSelection(const QItemSelection& selected, const QItemSele
         }
     }
 }
-
-// bool ScreenView::isInOurView(QModelIndex index)
-//{
-//	// we track only first column
-//	widget = index.sibling(widget.row(), 0);
-
-//	while (widget.isValid() && !isWidget(widget)) {
-//		widget = widget.parent();
-//	}
-//	QModelIndex screen = widget;
-//	while (screen.isValid() && screen.data(RoleType) != TypeScreen) {
-//		screen = screen.parent();
-//	}
-//	if (!screen.isValid()) {
-//		qDebug() << "selected not in screen";
-//		return;
-//	}
-//	if (!(m_view && m_view->currentIndex() == screen)) {
-//		if (m_view)
-//			delete m_view;
-//		m_view = new ScreenView(m_model, screen);
-//	    ui->graphicsView->setScene(m_view->scene());
-//		ui->graphicsView->fitInView(m_view->scene()->sceneRect(),
-// Qt::KeepAspectRatio);
-//		QObject::connect(m_view, &ScreenView::selectionChanged, this,
-//&MainWindow::updateSceneSelection);
-//	}
-//	m_view->selectWidget(widget);
-
-//}

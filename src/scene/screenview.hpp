@@ -56,7 +56,6 @@ private slots:
 private:
     QModelIndex normalizeIndex(const QModelIndex& index) const;
     QItemSelection makeRowSelection(const QModelIndex& index);
-    //	bool isInOurView(QModelIndex index);
     const int mOutputId = 0;
 
     // ref
