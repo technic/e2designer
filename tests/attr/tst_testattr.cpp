@@ -68,7 +68,7 @@ private slots:
     }
 };
 
-TestAttr::TestAttr() {}
+TestAttr::TestAttr() = default;
 
 QTEST_APPLESS_MAIN(TestAttr)
 

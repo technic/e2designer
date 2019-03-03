@@ -262,7 +262,7 @@ WidgetData::WidgetData()
     Q_ASSERT(reflection.hasAllKeys());
 }
 
-WidgetData::~WidgetData() {}
+WidgetData::~WidgetData() = default;
 
 bool WidgetData::insertChild(int position, WidgetData* child)
 {
@@ -584,7 +584,7 @@ QVariant WidgetData::scenePreview() const
         }
     }
     Source* finalSource = source;
-    if (m_converters.size() > 0) {
+    if (!m_converters.empty()) {
         finalSource = m_converters.back().get();
     }
     using R = Property::Render;

@@ -8,7 +8,7 @@ class TestConverter : public QObject
     Q_OBJECT
 
 public:
-    TestConverter() {}
+    TestConverter() = default;
 
 private slots:
     void initTestCase()

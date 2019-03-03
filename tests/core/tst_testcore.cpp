@@ -43,7 +43,7 @@ class ItemList : public NamedList<Item>
 
     // NamedList interface
 protected:
-    void emitValueChanged(const QString& name, const Item& value) const final{};
+    void emitValueChanged(const QString& name, const Item& value) const final {}
 };
 
 class TestCore : public QObject

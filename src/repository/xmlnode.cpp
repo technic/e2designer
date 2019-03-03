@@ -2,7 +2,7 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-XmlData::XmlData() {}
+XmlData::XmlData() = default;
 bool XmlData::nextXmlChild(QXmlStreamReader& xml)
 {
     using TokenType = QXmlStreamReader::TokenType;
