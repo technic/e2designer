@@ -19,7 +19,7 @@ class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem
 {
     Q_OBJECT
 public:
-    WidgetGraphicsItem(ScreenView* view, QModelIndex index, WidgetGraphicsItem* parent);
+    WidgetGraphicsItem(ScreenView* sreen, QModelIndex index, WidgetGraphicsItem* parent);
 
     enum
     {
@@ -50,7 +50,6 @@ private:
     ScreenView* mScreen;
     ScreensModel* mModel;
     QPersistentModelIndex mData;
-    //    RectSelector *mSelector;
 
     // Observer
     WidgetObserverRegistrator mObserver;

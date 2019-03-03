@@ -9,12 +9,12 @@
 #include <QPainter>
 #include <QTextDocument>
 
-WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* view,
+WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* sreen,
                                        QModelIndex index,
                                        WidgetGraphicsItem* parent)
     : ResizableGraphicsRectItem(parent)
-    , mScreen(view)
-    , mModel(view->model())
+    , mScreen(sreen)
+    , mModel(sreen->model())
     , mData(index)
     , mObserver(mModel, index)
     , mRectChange(false)
@@ -36,10 +36,6 @@ WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* view,
     for (int i = 0; i < props.keyCount(); ++i) {
         updateAttribute(i);
     }
-
-    //    connect(&SkinRepository::screens()->widget(index), &WidgetData::attrChanged, this,
-    //            &WidgetView::setAttribute);
-
     showBorder(mScreen->haveBorders());
 }
 
@@ -353,13 +349,6 @@ QVariant WidgetGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change
             setFlag(ItemIsFocusable, false);
             setFlag(ItemIsMovable, false);
         }
-        break;
-    case ItemSceneHasChanged:
-        //        mSelector->setParentItem(parentItem());
-        //        if (mSelector->parentItem() == nullptr) {
-        //            if (scene())
-        //                scene()->addItem(mSelector);
-        //        }
         break;
     default:
         break;
