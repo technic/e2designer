@@ -18,7 +18,12 @@ Font::Font(const QString& name, const QString& fileName)
 
 QFont Font::font() const
 {
-    // FIXME: implement!
+    if (mFontId >= 0) {
+        auto families = QFontDatabase::applicationFontFamilies(mFontId);
+        if (!families.isEmpty()) {
+            return QFont(families.first());
+        }
+    }
     return QFont();
 }
 
@@ -83,7 +88,7 @@ void FontsList::fromXml(QXmlStreamReader& xml)
             Font f;
             f.fromXml(xml);
             if (f.name().isEmpty() || f.name().isNull()) {
-                qWarning() << "empty or null color name";
+                qWarning() << "empty or null font name";
                 continue;
             }
             if (canInsertItem(f)) {
