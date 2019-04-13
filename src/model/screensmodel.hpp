@@ -107,7 +107,7 @@ public:
 
     // Xml:
     void appendFromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml);
+    void toXml(XmlStreamWriter &xml);
 
     // Read only access to widget:
     const WidgetData& widget(const QModelIndex& index) const;

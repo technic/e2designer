@@ -81,7 +81,8 @@ SOURCES += \
     skin/offsetattr.cpp \
     model/outputsmodel.cpp \
     model/movablelistmodel.cpp \
-    outputslistwindow.cpp
+    outputslistwindow.cpp \
+    base/xmlstreamwriter.cpp
 
 HEADERS += \
     mainwindow.hpp \
@@ -132,7 +133,8 @@ HEADERS += \
     base/typelist.hpp \
     model/outputsmodel.hpp \
     model/movablelistmodel.hpp \
-    outputslistwindow.hpp
+    outputslistwindow.hpp \
+    base/xmlstreamwriter.hpp
 
 FORMS += \
     ui/mainwindow.ui \

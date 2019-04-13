@@ -314,7 +314,7 @@ void MainWindow::checkUpdates()
 void MainWindow::setEditorText(const QModelIndex& index)
 {
     QString str;
-    QXmlStreamWriter xml(&str);
+    XmlStreamWriter xml(&str);
     xml.setAutoFormatting(true);
     xml.setAutoFormattingIndent(2);
     SkinRepository::screens()->widget(index).toXml(xml);

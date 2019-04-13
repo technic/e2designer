@@ -8,11 +8,11 @@
 #include <QDebug>
 #include <QDateTime>
 #include <memory>
+#include "base/xmlstreamwriter.hpp"
 #include "base/singleton.hpp"
 #include "base/meta.hpp"
 
 class QXmlStreamReader;
-class QXmlStreamWriter;
 
 class Source
 {
@@ -68,7 +68,7 @@ class Converter : public Source
 public:
     Converter() {}
     void fromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml) const;
+    void toXml(XmlStreamWriter& xml) const;
     const QString& arg() const { return m_text; }
     void setArg(const QString& arg);
     const QString& type() const { return m_type; }

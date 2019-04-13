@@ -31,12 +31,12 @@ void Converter::fromXml(QXmlStreamReader& xml)
     parseArgument();
 }
 
-void Converter::toXml(QXmlStreamWriter& xml) const
+void Converter::toXml(XmlStreamWriter& xml) const
 {
     xml.writeStartElement("convert");
     xml.writeAttribute("type", m_type);
     if (!m_text.isEmpty())
-        xml.writeCharacters(m_text);
+        xml.writeQuotedCharacters(m_text);
     xml.writeEndElement();
 }
 

@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include "base/xmlstreamwriter.hpp"
 
 SkinRepository::SkinRepository(QObject* parent)
     : QObject(parent)
@@ -104,7 +105,7 @@ bool SkinRepository::save()
         return false;
     }
 
-    QXmlStreamWriter xml(&file);
+    XmlStreamWriter xml(&file);
     xml.setAutoFormatting(true);
     xml.setAutoFormattingIndent(2);
     xml.writeStartDocument();
@@ -186,7 +187,7 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
     }
 }
 
-void SkinRepository::toXml(QXmlStreamWriter& xml) const
+void SkinRepository::toXml(XmlStreamWriter& xml) const
 {
     xml.writeStartElement("skin");
     mOutputRepository.toXml(xml);

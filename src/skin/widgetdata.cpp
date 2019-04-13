@@ -676,7 +676,7 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
     }
 }
 
-void WidgetData::toXml(QXmlStreamWriter& xml) const
+void WidgetData::toXml(XmlStreamWriter& xml) const
 {
     xml.writeStartElement(typeStr());
 

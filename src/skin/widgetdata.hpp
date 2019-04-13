@@ -163,7 +163,7 @@ public:
 
     // Xml
     void fromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml) const;
+    void toXml(XmlStreamWriter& xml) const;
 
     // Attribute get/set QVariant methods
     QVariant getAttr(int key) const;

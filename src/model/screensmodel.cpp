@@ -416,7 +416,7 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
     endInsertRows();
 }
 
-void ScreensModel::toXml(QXmlStreamWriter& xml)
+void ScreensModel::toXml(XmlStreamWriter& xml)
 {
     for (int i = 0; i < mRoot->childCount(); ++i) {
         mRoot->child(i)->toXml(xml);
