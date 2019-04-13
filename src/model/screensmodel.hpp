@@ -122,7 +122,7 @@ public:
     //    }
 
     // Access asosiated fonts and colors
-    const ColorsModel& colors() const { return m_colorsModel; };
+    const ColorsModel& colors() const { return m_colorsModel; }
     const FontsModel& fonts() const { return m_fontsModel; }
     const ColorRolesModel& roles() const { return m_colorRolesModel; }
 
