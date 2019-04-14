@@ -3,6 +3,7 @@
 
 if test -z "$1"; then
     echo "Usage: $0 <job>"
+    exit 1
 fi
 
 docker run --rm \
@@ -13,4 +14,4 @@ docker run --rm \
     exec docker \
         --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
         --docker-pull-policy if-not-present \
-        $1
+        "$1"
