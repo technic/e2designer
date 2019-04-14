@@ -107,7 +107,7 @@ public:
 
     // Xml:
     void appendFromXml(QXmlStreamReader& xml);
-    void toXml(XmlStreamWriter &xml);
+    void toXml(XmlStreamWriter& xml);
 
     // Read only access to widget:
     const WidgetData& widget(const QModelIndex& index) const;
@@ -120,6 +120,9 @@ public:
     //    bool setWidgetAttr(const QModelIndex &index, int key, const T &value) {
     //        return setWidgetAttr(index, key, QVariant::fromValue(value));
     //    }
+
+    // Edit widget with XML editor
+    bool setWidgetDataFromXml(const QModelIndex& index, QXmlStreamReader& xml);
 
     // Access asosiated fonts and colors
     const ColorsModel& colors() const { return m_colorsModel; }

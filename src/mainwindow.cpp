@@ -324,6 +324,18 @@ void MainWindow::setEditorText(const QModelIndex& index)
     ui->textEdit->document()->setPlainText(str);
 }
 
+void MainWindow::loadEditorText()
+{
+    auto* model = SkinRepository::screens();
+    QModelIndex index = ui->treeView->selectionModel()->currentIndex();
+    QModelIndex parent = index.parent();
+    QXmlStreamReader xml(ui->textEdit->toPlainText());
+    xml.readNextStartElement();
+    model->setWidgetDataFromXml(index, xml);
+    index = model->index(index.row(), ScreensModel::ColumnElement, parent);
+    ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Current);
+}
+
 void MainWindow::createActions()
 {
     // Connect actions
@@ -360,6 +372,9 @@ void MainWindow::createActions()
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
     connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);
     connect(ui->actionEditOutputs, &QAction::triggered, this, &MainWindow::editOutputs);
+
+    // Connect buttons
+    connect(ui->refreshButton, &QPushButton::clicked, this, &MainWindow::loadEditorText);
 }
 
 void MainWindow::readSettings()

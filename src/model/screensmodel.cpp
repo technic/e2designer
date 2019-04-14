@@ -449,6 +449,24 @@ bool ScreensModel::setWidgetAttr(const QModelIndex& index, int key, const QVaria
     return false;
 }
 
+bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamReader& xml)
+{
+    QModelIndex parent = index.parent();
+    int row = index.row();
+
+    removeRow(row, parent);
+    insertRow(row, parent);
+
+    auto* widget = indexToItem(parent)->child(row);
+    widget->fromXml(xml);
+    //    auto* widget = indexToItem(index);
+    //    if (widget) {
+    //        mCommander->push();
+    //    }
+    //    return false;
+    return true;
+}
+
 void ScreensModel::resizeWidget(const QModelIndex& index, const QSize& size)
 {
     auto* widget = indexToItem(index);
