@@ -13,5 +13,6 @@ docker run --rm \
     gitlab/gitlab-runner:latest \
     exec docker \
         --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
+        --docker-privileged \
         --docker-pull-policy if-not-present \
         "$1"
