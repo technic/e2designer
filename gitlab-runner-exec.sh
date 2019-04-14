@@ -7,6 +7,8 @@ if test -z "$1"; then
     exit 1
 fi
 
+export MSYS_NO_PATHCONV=1
+
 docker run --rm \
     --volume /var/run/docker.sock:/var/run/docker.sock \
     --volume $PWD:$PWD \
