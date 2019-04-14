@@ -50,7 +50,11 @@ public:
                   const QModelIndex& destinationParent,
                   int destinationChild) override;
 
-private:
+signals:
+    void valueChanged(int id, const VideoOutput& output) const;
+
+protected:
+    void emitValueChanged(const QString& name, const VideoOutput& value) const final;
 };
 
 #endif // OUTPUTSMODEL_HPP

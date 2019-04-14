@@ -26,7 +26,7 @@ ScreenView::ScreenView(ScreensModel* model)
     // set inital scene size and subscribe to changes
     setSceneSize(SkinRepository::outputs()->getOutput(mOutputId).size());
     connect(SkinRepository::outputs(),
-            &VideoOutputRepository::valueChanged,
+            &OutputsModel::valueChanged,
             this,
             &ScreenView::onOutputChanged);
 

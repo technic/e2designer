@@ -150,3 +150,9 @@ bool OutputsModel::moveRows(const QModelIndex& sourceParent,
     qWarning() << "Requested move is not allowed!";
     return false;
 }
+
+void OutputsModel::emitValueChanged(const QString& name, const VideoOutput& value) const
+{
+    Q_UNUSED(name);
+    emit valueChanged(value.id(), value);
+}

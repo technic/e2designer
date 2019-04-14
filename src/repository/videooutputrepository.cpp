@@ -18,12 +18,6 @@ void VideoOutputRepository::toXml(QXmlStreamWriter& xml) const
     }
 }
 
-void VideoOutputRepository::emitValueChanged(const QString& name, const VideoOutput& value) const
-{
-    Q_UNUSED(name);
-    emit valueChanged(value.id(), value);
-}
-
 VideoOutput::VideoOutput(const QString& id, const VideoOutputData& data)
     : m_xres(data.resolution.width())
     , m_yres(data.resolution.height())

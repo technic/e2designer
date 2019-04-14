@@ -48,9 +48,8 @@ private:
     int m_id;
 };
 
-class VideoOutputRepository : public QObject, public NamedList<VideoOutput>, public XmlData
+class VideoOutputRepository : public NamedList<VideoOutput>, public XmlData
 {
-    Q_OBJECT
 public:
     VideoOutputRepository();
 
@@ -59,13 +58,6 @@ public:
 
     inline VideoOutput getOutput(int id = 0) const { return getValue(QString::number(id)); }
     void clear() { removeItems(0, itemsCount()); }
-
-signals:
-    void valueChanged(int id, const VideoOutput& output) const;
-
-protected:
-    bool insertRows(int pos, int count);
-    void emitValueChanged(const QString& name, const VideoOutput& value) const final;
 };
 
 #endif // VIDEOOUTPUTREPOSITORY_H
