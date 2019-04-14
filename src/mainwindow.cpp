@@ -336,6 +336,15 @@ void MainWindow::loadEditorText()
     ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Current);
 }
 
+void MainWindow::showXmlEditor(bool show)
+{
+    if (show) {
+        ui->splitterR->setSizes(QList<int>{ 300, 300 });
+    } else {
+        ui->splitterR->setSizes(QList<int>{ 0, 10 });
+    }
+}
+
 void MainWindow::createActions()
 {
     // Connect actions
@@ -368,6 +377,7 @@ void MainWindow::createActions()
 
     ui->actionWidget_borders->setChecked(mView->haveBorders());
     connect(ui->actionWidget_borders, &QAction::triggered, mView, &ScreenView::displayBorders);
+    connect(ui->actionXmlEditor, &QAction::triggered, this, &MainWindow::showXmlEditor);
 
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
     connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);

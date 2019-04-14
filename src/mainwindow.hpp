@@ -59,6 +59,7 @@ private slots:
     void checkUpdates();
     void setEditorText(const QModelIndex& index);
     void loadEditorText();
+    void showXmlEditor(bool show);
 
 private:
     // menu and toolbar
