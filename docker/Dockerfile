@@ -9,12 +9,16 @@ RUN apt-add-repository -y ppa:beineri/opt-qt-5.11.1-xenial \
 RUN sed -i '/^TEST/d' /opt/qt511/bin/qt511-env.sh
 RUN echo "source /opt/qt511/bin/qt511-env.sh" >> $HOME/.bashrc
 
-RUN apt-get install -y fuse ccache zsync
+RUN apt-get install -y fuse ccache zsync gcovr lcov doxygen graphviz
 
-RUN apt-get install -y clang-6.0 clang-format-6.0 clang-tidy-6.0 clang-tools-6.0 bear python-yaml \
- && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-6.0 100 \
- && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-6.0 100 \
- && update-alternatives --install /usr/bin/run-clang-tidy.py run-clang-tidy.py /usr/bin/run-clang-tidy-6.0.py 100 \
- && update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-6.0 100 \
- && update-alternatives --install /usr/bin/scan-build scan-build /usr/bin/scan-build-6.0 100
+ARG v=9
+RUN apt-add-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main' \
+    && curl https://apt.llvm.org/llvm-snapshot.gpg.key |apt-key add - \
+    && apt-get update
 
+RUN apt-get install -y clang-$v clang-format-$v clang-tidy-$v clang-tools-$v bear python-yaml \
+ && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-$v 100 \
+ && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-$v 100 \
+ && update-alternatives --install /usr/bin/run-clang-tidy.py run-clang-tidy.py /usr/bin/run-clang-tidy-$v.py 100 \
+ && update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-$v 100 \
+ && update-alternatives --install /usr/bin/scan-build scan-build /usr/bin/scan-build-$v 100
