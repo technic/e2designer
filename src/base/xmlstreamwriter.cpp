@@ -7,7 +7,9 @@ void XmlStreamWriter::writeQuotedCharacters(const QString& text)
         writeCharacters(part);
         if (part != parts.back()) {
             // XML allows to have unquoted charectes inside the element
-            device()->putChar('"');
+            if (device()) {
+                device()->putChar('"');
+            }
         }
     }
 }
