@@ -12,7 +12,6 @@ variables:
 stages:
   - images
   - build
-  - test
   - deploy
 
 image-ubuntu:
@@ -77,7 +76,7 @@ build:
       - ccache/
 
 clazy:
-  stage: test
+  stage: build
   script:
     - curl -o /usr/local/bin/clazy http://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
     - chmod a+x /usr/local/bin/clazy
@@ -87,7 +86,7 @@ clazy:
   allow_failure: true
 
 clang-tidy:
-  stage: test
+  stage: build
   script:
     - mkdir -p build && cd build
     - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
@@ -95,7 +94,7 @@ clang-tidy:
     - run-clang-tidy.py
 
 test:
-  stage: test
+  stage: build
   script:
   - mkdir -p build && cd build
   - qmake .. "QMAKE_CXX = ccache g++"
