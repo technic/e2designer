@@ -89,6 +89,8 @@ clazy:
 clang-tidy:
   stage: build
   script:
+    - lcov --version
+    - gcov --version
     - mkdir -p build && cd build
     - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
     - bear make
