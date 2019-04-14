@@ -48,6 +48,7 @@ before_script:
   - export CCACHE_DIR=${PWD}/ccache
   - ccache -sz
   - export VERSION=$(git describe)
+  - cat /proc/cpuinfo
 
 build:
   stage: build
