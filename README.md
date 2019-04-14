@@ -39,6 +39,12 @@ make
 # License
 GPLv3
 
+# Updating subtrees
+We need to pull upstream from time to time:
+```
+git subtree pull -P Qt-Color-Widgets/ --squash git@gitlab.com:mattia.basaglia/Qt-Color-Widgets.git master
+```
+
 # Credits
 Libraries:
 [Qt-Color-Widgets](https://github.com/mbasaglia/Qt-Color-Widgets)

@@ -1,5 +1,6 @@
 #!/bin/bash
 # According to https://gitlab.com/gitlab-org/gitlab-runner/issues/2438#note_34431388
+# More complicated command is required on Windows
 
 if test -z "$1"; then
     echo "Usage: $0 <job>"
