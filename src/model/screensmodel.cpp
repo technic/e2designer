@@ -157,13 +157,7 @@ QModelIndex ScreensModel::index(int row, int column, const QModelIndex& parent) 
         return QModelIndex();
     }
 
-    Item* parentItem;
-    if (!parent.isValid()) {
-        parentItem = mRoot;
-    } else {
-        parentItem = castItem(parent);
-    }
-
+    Item* parentItem = indexToItem(parent);
     Item* childItem = parentItem->child(row);
     if (childItem)
         return createIndex(row, column, childItem);
@@ -184,12 +178,7 @@ QModelIndex ScreensModel::parent(const QModelIndex& index) const
 
 int ScreensModel::rowCount(const QModelIndex& parent) const
 {
-    Item* parentItem;
-    if (!parent.isValid())
-        parentItem = mRoot;
-    else
-        parentItem = castItem(parent);
-
+    Item* parentItem = indexToItem(parent);
     return parentItem->childCount();
 }
 
@@ -204,7 +193,7 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    auto* widget = static_cast<const WidgetData*>(index.internalPointer());
+    auto* widget = castItem(index);
 
     switch (role) {
     case Qt::DisplayRole:
@@ -238,7 +227,7 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
     if (!index.isValid())
         return false;
 
-    auto* widget = static_cast<WidgetData*>(index.internalPointer());
+    auto* widget = castItem(index);
 
     switch (role) {
     case Qt::EditRole:
@@ -280,12 +269,7 @@ Qt::ItemFlags ScreensModel::flags(const QModelIndex& index) const
 
 bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
 {
-    Item* parentItem;
-    if (!parent.isValid())
-        parentItem = mRoot;
-    else
-        parentItem = castItem(parent);
-
+    Item* parentItem = indexToItem(parent);
     if (row < 0 || row > rowCount(parent)) {
         return false;
     }
@@ -300,12 +284,7 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
 
 bool ScreensModel::removeRows(int row, int count, const QModelIndex& parent)
 {
-    Item* parentItem;
-    if (!parent.isValid())
-        parentItem = mRoot;
-    else
-        parentItem = castItem(parent);
-
+    Item* parentItem = indexToItem(parent);
     if (count <= 0 || row < 0 || row + count > parentItem->childCount()) {
         return false;
     }
