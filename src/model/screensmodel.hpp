@@ -3,6 +3,7 @@
 
 #include "skin/widgetdata.hpp"
 #include "model/windowstyle.hpp"
+#include "commands/attrcommand.hpp"
 #include <QAbstractItemModel>
 #include <QUndoStack>
 
@@ -156,6 +157,12 @@ public slots:
     void onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value);
     void onFontChanged(const QString& name, const Font& value);
 
+protected:
+    QVector<WidgetData*> takeChildren(int row, int count, WidgetData& parent);
+    void insertChildren(int row, QVector<WidgetData*> childs, WidgetData& parent);
+    friend class RemoveRowsCommand;
+    friend class InsertRowsCommand;
+
 private:
     Item* indexToItem(const QModelIndex& index) const;
     static Item* castItem(const QModelIndex& index);
@@ -195,6 +202,45 @@ public:
 private:
     ScreensModel* m_model;
     QPersistentModelIndex m_index;
+};
+
+class RemoveRowsCommand : public QUndoCommand
+{
+public:
+    RemoveRowsCommand(WidgetData& root, int row, int count, QUndoCommand* parent = nullptr);
+    int id() const final { return getCommandId<decltype(this)>(); }
+    void redo() final;
+    void undo() final;
+    ~RemoveRowsCommand();
+
+private:
+    // Reference to the parent element
+    WidgetData& m_root;
+    int m_row;
+    int m_count;
+    // Takes ownership of items removed from the model
+    QVector<WidgetData*> m_items;
+};
+
+class InsertRowsCommand : public QUndoCommand
+{
+public:
+    InsertRowsCommand(WidgetData& root,
+                      int row,
+                      QVector<WidgetData*> items,
+                      QUndoCommand* parent = nullptr);
+    int id() const final { return getCommandId<decltype(this)>(); }
+    void redo() final;
+    void undo() final;
+    ~InsertRowsCommand();
+
+private:
+    // Reference to the parent element
+    WidgetData& m_root;
+    int m_row;
+    int m_count;
+    // Holds ownership of items until they are passed to the model
+    QVector<WidgetData*> m_items;
 };
 
 #endif // SCREENSMODEL_H

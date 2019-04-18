@@ -17,8 +17,14 @@ class AttrCommand;
 class MoveWidgetCommand;
 class ResizeWidgetCommand;
 class ChangeRectWidgetCommand;
-using CommandClasses =
-  TypeList<AttrCommand, MoveWidgetCommand, ResizeWidgetCommand, ChangeRectWidgetCommand>;
+class RemoveRowsCommand;
+class InsertRowsCommand;
+using CommandClasses = TypeList<AttrCommand,
+                                MoveWidgetCommand,
+                                ResizeWidgetCommand,
+                                ChangeRectWidgetCommand,
+                                RemoveRowsCommand,
+                                InsertRowsCommand>;
 
 template<typename T>
 static inline int getCommandId()

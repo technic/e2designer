@@ -274,11 +274,11 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
         return false;
     }
 
-    beginInsertRows(parent, row, row + count - 1);
+    QVector<WidgetData*> childs;
     for (int i = 0; i < count; ++i) {
-        parentItem->insertChild(row, new WidgetData());
+        childs.append(new WidgetData());
     }
-    endInsertRows();
+    mCommander->push(new InsertRowsCommand(*parentItem, row, childs));
     return true;
 }
 
@@ -288,10 +288,29 @@ bool ScreensModel::removeRows(int row, int count, const QModelIndex& parent)
     if (count <= 0 || row < 0 || row + count > parentItem->childCount()) {
         return false;
     }
-    beginRemoveRows(parent, row, row + count - 1);
-    parentItem->removeChildren(row, count);
-    endRemoveRows();
+    mCommander->push(new RemoveRowsCommand(*parentItem, row, count));
     return true;
+}
+
+/// Takes children from parent emitting necessary notifications
+QVector<WidgetData*> ScreensModel::takeChildren(int row, int count, WidgetData& parent)
+{
+    Q_ASSERT(count > 0 && 0 <= row && row + count <= parent.childCount());
+    QModelIndex parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
+    beginRemoveRows(parentIndex, row, row + count - 1);
+    auto items = parent.takeChildren(row, count);
+    endRemoveRows();
+    return items;
+}
+
+/// Inserts children into parent emitting necessary notifications
+void ScreensModel::insertChildren(int row, QVector<WidgetData*> childs, WidgetData& parent)
+{
+    Q_ASSERT(0 <= row && row <= parent.childCount());
+    QModelIndex parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
+    beginInsertRows(parentIndex, row, row + childs.count() - 1);
+    parent.insertChildren(row, childs);
+    endInsertRows();
 }
 
 void ScreensModel::clear()
@@ -681,4 +700,64 @@ void WidgetObserverRegistrator::setIndex(const QModelIndex& index)
 WidgetObserverRegistrator::~WidgetObserverRegistrator()
 {
     m_model->unregisterObserver(m_index);
+}
+
+RemoveRowsCommand::RemoveRowsCommand(WidgetData& root, int row, int count, QUndoCommand* parent)
+    : QUndoCommand(parent)
+    , m_root(root)
+    , m_row(row)
+    , m_count(count)
+{
+    // Can not work without a model
+    Q_ASSERT(m_root.model() != nullptr);
+}
+
+void RemoveRowsCommand::redo()
+{
+    // Take ownership from the model
+    m_items = m_root.model()->takeChildren(m_row, m_count, m_root);
+}
+
+void RemoveRowsCommand::undo()
+{
+    // Transfer ownership to the model
+    m_root.model()->insertChildren(m_row, m_items, m_root);
+    m_items.clear();
+}
+
+RemoveRowsCommand::~RemoveRowsCommand()
+{
+    qDeleteAll(m_items);
+}
+
+InsertRowsCommand::InsertRowsCommand(WidgetData& root,
+                                     int row,
+                                     QVector<WidgetData*> items,
+                                     QUndoCommand* parent)
+    : QUndoCommand(parent)
+    , m_root(root)
+    , m_row(row)
+    , m_count(items.count())
+    , m_items(items)
+{
+    // Can not work without a model
+    Q_ASSERT(m_root.model() != nullptr);
+}
+
+void InsertRowsCommand::redo()
+{
+    // Transfer ownership to the model
+    m_root.model()->insertChildren(m_row, m_items, m_root);
+    m_items.clear();
+}
+
+void InsertRowsCommand::undo()
+{
+    // Take ownership from the model
+    m_items = m_root.model()->takeChildren(m_row, m_count, m_root);
+}
+
+InsertRowsCommand::~InsertRowsCommand()
+{
+    qDeleteAll(m_items);
 }

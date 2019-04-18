@@ -5,4 +5,5 @@ SUBDIRS += \
     attr \
     converter \
     core \
-    typelist
+    typelist \
+    models
