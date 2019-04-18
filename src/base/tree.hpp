@@ -148,7 +148,8 @@ bool MixinTreeNode<T>::insertChildren(int position, QVector<T*> list)
     auto it = mChilds.begin() + position;
     for (int i = 0; i < list.count(); i++) {
         list[i]->mParent = this;
-        it = mChilds.insert(it, list[i]);
+        it = mChilds.insert(it, list[i]); // Inserts before iterator
+        it++;
     }
     return true;
 }
