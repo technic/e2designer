@@ -3,11 +3,12 @@ FROM ubuntu:16.04
 RUN apt-get update \
  && apt-get install -y curl git g++ make software-properties-common
 
-RUN apt-add-repository -y ppa:beineri/opt-qt-5.11.1-xenial \
- && apt-get update && apt-get install -y qt511base qt511tools qt511svg libgl1-mesa-dev
+ARG Qt=512
+RUN apt-add-repository -y ppa:beineri/opt-qt-5.12.2-xenial \
+ && apt-get update && apt-get install -y qt${Qt}base qt${Qt}tools qt${Qt}svg libgl1-mesa-dev
 # disable grep and exec part of the script
-RUN sed -i '/^TEST/d' /opt/qt511/bin/qt511-env.sh
-RUN echo "source /opt/qt511/bin/qt511-env.sh" >> $HOME/.bashrc
+RUN sed -i '/^TEST/d' /opt/qt${Qt}/bin/qt${Qt}-env.sh
+RUN echo "source /opt/qt${Qt}/bin/qt${Qt}-env.sh" >> $HOME/.bashrc
 
 RUN apt-get install -y fuse ccache zsync gcovr lcov doxygen graphviz
 
