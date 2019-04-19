@@ -2,9 +2,6 @@
 #include <QVector>
 #include <vector>
 #include "model/namedlist.hpp"
-#include "skin/colorattr.hpp"
-
-// add necessary includes here
 
 class Item
 {
