@@ -12,8 +12,8 @@ RUN echo "source /opt/qt${Qt}/bin/qt${Qt}-env.sh" >> $HOME/.bashrc
 
 RUN apt-get install -y fuse ccache zsync gcovr lcov doxygen graphviz
 
-ARG v=9
-RUN apt-add-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial main' \
+ARG v=8
+RUN apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-$v main" \
     && curl https://apt.llvm.org/llvm-snapshot.gpg.key |apt-key add - \
     && apt-get update
 
