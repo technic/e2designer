@@ -35,7 +35,8 @@ format:
     - clang-format --version
   script:
     - clang-format -style=file -i
-      $(find . -type d -path './Qt-Color-Widgets' -prune -iname '*.hpp' -o -iname '*.cpp')
+      $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' \) -prune -o
+      \( -name '*.hpp' -o -name '*.cpp' \) -print)
     - git diff --exit-code
 
 before_script:
