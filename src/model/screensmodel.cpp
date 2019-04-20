@@ -296,7 +296,11 @@ bool ScreensModel::removeRows(int row, int count, const QModelIndex& parent)
 QVector<WidgetData*> ScreensModel::takeChildren(int row, int count, WidgetData& parent)
 {
     Q_ASSERT(count > 0 && 0 <= row && row + count <= parent.childCount());
-    QModelIndex parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
+    QModelIndex parentIndex;
+    // createIndex doesn't work for root node
+    if (&parent != mRoot) {
+        parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
+    }
     beginRemoveRows(parentIndex, row, row + count - 1);
     auto items = parent.takeChildren(row, count);
     endRemoveRows();
@@ -307,7 +311,11 @@ QVector<WidgetData*> ScreensModel::takeChildren(int row, int count, WidgetData& 
 void ScreensModel::insertChildren(int row, QVector<WidgetData*> childs, WidgetData& parent)
 {
     Q_ASSERT(0 <= row && row <= parent.childCount());
-    QModelIndex parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
+    QModelIndex parentIndex;
+    // createIndex doesn't work for root node
+    if (&parent != mRoot) {
+        parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
+    }
     beginInsertRows(parentIndex, row, row + childs.count() - 1);
     parent.insertChildren(row, childs);
     endInsertRows();
