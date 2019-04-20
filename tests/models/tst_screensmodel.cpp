@@ -1,4 +1,5 @@
 #include <QTest>
+#include <QAbstractItemModel>
 #include <QAbstractItemModelTester>
 #include "autotests.hpp"
 #include "model/screensmodel.hpp"
