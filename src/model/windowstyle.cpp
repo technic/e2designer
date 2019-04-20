@@ -49,7 +49,6 @@ void WindowStyleColor::toXml(QXmlStreamWriter& xml) const
 
 WindowStyle::WindowStyle()
     : m_id(-1)
-    , m_colors(roleCount())
 {}
 
 void WindowStyle::fromXml(QXmlStreamReader& xml)
@@ -58,7 +57,7 @@ void WindowStyle::fromXml(QXmlStreamReader& xml)
 
     m_type = xml.attributes().value("type").toString();
     m_id = xml.attributes().value("id").toInt();
-    m_colors = QVector<WindowStyleColor>(roleCount());
+    m_colors.clear();
 
     while (nextXmlChild(xml)) {
         if (xml.isStartElement()) {
