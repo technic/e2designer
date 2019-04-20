@@ -718,6 +718,7 @@ RemoveRowsCommand::RemoveRowsCommand(WidgetData& root, int row, int count, QUndo
 {
     // Can not work without a model
     Q_ASSERT(m_root.model() != nullptr);
+    setText(QString("rm %1 widgets").arg(count));
 }
 
 void RemoveRowsCommand::redo()
@@ -750,6 +751,7 @@ InsertRowsCommand::InsertRowsCommand(WidgetData& root,
 {
     // Can not work without a model
     Q_ASSERT(m_root.model() != nullptr);
+    setText(QString("add %1 widgets").arg(items.count()));
 }
 
 void InsertRowsCommand::redo()
