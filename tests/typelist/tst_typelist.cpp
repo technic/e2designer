@@ -21,14 +21,14 @@ public:
         int id() const { return ClassList::getIndex(this); }
     };
 
-    static_assert(ClassList::getIndex<C1>() == 0, "Test failed");
-    static_assert(ClassList::getIndex<C2>() == 1, "Test failed");
+    static_assert(ClassList::getIndex<C1>() == 0u, "Test failed");
+    static_assert(ClassList::getIndex<C2>() == 1u, "Test failed");
 
 private slots:
     void test_case()
     {
-        QCOMPARE(ClassList::getIndex<C1>(), 0);
-        QCOMPARE(ClassList::getIndex<C2>(), 1);
+        QCOMPARE(ClassList::getIndex<C1>(), 0u);
+        QCOMPARE(ClassList::getIndex<C2>(), 1u);
 
         QCOMPARE(C1().id(), 0);
         QCOMPARE(C2().id(), 1);
