@@ -102,6 +102,7 @@ public:
         Picon,
         Slider,
         Pig,
+        Listbox,
     };
     Q_ENUM(Render)
 
