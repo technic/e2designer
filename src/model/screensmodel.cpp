@@ -457,19 +457,19 @@ bool ScreensModel::setWidgetAttr(const QModelIndex& index, int key, const QVaria
 
 bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamReader& xml)
 {
+    if (!index.isValid()) {
+        return false;
+    }
+    auto* widget = new WidgetData();
+    widget->fromXml(xml); // TODO: handle errors
     QModelIndex parent = index.parent();
-    int row = index.row();
-
-    removeRow(row, parent);
-    insertRow(row, parent);
-
-    auto* widget = indexToItem(parent)->child(row);
-    widget->fromXml(xml);
-    //    auto* widget = indexToItem(index);
-    //    if (widget) {
-    //        mCommander->push();
-    //    }
-    //    return false;
+    mCommander->beginMacro("Edit XML source");
+    // Remove old widget
+    mCommander->push(new RemoveRowsCommand(*indexToItem(parent), index.row(), 1));
+    // Insert constructed widget
+    auto child = QVector<WidgetData*>{ widget };
+    mCommander->push(new InsertRowsCommand(*indexToItem(parent), index.row(), child));
+    mCommander->endMacro();
     return true;
 }
 
