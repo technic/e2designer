@@ -39,7 +39,7 @@ format:
     - git diff --exit-code
 
 before_script:
-  - . /opt/qt511/bin/qt511-env.sh
+  - . /opt/qt${Qt}/bin/qt${Qt}-env.sh
   - which qmake
   - qmake --version
   - g++ --version
