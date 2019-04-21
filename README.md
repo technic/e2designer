@@ -31,7 +31,7 @@ make
 # Contributing
 
 1. Use \*.hpp and \*.cpp for file extensions.
-2. Try to use style defined by clang-format in the project root directory.
+2. Use style defined by clang-format in the project root directory, stay with clang-8.
 4. Report issues in GitLab [bugtracker](https://gitlab.com/technic93/e2designer/issues)
 3. Fork and send GitLab pull requests.
 4. Join discussion on the [openpli forum](https://forums.openpli.org/topic/61204-e2designer-alpha/)

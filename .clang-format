@@ -4,7 +4,7 @@ AccessModifierOffset: '-4'
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 BreakBeforeBinaryOperators: NonAssignment
-BreakBeforeInheritanceComma: 'false'
+BreakInheritanceList: BeforeColon
 ColumnLimit: '100'
 ConstructorInitializerIndentWidth: '4'
 IndentCaseLabels: 'false'
@@ -13,5 +13,4 @@ PenaltyBreakBeforeFirstCallParameter: '90'
 SortIncludes: 'false'
 SpaceAfterTemplateKeyword: 'false'
 SpacesInContainerLiterals: 'false'
-
 ...
