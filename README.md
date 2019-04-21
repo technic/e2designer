@@ -43,6 +43,7 @@ GPLv3
 We need to pull upstream from time to time:
 ```
 git subtree pull -P Qt-Color-Widgets/ --squash git@gitlab.com:mattia.basaglia/Qt-Color-Widgets.git master
+git subtree pull -P AppImageUpdaterBridge --squash https://github.com/antony-jr/AppImageUpdaterBridge.git master
 ```
 
 # Credits
