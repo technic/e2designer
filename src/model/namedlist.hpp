@@ -144,8 +144,8 @@ bool NamedList<T>::canMoveItems(int sourcePosition, int count, int destinationPo
 {
     bool overlap =
       destinationPosition >= sourcePosition && destinationPosition <= sourcePosition + count;
-    if (sourcePosition >= 0 && sourcePosition + count <= mItems.size() &&
-        destinationPosition >= 0 && destinationPosition <= mItems.size() && !overlap) {
+    if (sourcePosition >= 0 && sourcePosition + count <= mItems.size() && destinationPosition >= 0
+        && destinationPosition <= mItems.size() && !overlap) {
         return true;
     }
     return false;

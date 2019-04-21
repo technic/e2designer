@@ -1,7 +1,8 @@
 #ifndef GITVERSION_HPP
 #define GITVERSION_HPP
 
-struct Git {
+struct Git
+{
     static const char* version;
 };
 

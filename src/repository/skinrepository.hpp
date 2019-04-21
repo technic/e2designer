@@ -45,7 +45,7 @@ public:
 
     bool fromXmlDocument(QXmlStreamReader& xml);
     void fromXml(QXmlStreamReader& xml);
-    void toXml(XmlStreamWriter &xml) const;
+    void toXml(XmlStreamWriter& xml) const;
     QString previewFilePath();
 
     QString lastError() const { return mErrorMessage; }
