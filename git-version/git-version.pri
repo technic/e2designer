@@ -37,3 +37,4 @@ QMAKE_EXTRA_TARGETS += versiontarget
 
 PRE_TARGETDEPS += $$VERSION_FILE
 SOURCES += $$VERSION_FILE
+HEADERS += gitversion.hpp
