@@ -14,6 +14,8 @@ variables:
 stages:
   - images
   - build
+  - tests
+  - package
   - deploy
 
 .docker:
@@ -92,7 +94,7 @@ build:debug:
       - ccache/
 
 AppImage:
-  stage: build
+  stage: package
   dependencies:
     - build:release
   script:
@@ -123,15 +125,13 @@ clazy:
 clang-tidy:
   stage: build
   script:
-    - lcov --version
-    - gcov --version
     - mkdir -p build && cd build
     - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
     - bear make
     - run-clang-tidy.py
 
 test:
-  stage: build
+  stage: tests
   dependencies:
     - build:release
   script:
@@ -139,7 +139,7 @@ test:
   - make check
 
 coverage:
-    stage: build
+    stage: tests
     dependencies:
       - build:debug
     script:
@@ -157,7 +157,7 @@ coverage:
 
 flatpak:
   image: $FLATPAK_IMAGE
-  stage: build
+  stage: package
   before_script:
     - flatpak --version
     - flatpak-builder --version
