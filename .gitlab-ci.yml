@@ -16,35 +16,27 @@ stages:
   - build
   - deploy
 
-image-ubuntu:
-  stage: images
-  image: docker:git
-  services:
-    - docker:dind
-  before_script:
-    - docker info
-    - echo building $UBUNTU_IMAGE ...
-  script:
-    - cd docker
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - docker build --pull -t $UBUNTU_IMAGE .
-    - docker push $UBUNTU_IMAGE
-  when: manual
+.docker:
+    stage: images
+    image: docker:git
+    services:
+        - docker:dind
+    before_script:
+        - docker info
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    when: manual
 
-image-flatpak:
-  stage: images
-  image: docker:git
-  services:
-    - docker:dind
-  before_script:
-    - docker info
-    - echo building $FLATPAK_IMAGE ...
+image:qt:
+  extends: .docker
   script:
-    - cd docker/flatpak
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - docker build --pull -t $FLATPAK_IMAGE .
+    - docker build docker/qt --pull -t $UBUNTU_IMAGE
+    - docker push $UBUNTU_IMAGE
+
+image:flatpak:
+  extends: .docker
+  script:
+    - docker build docker/flatpak --pull -t $FLATPAK_IMAGE
     - docker push $FLATPAK_IMAGE
-  when: manual
 
 format:
   stage: build
