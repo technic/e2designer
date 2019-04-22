@@ -6,6 +6,12 @@
 build/
 doxygen/
 
+# flatpak
+org.technic93.e2designer.json
+.flatpak-builder/
+flatpak-build/
+flatpak-repo/
+
 # qmake
 /.qmake.stash
 stable.hpp.cpp

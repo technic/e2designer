@@ -1,7 +1,5 @@
 TEMPLATE = subdirs
 
-isEmpty(PREFIX) {
-
 SUBDIRS += \
     misc \
     widget \
@@ -11,4 +9,7 @@ SUBDIRS += \
     typelist \
     models
 
+# No tests if PREFIX is set (for flatpak)
+defined(PREFIX, var) {
+    SUBDIRS =
 }

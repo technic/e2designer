@@ -5,9 +5,11 @@ image: registry.gitlab.com/technic93/e2designer:latest
 
 variables:
     UBUNTU_IMAGE: registry.gitlab.com/technic93/e2designer:latest
+    FLATPAK_IMAGE: registry.gitlab.com/technic93/e2designer:flatpak
     BINTRAY_USER: technic
     BINTRAY_REPO: e2designer
     BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
+    APP_NAME: org.technic93.e2designer
 
 stages:
   - images
@@ -27,6 +29,21 @@ image-ubuntu:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - docker build --pull -t $UBUNTU_IMAGE .
     - docker push $UBUNTU_IMAGE
+  when: manual
+
+image-flatpak:
+  stage: images
+  image: docker:git
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+    - echo building $FLATPAK_IMAGE ...
+  script:
+    - cd docker/flatpak
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+    - docker build --pull -t $FLATPAK_IMAGE .
+    - docker push $FLATPAK_IMAGE
   when: manual
 
 format:
@@ -132,3 +149,14 @@ deploy-AppImage:
       $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
     - curl -T build/e2designer-$VERSION-x86_64.AppImage.zsync -u technic:$BINTRAY_API_KEY
       $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
+
+flatpak:
+  image: $FLATPAK_IMAGE
+  stage: deploy
+  script:
+    - cat $APP_NAME.yaml | yaml2json.py > $APP_NAME.json
+    - flatpak-builder --ccache --repo=flatpak-repo flatpak-build $APP_NAME.json
+    - flatpak build-bundle flatpak-repo e2designer.flatpak $APP_NAME
+  artifacts:
+    paths:
+      - "*.flatpak"
