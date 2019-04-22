@@ -1,5 +1,7 @@
 TEMPLATE = subdirs
 
+isEmpty(PREFIX) {
+
 SUBDIRS += \
     misc \
     widget \
@@ -8,3 +10,5 @@ SUBDIRS += \
     core \
     typelist \
     models
+
+}
