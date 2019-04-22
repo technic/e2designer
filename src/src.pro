@@ -146,7 +146,10 @@ RESOURCES += \
     data.qrc
 
 unix {
-    target.path = /usr/lib
+    isEmpty(PREFIX) {
+        PREFIX = /usr
+    }
+    target.path = $$PREFIX/lib
     INSTALLS += target
 }
 
