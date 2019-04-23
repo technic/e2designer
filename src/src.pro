@@ -155,3 +155,23 @@ unix {
 
 DISTFILES += \
     src.pri
+
+win32 {
+    DOXYGEN_BIN = $$system(where doxygen)
+}
+unix {
+    DOXYGEN_BIN = $$system(which doxygen)
+}
+isEmpty(DOXYGEN_BIN) {
+    message("Doxygen not found")
+} else {
+    message("Doxygen found in" $$DOXYGEN_BIN)
+    qtPrepareTool(QHELPGENERATOR, qhelpgenerator)
+    win32 {
+        docs.commands += set QHG_LOCATION="$$QHELPGENERATOR" && doxygen $$PWD/../Doxyfile
+    } unix {
+        docs.commands += QHG_LOCATION="$$QHELPGENERATOR" doxygen $$PWD/../Doxyfile
+    }
+    QMAKE_EXTRA_TARGETS += docs
+    POST_TARGETDEPS += docs
+}
