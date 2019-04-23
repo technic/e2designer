@@ -117,7 +117,7 @@ clazy:
   script:
     - curl -o /usr/local/bin/clazy http://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
     - chmod a+x /usr/local/bin/clazy
-    - mkdir -p build && cd build
+    - mkdir -p build && pushd build
     - qmake .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -Werror -fcolor-diagnostics"
     - make
   allow_failure: true
@@ -127,7 +127,7 @@ clang-tidy:
   script:
     - mkdir -p build && cd build
     - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
-    - bear make
+    - bear make -j$(nproc)
     - run-clang-tidy.py
 
 test:
@@ -175,7 +175,6 @@ deploy:
     - AppImage
     - flatpak
   script:
-    - find .
     - curl -T build/e2designer-$VERSION-x86_64.AppImage -u technic:$BINTRAY_API_KEY
       $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
     - curl -T build/e2designer-$VERSION-x86_64.AppImage.zsync -u technic:$BINTRAY_API_KEY
