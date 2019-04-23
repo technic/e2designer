@@ -14,4 +14,4 @@ DISTFILES += LICENSE README.md .gitlab-ci.yml .appveyor.yml .gitignore \
     Doxyfile \
     docker/flatpak/Dockerfile docker/flatpak/yaml2json.py \
     org.technic93.e2designer.yaml \
-    docker/Dockerfile docker-push.sh gitlab-runner-exec.sh
+    docker/qt/Dockerfile docker-push.sh gitlab-runner-exec.sh
