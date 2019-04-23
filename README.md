@@ -48,8 +48,8 @@ git subtree pull -P AppImageUpdaterBridge --squash https://github.com/antony-jr/
 
 # Credits
 Libraries:
-[Qt-Color-Widgets](https://github.com/mbasaglia/Qt-Color-Widgets)
-[AppImageUpdaterBridge](https://github.com/antony-jr/AppImageUpdaterBridge)
+- [Qt-Color-Widgets](https://github.com/mbasaglia/Qt-Color-Widgets)
+- [AppImageUpdaterBridge](https://github.com/antony-jr/AppImageUpdaterBridge)
 
 Application icon made by [Picol](https://www.flaticon.com/authors/picol)
 from [Flaticon](https://www.flaticon.com/)
