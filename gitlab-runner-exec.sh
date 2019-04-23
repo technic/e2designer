@@ -18,5 +18,7 @@ docker run --rm \
     exec docker \
         --docker-volumes "/var/run/docker.sock:/var/run/docker.sock" \
         --docker-privileged \
+        --cache-dir=/tmp/cache --docker-cache-dir=/tmp/cache \
+        --docker-volumes=$PWD/.cache:/tmp/cache \
         --docker-pull-policy if-not-present \
         "$1"
