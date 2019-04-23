@@ -5,7 +5,7 @@
 
 /**
  * @brief Model for the list wich can reoder items by drag and drop
- * You must reimplement ::moveItems command to make it work
+ * You must implement QAbstractTableModel::moveItems() function to make it work
  */
 class MovableListModel : public QAbstractTableModel
 {
