@@ -29,7 +29,7 @@
 #include <AppImageUpdaterDialog>
 #endif
 
-using namespace AppImageUpdaterBridge;
+using AppImageUpdaterBridge::AppImageUpdaterDialog;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
