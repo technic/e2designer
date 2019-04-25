@@ -3,6 +3,7 @@
         <file>background.jpg</file>
     </qresource>
     <qresource prefix="/icons">
+        <file>misc/e2designer.png</file>
         <file>icons/baseline-redo-24px.svg</file>
         <file>icons/baseline-save-24px.svg</file>
         <file>icons/baseline-undo-24px.svg</file>

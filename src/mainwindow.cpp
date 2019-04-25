@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QRgb>
+#include <QScreen>
 #include <QSettings>
 #include <QStyledItemDelegate>
 #include <QSpinBox>
@@ -27,9 +28,9 @@
 
 #ifdef APPIMAGE_UPDATE
 #include <AppImageUpdaterDialog>
-#endif
 
 using AppImageUpdaterBridge::AppImageUpdaterDialog;
+#endif
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -37,7 +38,7 @@ MainWindow::MainWindow(QWidget* parent)
     , mView(new ScreenView(SkinRepository::screens()))
     , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 #ifdef APPIMAGE_UPDATE
-    , m_updater(new AppImageUpdaterDialog(QPixmap(), this))
+    , m_updater(new AppImageUpdaterDialog(QPixmap(":/icons/misc/e2designer.png"), this))
 #else
     , m_updater(nullptr)
 #endif
@@ -91,6 +92,12 @@ MainWindow::MainWindow(QWidget* parent)
     factory->registerEditor(qMetaTypeId<SkinEnumList>(), new QStandardItemEditorCreator<ListBox>());
     delegate->setItemEditorFactory(factory);
     ui->propView->setItemDelegate(delegate);
+
+#ifdef APPIMAGE_UPDATE
+    // Center the update dialog
+    m_updater->move(QGuiApplication::primaryScreen()->geometry().center()
+                    - m_updater->rect().center());
+#endif
 
     // Synchronize selections
 
