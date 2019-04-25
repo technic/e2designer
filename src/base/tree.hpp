@@ -16,6 +16,7 @@ class MixinTreeNode
 {
     // alias
     typedef MixinTreeNode<T> Node;
+    Q_DISABLE_COPY(MixinTreeNode)
 
 protected:
     // You must inherit from this class
