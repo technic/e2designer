@@ -8,6 +8,7 @@ variables:
     FLATPAK_IMAGE: registry.gitlab.com/technic93/e2designer:flatpak
     BINTRAY_USER: technic
     BINTRAY_REPO: e2designer
+    BINTRAY_PACKAGE: e2designer
     BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
     APP_NAME: org.technic93.e2designer
 
@@ -181,3 +182,4 @@ deploy:
       $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
     - curl -T e2designer.flatpak -u technic:$BINTRAY_API_KEY
       $BINTRAY_URL/$VERSION/e2designer-$VERSION.flatpak
+    - python bintray.py
