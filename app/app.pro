@@ -41,7 +41,10 @@ unix {
     iconFiles.files = ../misc/e2designer.png
     iconFiles.path = $$PREFIX/share/pixmaps/
 
-    INSTALLS += desktopFiles iconFiles
+    miscFiles.files = ../misc/e2designer.appdata.xml
+    miscFiles.path = $$PREFIX/share/metainfo/
+
+    INSTALLS += desktopFiles iconFiles miscFiles
 }
 
 INSTALLS += target
