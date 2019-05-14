@@ -17,11 +17,14 @@ if __name__ == "__main__":
     with open('README.md') as f:
         readme = f.read()
     print("Uploading readme...")
-    r = requests.post(url=f"{api_url}/packages/{user}/{repo}/{package}/readme", json={
-        "bintray": {
-            "syntax": "markdown",
-            "content": readme,
-        }
-    }, auth=(user, key))
+    r = requests.post(
+        url="{api_url}/packages/{user}/{repo}/{package}/readme".format(
+            api_url=api_url, user=user, repo=repo, package=package),
+        json={
+            "bintray": {
+                "syntax": "markdown",
+                "content": readme,
+            }
+        }, auth=(user, key))
     r.raise_for_status()
     print("Done.")

@@ -182,4 +182,4 @@ deploy:
       $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage.zsync
     - curl -T e2designer.flatpak -u technic:$BINTRAY_API_KEY
       $BINTRAY_URL/$VERSION/e2designer-$VERSION.flatpak
-    - python bintray.py
+    - python3 bintray.py
