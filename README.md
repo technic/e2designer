@@ -4,6 +4,10 @@ Skin editor for enigma2 written in C++/Qt5 framework.
 
 [ ![Download](https://api.bintray.com/packages/technic/e2designer/e2designer/images/download.svg) ](https://bintray.com/technic/e2designer/e2designer/_latestVersion#files)
 
+# Screenshot
+
+![Application window.](https://gitlab.com/technic93/e2designer/raw/master/screenshot.png)
+
 # Insallation
 
 Portable builds:
