@@ -30,3 +30,6 @@ GeneratedFiles/
 *.sln
 *.vcxproj
 *.vcxproj.filters
+
+# Visual Studio Code
+.vscode/ipch/
