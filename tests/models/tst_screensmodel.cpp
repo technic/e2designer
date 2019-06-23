@@ -51,9 +51,11 @@ private slots:
     }
 };
 
-static Test test([](int argc, char** argv) -> int {
-    TestScreensModel tc;
-    return QTest::qExec(&tc, argc, argv);
-});
+QTEST_APPLESS_MAIN(TestScreensModel)
+
+// static Test test([](int argc, char** argv) -> int {
+//     TestScreensModel tc;
+//     return QTest::qExec(&tc, argc, argv);
+// });
 
 #include "tst_screensmodel.moc"

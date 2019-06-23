@@ -6,16 +6,19 @@ set(CMAKE_CXX_STANDARD 14)
 # Find includes in the build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Turn on automatic invocation of the MOC, UIC & RCC
+# Turn on automatic invocation of the MOC, UIC and RCC
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# Add a compiler flag
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+# Find Qt
+find_package(Qt5 COMPONENTS Core Widgets Gui Test REQUIRED)
 
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build QtColorWidgets shared library")
+set(BUILD_STATIC_LIBS ON  CACHE BOOL "Build QtColorWidgets static library")
+add_subdirectory(Qt-Color-Widgets)
 
+# Application core
 set(SOURCE
     src/base/flagsetter.cpp
     src/base/singleton.cpp
@@ -63,19 +66,19 @@ set(SOURCE
     src/skin/sizeattr.cpp
     src/skin/widgetdata.cpp
     src/skindelegate.cpp
-    app/main.cpp
     resources.qrc
     src/data.qrc
     src/skin/enums.hpp
 )
 
-add_executable(${PROJECT_NAME} ${SOURCE})
+include_directories(src)
+add_library(srclib ${SOURCE})
+target_link_libraries(srclib Qt5::Core Qt5::Widgets Qt5::Gui QtColorWidgets)
 
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build QtColorWidgets shared library")
-set(BUILD_STATIC_LIBS ON  CACHE BOOL "Build QtColorWidgets static library")
-add_subdirectory(Qt-Color-Widgets)
+# Application executable
+add_executable(${PROJECT_NAME} app/main.cpp)
+target_link_libraries(${PROJECT_NAME} srclib)
+#target_include_directories(e2designer PRIVATE src Qt-Color-Widgets/include)
 
-#qt5_use_modules(e2designer Core Widgets)
-
-target_link_libraries(e2designer Qt5::Core Qt5::Widgets QtColorWidgets)
-target_include_directories(e2designer PRIVATE src Qt-Color-Widgets/include)
+enable_testing()
+add_subdirectory(tests)

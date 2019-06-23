@@ -2,5 +2,12 @@
     "cmake.configureArgs": [
         "-DCMAKE_PREFIX_PATH=C:\\Qt\\5.11.2\\msvc2017_64"
     ],
-    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+    "cmake.testEnvironment": {
+        "PATH": "C:\\Qt\\5.11.2\\msvc2017_64\\bin;${env.PATH}"
+    },
+    "cmake.configureOnOpen": true,
+    "cSpell.words": [
+        "qfindtestdata",
+        "qverify"
+    ]
 }
