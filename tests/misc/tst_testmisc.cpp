@@ -1,9 +1,10 @@
 #include <QtTest>
 #include "base/flagsetter.hpp"
 
-class MiscTests : public QObject
+class TestMisc : public QObject
 {
     Q_OBJECT
+
 private slots:
     void test_flagSetter()
     {
@@ -23,6 +24,6 @@ private slots:
     }
 };
 
-QTEST_APPLESS_MAIN(MiscTests)
+QTEST_APPLESS_MAIN(TestMisc)
 
-#include "tst_misctests.moc"
+#include "tst_testmisc.moc"

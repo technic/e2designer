@@ -8,4 +8,5 @@ TEMPLATE = app
 
 include(../../src/src.pri)
 
-SOURCES +=  tst_misctests.cpp
+SOURCES +=  \
+    tst_testmisc.cpp
