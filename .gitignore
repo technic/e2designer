@@ -21,6 +21,7 @@ stable.hpp.cpp
 .vs/e2designer
 .vs/slnx.sqlite
 .vs/ProjectSettings.json
+.vs/VS*.json
 target_wrapper.bat
 *.vspx
 *.psess
