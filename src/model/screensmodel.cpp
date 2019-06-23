@@ -5,6 +5,7 @@
 #include <QUndoStack>
 #include <QMimeData>
 #include <QByteArray>
+#include <QDataStream>
 
 // ScreensTree
 
