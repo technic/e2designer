@@ -18,7 +18,9 @@ flatpak-repo/
 stable.hpp.cpp
 
 # Visual Studio
-.vs/
+.vs/e2designer
+.vs/slnx.sqlite
+.vs/ProjectSettings.json
 target_wrapper.bat
 *.vspx
 *.psess
