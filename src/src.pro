@@ -137,10 +137,10 @@ HEADERS += \
     base/xmlstreamwriter.hpp
 
 FORMS += \
-    ui/mainwindow.ui \
-    ui/colorlistwindow.ui \
-    ui/fontlistwindow.ui \
-    ui/outputslistwindow.ui
+    mainwindow.ui \
+    colorlistwindow.ui \
+    fontlistwindow.ui \
+    outputslistwindow.ui
 
 RESOURCES += \
     data.qrc
