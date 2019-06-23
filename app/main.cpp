@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     QCoreApplication::setOrganizationName("e2designer");
     QCoreApplication::setApplicationName("e2designer");
     QCoreApplication::setApplicationVersion(Git::version);
-    app.setWindowIcon(QIcon(":/icons/misc/e2designer.png")); /* set icon */
+    app.setWindowIcon(QIcon(":/icons/misc/e2designer.png"));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(QCoreApplication::applicationName());
