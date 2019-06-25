@@ -82,3 +82,13 @@ target_link_libraries(${PROJECT_NAME} srclib)
 
 enable_testing()
 add_subdirectory(tests)
+
+# git version
+find_package(Git)
+add_custom_target(
+    version ${CMAKE_COMMAND} 
+    -D local_dir=${CMAKE_SOURCE_DIR} -D output_dir=${CMAKE_BINARY_DIR}
+    -P ${CMAKE_SOURCE_DIR}/git-version/git-version.cmake
+)
+add_dependencies(${PROJECT_NAME} version)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/generated)

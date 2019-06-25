@@ -1,0 +1,9 @@
+#ifndef GITVERSION_HPP
+#define GITVERSION_HPP
+
+struct Git
+{
+    static constexpr char* version = "@build_version@";
+};
+
+#endif // GITVERSION_HPP
