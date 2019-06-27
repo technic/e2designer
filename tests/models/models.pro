@@ -8,8 +8,7 @@ TEMPLATE = app
 
 include(../../src/src.pri)
 
-SOURCES +=  \
-    autotests.cpp \
+SOURCES += \
     tst_screensmodel.cpp
 
 HEADERS += \
