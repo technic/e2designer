@@ -15,7 +15,7 @@
             "environment": [
                 {
                     "name": "PATH",
-                    "value": "C:\\Qt\\5.11.2\\msvc2017_64\\bin;${env.PATH}"
+                    "value": "C:\\Qt\\5.12.4\\msvc2017_64\\bin;${env.PATH}"
                 }
             ],
             "externalConsole": false
