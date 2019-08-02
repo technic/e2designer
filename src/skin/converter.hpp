@@ -96,7 +96,7 @@ public:
 private:
     // Constructor functions map
     using Constructor = Converter* (*)();
-    QHash<QByteArray, Constructor> _constructors;
+    QHash<QByteArray, Constructor> m_constructors;
 };
 
 class ServiceName : public Converter

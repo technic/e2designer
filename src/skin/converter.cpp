@@ -193,8 +193,8 @@ ConverterFactory::ConverterFactory()
 
 std::unique_ptr<Converter> ConverterFactory::createConverterByName(const QString& name)
 {
-    auto it = _constructors.find(name.toLatin1());
-    if (it != _constructors.end()) {
+    auto it = m_constructors.find(name.toLatin1());
+    if (it != m_constructors.end()) {
         Constructor function = *it;
         return std::unique_ptr<Converter>((*function)());
     } else {
@@ -207,7 +207,7 @@ void ConverterFactory::registerObject()
 {
     static_assert(std::is_base_of<Converter, T>::value, "Can only register Converter classes");
     const QMetaObject* mo = &T::staticMetaObject;
-    _constructors[mo->className()] = []() -> Converter* { return new T(); };
+    m_constructors[mo->className()] = []() -> Converter* { return new T(); };
 }
 
 void ClockToText::parseArgument()
