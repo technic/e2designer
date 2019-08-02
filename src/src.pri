@@ -4,7 +4,7 @@
 # Copyright (c) 2017 mxklb
 
 INCLUDEPATH += $$PWD
-CONFIG += static c++14
+CONFIG += static c++17
 QT += widgets network
 
 # Sets the win32 output dir WINDIR
