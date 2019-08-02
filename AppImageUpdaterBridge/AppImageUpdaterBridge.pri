@@ -1,4 +1,4 @@
-INCLUDEPATH += $$PWD
+INCLUDEPATH += $$PWD $$PWD/include
 QT += core widgets network
 HEADERS += \
     $$PWD/include/appimageupdateinformation_p.hpp \
@@ -12,6 +12,7 @@ HEADERS += \
     $$PWD/include/appimageupdaterbridge_enums.hpp \
     $$PWD/include/appimageupdaterbridge.hpp \
     $$PWD/include/appimageupdaterdialog.hpp \
+    $$PWD/include/softwareupdatedialog_p.hpp \
     $$PWD/include/helpers_p.hpp
 
 SOURCES += \
@@ -24,13 +25,22 @@ SOURCES += \
     $$PWD/src/appimagedeltarevisioner.cc \
     $$PWD/src/appimageupdaterdialog.cc \
     $$PWD/src/appimageupdaterbridge_enums.cc \
+    $$PWD/src/softwareupdatedialog_p.cc \ 
     $$PWD/src/helpers_p.cc
+
+FORMS += $$PWD/src/AppImageUpdaterDialog.ui \
+         $$PWD/include/SoftwareUpdateDialog.ui
 
 NO_GUI {
 	message(AppImage Updater Bridge widgets will be disabled for this build.)
 	QT -= widgets
 	HEADERS -= $$PWD/include/appimageupdaterdialog.hpp
+        HEADERS -= $$PWD/include/softwareupdatedialog_p.hpp
 	SOURCES -= $$PWD/src/appimageupdaterdialog.cc
+	SOURCES -= $$PWD/src/softwareupdatedialog_p.cc
+
+        FORMS -= $$PWD/src/AppImageUpdaterDialog.ui \
+                 $$PWD/include/SoftwareUpdateDialog.ui
 }
 
 LOGGING_DISABLED {

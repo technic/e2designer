@@ -9,9 +9,21 @@
 
 const users = [
   {	
-    caption: 'AppImageUpdaterBridge',
-    image: '/AppImageUpdaterBridge/img/AppImageUpdaterBridge.png',
-    infoLink: 'https://antony-jr.github.io/AppImageUpdaterBridge',
+    caption: 'AppImageUpdater',
+    image: '/AppImageUpdaterBridge/img/AppImageUpdater.png',
+    infoLink: 'https://github.com/antony-jr/AppImageUpdater',
+    pinned: true,
+  },
+  {
+    caption: 'e2designer',
+    image: '/AppImageUpdaterBridge/img/e2designer.png',
+    infoLink: 'https://gitlab.com/technic93/e2designer',
+    pinned: true,
+  },
+  {
+    caption: 'Update Deploy Qt',
+    image: '/AppImageUpdaterBridge/img/updatedeployqt.png',
+    infoLink: 'https://github.com/TheFutureShell/updatedeployqt',
     pinned: true,
   },
 ];

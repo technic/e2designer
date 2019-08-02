@@ -74,52 +74,96 @@ AppImageDeltaRevisionerPrivate::AppImageDeltaRevisionerPrivate(bool singleThread
     p_UpdateInformation->setLoggerName("UpdateInformation");
     p_ControlFileParser->setLoggerName("ControlFileParser");
     p_DeltaWriter->setLoggerName("AppImageDeltaRevisioner");
+    
+
+    /* Connect AppImageUpdateInformationPrivate */
     connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::statusChanged,
-            this, &AppImageDeltaRevisionerPrivate::statusChanged, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::statusChanged, 
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::progress,
-            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress);
+            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress ,
+	    Qt::UniqueConnection);
     connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::info,
-            this, &AppImageDeltaRevisionerPrivate::embededInformation, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::embededInformation, 
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::error,
-            this, &AppImageDeltaRevisionerPrivate::error, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::error,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::logger,
-            this, &AppImageDeltaRevisionerPrivate::logger, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::logger,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+    
+    
+    /* Connect ZsyncRemoteControlFileParserPrivate */
     connect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::statusChanged,
-            this, &AppImageDeltaRevisionerPrivate::statusChanged, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::statusChanged, 
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::progress,
-            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress);
+            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress,
+	    Qt::UniqueConnection);
     connect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::error,
-            this, &AppImageDeltaRevisionerPrivate::error, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::error, 
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::logger,
-            this, &AppImageDeltaRevisionerPrivate::logger, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::logger,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+    
+    /* Connect ZsyncWriterPrivate */
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::statusChanged,
-            this, &AppImageDeltaRevisionerPrivate::statusChanged, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::statusChanged,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::error,
-            this, &AppImageDeltaRevisionerPrivate::error, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::error,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::logger,
-            this, &AppImageDeltaRevisionerPrivate::logger, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::logger,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::started,
-            this, &AppImageDeltaRevisionerPrivate::started, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::started,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::canceled,
-            this, &AppImageDeltaRevisionerPrivate::canceled, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::canceled,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::finished,
-            this, &AppImageDeltaRevisionerPrivate::finished, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::finished,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+    
+    /* connect BlockDownloader */
     connect(p_BlockDownloader.data(), &ZsyncBlockRangeDownloaderPrivate::error,
-            this,  &AppImageDeltaRevisionerPrivate::error, Qt::DirectConnection);
+            this,  &AppImageDeltaRevisionerPrivate::error,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_BlockDownloader.data(), &ZsyncBlockRangeDownloaderPrivate::canceled,
-            this, &AppImageDeltaRevisionerPrivate::canceled, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::canceled,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_BlockDownloader.data(), &ZsyncBlockRangeDownloaderPrivate::started,
-            this, &AppImageDeltaRevisionerPrivate::handleBlockDownloaderStarted, Qt::QueuedConnection);
+            this, &AppImageDeltaRevisionerPrivate::handleBlockDownloaderStarted, 
+	    (Qt::ConnectionType)(Qt::QueuedConnection | Qt::UniqueConnection));
     connect(p_BlockDownloader.data(), &ZsyncBlockRangeDownloaderPrivate::finished,
-            this, &AppImageDeltaRevisionerPrivate::handleBlockDownloaderFinished , Qt::QueuedConnection);
+            this, &AppImageDeltaRevisionerPrivate::handleBlockDownloaderFinished , 
+	    (Qt::ConnectionType)(Qt::QueuedConnection | Qt::UniqueConnection));
     connect(p_BlockDownloader.data(), &ZsyncBlockRangeDownloaderPrivate::progress,
-            this, &AppImageDeltaRevisionerPrivate::progress, Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::progress,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+    
+    
+
+    /* Connect the recieveControlFile signal to ZsyncWriter */
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::progress,
-            this, &AppImageDeltaRevisionerPrivate::progress,Qt::DirectConnection);
+            this, &AppImageDeltaRevisionerPrivate::progress,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     connect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::zsyncInformation,
-            p_DeltaWriter.data(), &ZsyncWriterPrivate::setConfiguration, Qt::QueuedConnection);
+            p_DeltaWriter.data(), &ZsyncWriterPrivate::setConfiguration, 
+	    (Qt::ConnectionType)(Qt::QueuedConnection | Qt::UniqueConnection));
     connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::finishedConfiguring,
-            p_DeltaWriter.data(), &ZsyncWriterPrivate::start, Qt::QueuedConnection);
+            p_DeltaWriter.data(), &ZsyncWriterPrivate::start,
+	    (Qt::ConnectionType)(Qt::QueuedConnection | Qt::UniqueConnection));
+
+
+   /* Reset connection whenever error, canceled or finished */
+   connect(this , &AppImageDeltaRevisionerPrivate::embededInformation , this , &AppImageDeltaRevisionerPrivate::resetConnections);
+   connect(this , &AppImageDeltaRevisionerPrivate::error , this , &AppImageDeltaRevisionerPrivate::resetConnections);
+   connect(this , &AppImageDeltaRevisionerPrivate::canceled , this , &AppImageDeltaRevisionerPrivate::resetConnections);
+   connect(this , &AppImageDeltaRevisionerPrivate::finished , this , &AppImageDeltaRevisionerPrivate::resetConnections);
 }
 
 AppImageDeltaRevisionerPrivate::AppImageDeltaRevisionerPrivate(const QString &AppImagePath, bool singleThreaded, QObject *parent)
@@ -138,6 +182,7 @@ AppImageDeltaRevisionerPrivate::AppImageDeltaRevisionerPrivate(QFile *AppImage, 
 
 AppImageDeltaRevisionerPrivate::~AppImageDeltaRevisionerPrivate()
 {
+    cancel(); /* Cancel anything before exiting. */
     if(!p_SharedThread.isNull()) {
         p_SharedThread->quit();
         p_SharedThread->wait();
@@ -147,29 +192,32 @@ AppImageDeltaRevisionerPrivate::~AppImageDeltaRevisionerPrivate()
 
 void AppImageDeltaRevisionerPrivate::start(void)
 {
+    if(b_Busy){
+	    return;
+    }
     connect(p_UpdateInformation.data(), SIGNAL(info(QJsonObject)),
-            p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)), Qt::UniqueConnection);
+            p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)),
+	    (Qt::ConnectionType)(Qt::UniqueConnection | Qt::QueuedConnection));
     connect(p_ControlFileParser.data(), SIGNAL(receiveControlFile(void)),
-            p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)), Qt::UniqueConnection);
+            p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)),
+	    (Qt::ConnectionType)(Qt::UniqueConnection | Qt::QueuedConnection));
     connect(p_ControlFileParser.data(), SIGNAL(updateCheckInformation(QJsonObject)),
-            this, SLOT(doStart(QJsonObject)), Qt::UniqueConnection);
+            this, SLOT(doStart(QJsonObject)),
+	    (Qt::ConnectionType)(Qt::UniqueConnection | Qt::QueuedConnection));
+    disconnect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::progress,
+            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress);
+    disconnect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::progress,
+            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress);
     disconnect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::info,
                this, &AppImageDeltaRevisionerPrivate::embededInformation);
-    getAppImageEmbededInformation();
+    getMethod(p_UpdateInformation.data(), "getInfo(void)").invoke(p_UpdateInformation.data(), Qt::QueuedConnection); 
+    b_Busy = true;
     return;
 }
 
 void AppImageDeltaRevisionerPrivate::doStart(QJsonObject information)
 {
-    disconnect(p_UpdateInformation.data(), SIGNAL(info(QJsonObject)),
-               p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)));
-    disconnect(p_ControlFileParser.data(), SIGNAL(receiveControlFile(void)),
-               p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)));
-    disconnect(p_ControlFileParser.data(), SIGNAL(updateCheckInformation(QJsonObject)),
-               this, SLOT(doStart(QJsonObject)));
-    connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::info,
-            this, &AppImageDeltaRevisionerPrivate::embededInformation, Qt::UniqueConnection);
-
+    resetConnections();
     if(information.isEmpty()) {
         return;
     }
@@ -186,6 +234,7 @@ void AppImageDeltaRevisionerPrivate::doStart(QJsonObject information)
         .invoke(p_ControlFileParser.data(), Qt::QueuedConnection);
     } else {
         /* Current Version is the new version. */
+	emit started(); /* Some may depend on this signal. */
         QJsonObject newVersionDetails {
             { "AbsolutePath", oldVersionInformation["AppImageFilePath"].toString() },
             { "Sha1Hash", oldVersionInformation["AppImageSHA1Hash"].toString() }
@@ -204,6 +253,9 @@ void AppImageDeltaRevisionerPrivate::cancel(void)
 
 void AppImageDeltaRevisionerPrivate::setAppImage(const QString &AppImagePath)
 {
+    if(b_Busy){
+	    return;
+    }
     clear();
     getMethod(p_UpdateInformation.data(), "setAppImage(const QString&)").invoke(p_UpdateInformation.data(),
             Qt::QueuedConnection,
@@ -213,6 +265,10 @@ void AppImageDeltaRevisionerPrivate::setAppImage(const QString &AppImagePath)
 
 void AppImageDeltaRevisionerPrivate::setAppImage(QFile *AppImage)
 {
+    if(b_Busy){
+	    return;
+    }
+    clear();
     getMethod(p_UpdateInformation.data(), "setAppImage(QFile *)").invoke(p_UpdateInformation.data(),
             Qt::QueuedConnection,
             Q_ARG(QFile*,AppImage));
@@ -232,20 +288,35 @@ void AppImageDeltaRevisionerPrivate::setShowLog(bool choice)
 
 void AppImageDeltaRevisionerPrivate::setOutputDirectory(const QString &dir)
 {
+    if(b_Busy){
+	    return;
+    }
     getMethod(p_DeltaWriter.data(), "setOutputDirectory(const QString&)").invoke(p_DeltaWriter.data(),
             Qt::QueuedConnection,
             Q_ARG(QString, dir));
     return;
 }
 
+void AppImageDeltaRevisionerPrivate::setProxy(const QNetworkProxy &proxy){
+    p_SharedNetworkAccessManager->setProxy(proxy);
+    return;
+}
+
 void AppImageDeltaRevisionerPrivate::getAppImageEmbededInformation(void)
 {
-    getMethod(p_UpdateInformation.data(), "getInfo(void)").invoke(p_UpdateInformation.data(), Qt::QueuedConnection);
+    if(b_Busy){
+	    return;
+    }
+    b_Busy = true;
+    getMethod(p_UpdateInformation.data(), "getInfo(void)").invoke(p_UpdateInformation.data(), Qt::QueuedConnection); 
     return;
 }
 
 void AppImageDeltaRevisionerPrivate::clear(void)
 {
+    if(b_Busy){
+	    return;
+    }
     getMethod(p_UpdateInformation.data(), "clear(void)").invoke(p_UpdateInformation.data(), Qt::QueuedConnection);
     getMethod(p_ControlFileParser.data(), "clear(void)").invoke(p_ControlFileParser.data(), Qt::QueuedConnection);
     return;
@@ -255,20 +326,30 @@ void AppImageDeltaRevisionerPrivate::clear(void)
 
 void AppImageDeltaRevisionerPrivate::checkForUpdate(void)
 {
+    if(b_Busy){
+	    return;
+    }
     connect(p_UpdateInformation.data(), SIGNAL(info(QJsonObject)),
-            p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)), Qt::UniqueConnection);
+            p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)),
+	    (Qt::ConnectionType)(Qt::UniqueConnection | Qt::QueuedConnection));
     connect(p_ControlFileParser.data(), SIGNAL(receiveControlFile(void)),
-            p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)), Qt::UniqueConnection);
+            p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)),
+	    (Qt::ConnectionType)(Qt::UniqueConnection | Qt::QueuedConnection));
     connect(p_ControlFileParser.data(), SIGNAL(updateCheckInformation(QJsonObject)),
-            this, SLOT(handleUpdateCheckInformation(QJsonObject)), Qt::UniqueConnection);
-    getAppImageEmbededInformation();
+            this, SLOT(handleUpdateCheckInformation(QJsonObject)),
+	    (Qt::ConnectionType)(Qt::UniqueConnection | Qt::QueuedConnection));
+    disconnect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::info,
+               this, &AppImageDeltaRevisionerPrivate::embededInformation);
+    getMethod(p_UpdateInformation.data(), "getInfo(void)").invoke(p_UpdateInformation.data(), Qt::QueuedConnection); 
+    b_Busy = true;
     return;
 }
 
 void AppImageDeltaRevisionerPrivate::handleBlockDownloaderStarted(void)
 {
     connect(p_BlockDownloader.data(), &ZsyncBlockRangeDownloaderPrivate::progress,
-            this, &AppImageDeltaRevisionerPrivate::progress, (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+            this, &AppImageDeltaRevisionerPrivate::progress,
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
     disconnect(p_DeltaWriter.data(), &ZsyncWriterPrivate::progress,
             this, &AppImageDeltaRevisionerPrivate::progress); 
 }
@@ -294,25 +375,49 @@ void AppImageDeltaRevisionerPrivate::handleIndeterminateProgress(int percentage)
 
 void AppImageDeltaRevisionerPrivate::handleUpdateCheckInformation(QJsonObject information)
 {
-    disconnect(p_UpdateInformation.data(), SIGNAL(info(QJsonObject)),
-               p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)));
-    disconnect(p_ControlFileParser.data(), SIGNAL(receiveControlFile(void)),
-               p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)));
-    disconnect(p_ControlFileParser.data(), SIGNAL(updateCheckInformation(QJsonObject)),
-               this, SLOT(handleUpdateCheckInformation(QJsonObject)));
-
+    resetConnections();
     if(information.isEmpty()) {
         return;
     }
 
     auto embededUpdateInformation = information["EmbededUpdateInformation"].toObject();
     auto remoteTargetFileSHA1Hash = information["RemoteTargetFileSHA1Hash"].toString();
+    auto releaseNotes = information["ReleaseNotes"].toString();
     QString localAppImageSHA1Hash = embededUpdateInformation["FileInformation"].toObject()["AppImageSHA1Hash"].toString(),
             localAppImagePath = embededUpdateInformation["FileInformation"].toObject()["AppImageFilePath"].toString();
 
-    emit updateAvailable((localAppImageSHA1Hash != remoteTargetFileSHA1Hash),
-                         embededUpdateInformation["FileInformation"].toObject());
+    QJsonObject updateInfo {
+	    { "AbsolutePath" , localAppImagePath },
+	    { "Sha1Hash" , localAppImageSHA1Hash },
+	    { "RemoteSha1Hash" , remoteTargetFileSHA1Hash },
+	    { "ReleaseNotes" , releaseNotes }
+    };
+    emit updateAvailable((localAppImageSHA1Hash != remoteTargetFileSHA1Hash), updateInfo);
     return;
 }
 
-
+void AppImageDeltaRevisionerPrivate::resetConnections(){
+    b_Busy = false;
+    
+    disconnect(p_UpdateInformation.data(), SIGNAL(info(QJsonObject)),
+               p_ControlFileParser.data(), SLOT(setControlFileUrl(QJsonObject)));
+    disconnect(p_ControlFileParser.data(), SIGNAL(receiveControlFile(void)),
+               p_ControlFileParser.data(), SLOT(getUpdateCheckInformation(void)));
+    disconnect(p_ControlFileParser.data(), SIGNAL(updateCheckInformation(QJsonObject)),
+               this, SLOT(handleUpdateCheckInformation(QJsonObject)));
+    disconnect(p_ControlFileParser.data(), SIGNAL(updateCheckInformation(QJsonObject)),  
+		    this, SLOT(doStart(QJsonObject)));
+    connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::info,
+            this, &AppImageDeltaRevisionerPrivate::embededInformation, 
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+    connect(p_UpdateInformation.data(), &AppImageUpdateInformationPrivate::progress,
+            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress ,
+	    Qt::UniqueConnection);
+    connect(p_ControlFileParser.data(), &ZsyncRemoteControlFileParserPrivate::progress,
+            this, &AppImageDeltaRevisionerPrivate::handleIndeterminateProgress,
+	    Qt::UniqueConnection);
+    connect(p_DeltaWriter.data(), &ZsyncWriterPrivate::progress,
+            this, &AppImageDeltaRevisionerPrivate::progress, 
+	    (Qt::ConnectionType)(Qt::DirectConnection | Qt::UniqueConnection));
+    return;
+}

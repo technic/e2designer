@@ -23,27 +23,25 @@ int main(int ac , char **av)
         }
 	
 	using AppImageUpdaterBridge::AppImageUpdaterDialog;
-        QApplication app(ac , av);
+	using AppImageUpdaterBridge::AppImageDeltaRevisioner;
+	QApplication app(ac , av);
  	QString AppImagePath = QString(av[1]);
 
-	AppImageUpdaterDialog UWidget(AppImagePath);
+	AppImageDeltaRevisioner DRev(AppImagePath);
+	DRev.setShowLog(true); // Display log?
+	
+	AppImageUpdaterDialog UWidget;
 	QObject::connect(&UWidget , &AppImageUpdaterDialog::finished ,
         [&](QJsonObject newVersionDetails){
 		qInfo() << "New Version Details:: " << newVersionDetails;
 		app.quit();
-        });
+	});
 	QObject::connect(&UWidget , &AppImageUpdaterDialog::error ,
         [&](QString eStr , short e){
 		qInfo() << "error(" << e "):: " << eStr;
 		app.quit();
-        });
-        /*
-         * Enable this if you want to print the log messages in 
-         * the standard output.
-        */
-	UWidget.setShowLog(true);
-	
-	UWidget.init(); /* Start the update. */
+	});	
+	UWidget.init(&DRev); /* Start the update using GUI */
 	return app.exec();
 }
  

@@ -8,7 +8,7 @@ sidebar_label: Class AppImageUpdaterDialog
 |-----------|----------------------------------------------------------|
 |  Header:  | #include < AppImageUpdaterDialog >                       |
 |   qmake:  | include(AppImageUpdaterBridge/AppImageUpdaterBridge.pri) |
-|Inherits:  | [QObject](http://doc.qt.io/qt-5/qobject.html)            |
+|Inherits:  | [QDialog](http://doc.qt.io/qt-5/qdialog.html)            |
 |Namespace: | **AppImageUpdaterBridge**                                |
 
 
@@ -23,18 +23,13 @@ All methods in this class is [reentrant](https://doc.qt.io/qt-5/threads-reentran
 
 |                                                                                                                |
 |----------------------------------------------------------------------------------------------------------------|
-| AppImageUpdaterDialog(QPixmap img = QPixmap(), QWidget \*parent = nullptr, int flags = Default)                |
-| AppImageUpdaterDialog(const QString&, QPixmap img = QPixmap(), QWidget \*parent = nullptr, int flags = Default)|
-| AppImageUpdaterDialog(QFile\*, QPixmap img = QPixmap(), QWidget \*parent = nullptr, int flags = Default)       |
+| [AppImageUpdaterDialog(QPixmap img = QPixmap(), QWidget \*parent = nullptr, int flags = Default)](#appimageupdaterdialogqpixmap-img-qpixmap-qwidget-parent-nullptr-int-flags-default)           |
 
 ## Slots
 
 | Return Type  | Name |
 |------------------------------|-------------------------------------------|
-| **void** | [init(void)](#void-initvoid) |
-| **void** | [setAppImage(const QString&)](#void-setappimageconst-qstring) |
-| **void** | [setAppImage(QFile *)](#void-setappimageqfile) |
-| **void** | [setShowLog(bool)](#void-setshowlogbool) |
+| **void** | [init(AppImageDeltaRevisioner \*revisioner = nullptr, const QString &applicationName = QApplication::applicationName())](#void-init-appimagedeltarevisioner-classappimagedeltarevisionerhtml-revisioner-nullptr-const-qstring-applicationname-qapplication-applicationname) |
 
 ## Signals
 
@@ -58,6 +53,13 @@ All methods in this class is [reentrant](https://doc.qt.io/qt-5/threads-reentran
 | AppImageUpdaterDialog::ShowErrorDialog                  |  Show a error message box when update is errored.              |  0x10 |
 | AppImageUpdaterDialog::AlertWhenAuthorizationIsRequired |  Emit **requiresAuthorization** when authorization is required.|  0x20 |
 | AppImageUpdaterDialog::NotifyWhenNoUpdateIsAvailable    |  Show a message box when there was no update.                  |  0x40 |
+| AppImageUpdaterDialog::NoRemindMeLaterButton            |  Do not show 'Remind me later' in the confirmation dialog.     |  0x80 |
+| AppImageUpdaterDialog::NoSkipThisVersionButton          |  Do not show 'Skip This Version' in the confirmatino dialog.   |  0x100|
+| AppImageUpdaterDialog::Default                          |  Give the default combination of flags                         |  0x1df|
+
+
+> The Default flag enables ShowProgressDialog, ShowBeforeProgress, ShowUpdateConfirmationDialog, ShowFinishedDialog,
+> ShowErrorDialog, NotifyWhenNoUpdateIsAvailable, NoRemindMeLaterButton, NoSkipThisVersionButton
 
 
 ## Member Functions Documentation
@@ -67,45 +69,22 @@ All methods in this class is [reentrant](https://doc.qt.io/qt-5/threads-reentran
 Default constructor for *AppImageUpdaterDialog* , uses the given **QPixmap**(img) as the icon throughout the
 update process.
 
-### AppImageUpdaterDialog(const QString &path , QPixmap img = QPixmap(), QWidget \*parent = nullptr, int flags = Default)
-
-Overloaded constructor. Sets the given **QString**(path) as the AppImage path.
-
-
-### AppImageUpdaterDialog(QFile *AppImage , QPixmap img = QPixmap(), QWidget \*parent = nullptr, int flags = Default)
-
-Overloaded constructor.Sets the given **QFile** as the AppImage itself.
+> The Default flag enables ShowProgressDialog, ShowBeforeProgress, ShowUpdateConfirmationDialog, ShowFinishedDialog,
+> ShowErrorDialog, NotifyWhenNoUpdateIsAvailable, NoRemindMeLaterButton, NoSkipThisVersionButton
 
 
-### void init(void)
+### void init([AppImageDeltaRevisioner](ClassAppImageDeltaRevisioner.html) \*revisioner = nullptr , const QString &applicationName = QApplication::applicationName())
 <p align="right"> <b>[SLOT]</b> </p>
 
-Starts the updater.
-Emits **started()** signal when starts.
+Starts the updater using the given [AppImageDeltaRevisioner](ClassAppImageDeltaRevisioner.html), You must set the needed settings for the given delta revisioner.
+Emits **started()** signal when starts the actuall update,(i.e) After finishing update check and getting update confirmation.
 
+The application name is used in the update confirmation dialog.
 
-### void cancel(void)
-<p align="right"> <b>[SLOT]</b> </p>
+> If the revisioner is not given then a new instance of AppImageDeltaRevisioner is created and the AppImage path is 
+> guessed.
 
-Cancels the update.
-Emits **canceled()** signal when cancel was successfull.
-
-
-### void setAppImage(const QString&)
-<p align="right"> <b>[SLOT]</b> </p>
-
-Sets the AppImage Path as the given **QString**.
-
-
-### void setAppImage(QFile *)
-<p align="right"> <b>[SLOT]</b> </p>
-
-Sets the given **QFile\*** as the AppImage itself.
-
-### void setShowLog(bool)
-<p align="right"> <b>[SLOT]</b> </p>
-
-Turns on and off the log printer.
+> You must disconnect all slots to this given AppImageDeltaRevisioner to avoid any collision before giving it to this method. 
 
 ### void started(void)
 <p align="right"> <b>[SIGNAL]</b> </p>
@@ -137,7 +116,7 @@ it could mean that there were no updates needed.
 <p align="right"> <b>[SIGNAL]</b> </p>
 
 Emitted when the updater is errored. The given short integer is the error code.
-See [error codes](https://antony-jr.github.io/AppImageUpdaterBridge/docs/AppImageUpdaterBridgeErrorCodes.html).
+See [error codes](AppImageUpdaterBridgeErrorCodes.html).
 The **QString** is the error in layman terms.
 
 ### requiresAuthorization(QString, short, QString)

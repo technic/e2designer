@@ -171,6 +171,7 @@ void ZsyncRemoteControlFileParserPrivate::setControlFileUrl(QJsonObject informat
         return;
     }
     emit statusChanged(ParsingAppimageEmbededUpdateInformation);
+    
     /*
      * Check if we are given the same information consecutively , If so then return
      * what we know. */
@@ -180,13 +181,12 @@ void ZsyncRemoteControlFileParserPrivate::setControlFileUrl(QJsonObject informat
             emit receiveControlFile();
             return;
         }
-        j_UpdateInformation = information;
-    } else {
-        {
-            j_UpdateInformation = information;
-            auto fileInfo = information["FileInformation"].toObject();
-            s_AppImagePath = fileInfo["AppImageFilePath"].toString();
-        }
+    }
+    
+    {
+       j_UpdateInformation = information;
+       auto fileInfo = information["FileInformation"].toObject();
+       s_AppImagePath = fileInfo["AppImageFilePath"].toString();
     }
 
     information = information["UpdateInformation"].toObject();
@@ -257,6 +257,7 @@ void ZsyncRemoteControlFileParserPrivate::clear(void)
     s_TargetFileName.clear();
     s_TargetFileSHA1.clear();
     s_ZsyncFileName.clear();
+    s_ReleaseNotes.clear();
 #ifndef LOGGING_DISABLED
     s_LogBuffer.clear();
 #endif // LOGGING_DISABLED
@@ -304,7 +305,8 @@ void ZsyncRemoteControlFileParserPrivate::getUpdateCheckInformation(void)
 {
     QJsonObject result {
         { "EmbededUpdateInformation", j_UpdateInformation},
-        { "RemoteTargetFileSHA1Hash", s_TargetFileSHA1 }
+        { "RemoteTargetFileSHA1Hash", s_TargetFileSHA1 },
+	{ "ReleaseNotes" , s_ReleaseNotes }
     };
 
     emit updateCheckInformation(result);
@@ -427,8 +429,10 @@ void ZsyncRemoteControlFileParserPrivate::handleGithubAPIResponse(void)
 
     QJsonObject jsonObject = jsonResponse.object();
     QJsonArray assetsArray = jsonObject["assets"].toArray();
-    QString version = jsonObject["tagn_ame"].toString();
+    QString version = jsonObject["tag_name"].toString();
     QVector<QJsonObject> assets;
+
+    s_ReleaseNotes = jsonObject["body"].toString();
 
     /* Patern matching with wildcards. */
     QRegExp rx(s_ZsyncFileName);
@@ -443,10 +447,11 @@ void ZsyncRemoteControlFileParserPrivate::handleGithubAPIResponse(void)
         if(rx.exactMatch(asset["name"].toString())) {
             setControlFileUrl(QUrl(asset["browser_download_url"].toString()));
             getControlFile();
-            break;
+            return;
         }
         QCoreApplication::processEvents();
     }
+    emit error(ZsyncControlFileNotFound);
     return;
 }
 
