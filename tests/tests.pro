@@ -1,15 +1,8 @@
-TEMPLATE = subdirs
-
-SUBDIRS += \
-    misc \
-    widget \
-    attr \
-    converter \
-    core \
-    typelist \
-    models
-
-# No tests if PREFIX is set (for flatpak)
-defined(PREFIX, var) {
-    SUBDIRS =
-}
+include(../AppImageUpdaterBridge.pri)
+INCLUDEPATH += .
+CONFIG += release
+QT += testlib
+SOURCES += main.cc
+HEADERS += AppImageUpdateInformation.hpp \
+	   ZsyncRemoteControlFileParser.hpp \
+	   AppImageDeltaRevisioner.hpp
