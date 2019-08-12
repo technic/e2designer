@@ -356,7 +356,7 @@ public:
         WithSeconds,
         InMinutes,
         Date,
-        AsLenght,
+        AsLength,
         Format,
     };
     Q_ENUM(Arg);

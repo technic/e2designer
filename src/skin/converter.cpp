@@ -265,7 +265,7 @@ QString ClockToText::getText()
     }
     if (m_type == InMinutes) {
         return QString::number(t / 60);
-    } else if (m_type == AsLenght) {
+    } else if (m_type == AsLength) {
         return QString().sprintf("%d:%02d", t / 60, t % 60);
     }
     auto date = QDateTime::fromSecsSinceEpoch(t);
