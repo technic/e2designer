@@ -70,18 +70,38 @@ private slots:
     void test_xml()
     {
         QFile file(QFINDTESTDATA("widget.xml"));
-        qDebug() << file.fileName();
         QVERIFY(file.open(QIODevice::ReadOnly));
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
 
         WidgetData w;
-        w.fromXml(xml);
+        QVERIFY(w.fromXml(xml));
         QVERIFY(w.name() == "test1");
         QVERIFY(w.alphatest() == Alphatest::blend);
         QVERIFY(w.position() == PositionAttr(10, 20));
         QVERIFY(w.size() == SizeAttr(100, 300));
         QVERIFY(w.color(Property::backgroundColor).value() == QColor(Qt::red));
+    }
+
+    void test_invalid_xml()
+    {
+        QXmlStreamReader xml(R"(<widget name="foobar"><widget_bad/>)");
+        xml.readNextStartElement();
+
+        WidgetData w;
+        QCOMPARE(w.fromXml(xml), false);
+        QVERIFY(xml.hasError());
+        qDebug() << xml.error() << xml.errorString();
+    }
+
+    void test_invalid_xml_tag() {
+        QXmlStreamReader xml(R"(<badtag name="foobar"><badtag/>)");
+        xml.readNextStartElement();
+
+        WidgetData w;
+        QCOMPARE(w.fromXml(xml), false);
+        QVERIFY(xml.hasError());
+        qDebug() << xml.error() << xml.errorString();
     }
 
     void test_tree()

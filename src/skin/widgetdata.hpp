@@ -162,7 +162,7 @@ public:
     void setFlags(Property::Flags flags);
 
     // Xml
-    void fromXml(QXmlStreamReader& xml);
+    bool fromXml(QXmlStreamReader& xml);
     void toXml(XmlStreamWriter& xml) const;
 
     // Attribute get/set QVariant methods

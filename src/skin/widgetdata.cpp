@@ -610,18 +610,27 @@ void WidgetData::setFlags(Property::Flags flags)
     notifyAttrChange(Property::flags);
 }
 
-void WidgetData::fromXml(QXmlStreamReader& xml)
+/*!
+ * \brief Parses widget data from xml stream
+ * The \a xml reader should be at the StartElement token.
+ * If widget can not be parsed the error is reported to \a xml reader
+ * \param xml reader
+ * \return parse status
+ */
+bool WidgetData::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement());
 
     bool ok;
     m_type = strToType(xml.name(), ok);
-    Q_ASSERT(ok);
-
+    if (!ok) {
+        xml.raiseError(QString("Unknown widget tag %1").arg(xml.name().toString()));
+        return false;
+    }
+    QMetaEnum meta = Property::propertyEnum();
     QXmlStreamAttributes attrs = xml.attributes();
     for (auto it = attrs.cbegin(); it != attrs.cend(); ++it) {
         bool ok;
-        QMetaEnum meta = Property::propertyEnum();
         m_propertiesOrder.append(it->name().toString());
         int key = meta.keyToValue(it->name().toLatin1().data(), &ok);
         if (ok) {
@@ -632,34 +641,29 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
         }
     }
 
-    while (nextXmlChild(xml)) {
-        // qDebug() << "child" << xml.tokenString() << xml.name() << xml.text();
-        if (xml.isStartElement()) {
-            if (m_type == Screen) {
-                bool ok;
-                strToType(xml.name(), ok);
-                if (ok) {
-                    auto* widget = new WidgetData();
-                    appendChild(widget);
-                    widget->fromXml(xml);
-                } else {
-                    xml.skipCurrentElement();
-                }
-            } else if (xml.name() == "convert") {
-                auto name = xml.attributes().value("type");
-                std::unique_ptr<Converter> converter;
-                if (!name.isNull()) {
-                    converter = ConverterFactory::instance().createConverterByName(name.toString());
-                }
-                if (!converter) {
-                    // Fallback to default implementation
-                    converter = std::make_unique<Converter>();
-                }
-                converter->fromXml(xml);
-                m_converters.push_back(std::move(converter));
+    while (xml.readNextStartElement()) {
+        if (m_type == Screen) {
+            auto* widget = new WidgetData();
+            if (widget->fromXml(xml)) {
+                appendChild(widget);
             } else {
-                xml.skipCurrentElement();
+                delete widget;
+                return false;
             }
+        } else if (xml.name() == "convert") {
+            auto name = xml.attributes().value("type");
+            std::unique_ptr<Converter> converter;
+            if (!name.isNull()) {
+                converter = ConverterFactory::instance().createConverterByName(name.toString());
+            }
+            if (!converter) {
+                // Fallback to default implementation
+                converter = std::make_unique<Converter>();
+            }
+            converter->fromXml(xml);
+            m_converters.push_back(std::move(converter));
+        } else {
+            xml.skipCurrentElement();
         }
     }
 
@@ -674,6 +678,7 @@ void WidgetData::fromXml(QXmlStreamReader& xml)
             }
         }
     }
+    return !xml.hasError();
 }
 
 void WidgetData::toXml(XmlStreamWriter& xml) const
