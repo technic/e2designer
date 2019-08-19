@@ -337,8 +337,15 @@ void MainWindow::loadEditorText()
     QModelIndex index = ui->treeView->selectionModel()->currentIndex();
     QModelIndex parent = index.parent();
     QXmlStreamReader xml(ui->textEdit->toPlainText());
-    xml.readNextStartElement();
-    model->setWidgetDataFromXml(index, xml);
+    bool ok = xml.readNextStartElement();
+    if (!ok) {
+        QMessageBox::warning(this, tr("XML parser error"), xml.errorString());
+        return;
+    }
+    if (!model->setWidgetDataFromXml(index, xml)) {
+        QMessageBox::warning(this, tr("XML parser error"), xml.errorString());
+        return;
+    }
     index = model->index(index.row(), ScreensModel::ColumnElement, parent);
     ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Current);
 }

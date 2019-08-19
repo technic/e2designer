@@ -462,7 +462,10 @@ bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamRead
         return false;
     }
     auto* widget = new WidgetData();
-    widget->fromXml(xml); // TODO: handle errors
+    if (!widget->fromXml(xml)) {
+        delete widget;
+        return false;
+    }
     QModelIndex parent = index.parent();
     mCommander->beginMacro("Edit XML source");
     // Remove old widget
