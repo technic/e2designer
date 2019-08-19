@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2018-2019, Antony jr
+ * Copyright (c) 2017-2019, Antony jr
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,7 @@
 #ifndef APPIMAGE_DELTA_REVISIONER_HPP_INCLUDED
 #define APPIMAGE_DELTA_REVISIONER_HPP_INCLUDED
 #include <QNetworkReply>
+#include <QNetworkProxy>
 #include <QObject>
 #include <QJsonObject>
 #include <QString>
@@ -65,6 +66,7 @@ public Q_SLOTS:
     void setAppImage(QFile*);
     void setShowLog(bool);
     void setOutputDirectory(const QString&);
+    void setProxy(const QNetworkProxy&);
     void getAppImageEmbededInformation(void);
     void checkForUpdate(void);
     void clear(void);

@@ -44,9 +44,10 @@ Eventhough all methods are reentrant , This class does not use **mutex** thanks 
 | **void** | [start(void)](#void-startvoid) |
 | **void** | [cancel(void)](#void-cancelvoid) |
 | **void** | [setAppImage(const QString&)](#void-setappimageconst-qstring) |
-| **void** | [setAppImage(QFile *)](#void-setappimageqfile) |
+| **void** | [setAppImage(QFile \*)](#void-setappimageqfile) |
 | **void** | [setShowLog(bool)](#void-setshowlogbool) |
 | **void** | [setOutputDirectory(const QString&)](#void-setoutputdirectoryconst-qstring) |
+| **void** | [setProxy(const QNetworkProxy&)](#void-setproxyconst-qnetworkproxy-https-docqtio-qt-5-qnetworkproxyhtml) |
 | **void** | [getAppImageEmbededInformation(void)](#void-getappimageembededinformationvoid) |
 | **void** | [checkForUpdate(void)](#void-checkforupdatevoid) |
 | **void** | [clear(void)](#void-clearvoid) |
@@ -102,7 +103,7 @@ This is an overloaded constructor , Constructs the Updater with the given QFile 
 If the pointer is invalid or has other sort of read errors , The updater will emit error but when 
 forced to start , Again the updater guesses the AppImage Path in order to continue with the extraction.
 If the guessed AppImage Path is not an AppImage but a normal elf file then this result in a invalid magic
-byte error. See [error codes](https://antony-jr.github.io/AppImageUpdaterBridge/docs/AppImageDeltaRevisionerErrorCodes.html) for more information.
+byte error. See [error codes](AppImageDeltaRevisionerErrorCodes.html) for more information.
 
 The default value for **singleThreaded** is **true** but you can set it to **false** to run all the 
 resource of the updater in a seperate thread excluding **this class**.
@@ -120,6 +121,8 @@ Emits **started()** signal when starts.
 slots before start , Don't worry about overheads too , Since when you call checkForUpdate slot , The information
 is cached and when start slot is called again , it will be faster than normal. 
 
+> Important Note: You should also call clear and set the settings again if you want to clear the cache.
+
 ### void cancel(void)
 <p align="right"> <b>[SLOT]</b> </p>
 
@@ -133,10 +136,10 @@ Emits **canceled()** signal when cancel was successfull.
 Sets the AppImage Path as the given **QString**.
 
 
-### void setAppImage(QFile *)
+### void setAppImage(QFile \*)
 <p align="right"> <b>[SLOT]</b> </p>
 
-Sets the given **QFile\*** as the AppImage itself.
+Sets the given **QFile** as the AppImage itself.
 
 ### void setShowLog(bool)
 <p align="right"> <b>[SLOT]</b> </p>
@@ -152,6 +155,24 @@ if set to true.
 
 Writes the new version of the AppImage to the given Output directory , Assuming the given QString a directory path.
 The default is the old version AppImage's directory.
+
+
+### void setProxy(const [QNetworkProxy](https://doc.qt.io/qt-5/qnetworkproxy.html)&)
+<p align="right"> <b>[SLOT]</b> </p>
+
+Sets the given [QNetworkProxy](https://doc.qt.io/qt-5/qnetworkproxy.html) as the proxy
+to use for all network communication for the updater.
+
+```
+   QNetworkProxy proxy;
+   proxy.setType(QNetworkProxy::Socks5Proxy);
+   proxy.setHostName("127.0.0.1");
+   proxy.setPort(9050);
+
+   AppImageDeltaRevisioner Revisioner("Ein.AppImage");
+   Revisioner.setProxy(proxy);
+   Revisioner.start(); /* Start the updater */
+```
 
 
 ### void getAppImageEmbededInformation(void)
@@ -237,8 +258,8 @@ of the AppImage and the given *QString* has the absolute path to the old versioi
 The *QJsonObject* will follow the folloing format with respect to json ,
 	
     {
-        "AbsolutePath" : Absolute path of the new version of the AppImage ,
-        "Sha1Hash"     : Sha1 hash of the new version of the AppImage
+        "AbsolutePath" : "Absolute path of the new version of the AppImage" ,
+        "Sha1Hash"     : "Sha1 hash of the new version of the AppImage"
     }
 
 > Note: If the absolute path of the new version of the AppImage is same as the old version then
@@ -262,22 +283,24 @@ the current operating AppImage.
 The *QJsonObject* will follow the following format with respect to json , 
 	
     {
-        "AbsolutePath" : The absolute path of the current operating AppImage ,
-        "Sha1Hash"     : The Sha1 hash of the current operating AppImage
+        "AbsolutePath" : "The absolute path of the current operating AppImage" ,
+        "Sha1Hash"     : "The Sha1 hash of the current operating AppImage" ,
+        "RemoteSha1Hash" : "The Sha1 hash of the lastest AppImage" ,
+        "ReleaseNotes" : "Release notes if available"
     }
 
 ### void statusChanged(short)
 <p align="right"> <b>[SIGNAL]</b> </p>
 
 Emitted when the updater status is changed , The given short integer is the status code.
-See [status codes](https://antony-jr.github.io/AppImageUpdaterBridge/docs/AppImageUpdaterBridgeStatusCodes.html).
+See [status codes](AppImageUpdaterBridgeStatusCodes.html).
 
 
 ### void error(short)
 <p align="right"> <b>[SIGNAL]</b> </p>
 
 Emitted when the updater is errored. The given short integer is the error code.
-See [error codes](https://antony-jr.github.io/AppImageUpdaterBridge/docs/AppImageUpdaterBridgeErrorCodes.html).
+See [error codes](AppImageUpdaterBridgeErrorCodes.html).
 
 
 ### void progress(int percentage , qint64 bytesReceived , qint64 bytesTotal , double speed , QString speedUnits)

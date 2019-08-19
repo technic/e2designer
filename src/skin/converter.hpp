@@ -96,7 +96,7 @@ public:
 private:
     // Constructor functions map
     using Constructor = Converter* (*)();
-    QHash<QByteArray, Constructor> _constructors;
+    QHash<QByteArray, Constructor> m_constructors;
 };
 
 class ServiceName : public Converter
@@ -356,7 +356,7 @@ public:
         WithSeconds,
         InMinutes,
         Date,
-        AsLenght,
+        AsLength,
         Format,
     };
     Q_ENUM(Arg);

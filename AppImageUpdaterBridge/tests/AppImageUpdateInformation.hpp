@@ -8,7 +8,7 @@
  * Get the official appimage tool to test it with
  * our library.
 */
-#define APPIMAGE_TOOL_RELATIVE_PATH QString("test_cases/appimagetool-x86_64.AppImage")
+#define APPIMAGE_TOOL_RELATIVE_PATH QString("test_cases/appimagetool.AppImage")
 
 class AppImageUpdateInformation : public QObject
 {
@@ -70,6 +70,28 @@ private slots:
         /* both are not empty , Check the value for isEmpty in the resultant. */
         QVERIFY(!result["isEmpty"].toBool());
         return;
+    }
+   
+    void reentrant(void){
+        using AppImageUpdaterBridge::AppImageUpdateInformationPrivate;
+        AppImageUpdateInformationPrivate AIUpdateInformation;
+        QSignalSpy spyInfo(&AIUpdateInformation, SIGNAL(info(QJsonObject)));
+
+        AIUpdateInformation.setAppImage(APPIMAGE_TOOL_RELATIVE_PATH);
+	AIUpdateInformation.getInfo();
+	
+	AIUpdateInformation.setAppImage(APPIMAGE_TOOL_RELATIVE_PATH);
+	AIUpdateInformation.getInfo();
+
+        AIUpdateInformation.setAppImage(APPIMAGE_TOOL_RELATIVE_PATH);
+	AIUpdateInformation.getInfo();
+	
+        AIUpdateInformation.setAppImage(APPIMAGE_TOOL_RELATIVE_PATH);
+	AIUpdateInformation.getInfo();
+
+	QVERIFY(spyInfo.count() || spyInfo.wait());
+
+
     }
 
     void checkErrorSignal(void)

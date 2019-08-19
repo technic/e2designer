@@ -1,11 +1,12 @@
 ---
-id: AppImageDeltaRevisionerExample
-title: Updating an AppImage
-sidebar_label: Updating an AppImage
+id: AppImageDeltaRevisionerProxyExample
+title: Updating an AppImage using Proxy
+sidebar_label: Updating an AppImage using Proxy
 ---
 
-This guide Demonstrates how to use the *AppImageUpdaterBridge* APIs for updating a single AppImage file.
-This example parses the path from the program arguments , And uses the *[AppImageDeltaRevisioner](ClassAppImageDeltaRevisioner.html)* class to perform the actual delta update.
+This guide Demonstrates how to use the *AppImageUpdaterBridge* APIs for updating a single AppImage file through a given **proxy**.
+This example parses the path from the program arguments , And uses the *[AppImageDeltaRevisioner]()* class to
+perform the actual delta update.
 
 ## main.cpp
 
@@ -13,6 +14,7 @@ This example parses the path from the program arguments , And uses the *[AppImag
 #include <QCoreApplication>
 #include <QDebug>
 #include <AppImageUpdaterBridge>
+#include <QNetworkProxy> 
 
 int main(int ac , char **av)
 {
@@ -22,8 +24,16 @@ int main(int ac , char **av)
         }
 	
 	using AppImageUpdaterBridge::AppImageDeltaRevisioner;
+	using AppImageUpdaterBridge::errorCodeToString;
 	QCoreApplication app(ac , av);
  	QString AppImagePath = QString(av[1]);
+
+	/* Set proxy settings */
+	QNetworkProxy proxy;
+	/* For this demo , we assume we use a local tor instance. */
+	proxy.setType(QNetworkProxy::Socks5Proxy);
+	proxy.setHostName("127.0.0.1");
+	proxy.setPort(9050);
 
 	AppImageDeltaRevisioner DRevisioner(AppImagePath);
 	QObject::connect(&DRevisioner , &AppImageDeltaRevisioner::finished ,
@@ -34,10 +44,13 @@ int main(int ac , char **av)
 	});
 	QObject::connect(&DRevisioner , &AppImageDeltaRevisioner::error ,
         [&](short e){
-		qInfo() << "error:: " << AppImageUpdaterBridge::errorCodeToString(e);
+		qInfo() << "error:: " << errorCodeToString(e);
 		app.quit();
 	});
-	DRevisioner.setShowLog(true); // Display log?
+	DRevisioner.setShowLog(true); // Display log
+        
+	/* Using proxy. */
+	DRevisioner.setProxy(proxy);
 	
 	DRevisioner.start(); /* Start the update. */
 	return app.exec();

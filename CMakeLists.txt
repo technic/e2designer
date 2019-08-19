@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(e2designer)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # Find includes in the build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
