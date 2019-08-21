@@ -29,7 +29,7 @@ public:
     Preview getPreview(const QString& screen, const QString& widget) const;
 
 protected:
-    QMap<QString, QMap<QString, Preview>> mPreviews;
+    QMap<QString, QMap<QString, Preview>> m_previews;
 };
 
 class ColorsModel;
@@ -47,8 +47,7 @@ public:
                           QObject* parent = Q_NULLPTR);
     ~ScreensModel() override;
 
-    //	typedef MixinTreeNode<WidgetData> Item;
-    typedef WidgetData Item;
+    using Item = WidgetData;
 
     enum
     {
@@ -131,7 +130,7 @@ public:
     const ColorRolesModel& roles() const { return m_colorRolesModel; }
 
     // Access undo model
-    QUndoStack* undoStack() const { return mCommander; }
+    QUndoStack* undoStack() const { return m_commander; }
 
     // Move and resize widget
     void resizeWidget(const QModelIndex& index, const QSize& size);
@@ -188,7 +187,7 @@ private:
     // own
     WidgetData* mRoot;
     // QObject owned
-    QUndoStack* mCommander;
+    QUndoStack* m_commander;
 };
 
 class WidgetObserverRegistrator

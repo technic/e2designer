@@ -11,7 +11,7 @@
 
 void ScreensTree::loadPreviews(const QString& path)
 {
-    mPreviews.clear();
+    m_previews.clear();
 
     QFile file(path);
     bool ok = file.open(QIODevice::ReadOnly);
@@ -59,7 +59,7 @@ void ScreensTree::loadPreviews(const QString& path)
             }
         }
         if (!screenName.isEmpty()) {
-            mPreviews.insert(screenName, map);
+            m_previews.insert(screenName, map);
         }
     }
 }
@@ -77,7 +77,7 @@ void ScreensTree::savePreviews(const QString& path)
     xml.writeStartDocument();
     xml.writeStartElement("screens");
     // iterate over screens
-    for (auto s = mPreviews.begin(); s != mPreviews.end(); ++s) {
+    for (auto s = m_previews.begin(); s != m_previews.end(); ++s) {
         if (s.value().empty())
             continue;
         xml.writeStartElement("screen");
@@ -105,8 +105,8 @@ void ScreensTree::savePreviews(const QString& path)
 
 Preview ScreensTree::getPreview(const QString& screen, const QString& widget) const
 {
-    auto screen_it = mPreviews.find(screen);
-    if (screen_it == mPreviews.end())
+    auto screen_it = m_previews.find(screen);
+    if (screen_it == m_previews.end())
         return Preview();
     auto widget_it = screen_it.value().find(widget);
     if (widget_it == screen_it.value().end())
@@ -125,9 +125,9 @@ ScreensModel::ScreensModel(ColorsModel& colors,
     , m_colorRolesModel(roles)
     , m_fontsModel(fonts)
     , mRoot(new WidgetData())
-    , mCommander(new QUndoStack(this))
+    , m_commander(new QUndoStack(this))
 {
-    mCommander->setUndoLimit(100);
+    m_commander->setUndoLimit(100);
     mRoot->setModel(this);
     connect(&colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
     connect(&roles, &ColorRolesModel::colorChanged, this, &ScreensModel::onStyledColorChanged);
@@ -279,7 +279,7 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
     for (int i = 0; i < count; ++i) {
         childs.append(new WidgetData());
     }
-    mCommander->push(new InsertRowsCommand(*parentItem, row, childs));
+    m_commander->push(new InsertRowsCommand(*parentItem, row, childs));
     return true;
 }
 
@@ -289,7 +289,7 @@ bool ScreensModel::removeRows(int row, int count, const QModelIndex& parent)
     if (count <= 0 || row < 0 || row + count > parentItem->childCount()) {
         return false;
     }
-    mCommander->push(new RemoveRowsCommand(*parentItem, row, count));
+    m_commander->push(new RemoveRowsCommand(*parentItem, row, count));
     return true;
 }
 
@@ -328,7 +328,7 @@ void ScreensModel::clear()
     QModelIndex rootIndex;
     removeRows(0, rowCount(rootIndex), rootIndex);
     endResetModel();
-    mCommander->clear();
+    m_commander->clear();
 }
 
 bool ScreensModel::moveRows(const QModelIndex& sourceParent,
@@ -450,7 +450,7 @@ bool ScreensModel::setWidgetAttr(const QModelIndex& index, int key, const QVaria
 {
     auto* widget = indexToItem(index);
     if (widget) {
-        mCommander->push(new AttrCommand(widget, key, value));
+        m_commander->push(new AttrCommand(widget, key, value));
         return true;
     }
     return false;
@@ -467,13 +467,13 @@ bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamRead
         return false;
     }
     QModelIndex parent = index.parent();
-    mCommander->beginMacro("Edit XML source");
+    m_commander->beginMacro("Edit XML source");
     // Remove old widget
-    mCommander->push(new RemoveRowsCommand(*indexToItem(parent), index.row(), 1));
+    m_commander->push(new RemoveRowsCommand(*indexToItem(parent), index.row(), 1));
     // Insert constructed widget
     auto child = QVector<WidgetData*>{ widget };
-    mCommander->push(new InsertRowsCommand(*indexToItem(parent), index.row(), child));
-    mCommander->endMacro();
+    m_commander->push(new InsertRowsCommand(*indexToItem(parent), index.row(), child));
+    m_commander->endMacro();
     return true;
 }
 
@@ -481,7 +481,7 @@ void ScreensModel::resizeWidget(const QModelIndex& index, const QSize& size)
 {
     auto* widget = indexToItem(index);
     if (widget) {
-        mCommander->push(new ResizeWidgetCommand(widget, size));
+        m_commander->push(new ResizeWidgetCommand(widget, size));
     }
 }
 
@@ -489,7 +489,7 @@ void ScreensModel::moveWidget(const QModelIndex& index, const QPoint& pos)
 {
     auto* widget = indexToItem(index);
     if (widget) {
-        mCommander->push(new MoveWidgetCommand(widget, pos));
+        m_commander->push(new MoveWidgetCommand(widget, pos));
     }
 }
 
@@ -497,7 +497,7 @@ void ScreensModel::changeWidgetRect(const QModelIndex& index, const QRect& rect)
 {
     auto* widget = indexToItem(index);
     if (widget) {
-        mCommander->push(new ChangeRectWidgetCommand(widget, rect));
+        m_commander->push(new ChangeRectWidgetCommand(widget, rect));
     }
 }
 
@@ -639,7 +639,7 @@ QVector<QModelIndex> ScreensModel::decodeRows(QDataStream& stream) const
 
 void ScreensModel::updatePreviewMap()
 {
-    mPreviews.clear();
+    m_previews.clear();
     for (int i = 0; i < mRoot->childCount(); ++i) {
         const auto* screen = mRoot->child(i);
         QMap<QString, Preview> map;
@@ -649,7 +649,7 @@ void ScreensModel::updatePreviewMap()
                 map[widget->name()] = Preview(widget->previewValue(), widget->previewRender());
         }
         if (!map.empty())
-            mPreviews[screen->name()] = map;
+            m_previews[screen->name()] = map;
     }
 }
 
