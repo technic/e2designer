@@ -5,10 +5,29 @@
 #include "ui_colorlistwindow.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QStyledItemDelegate>
 #include <array>
 #include <QtColorWidgets/color_line_edit.hpp>
 #include <QtColorWidgets/color_dialog.hpp>
 #include <QtColorWidgets/ColorSelector>
+
+class ColorColumnDelegate : public QStyledItemDelegate
+{
+public:
+    ColorColumnDelegate(QObject* parent = nullptr)
+        : QStyledItemDelegate(parent)
+    {}
+
+    void paint(QPainter* painter,
+               const QStyleOptionViewItem& option,
+               const QModelIndex& index) const override
+    {
+        auto itemOption = option;
+        // Disable selection to keep background color
+        itemOption.state.setFlag(QStyle::State_Selected, false);
+        QStyledItemDelegate::paint(painter, itemOption, index);
+    }
+};
 
 ColorListWindow::ColorListWindow(QWidget* parent)
     : QDockWidget(parent)
@@ -33,6 +52,8 @@ ColorListWindow::ColorListWindow(QWidget* parent)
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setDragDropMode(QAbstractItemView::InternalMove);
     ui->tableView->setDropIndicatorShown(true);
+    ui->tableView->setItemDelegateForColumn(ColorsModel::ColumnColor,
+                                            new ColorColumnDelegate(this));
 
     // Color selectors
     using namespace color_widgets;
