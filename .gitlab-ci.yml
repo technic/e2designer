@@ -148,7 +148,7 @@ coverage:
     - make check
     - popd
     - lcov --no-external --directory . --capture --output-file coverage.info
-    - lcov --remove coverage.info "moc_*" "*.moc" "tests/*" --output-file coverage.info
+    - lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info
     - lcov --list coverage.info
     - genhtml coverage.info --output-directory coverage-report
     coverage: '/Total:\|(\d+\.?\d+\%)/'
