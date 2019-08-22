@@ -315,8 +315,6 @@ void MainWindow::checkUpdates()
         qWarning() << "Can't update! Are you running AppImage?";
         return;
     }
-    m_updater->setAppImage(fileName);
-    m_updater->setShowLog(true);
     m_updater->init();
 #endif
 }
