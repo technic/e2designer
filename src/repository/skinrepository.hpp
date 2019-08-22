@@ -9,7 +9,6 @@
 #include "model/fontsmodel.hpp"
 #include "model/screensmodel.hpp"
 #include "model/windowstyle.hpp"
-#include "repository/videooutputrepository.hpp"
 #include <QDir>
 #include <QObject>
 

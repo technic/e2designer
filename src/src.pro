@@ -54,7 +54,6 @@ SOURCES += \
     repository/xmlnode.cpp \
     repository/skinrepository.cpp \
     skin/widgetdata.cpp \
-    repository/videooutputrepository.cpp \
     base/uniqueid.cpp \
     repository/pixmapstorage.cpp \
     commands/attrcommand.cpp \
@@ -101,7 +100,6 @@ HEADERS += \
     repository/xmlnode.hpp \
     repository/skinrepository.hpp \
     skin/widgetdata.hpp \
-    repository/videooutputrepository.hpp \
     base/uniqueid.hpp \
     repository/pixmapstorage.hpp \
     base/tree.hpp \

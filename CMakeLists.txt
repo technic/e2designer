@@ -44,7 +44,6 @@ set(SOURCE
     src/outputslistwindow.cpp
     src/repository/pixmapstorage.cpp
     src/repository/skinrepository.cpp
-    src/repository/videooutputrepository.cpp
     src/repository/xmlnode.cpp
     src/scene/backgroundpixmap.cpp
     src/scene/borderview.cpp
