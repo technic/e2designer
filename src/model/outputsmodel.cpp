@@ -57,7 +57,6 @@ void VideoOutput::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-
 OutputsModel::OutputsModel(QObject* parent)
     : MovableListModel(parent)
 {}
