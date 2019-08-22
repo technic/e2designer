@@ -127,7 +127,7 @@ clang-tidy:
   stage: build
   script:
     - mkdir -p build && cd build
-    - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
+    - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics -Wno-register"
     - bear make -j$(nproc)
     - run-clang-tidy.py
 
