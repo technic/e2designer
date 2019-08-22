@@ -229,7 +229,7 @@ void MainWindow::setTitle(const QString& skinPath)
     setWindowTitle(QString("%1[*] - %2").arg(skinPath, QCoreApplication::applicationName()));
 }
 
-void MainWindow::addSkinItem(int type)
+void MainWindow::addSkinItem(WidgetData::WidgetType type)
 {
     // FIXME: is m_view always authoritative?
     // TODO: should model provide more friendly interface?
