@@ -231,10 +231,13 @@ void MainWindow::setTitle(const QString& skinPath)
 
 void MainWindow::addSkinItem(WidgetData::WidgetType type)
 {
-    // FIXME: is m_view always authoritative?
-    // TODO: should model provide more friendly interface?
+    // Get parent screen for new skin item
+    auto screen = mView->currentIndex();
+    if (!screen.isValid()) {
+        return;
+    }
+    // TODO: should model provide more friendly interface?   
     auto& model = *SkinRepository::screens();
-    QModelIndex screen = mView->currentIndex();
     model.insertRow(model.rowCount(screen), screen);
     QModelIndex widget = model.index(model.rowCount(screen) - 1, 0, screen);
     model.setData(widget, type, ScreensModel::TypeRole);

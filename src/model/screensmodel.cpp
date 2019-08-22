@@ -277,7 +277,12 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
 
     QVector<WidgetData*> childs;
     for (int i = 0; i < count; ++i) {
-        childs.append(new WidgetData());
+        auto widget = new WidgetData();
+        // Top level items should be Screens
+        if (parentItem == mRoot) {
+            widget->setType(WidgetData::Screen);
+        }
+        childs.append(widget);
     }
     m_commander->push(new InsertRowsCommand(*parentItem, row, childs));
     return true;

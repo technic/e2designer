@@ -17,7 +17,7 @@ class ScreenView : public QObject
 
 public:
     ScreenView(ScreensModel* model);
-    // returns current screen index
+    /// Returns current screen index
     QModelIndex currentIndex() { return mRoot; }
     int outputId() const { return mOutputId; }
     QGraphicsScene* scene() const { return mScene; }
