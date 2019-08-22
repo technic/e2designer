@@ -94,7 +94,8 @@ private slots:
         qDebug() << xml.error() << xml.errorString();
     }
 
-    void test_invalid_xml_tag() {
+    void test_invalid_xml_tag()
+    {
         QXmlStreamReader xml(R"(<badtag name="foobar"><badtag/>)");
         xml.readNextStartElement();
 

@@ -237,7 +237,7 @@ void MainWindow::addSkinItem(WidgetData::WidgetType type)
         QMessageBox::warning(this, tr("Error"), tr("Can not add widget to the skin top level"));
         return;
     }
-    // TODO: should model provide more friendly interface?   
+    // TODO: should model provide more friendly interface?
     auto& model = *SkinRepository::screens();
     model.insertRow(model.rowCount(screen), screen);
     QModelIndex widget = model.index(model.rowCount(screen) - 1, 0, screen);
