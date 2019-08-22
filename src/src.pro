@@ -51,14 +51,12 @@ SOURCES += \
     scene/foregroundwidget.cpp \
     editor/codeeditor.cpp \
     scene/rectselector.cpp \
-    base/singleton.cpp \
     repository/xmlnode.cpp \
     repository/skinrepository.cpp \
     skin/widgetdata.cpp \
     repository/videooutputrepository.cpp \
     base/uniqueid.cpp \
     repository/pixmapstorage.cpp \
-    base/tree.cpp \
     commands/attrcommand.cpp \
     fontlistwindow.cpp \
     model/namedlist.cpp \
