@@ -234,6 +234,7 @@ void MainWindow::addSkinItem(WidgetData::WidgetType type)
     // Get parent screen for new skin item
     auto screen = mView->currentIndex();
     if (!screen.isValid()) {
+        QMessageBox::warning(this, tr("Error"), tr("Can not add widget to the skin top level"));
         return;
     }
     // TODO: should model provide more friendly interface?   
