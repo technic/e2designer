@@ -115,7 +115,7 @@ public:
     // Access widget attributes:
     QVariant widgetAttr(const QModelIndex& index, int key) const;
     bool setWidgetAttr(const QModelIndex& index, int key, const QVariant& value);
-    // Syntax shugar
+    // Syntax sugar
     //    template<class T>
     //    bool setWidgetAttr(const QModelIndex &index, int key, const T &value) {
     //        return setWidgetAttr(index, key, QVariant::fromValue(value));
@@ -124,7 +124,7 @@ public:
     // Edit widget with XML editor
     bool setWidgetDataFromXml(const QModelIndex& index, QXmlStreamReader& xml);
 
-    // Access asosiated fonts and colors
+    // Access associated fonts and colors
     const ColorsModel& colors() const { return m_colorsModel; }
     const FontsModel& fonts() const { return m_fontsModel; }
     const ColorRolesModel& roles() const { return m_colorRolesModel; }
@@ -137,7 +137,7 @@ public:
     void moveWidget(const QModelIndex& index, const QPoint& pos);
     void changeWidgetRect(const QModelIndex& index, const QRect& rect);
 
-    // widgetChanged only emmited for widgets being observed
+    // widgetChanged only emitted for widgets being observed
     void registerObserver(const QModelIndex& index);
     void unregisterObserver(const QModelIndex& index);
 

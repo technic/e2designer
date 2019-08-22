@@ -231,7 +231,7 @@ void MainWindow::setTitle(const QString& skinPath)
 
 void MainWindow::addSkinItem(int type)
 {
-    // FIXME: is m_view always athorative?
+    // FIXME: is m_view always authoritative?
     // TODO: should model provide more friendly interface?
     auto& model = *SkinRepository::screens();
     QModelIndex screen = mView->currentIndex();
@@ -282,7 +282,7 @@ void MainWindow::delWidget()
     QModelIndex idx = ui->treeView->selectionModel()->currentIndex();
     SkinRepository::screens()->removeRow(idx.row(), idx.parent());
     //    mView->deleteSelected();
-    // FIXME: is m_view always athorative?
+    // FIXME: is m_view always authoritative?
 }
 
 void MainWindow::editColors()
