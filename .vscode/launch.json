@@ -8,6 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
+            // Target is selected in the CMake Tools status bar
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "stopAtEntry": false,
@@ -18,6 +19,7 @@
                     "value": "C:\\Qt\\5.12.4\\msvc2017_64\\bin;${env.PATH}"
                 }
             ],
+            "internalConsoleOptions": "openOnSessionStart",
             "externalConsole": false
         }
     ]
