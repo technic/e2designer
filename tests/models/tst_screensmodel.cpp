@@ -23,7 +23,7 @@ private slots:
         for (int i = 0; i < 4; i++) {
             QCOMPARE(model.data(model.index(i, ScreensModel::ColumnElement, root), Qt::DisplayRole)
                        .toString(),
-                     "widget");
+                     "screen");
         }
         model.undoStack()->undo();
         QCOMPARE(model.rowCount(), 0);
