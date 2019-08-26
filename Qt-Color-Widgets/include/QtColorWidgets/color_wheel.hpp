@@ -43,7 +43,7 @@ class QCP_EXPORT ColorWheel : public QWidget
     Q_PROPERTY(qreal hue READ hue WRITE setHue DESIGNABLE false )
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation DESIGNABLE false )
     Q_PROPERTY(qreal value READ value WRITE setValue DESIGNABLE false )
-    Q_PROPERTY(unsigned wheelWidth READ wheelWidth WRITE setWheelWidth DESIGNABLE true )
+    Q_PROPERTY(unsigned wheelWidth READ wheelWidth WRITE setWheelWidth NOTIFY wheelWidthChanged DESIGNABLE true )
     Q_PROPERTY(DisplayFlags displayFlags READ displayFlags WRITE setDisplayFlags NOTIFY displayFlagsChanged DESIGNABLE true )
 
 public:
@@ -186,6 +186,8 @@ Q_SIGNALS:
      * Emitted when harmony settings or harmony colors are changed (including due to main hue change)
      */
     void harmonyChanged();
+
+    void wheelWidthChanged(unsigned);
 
 protected:
     void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;

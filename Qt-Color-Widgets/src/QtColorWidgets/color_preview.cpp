@@ -57,6 +57,7 @@ void ColorPreview::setBackground(const QBrush &bk)
 {
     p->back = bk;
     update();
+    Q_EMIT backgroundChanged(bk);
 }
 
 QBrush ColorPreview::background() const
@@ -73,6 +74,7 @@ void ColorPreview::setDisplayMode(DisplayMode m)
 {
     p->display_mode = m;
     update();
+    Q_EMIT displayModeChanged(m);
 }
 
 QColor ColorPreview::color() const
@@ -139,6 +141,7 @@ void ColorPreview::setComparisonColor(const QColor &c)
 {
     p->comparison = c;
     update();
+    Q_EMIT comparisonColorChanged(c);
 }
 
 void ColorPreview::paintEvent(QPaintEvent *)

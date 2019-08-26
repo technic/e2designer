@@ -37,7 +37,7 @@ namespace color_widgets {
 class QCP_EXPORT GradientSlider : public QSlider
 {
     Q_OBJECT
-    Q_PROPERTY(QBrush background READ background WRITE setBackground)
+    Q_PROPERTY(QBrush background READ background WRITE setBackground NOTIFY backgroundChanged)
     Q_PROPERTY(QGradientStops colors READ colors WRITE setColors DESIGNABLE false)
     Q_PROPERTY(QColor firstColor READ firstColor WRITE setFirstColor STORED false)
     Q_PROPERTY(QColor lastColor READ lastColor WRITE setLastColor STORED false)
@@ -96,6 +96,9 @@ public:
      * \returns QColor() con empty gradient
      */
     QColor lastColor() const;
+
+Q_SIGNALS:
+    void backgroundChanged(const QBrush&);
     
 protected:
     void paintEvent(QPaintEvent *ev) override;

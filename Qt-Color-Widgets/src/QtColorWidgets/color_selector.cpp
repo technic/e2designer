@@ -69,6 +69,7 @@ ColorSelector::UpdateMode ColorSelector::updateMode() const
 void ColorSelector::setUpdateMode(UpdateMode m)
 {
     p->update_mode = m;
+    Q_EMIT updateModeChanged(m);
 }
 
 Qt::WindowModality ColorSelector::dialogModality() const
@@ -79,6 +80,7 @@ Qt::WindowModality ColorSelector::dialogModality() const
 void ColorSelector::setDialogModality(Qt::WindowModality m)
 {
     p->dialog->setWindowModality(m);
+    Q_EMIT dialogModalityChanged(m);
 }
 
 ColorWheel::DisplayFlags ColorSelector::wheelFlags() const
