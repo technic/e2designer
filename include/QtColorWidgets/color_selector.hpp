@@ -34,8 +34,8 @@ class QCP_EXPORT ColorSelector : public ColorPreview
 {
     Q_OBJECT
     Q_ENUMS(UpdateMode)
-    Q_PROPERTY(UpdateMode updateMode READ updateMode WRITE setUpdateMode )
-    Q_PROPERTY(Qt::WindowModality dialogModality READ dialogModality WRITE setDialogModality )
+    Q_PROPERTY(UpdateMode updateMode READ updateMode WRITE setUpdateMode NOTIFY updateModeChanged)
+    Q_PROPERTY(Qt::WindowModality dialogModality READ dialogModality WRITE setDialogModality NOTIFY dialogModalityChanged)
     Q_PROPERTY(ColorWheel::DisplayFlags wheelFlags READ wheelFlags WRITE setWheelFlags NOTIFY wheelFlagsChanged)
 
 public:
@@ -57,6 +57,8 @@ public:
 
 Q_SIGNALS:
     void wheelFlagsChanged(ColorWheel::DisplayFlags flags);
+    void updateModeChanged(UpdateMode);
+    void dialogModalityChanged(Qt::WindowModality);
 
 public Q_SLOTS:
     void showDialog();

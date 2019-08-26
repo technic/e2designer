@@ -81,6 +81,7 @@ void HueSlider::setColorSaturation(qreal s)
 {
     p->saturation = qBound(0.0, s, 1.0);
     p->updateGradient();
+    Q_EMIT colorSaturationChanged(s);
 }
 
 qreal HueSlider::colorValue() const
@@ -92,6 +93,7 @@ void HueSlider::setColorValue(qreal v)
 {
     p->value = qBound(0.0, v, 1.0);
     p->updateGradient();
+    Q_EMIT colorValueChanged(v);
 }
 
 qreal HueSlider::colorAlpha() const
@@ -103,6 +105,7 @@ void HueSlider::setColorAlpha(qreal alpha)
 {
     p->alpha = alpha;
     p->updateGradient();
+    Q_EMIT colorAlphaChanged(alpha);
 }
 
 QColor HueSlider::color() const
@@ -116,12 +119,15 @@ void HueSlider::setColor(const QColor& color)
     p->value = color.valueF();
     p->updateGradient();
     setColorHue(color.hueF());
+    Q_EMIT colorValueChanged(p->alpha);
+    Q_EMIT colorSaturationChanged(p->alpha);
 }
 
 void HueSlider::setFullColor(const QColor& color)
 {
     p->alpha = color.alphaF();
     setColor(color);
+    Q_EMIT colorAlphaChanged(p->alpha);
 }
 
 qreal HueSlider::colorHue() const
@@ -140,6 +146,8 @@ void HueSlider::setColorHue(qreal colorHue)
     if (orientation() == Qt::Vertical)
         colorHue = 1 - colorHue;
     setValue(minimum()+colorHue*(maximum()-minimum()));
+    Q_EMIT colorHueChanged(colorHue);
+    Q_EMIT colorChanged(color());
 }
 
 } // namespace color_widgets

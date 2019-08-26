@@ -378,6 +378,7 @@ void ColorWheel::setWheelWidth(unsigned int w)
     p->wheel_width = w;
     p->render_inner_selector();
     update();
+    Q_EMIT wheelWidthChanged(w);
 }
 
 void ColorWheel::paintEvent(QPaintEvent * )

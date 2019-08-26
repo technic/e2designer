@@ -36,9 +36,9 @@ class QCP_EXPORT ColorPreview : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged DESIGNABLE true)
-    Q_PROPERTY(QColor comparisonColor READ comparisonColor WRITE setComparisonColor DESIGNABLE true)
-    Q_PROPERTY(DisplayMode display_mode READ displayMode WRITE setDisplayMode DESIGNABLE true)
-    Q_PROPERTY(QBrush background READ background WRITE setBackground DESIGNABLE true)
+    Q_PROPERTY(QColor comparisonColor READ comparisonColor WRITE setComparisonColor NOTIFY comparisonColorChanged DESIGNABLE true)
+    Q_PROPERTY(DisplayMode display_mode READ displayMode WRITE setDisplayMode NOTIFY displayModeChanged DESIGNABLE true)
+    Q_PROPERTY(QBrush background READ background WRITE setBackground NOTIFY backgroundChanged DESIGNABLE true)
     Q_ENUMS(DisplayMode)
 public:
     enum DisplayMode
@@ -88,6 +88,10 @@ Q_SIGNALS:
 
     /// Emitted on setColor
     void colorChanged(QColor);
+
+    void comparisonColorChanged(QColor);
+    void displayModeChanged(DisplayMode);
+    void backgroundChanged(const QBrush&);
 
 protected:
     void paintEvent(QPaintEvent *);
