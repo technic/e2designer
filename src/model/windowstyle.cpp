@@ -143,7 +143,7 @@ ColorRolesModel::ColorRolesModel(ColorsModel& colors, QObject* parent)
     , _colors(colors)
 {}
 
-void ColorRolesModel::setStlye(WindowStyle* style)
+void ColorRolesModel::setStyle(WindowStyle* style)
 {
     // We are connected and have to disconnect
     if (_style && !style) {

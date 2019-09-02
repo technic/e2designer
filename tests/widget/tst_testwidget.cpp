@@ -214,7 +214,7 @@ private slots:
         auto fonts = new FontsModel(this);
         auto widgets = new ScreensModel(*colors, *colorRoles, *fonts, this);
         WindowStyle style;
-        colorRoles->setStlye(&style);
+        colorRoles->setStyle(&style);
 
         using Role = WindowStyleColor::ColorRole;
         style.setColor(Role::Background, ColorAttr(Qt::red));

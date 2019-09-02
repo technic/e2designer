@@ -100,7 +100,7 @@ class ColorRolesModel : public QObject
 
 public:
     ColorRolesModel(ColorsModel& colors, QObject* parent = nullptr);
-    void setStlye(WindowStyle* style);
+    void setStyle(WindowStyle* style);
     QColor getQColor(ColorRole role) const;
 signals:
     void colorChanged(WindowStyleColor::ColorRole role, QRgb value);
