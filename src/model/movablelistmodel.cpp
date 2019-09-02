@@ -58,7 +58,7 @@ bool MovableListModel::dropMimeData(const QMimeData* data,
     for (auto sRow : qAsConst(rows)) {
         ok |= moveRows(root, sRow, 1, parent, row);
     }
-    // Default implemententation removes successfully moved out rows, return false to disable it.
+    // Default implementation removes successfully moved out rows, return false to disable it.
     return false;
 }
 

@@ -4,7 +4,7 @@
 #include <QAbstractTableModel>
 
 /**
- * @brief Model for the list wich can reoder items by drag and drop
+ * @brief Model for the list which can reorder items by drag and drop
  * You must implement QAbstractTableModel::moveItems() function to make it work
  */
 class MovableListModel : public QAbstractTableModel
