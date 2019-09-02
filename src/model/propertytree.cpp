@@ -110,7 +110,7 @@ void PropertyTree::add(int k, AttrItem* parent)
 // AttrItem
 
 AttrItem::AttrItem(int key)
-    : mKey(key)
+    : m_key(key)
     , m_tree(nullptr)
 {}
 
@@ -123,7 +123,7 @@ QVariant AttrItem::keyData(int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
-        return Property::propertyEnum().valueToKey(mKey);
+        return Property::propertyEnum().valueToKey(m_key);
     default:
         return QVariant();
     }

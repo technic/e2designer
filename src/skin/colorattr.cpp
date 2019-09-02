@@ -4,13 +4,13 @@
 #include <QColor>
 
 ColorAttr::ColorAttr()
-    : mName()
-    , mValue(0)
+    : m_name()
+    , m_value(0)
     , m_state(State::Null)
 {}
 ColorAttr::ColorAttr(const QColor& color)
-    : mName()
-    , mValue(color.rgba())
+    : m_name()
+    , m_value(color.rgba())
     , m_state(State::Fixed)
 {}
 
@@ -25,11 +25,11 @@ ColorAttr::ColorAttr(const QString& str, bool invertAlpha)
                 // 255=transparent, 0=opaque
                 color.setAlpha(255 - color.alpha());
             }
-            mValue = color.rgba();
+            m_value = color.rgba();
             m_state = State::Fixed;
         }
     } else {
-        mName = str;
+        m_name = str;
         m_state = State::Named;
     }
 }
@@ -37,20 +37,20 @@ ColorAttr::ColorAttr(const QString& str, bool invertAlpha)
 const QColor ColorAttr::value() const
 {
     if (m_state == State::Fixed)
-        return QColor::fromRgba(mValue);
+        return QColor::fromRgba(m_value);
     else
         return qRgb(0, 0, 0);
 }
 
 const QString& ColorAttr::name() const
 {
-    return mName;
+    return m_name;
 }
 
 void ColorAttr::setRawValue(QRgb value)
 {
     Q_ASSERT(m_state == State::Named);
-    mValue = value;
+    m_value = value;
 }
 
 QString ColorAttr::toStr(bool invertAlpha) const
@@ -68,7 +68,7 @@ QString ColorAttr::toStr(bool invertAlpha) const
         }
         return color.name(QColor::HexArgb);
     } else {
-        return mName;
+        return m_name;
     }
 }
 

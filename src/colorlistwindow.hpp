@@ -56,10 +56,10 @@ private:
     bool confirmAdd(const QString& name);
 
     Ui::ColorListWindow* ui;
-    ColorsModel* mModel;
+    ColorsModel* m_model;
     bool m_updating;
-    QDataWidgetMapper* mMapper;
-    QPersistentModelIndex mCurrentIndex; // TODO: remove
+    QDataWidgetMapper* m_mapper;
+    QPersistentModelIndex m_currentIndex; // TODO: remove
 };
 
 #endif // COLORLISTWINDOW_H

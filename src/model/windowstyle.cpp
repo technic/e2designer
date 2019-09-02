@@ -139,32 +139,32 @@ void WindowStylesList::emitValueChanged(const QString& name, const WindowStyle& 
 
 ColorRolesModel::ColorRolesModel(ColorsModel& colors, QObject* parent)
     : QObject(parent)
-    , _style(nullptr)
-    , _colors(colors)
+    , m_style(nullptr)
+    , m_colors(colors)
 {}
 
 void ColorRolesModel::setStyle(WindowStyle* style)
 {
     // We are connected and have to disconnect
-    if (_style && !style) {
-        disconnect(&_colors,
+    if (m_style && !style) {
+        disconnect(&m_colors,
                    &ColorsModel::valueChanged,
                    this,
                    &ColorRolesModel::onColorValueChanged);
     }
     // We are not connected and have to connect
-    if (!_style && style) {
-        connect(&_colors, &ColorsModel::valueChanged, this, &ColorRolesModel::onColorValueChanged);
+    if (!m_style && style) {
+        connect(&m_colors, &ColorsModel::valueChanged, this, &ColorRolesModel::onColorValueChanged);
     }
-    _style = style;
+    m_style = style;
     reload();
 }
 
 QColor ColorRolesModel::getQColor(ColorRole role) const
 {
-    if (_style) {
+    if (m_style) {
         // FIXME: optimize it!
-        for (const auto& c : _style->m_colors) {
+        for (const auto& c : m_style->m_colors) {
             if (c.role == role) {
                 return c.color.getQColor();
             }
@@ -175,8 +175,8 @@ QColor ColorRolesModel::getQColor(ColorRole role) const
 
 void ColorRolesModel::onColorValueChanged(const QString& name, QRgb value)
 {
-    Q_ASSERT(_style);
-    for (auto& item : _style->m_colors) {
+    Q_ASSERT(m_style);
+    for (auto& item : m_style->m_colors) {
         if (!name.isNull() && item.color.name() == name) {
             item.color.updateValue(value);
             emit colorChanged(item.role, value);
@@ -187,11 +187,11 @@ void ColorRolesModel::onColorValueChanged(const QString& name, QRgb value)
 void ColorRolesModel::reload()
 {
     // Reload cache
-    if (!_style) {
+    if (!m_style) {
         return;
     }
-    for (auto& item : _style->m_colors) {
-        item.color.reload(_colors);
+    for (auto& item : m_style->m_colors) {
+        item.color.reload(m_colors);
         emit colorChanged(item.role, item.color.value().rgba());
     }
 }

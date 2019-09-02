@@ -185,7 +185,7 @@ private:
     FontsModel& m_fontsModel;
 
     // own
-    WidgetData* mRoot;
+    WidgetData* m_root;
     // QObject owned
     QUndoStack* m_commander;
 };

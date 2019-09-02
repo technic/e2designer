@@ -13,16 +13,16 @@ WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* sreen,
                                        QModelIndex index,
                                        WidgetGraphicsItem* parent)
     : ResizableGraphicsRectItem(parent)
-    , mScreen(sreen)
-    , mModel(sreen->model())
-    , mData(index)
-    , mObserver(mModel, index)
-    , mRectChange(false)
+    , m_screen(sreen)
+    , m_model(sreen->model())
+    , m_data(index)
+    , m_observer(m_model, index)
+    , m_rectChange(false)
 {
-    Q_ASSERT(mData.column() == ScreensModel::ColumnElement);
+    Q_ASSERT(m_data.column() == ScreensModel::ColumnElement);
 
-    qDebug() << "create WidgetView for" << mData.data(Qt::DisplayRole)
-             << mData.sibling(mData.row(), ScreensModel::ColumnName).data(Qt::DisplayRole);
+    qDebug() << "create WidgetView for" << m_data.data(Qt::DisplayRole)
+             << m_data.sibling(m_data.row(), ScreensModel::ColumnName).data(Qt::DisplayRole);
 
     // interact with user
     setFlags(ItemIsSelectable | ItemIsFocusable);
@@ -30,18 +30,18 @@ WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* sreen,
     setFlag(ItemIsMovable, false);
     setFlag(ItemSendsGeometryChanges, true);
 
-    m_type = mData.data(ScreensModel::TypeRole).toInt();
+    m_type = m_data.data(ScreensModel::TypeRole).toInt();
 
     auto props = Property::propertyEnum();
     for (int i = 0; i < props.keyCount(); ++i) {
         updateAttribute(i);
     }
-    showBorder(mScreen->haveBorders());
+    showBorder(m_screen->haveBorders());
 }
 
 void WidgetGraphicsItem::resizeRectEvent(const QRectF& r)
 {
-    FlagSetter fs(&mRectChange);
+    FlagSetter fs(&m_rectChange);
 
     // update data in model
     QPoint oldPos = mapRectToParent(rect()).topLeft().toPoint();
@@ -57,29 +57,29 @@ void WidgetGraphicsItem::resizeRectEvent(const QRectF& r)
 
 void WidgetGraphicsItem::commitSizeChange(const QSize& size)
 {
-    FlagSetter fs(&mRectChange);
-    mModel->resizeWidget(mData, size);
+    FlagSetter fs(&m_rectChange);
+    m_model->resizeWidget(m_data, size);
 }
 
 void WidgetGraphicsItem::commitRectChange(const QRect& rect)
 {
-    FlagSetter fs(&mRectChange);
-    mModel->changeWidgetRect(mData, rect);
+    FlagSetter fs(&m_rectChange);
+    m_model->changeWidgetRect(m_data, rect);
 }
 
 void WidgetGraphicsItem::commitPositionChange(const QPoint& point)
 {
-    FlagSetter fs(&mRectChange);
-    mModel->moveWidget(mData, point);
+    FlagSetter fs(&m_rectChange);
+    m_model->moveWidget(m_data, point);
 }
 
 void WidgetGraphicsItem::updateAttribute(int key)
 {
-    if (mRectChange)
+    if (m_rectChange)
         return;
-    FlagSetter fs(&mRectChange);
+    FlagSetter fs(&m_rectChange);
 
-    auto& w = mModel->widget(mData);
+    auto& w = m_model->widget(m_data);
 
     // To be removed
     //    QVariant value = mModel->widget(mData).getAttr(key);
@@ -173,7 +173,7 @@ void WidgetGraphicsItem::paint(QPainter* painter,
     // no blending in the OSD layer
     painter->setCompositionMode(QPainter::CompositionMode_Source);
 
-    auto& w = mModel->widget(mData);
+    auto& w = m_model->widget(m_data);
 
     int render;
     switch (m_type) {
@@ -330,7 +330,7 @@ QVariant WidgetGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change
 {
     switch (change) {
     case ItemPositionHasChanged:
-        if (!mRectChange) {
+        if (!m_rectChange) {
             QPointF position = value.toPointF();
             commitPositionChange((position + rect().topLeft()).toPoint());
         }
@@ -338,7 +338,7 @@ QVariant WidgetGraphicsItem::itemChange(QGraphicsItem::GraphicsItemChange change
     case ItemSelectedHasChanged:
         if (isSelected() && scene()) {
             setHandlesVisible(true);
-            auto pos = mModel->widget(mData).position();
+            auto pos = m_model->widget(m_data).position();
             setXanchor(pos.x().type());
             setYanchor(pos.y().type());
             setFlag(ItemIsFocusable, true);

@@ -10,7 +10,7 @@
 
 void Source::attach(Source* parent)
 {
-    _parent = parent;
+    m_parent = parent;
 }
 
 // Converter
@@ -76,15 +76,15 @@ MockSource::MockSource(QXmlStreamReader& xml)
         }
         auto name = xml.attributes().value("name");
         auto value = xml.attributes().value("value");
-        _values[name.toString()] = value.toString();
+        m_values[name.toString()] = value.toString();
         xml.skipCurrentElement();
     }
 }
 
 QVariant MockSource::getVariant(const QString& key)
 {
-    auto it = _values.find(key);
-    if (it != _values.end()) {
+    auto it = m_values.find(key);
+    if (it != m_values.end()) {
         return *it;
     }
     return QVariant();
@@ -92,7 +92,7 @@ QVariant MockSource::getVariant(const QString& key)
 
 void MockSource::setValue(const QString& key, const QVariant& value)
 {
-    _values[key] = value;
+    m_values[key] = value;
 }
 
 // MockSourceFactory
@@ -105,7 +105,7 @@ MockSourceFactory::MockSourceFactory()
 
 void MockSourceFactory::loadXml(const QString& path)
 {
-    _sources.clear();
+    m_sources.clear();
 
     QFile file(path);
     bool ok = file.open(QIODevice::ReadOnly);
@@ -145,15 +145,15 @@ void MockSourceFactory::loadXml(const QString& path)
 
         // FIXME: not memory efficient
         for (auto& name : qAsConst(names)) {
-            _sources[name] = source;
+            m_sources[name] = source;
         }
     }
 }
 
 Source* MockSourceFactory::getReference(const QString& name)
 {
-    auto it = _sources.find(name);
-    if (it != _sources.end()) {
+    auto it = m_sources.find(name);
+    if (it != m_sources.end()) {
         return &it.value();
     } else {
         return nullptr;

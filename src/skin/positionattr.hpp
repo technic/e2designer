@@ -61,19 +61,22 @@ public:
     PositionAttr() {}
     PositionAttr(const Coordinate& x, const Coordinate& y);
     PositionAttr(const QString& str) { fromStr(str); }
-    inline const Coordinate& x() const { return mX; }
-    inline const Coordinate& y() const { return mY; }
-    bool isRelative() const { return mX.isRelative() || mY.isRelative(); }
+    inline const Coordinate& x() const { return m_x; }
+    inline const Coordinate& y() const { return m_y; }
+    bool isRelative() const { return m_x.isRelative() || m_y.isRelative(); }
     QPoint toPoint(const WidgetData& widget) const;
     void setPoint(const WidgetData& widget, const QPoint& pos);
 
     QString toStr() const;
     void fromStr(const QString& str);
 
-    inline bool operator==(const PositionAttr& other) { return mX == other.mX && mY == other.mY; }
+    inline bool operator==(const PositionAttr& other)
+    {
+        return m_x == other.m_x && m_y == other.m_y;
+    }
 
 private:
-    Coordinate mX, mY;
+    Coordinate m_x, m_y;
 };
 Q_DECLARE_METATYPE(PositionAttr);
 

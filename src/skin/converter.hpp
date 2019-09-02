@@ -18,7 +18,7 @@ class Source
 {
 public:
     Source()
-        : _parent(nullptr)
+        : m_parent(nullptr)
     {}
     // Interface for returning values
     virtual QString getText() { return QString(); }
@@ -34,10 +34,10 @@ public:
 
     // Parent - child relation
     void attach(Source* parent);
-    Source* parent() const { return _parent; }
+    Source* parent() const { return m_parent; }
 
 private:
-    Source* _parent;
+    Source* m_parent;
 };
 
 class MockSource : public Source
@@ -49,7 +49,7 @@ public:
     void setValue(const QString& key, const QVariant& value);
 
 private:
-    QHash<QString, QVariant> _values;
+    QHash<QString, QVariant> m_values;
 };
 
 class MockSourceFactory : public SingletonMixin<MockSourceFactory>
@@ -60,7 +60,7 @@ public:
     Source* getReference(const QString& name); // FIXME: should return const
 private:
     static QString readName(QXmlStreamReader& xml);
-    QHash<QString, MockSource> _sources;
+    QHash<QString, MockSource> m_sources;
 };
 
 class Converter : public Source
@@ -313,14 +313,14 @@ public:
     bool getBoolean()
     {
         int value = parent()->getValue();
-        return (value & _testValue) == _testValue;
+        return (value & m_testValue) == m_testValue;
     }
 
 protected:
-    void parseArgument() final { _testValue = arg().toInt(); }
+    void parseArgument() final { m_testValue = arg().toInt(); }
 
 private:
-    int _testValue;
+    int m_testValue;
 };
 
 class ValueRange : public Converter

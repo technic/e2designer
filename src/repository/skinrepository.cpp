@@ -7,15 +7,15 @@
 
 SkinRepository::SkinRepository(QObject* parent)
     : QObject(parent)
-    , mColors(new ColorsModel(this))
-    , mRoles(*mColors)
-    , mFonts(new FontsModel(this))
-    , mScreensModel(new ScreensModel(*mColors, mRoles, *mFonts, this))
+    , m_colors(new ColorsModel(this))
+    , m_roles(*m_colors)
+    , m_fonts(new FontsModel(this))
+    , m_screensModel(new ScreensModel(*m_colors, m_roles, *m_fonts, this))
 {}
 
 QSize SkinRepository::outputSize() const
 {
-    return mOutputRepository.getOutput(0).size();
+    return m_outputRepository.getOutput(0).size();
 }
 
 QString SkinRepository::resolveFilename(const QString& path) const
@@ -42,14 +42,14 @@ QString SkinRepository::resolveFilename(const QString& path) const
 
 bool SkinRepository::open(const QString& path)
 {
-    mDirectory = QDir(path);
-    if (!mDirectory.exists()) {
+    m_directory = QDir(path);
+    if (!m_directory.exists()) {
         return setError(tr("Directory does not exists"));
     }
 
-    mScreensModel->loadPreviews(previewFilePath());
+    m_screensModel->loadPreviews(previewFilePath());
 
-    QString skinFile = mDirectory.filePath("skin.xml");
+    QString skinFile = m_directory.filePath("skin.xml");
     QFile file(skinFile);
     bool ok = file.open(QIODevice::ReadOnly);
     if (!ok) {
@@ -98,7 +98,7 @@ bool SkinRepository::save()
         return false;
     }
 
-    QFile file(mDirectory.filePath("skin.xml"));
+    QFile file(m_directory.filePath("skin.xml"));
     bool ok = file.open(QIODevice::WriteOnly);
     if (!ok) {
         setError(file.errorString());
@@ -113,25 +113,25 @@ bool SkinRepository::save()
     xml.writeEndDocument();
 
     file.close();
-    mScreensModel->savePreviewTree(previewFilePath());
+    m_screensModel->savePreviewTree(previewFilePath());
 
     // Tell undo model that the state is saved
-    mScreensModel->undoStack()->setClean();
+    m_screensModel->undoStack()->setClean();
     return true;
 }
 
 bool SkinRepository::saveAs(const QString& path)
 {
-    QDir oldDir = mDirectory;
-    mDirectory = QDir(path);
-    qDebug() << oldDir.absolutePath() << mDirectory.absolutePath();
-    if (oldDir == mDirectory || QFileInfo(mDirectory, "skin.xml").exists()
-        || QFileInfo(mDirectory, "preview.xml").exists()) {
+    QDir oldDir = m_directory;
+    m_directory = QDir(path);
+    qDebug() << oldDir.absolutePath() << m_directory.absolutePath();
+    if (oldDir == m_directory || QFileInfo(m_directory, "skin.xml").exists()
+        || QFileInfo(m_directory, "preview.xml").exists()) {
         return setError("This folder already contains a skin");
     }
     bool saved = save();
     if (!saved) {
-        mDirectory = oldDir;
+        m_directory = oldDir;
     }
     return saved;
 }
@@ -139,40 +139,40 @@ bool SkinRepository::saveAs(const QString& path)
 bool SkinRepository::isOpened() const
 {
     // This is default path
-    return mDirectory.path() != ".";
+    return m_directory.path() != ".";
 }
 
 void SkinRepository::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "skin");
 
-    mScreensModel->clear();
-    mOutputRepository.clear();
-    mRoles.setStyle(nullptr);
-    mWindowStyles.clear();
-    mColors->removeRows(0, mColors->rowCount());
-    mFonts->removeRows(0, mFonts->rowCount());
+    m_screensModel->clear();
+    m_outputRepository.clear();
+    m_roles.setStyle(nullptr);
+    m_windowStyles.clear();
+    m_colors->removeRows(0, m_colors->rowCount());
+    m_fonts->removeRows(0, m_fonts->rowCount());
 
     while (nextXmlChild(xml)) {
         qDebug() << xml.tokenString() << xml.name() << xml.text() << xml.attributes().value("name");
 
         if (xml.isStartElement()) {
             if (xml.name() == "output") {
-                mOutputRepository.addFromXml(xml);
+                m_outputRepository.addFromXml(xml);
 
             } else if (xml.name() == "windowstyle") {
                 WindowStyle style;
                 style.fromXml(xml);
-                mWindowStyles.append(style);
+                m_windowStyles.append(style);
 
             } else if (xml.name() == "colors") {
-                mColors->fromXml(xml);
+                m_colors->fromXml(xml);
 
             } else if (xml.name() == "fonts") {
-                mFonts->fromXml(xml);
+                m_fonts->fromXml(xml);
 
             } else if (xml.name() == "screen") {
-                mScreensModel->appendFromXml(xml);
+                m_screensModel->appendFromXml(xml);
 
             } else {
                 qWarning() << "Unknown tag" << xml.name();
@@ -181,20 +181,20 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
         }
     }
 
-    if (mWindowStyles.itemsCount() > 0) {
-        defaultStyle = mWindowStyles.itemAt(0);
-        mRoles.setStyle(&defaultStyle);
+    if (m_windowStyles.itemsCount() > 0) {
+        defaultStyle = m_windowStyles.itemAt(0);
+        m_roles.setStyle(&defaultStyle);
     }
 }
 
 void SkinRepository::toXml(XmlStreamWriter& xml) const
 {
     xml.writeStartElement("skin");
-    mOutputRepository.toXml(xml);
-    mWindowStyles.toXml(xml);
-    mFonts->toXml(xml);
-    mColors->toXml(xml);
-    mScreensModel->toXml(xml);
+    m_outputRepository.toXml(xml);
+    m_windowStyles.toXml(xml);
+    m_fonts->toXml(xml);
+    m_colors->toXml(xml);
+    m_screensModel->toXml(xml);
     xml.writeEndElement();
 }
 
@@ -210,7 +210,7 @@ QString SkinRepository::previewFilePath()
  */
 bool SkinRepository::setError(const QString& message)
 {
-    mErrorMessage = message;
+    m_errorMessage = message;
     qWarning() << "Error occured:" << message;
     return false;
 }

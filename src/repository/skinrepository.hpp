@@ -28,13 +28,13 @@ public:
     explicit SkinRepository(QObject* parent = Q_NULLPTR);
 
     // functions for easy access to singleton childs
-    static ColorsModel* colors() { return instance().mColors; }
-    static FontsModel* fonts() { return instance().mFonts; }
-    static ScreensModel* screens() { return instance().mScreensModel; }
-    static OutputsModel* outputs() { return &instance().mOutputRepository; }
-    static WindowStylesList* styles() { return &instance().mWindowStyles; }
+    static ColorsModel* colors() { return instance().m_colors; }
+    static FontsModel* fonts() { return instance().m_fonts; }
+    static ScreensModel* screens() { return instance().m_screensModel; }
+    static OutputsModel* outputs() { return &instance().m_outputRepository; }
+    static WindowStylesList* styles() { return &instance().m_windowStyles; }
     QSize outputSize() const;
-    inline QDir dir() const { return mDirectory; }
+    inline QDir dir() const { return m_directory; }
     QString resolveFilename(const QString& path) const;
 
     bool open(const QString& path);
@@ -47,7 +47,7 @@ public:
     void toXml(XmlStreamWriter& xml) const;
     QString previewFilePath();
 
-    QString lastError() const { return mErrorMessage; }
+    QString lastError() const { return m_errorMessage; }
 
 signals:
     void filePathChanged(const QString& path);
@@ -55,18 +55,18 @@ signals:
 private slots:
 
 private:
-    ColorsModel* mColors;
-    ColorRolesModel mRoles;
-    FontsModel* mFonts;
-    ScreensModel* mScreensModel;
-    OutputsModel mOutputRepository;
-    WindowStylesList mWindowStyles;
+    ColorsModel* m_colors;
+    ColorRolesModel m_roles;
+    FontsModel* m_fonts;
+    ScreensModel* m_screensModel;
+    OutputsModel m_outputRepository;
+    WindowStylesList m_windowStyles;
     WindowStyle defaultStyle;
-    QDir mDirectory;
+    QDir m_directory;
 
     // Error handling
     bool setError(const QString& message);
-    QString mErrorMessage;
+    QString m_errorMessage;
 };
 
 #endif // SKINREPOSITORY_H

@@ -41,7 +41,7 @@ public:
     explicit AttrItem(int key = Property::invalid);
     virtual ~AttrItem() {}
     void setRoot(PropertyTree* tree);
-    int key() const { return mKey; }
+    int key() const { return m_key; }
     // Iterface for Qt Models
     virtual QVariant keyData(int role) const;
     virtual QVariant data(int role) const;
@@ -51,7 +51,7 @@ protected:
     inline const WidgetData& widget() const { return m_tree->widget(); }
 
 private:
-    int mKey;
+    int m_key;
     PropertyTree* m_tree;
     // const WidgetData *mWidget;
 };

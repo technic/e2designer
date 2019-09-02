@@ -110,8 +110,8 @@ private slots:
 private:
     void reload();
     // ref
-    WindowStyle* _style;
-    ColorsModel& _colors;
+    WindowStyle* m_style;
+    ColorsModel& m_colors;
 };
 
 #endif // WINDOWSTYLE_H

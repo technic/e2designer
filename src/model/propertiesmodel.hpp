@@ -54,12 +54,12 @@ private slots:
 
 private:
     static Item* castItem(QModelIndex index);
-    AttrItem mDummyRoot;
-    std::unique_ptr<PropertyTree> mTree;
-    AttrItem* mRoot;
-    ScreensModel* mModel;
-    QPersistentModelIndex mIndex;
-    QScopedPointer<WidgetObserverRegistrator> mObserver;
+    AttrItem m_dummyRoot;
+    std::unique_ptr<PropertyTree> m_tree;
+    AttrItem* m_root;
+    ScreensModel* m_model;
+    QPersistentModelIndex m_index;
+    QScopedPointer<WidgetObserverRegistrator> m_observer;
 };
 
 #endif // PROPERTIESMODEL_H

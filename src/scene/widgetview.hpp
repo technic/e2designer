@@ -26,7 +26,7 @@ public:
         Type = UserType + 1
     };
     int type() const override { return Type; }
-    QPersistentModelIndex modelIndex() const { return mData; }
+    QPersistentModelIndex modelIndex() const { return m_data; }
 
     // QGraphicsItem interface
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
@@ -47,12 +47,12 @@ protected:
 
 private:
     // refs
-    ScreenView* mScreen;
-    ScreensModel* mModel;
-    QPersistentModelIndex mData;
+    ScreenView* m_screen;
+    ScreensModel* m_model;
+    QPersistentModelIndex m_data;
 
     // Observer
-    WidgetObserverRegistrator mObserver;
+    WidgetObserverRegistrator m_observer;
 
     // Widget Type
     int m_type;
@@ -89,7 +89,7 @@ private:
 
     // Flag to reduce recursion:
     // don't call setData
-    bool mRectChange;
+    bool m_rectChange;
 
     void commitPositionChange(const QPoint& point);
     void commitSizeChange(const QSize& size);

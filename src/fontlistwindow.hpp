@@ -22,7 +22,7 @@ public slots:
 
 private:
     Ui::FontListWindow* ui;
-    FontsModel* mModel;
+    FontsModel* m_model;
 };
 
 #endif // FONTLISTWINDOW_H

@@ -8,22 +8,22 @@ class FontAttr
 {
 public:
     FontAttr()
-        : mName()
-        , mSize(0)
+        : m_name()
+        , m_size(0)
     {}
     FontAttr(const QString& str)
         : FontAttr()
     {
         fromStr(str);
     }
-    QString name() const { return mName; }
+    QString name() const { return m_name; }
     QFont getFont() const;
     QString toStr() const;
     void fromStr(const QString& str);
 
 private:
-    QString mName;
-    int mSize;
+    QString m_name;
+    int m_size;
 };
 Q_DECLARE_METATYPE(FontAttr);
 

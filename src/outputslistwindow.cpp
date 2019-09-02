@@ -4,7 +4,7 @@
 
 OutputsListWindow::OutputsListWindow(OutputsModel* model, QWidget* parent)
     : QDialog(parent)
-    , mModel(model)
+    , m_model(model)
     , ui(new Ui::OutputsListWindow)
 {
     ui->setupUi(this);
@@ -24,7 +24,7 @@ void OutputsListWindow::addDefault()
     int i = 0;
     do {
         auto item = VideoOutput(QString("%1").arg(i), VideoOutputData{ QSize(1280, 720), 32 });
-        ok = mModel->append(item);
+        ok = m_model->append(item);
         i++;
     } while (!ok);
 }
@@ -32,5 +32,5 @@ void OutputsListWindow::addDefault()
 void OutputsListWindow::removeSelected()
 {
     auto index = ui->tableView->selectionModel()->currentIndex();
-    mModel->removeRow(index.row());
+    m_model->removeRow(index.row());
 }

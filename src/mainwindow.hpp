@@ -76,10 +76,10 @@ private:
 
     //	SkinModel *m_model;
 
-    ScreenView* mView;
+    ScreenView* m_view;
 
     // QObject owned
-    PropertiesModel* mPropertiesModel;
+    PropertiesModel* m_propertiesModel;
     AppImageUpdaterBridge::AppImageUpdaterDialog* m_updater;
 
     //	QSortFilterProxyModel *m_topfilter;

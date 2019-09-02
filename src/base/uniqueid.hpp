@@ -8,28 +8,28 @@ class UniqueId
 {
 public:
     UniqueId()
-        : mId(getNextId())
+        : m_id(getNextId())
     {}
     // TODO: release id from possible id pool
     ~UniqueId() {}
     // copy has new id
 
     UniqueId(const UniqueId& other)
-        : mId(getNextId())
+        : m_id(getNextId())
     {
         Q_UNUSED(other);
     }
     UniqueId& operator=(const UniqueId& other)
     {
         Q_UNUSED(other);
-        mId = getNextId();
+        m_id = getNextId();
         return *this;
     }
 
     // move has same id
 
     UniqueId(UniqueId&& other)
-        : mId(other.mId)
+        : m_id(other.m_id)
     {}
     UniqueId& operator=(const UniqueId&& other)
     {
@@ -37,11 +37,11 @@ public:
         if (this == &other) {
             return *this;
         }
-        mId = other.mId;
+        m_id = other.m_id;
         return *this;
     }
 
-    uint id() const { return mId; }
+    uint id() const { return m_id; }
 
 private:
     static uint nextId;
@@ -51,7 +51,7 @@ private:
         Q_ASSERT(nextId < std::numeric_limits<uint>::max());
         return nextId++;
     }
-    uint mId;
+    uint m_id;
 };
 
 #endif // UNIQUEID_H

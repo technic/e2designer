@@ -28,9 +28,9 @@ public:
     void fromXml(QXmlStreamReader& xml);
 
 private:
-    QString mTag;
-    QXmlStreamAttributes mAttrs;
-    QVector<RawXmlElement> mChilds;
+    QString m_tag;
+    QXmlStreamAttributes m_attrs;
+    QVector<RawXmlElement> m_childs;
 };
 
 #endif // XMLNODE_H

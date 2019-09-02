@@ -2,15 +2,15 @@
 
 BorderView::BorderView(QGraphicsRectItem* parent)
     : QGraphicsRectItem(parent)
-    , mBorders(nullptr)
+    , m_borders(nullptr)
 {}
 void BorderView::setBorderSet(BorderSet* bs)
 {
-    mBorders = bs;
+    m_borders = bs;
     // TODO
 }
 void BorderView::setInnerRect(const QRect& innerRect)
 {
-    mRect = innerRect;
+    m_rect = innerRect;
     // TODO
 }

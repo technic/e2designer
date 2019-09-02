@@ -9,9 +9,9 @@ EnumAttr<Enum>::EnumAttr()
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
     if (meta.keyCount() > 0)
-        mValue = meta.value(0);
+        m_value = meta.value(0);
     else
-        mValue = 0;
+        m_value = 0;
 }
 
 template<class Enum>
@@ -19,10 +19,10 @@ EnumAttr<Enum>::EnumAttr(const QString& str)
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
     bool ok;
-    mValue = meta.keyToValue(str.toLatin1().data(), &ok);
+    m_value = meta.keyToValue(str.toLatin1().data(), &ok);
     if (!ok) {
         qWarning() << "bad enum " << str;
-        mValue = meta.value(0);
+        m_value = meta.value(0);
     }
 }
 
@@ -30,7 +30,7 @@ template<class Enum>
 EnumAttr<Enum>::EnumAttr(const int value)
 {
     // TODO: bounds check?
-    mValue = value;
+    m_value = value;
 }
 
 template<class Enum>
@@ -38,10 +38,10 @@ QString EnumAttr<Enum>::toStr(bool emptyDefault) const
 {
     QMetaEnum meta = QMetaEnum::fromType<Enum>();
     if (meta.keyCount() > 0) {
-        if (emptyDefault && mValue == meta.value(0))
+        if (emptyDefault && m_value == meta.value(0))
             return QString();
         else
-            return meta.valueToKey(mValue);
+            return meta.valueToKey(m_value);
     }
     return QString();
 }

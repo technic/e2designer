@@ -35,8 +35,8 @@ using AppImageUpdaterBridge::AppImageUpdaterDialog;
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mView(new ScreenView(SkinRepository::screens()))
-    , mPropertiesModel(new PropertiesModel(SkinRepository::screens(), this))
+    , m_view(new ScreenView(SkinRepository::screens()))
+    , m_propertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 #ifdef APPIMAGE_UPDATE
     , m_updater(new AppImageUpdaterDialog(QPixmap(":/icons/misc/e2designer.png"), this))
 #else
@@ -77,13 +77,13 @@ MainWindow::MainWindow(QWidget* parent)
             this,
             &MainWindow::setTitle);
 
-    ui->propView->setModel(mPropertiesModel);
+    ui->propView->setModel(m_propertiesModel);
     ui->propView->setIndentation(5);
 
     //	SkinDelegate *delegate = new SkinDelegate(this);
     //	ui->propView->setItemDelegate(delegate);
 
-    ui->graphicsView->setScene(mView->scene());
+    ui->graphicsView->setScene(m_view->scene());
 
     // Setup default editors
     auto* delegate = new QStyledItemDelegate(this);
@@ -102,7 +102,7 @@ MainWindow::MainWindow(QWidget* parent)
     // Synchronize selections
 
     ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    mView->setSelectionModel(ui->treeView->selectionModel());
+    m_view->setSelectionModel(ui->treeView->selectionModel());
 
     connect(ui->treeView->selectionModel(),
             &QItemSelectionModel::currentChanged,
@@ -112,7 +112,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    delete mView;
+    delete m_view;
     delete ui;
 }
 
@@ -135,7 +135,7 @@ void MainWindow::onCurrentSelectionChanged(const QModelIndex& index, const QMode
 {
     Q_UNUSED(previous);
     qDebug() << "current changed" << index;
-    mPropertiesModel->setWidget(index);
+    m_propertiesModel->setWidget(index);
     ui->propView->expandAll();
 
     setEditorText(index);
@@ -232,7 +232,7 @@ void MainWindow::setTitle(const QString& skinPath)
 void MainWindow::addSkinItem(WidgetData::WidgetType type)
 {
     // Get parent screen for new skin item
-    auto screen = mView->currentIndex();
+    auto screen = m_view->currentIndex();
     if (!screen.isValid()) {
         QMessageBox::warning(this, tr("Error"), tr("Can not add widget to the skin top level"));
         return;
@@ -281,7 +281,7 @@ void MainWindow::addScreen()
 
 void MainWindow::delWidget()
 {
-    if (!mView)
+    if (!m_view)
         return;
     QModelIndex idx = ui->treeView->selectionModel()->currentIndex();
     SkinRepository::screens()->removeRow(idx.row(), idx.parent());
@@ -391,8 +391,8 @@ void MainWindow::createActions()
         ui->actionCheckForUpdates->setVisible(false);
     }
 
-    ui->actionWidget_borders->setChecked(mView->haveBorders());
-    connect(ui->actionWidget_borders, &QAction::triggered, mView, &ScreenView::displayBorders);
+    ui->actionWidget_borders->setChecked(m_view->haveBorders());
+    connect(ui->actionWidget_borders, &QAction::triggered, m_view, &ScreenView::displayBorders);
     connect(ui->actionXmlEditor, &QAction::triggered, this, &MainWindow::showXmlEditor);
 
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);

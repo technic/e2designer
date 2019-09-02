@@ -17,9 +17,9 @@ public:
     Font(const QString& name = QString(), const QString& fileName = QString());
 
     // Base
-    QString name() const { return mName; }
-    QString value() const { return mFileName; }
-    bool isNull() const { return mName.isNull(); }
+    QString name() const { return m_name; }
+    QString value() const { return m_fileName; }
+    bool isNull() const { return m_name.isNull(); }
     QFont font() const;
 
     // Xml
@@ -31,10 +31,10 @@ public:
 private:
     void load();
 
-    QString mName;
-    QString mFileName;
-    int mFontId;
-    QString mStyle;
+    QString m_name;
+    QString m_fileName;
+    int m_fontId;
+    QString m_style;
 };
 
 /**

@@ -17,13 +17,13 @@ public:
     EnumAttr(const QString& str);
     EnumAttr(const int value);
 
-    inline Enum value() const { return Enum(mValue); }
+    inline Enum value() const { return Enum(m_value); }
     QString toStr(bool emptyDefault = true) const;
     QString toXml() { return toStr(true); }
     QStringList toStrList() const;
 
 private:
-    int mValue;
+    int m_value;
 };
 
 template<class T, typename = typename std::enable_if<std::is_enum<T>::value>::type>

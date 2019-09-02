@@ -71,15 +71,15 @@ bool Coordinate::isRelative() const
 // PositionAttr
 
 PositionAttr::PositionAttr(const Coordinate& x, const Coordinate& y)
-    : mX(x)
-    , mY(y)
+    : m_x(x)
+    , m_y(y)
 {}
 
 QPoint PositionAttr::toPoint(const WidgetData& widget) const
 {
     QSize s = widget.selfSize();
     QSize p = widget.parentSize();
-    return QPoint(mX.getInt(s.width(), p.width()), mY.getInt(s.height(), p.height()));
+    return QPoint(m_x.getInt(s.width(), p.width()), m_y.getInt(s.height(), p.height()));
 }
 
 void PositionAttr::setPoint(const WidgetData& widget, const QPoint& pos)
@@ -87,20 +87,20 @@ void PositionAttr::setPoint(const WidgetData& widget, const QPoint& pos)
     // Try to be smart
     const QSize s = widget.selfSize();
     const QSize p = widget.parentSize();
-    mX.parseInt(pos.x(), s.width(), p.width());
-    mY.parseInt(pos.y(), s.height(), p.height());
+    m_x.parseInt(pos.x(), s.width(), p.width());
+    m_y.parseInt(pos.y(), s.height(), p.height());
 }
 
 QString PositionAttr::toStr() const
 {
-    return mX.toStr() + "," + mY.toStr();
+    return m_x.toStr() + "," + m_y.toStr();
 }
 void PositionAttr::fromStr(const QString& str)
 {
     QStringList list = str.split(",");
     if (list.length() == 2) {
-        mX.parseStr(list[0]);
-        mY.parseStr(list[1]);
+        m_x.parseStr(list[0]);
+        m_y.parseStr(list[1]);
     } else {
         qWarning() << "bad position:" << str;
     }

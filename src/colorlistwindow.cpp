@@ -32,9 +32,9 @@ public:
 ColorListWindow::ColorListWindow(QWidget* parent)
     : QDockWidget(parent)
     , ui(new Ui::ColorListWindow)
-    , mModel(SkinRepository::colors())
+    , m_model(SkinRepository::colors())
     , m_updating(false)
-    , mMapper(new QDataWidgetMapper(this))
+    , m_mapper(new QDataWidgetMapper(this))
 {
     ui->setupUi(this);
 
@@ -48,7 +48,7 @@ ColorListWindow::ColorListWindow(QWidget* parent)
             this,
             &ColorListWindow::currentChanged);
 
-    ui->tableView->setModel(mModel);
+    ui->tableView->setModel(m_model);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setDragDropMode(QAbstractItemView::InternalMove);
     ui->tableView->setDropIndicatorShown(true);
@@ -73,16 +73,16 @@ ColorListWindow::ColorListWindow(QWidget* parent)
     connect(ui->wheel, &ColorWheel::colorChanged, this, &ColorListWindow::setFromWheel);
 
     // Map model data to color widgets
-    mMapper->setModel(mModel);
-    mMapper->addMapping(ui->name, ColorsModel::ColumnName);
-    mMapper->addMapping(this, ColorsModel::ColumnColor, "color");
+    m_mapper->setModel(m_model);
+    m_mapper->addMapping(ui->name, ColorsModel::ColumnName);
+    m_mapper->addMapping(this, ColorsModel::ColumnColor, "color");
     connect(ui->tableView->selectionModel(),
             &QItemSelectionModel::currentRowChanged,
-            mMapper,
+            m_mapper,
             &QDataWidgetMapper::setCurrentModelIndex);
-    mMapper->toFirst();
+    m_mapper->toFirst();
     // submit immediately
-    connect(this, &ColorListWindow::colorChanged, mMapper, &QDataWidgetMapper::submit);
+    connect(this, &ColorListWindow::colorChanged, m_mapper, &QDataWidgetMapper::submit);
 }
 
 ColorListWindow::~ColorListWindow()
@@ -224,7 +224,7 @@ void ColorListWindow::remove()
     // from bigger to smaller
     std::sort(rows.begin(), rows.end(), std::greater<int>());
     for (int r : rows) {
-        mModel->removeRow(r);
+        m_model->removeRow(r);
     }
 }
 
@@ -234,7 +234,7 @@ void ColorListWindow::addDefault()
     int i = 0;
     do {
         auto c = Color(QString("Untitled%1").arg(i), QRgb());
-        ok = mModel->append(c);
+        ok = m_model->append(c);
         i++;
     } while (!ok);
 }
@@ -244,7 +244,7 @@ void ColorListWindow::add()
     const QString name = ui->name->text();
     if (confirmAdd(name)) {
         Color c = Color(ui->name->text(), currentColor());
-        mModel->append(c);
+        m_model->append(c);
     }
 }
 
@@ -252,8 +252,8 @@ void ColorListWindow::rename()
 {
     QString const name = ui->name->text();
     if (confirmAdd(name)) {
-        QModelIndex index = mModel->index(mCurrentIndex.row(), ColorsModel::ColumnName);
-        mModel->setData(index, name);
+        QModelIndex index = m_model->index(m_currentIndex.row(), ColorsModel::ColumnName);
+        m_model->setData(index, name);
     }
 }
 
@@ -261,19 +261,19 @@ void ColorListWindow::moveUp()
 {
     auto index = ui->tableView->selectionModel()->currentIndex();
     // parent is same, thus we move rows before destination index
-    mModel->moveRow(index.parent(), index.row(), index.parent(), index.row() - 1);
+    m_model->moveRow(index.parent(), index.row(), index.parent(), index.row() - 1);
 }
 
 void ColorListWindow::moveDown()
 {
     auto index = ui->tableView->selectionModel()->currentIndex();
     // parent is same, thus we move rows before destination index
-    mModel->moveRow(index.parent(), index.row(), index.parent(), index.row() + 2);
+    m_model->moveRow(index.parent(), index.row(), index.parent(), index.row() + 2);
 }
 
 void ColorListWindow::currentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
-    mCurrentIndex = current;
+    m_currentIndex = current;
     Q_UNUSED(previous)
 }
 
@@ -283,7 +283,7 @@ QRgb ColorListWindow::currentColor() const
 }
 bool ColorListWindow::confirmAdd(const QString& name)
 {
-    bool has = mModel->contains(name);
+    bool has = m_model->contains(name);
     if (!has) {
         return true;
     }

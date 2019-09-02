@@ -20,13 +20,13 @@ public:
 
 protected:
     // list like interface
-    bool isValidIndex(int i) const { return 0 <= i && i < mItems.size(); }
+    bool isValidIndex(int i) const { return 0 <= i && i < m_items.size(); }
     bool setItemName(int i, const QString& name);
     bool setItemValue(int i, const typename T::Value& value);
 
     bool canInsertItem(const T& item);
     bool insertItem(int i, const T& item);
-    bool appendItem(T item) { return insertItem(mItems.count(), item); }
+    bool appendItem(T item) { return insertItem(m_items.count(), item); }
     bool canRemoveItems(int position, int count);
     bool removeItems(int position, int count);
     QVector<T> takeItems(int position, int count);
@@ -39,18 +39,18 @@ public:
     T getValue(const QString& name, const T& defaultValue = T()) const;
     QString getName(const typename T::Value value) const;
 
-    inline int itemsCount() const { return mItems.count(); }
-    inline const T& itemAt(int i) const { return mItems[i]; }
+    inline int itemsCount() const { return m_items.count(); }
+    inline const T& itemAt(int i) const { return m_items[i]; }
     int getIndex(const QString& name) const;
 
-    typename QVector<T>::const_iterator begin() const noexcept { return mItems.cbegin(); }
-    typename QVector<T>::const_iterator end() const noexcept { return mItems.cend(); }
+    typename QVector<T>::const_iterator begin() const noexcept { return m_items.cbegin(); }
+    typename QVector<T>::const_iterator end() const noexcept { return m_items.cend(); }
 
 protected:
     virtual void emitValueChanged(const QString& name, const T& value) const = 0;
 
 private:
-    QVector<T> mItems;
+    QVector<T> m_items;
 };
 
 // Implementation
@@ -64,9 +64,9 @@ bool NamedList<T>::setItemName(int i, const QString& name)
     if (contains(name)) {
         return false;
     }
-    emitValueChanged(mItems[i].name(), T());
-    mItems[i] = T(name, mItems[i].value());
-    emitValueChanged(name, mItems[i]);
+    emitValueChanged(m_items[i].name(), T());
+    m_items[i] = T(name, m_items[i].value());
+    emitValueChanged(name, m_items[i]);
     return true;
 }
 
@@ -76,8 +76,8 @@ bool NamedList<T>::setItemValue(int i, const typename T::Value& value)
     if (!isValidIndex(i)) {
         return false;
     }
-    mItems[i] = T(mItems[i].name(), value);
-    emitValueChanged(mItems[i].name(), mItems[i]);
+    m_items[i] = T(m_items[i].name(), value);
+    emitValueChanged(m_items[i].name(), m_items[i]);
     return true;
 }
 
@@ -95,7 +95,7 @@ template<typename T>
 bool NamedList<T>::insertItem(int i, const T& item)
 {
     if (canInsertItem(item)) {
-        mItems.insert(i, item);
+        m_items.insert(i, item);
         emitValueChanged(item.name(), item);
         return true;
     }
@@ -105,7 +105,7 @@ bool NamedList<T>::insertItem(int i, const T& item)
 template<typename T>
 bool NamedList<T>::canRemoveItems(int position, int count)
 {
-    if (position < 0 || position + count > mItems.size()) {
+    if (position < 0 || position + count > m_items.size()) {
         return false;
     }
     return true;
@@ -116,8 +116,8 @@ bool NamedList<T>::removeItems(int position, int count)
 {
     if (canRemoveItems(position, count)) {
         for (int i = 0; i < count; ++i) {
-            emitValueChanged(mItems[position].name(), T());
-            mItems.removeAt(position);
+            emitValueChanged(m_items[position].name(), T());
+            m_items.removeAt(position);
         }
         return true;
     }
@@ -131,8 +131,8 @@ QVector<T> NamedList<T>::takeItems(int position, int count)
         QVector<T> result;
         result.reserve(count);
         for (int i = 0; i < count; ++i) {
-            emitValueChanged(mItems[position].name(), T());
-            result.append(mItems.takeAt(position));
+            emitValueChanged(m_items[position].name(), T());
+            result.append(m_items.takeAt(position));
         }
         return result;
     }
@@ -144,8 +144,8 @@ bool NamedList<T>::canMoveItems(int sourcePosition, int count, int destinationPo
 {
     bool overlap =
       destinationPosition >= sourcePosition && destinationPosition <= sourcePosition + count;
-    if (sourcePosition >= 0 && sourcePosition + count <= mItems.size() && destinationPosition >= 0
-        && destinationPosition <= mItems.size() && !overlap) {
+    if (sourcePosition >= 0 && sourcePosition + count <= m_items.size() && destinationPosition >= 0
+        && destinationPosition <= m_items.size() && !overlap) {
         return true;
     }
     return false;
@@ -155,14 +155,14 @@ template<class T>
 bool NamedList<T>::moveItems(int sourcePosition, int count, int destinationPosition)
 {
     if (canMoveItems(sourcePosition, count, destinationPosition)) {
-        QVector<T> tmp = mItems.mid(sourcePosition, count);
+        QVector<T> tmp = m_items.mid(sourcePosition, count);
         for (int i = 0; i < count; ++i) {
-            mItems.insert(destinationPosition + i, tmp[i]);
+            m_items.insert(destinationPosition + i, tmp[i]);
         }
         if (destinationPosition < sourcePosition) {
-            mItems.remove(sourcePosition + count, count);
+            m_items.remove(sourcePosition + count, count);
         } else {
-            mItems.remove(sourcePosition, count);
+            m_items.remove(sourcePosition, count);
         }
         return true;
     }
@@ -173,7 +173,7 @@ template<typename T>
 bool NamedList<T>::contains(const QString& name) const
 {
     // TODO: optimization with QHash?
-    for (const T& item : mItems) {
+    for (const T& item : m_items) {
         if (item.name() == name) {
             return true;
         }
@@ -185,7 +185,7 @@ template<typename T>
 T NamedList<T>::getValue(const QString& name, const T& defaultValue) const
 {
     // TODO: optimization with QHash?
-    for (const T& item : mItems) {
+    for (const T& item : m_items) {
         if (item.name() == name)
             return item;
     }
@@ -195,7 +195,7 @@ T NamedList<T>::getValue(const QString& name, const T& defaultValue) const
 template<class T>
 QString NamedList<T>::getName(const typename T::Value value) const
 {
-    for (const T& item : mItems) {
+    for (const T& item : m_items) {
         if (item.value() == value)
             return item.name();
     }

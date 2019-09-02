@@ -5,10 +5,10 @@
 FontListWindow::FontListWindow(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::FontListWindow)
-    , mModel(SkinRepository::fonts())
+    , m_model(SkinRepository::fonts())
 {
     ui->setupUi(this);
-    ui->tableView->setModel(mModel);
+    ui->tableView->setModel(m_model);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     connect(ui->removeButton, &QPushButton::clicked, this, &FontListWindow::remove);
@@ -29,7 +29,7 @@ void FontListWindow::remove()
     // from bigger to smaller
     std::sort(rows.begin(), rows.end(), std::greater<int>());
     for (int r : rows) {
-        mModel->removeRow(r);
+        m_model->removeRow(r);
     }
 }
 
@@ -39,7 +39,7 @@ void FontListWindow::addDefault()
     int i = 0;
     do {
         auto f = Font(QString("Untitled%1").arg(i), QString());
-        ok = mModel->append(f);
+        ok = m_model->append(f);
         i++;
     } while (!ok);
 }

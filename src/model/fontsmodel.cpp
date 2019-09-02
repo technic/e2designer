@@ -9,17 +9,17 @@
 // Font
 
 Font::Font(const QString& name, const QString& fileName)
-    : mName(name)
-    , mFileName(fileName)
-    , mFontId(-1)
+    : m_name(name)
+    , m_fileName(fileName)
+    , m_fontId(-1)
 {
     load();
 }
 
 QFont Font::font() const
 {
-    if (mFontId >= 0) {
-        auto families = QFontDatabase::applicationFontFamilies(mFontId);
+    if (m_fontId >= 0) {
+        auto families = QFontDatabase::applicationFontFamilies(m_fontId);
         if (!families.isEmpty()) {
             return QFont(families.first());
         }
@@ -30,8 +30,8 @@ QFont Font::font() const
 void Font::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "font");
-    mName = xml.attributes().value("name").toString();
-    mFileName = xml.attributes().value("filename").toString();
+    m_name = xml.attributes().value("name").toString();
+    m_fileName = xml.attributes().value("filename").toString();
     xml.skipCurrentElement();
     load();
 }
@@ -39,15 +39,15 @@ void Font::fromXml(QXmlStreamReader& xml)
 void Font::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("font");
-    xml.writeAttribute("name", mName);
-    xml.writeAttribute("filename", mFileName);
+    xml.writeAttribute("name", m_name);
+    xml.writeAttribute("filename", m_fileName);
     xml.writeEndElement();
 }
 
 void Font::load()
 {
-    mFontId = -1;
-    QString fname = mFileName;
+    m_fontId = -1;
+    QString fname = m_fileName;
     if (fname.isEmpty()) {
         return;
     }
@@ -60,12 +60,12 @@ void Font::load()
         if (dir.exists(fname)) {
             fname = dir.filePath(fname);
         } else {
-            qWarning() << "font file not found" << mFileName;
+            qWarning() << "font file not found" << m_fileName;
             return;
         }
     }
-    mFontId = QFontDatabase::addApplicationFont(fname);
-    if (mFontId < 0) {
+    m_fontId = QFontDatabase::addApplicationFont(fname);
+    if (m_fontId < 0) {
         qWarning() << "invalid font file" << fname;
     }
 }

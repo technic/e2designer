@@ -21,7 +21,7 @@ class MixinTreeNode
 protected:
     // You must inherit from this class
     MixinTreeNode()
-        : mParent(nullptr)
+        : m_parent(nullptr)
     {
         // This can catch some errors, but not all
         static_assert(std::is_base_of<MixinTreeNode<T>, T>::value,
@@ -39,23 +39,23 @@ public:
     T* self() { return static_cast<T*>(this); }
     const T* self() const { return static_cast<const T*>(this); }
     // Tree-like logic
-    inline bool isChild() const { return mParent != nullptr; }
-    inline Node* parent() const { return mParent; }
+    inline bool isChild() const { return m_parent != nullptr; }
+    inline Node* parent() const { return m_parent; }
     // find my index among sibling nodes
     int myIndex() const;
     // find index of child node
     int indexOf(const T* child) const;
 
-    T* child(int i) const { return mChilds[i]; }
-    int childCount() const { return mChilds.size(); }
+    T* child(int i) const { return m_childs[i]; }
+    int childCount() const { return m_childs.size(); }
 
     // takes ownership
-    void appendChild(T* child) { insertChild(mChilds.size(), child); }
+    void appendChild(T* child) { insertChild(m_childs.size(), child); }
     virtual bool insertChild(int position, T* child);
     virtual bool insertChildren(int position, QVector<T*> list);
     // deletes underline data
     bool removeChildren(int position, int count);
-    void clear() { removeChildren(0, mChilds.size()); }
+    void clear() { removeChildren(0, m_childs.size()); }
     // releases ownership
     virtual QVector<T*> takeChildren(int position, int count);
 
@@ -97,9 +97,9 @@ public:
 
 private:
     // ref
-    Node* mParent;
+    Node* m_parent;
     // own
-    QList<T*> mChilds;
+    QList<T*> m_childs;
 };
 
 // Implementation
@@ -108,16 +108,16 @@ private:
 template<typename T>
 MixinTreeNode<T>::~MixinTreeNode()
 {
-    qDeleteAll(mChilds);
-    mChilds.clear();
+    qDeleteAll(m_childs);
+    m_childs.clear();
 }
 
 template<typename T>
 int MixinTreeNode<T>::myIndex() const
 {
     // FIXME: not that smart way to find index
-    if (mParent) {
-        return mParent->indexOf(self());
+    if (m_parent) {
+        return m_parent->indexOf(self());
     }
     return -1;
 }
@@ -126,30 +126,30 @@ template<typename T>
 int MixinTreeNode<T>::indexOf(const T* child) const
 {
     // I believe that indexOf() doesn't modify the object
-    return mChilds.indexOf(const_cast<T*>(child));
+    return m_childs.indexOf(const_cast<T*>(child));
 }
 
 template<typename T>
 bool MixinTreeNode<T>::insertChild(int position, T* child)
 {
-    if (position < 0 || position > mChilds.count()) {
+    if (position < 0 || position > m_childs.count()) {
         return false;
     }
-    child->mParent = this;
-    mChilds.insert(position, child);
+    child->m_parent = this;
+    m_childs.insert(position, child);
     return true;
 }
 
 template<typename T>
 bool MixinTreeNode<T>::insertChildren(int position, QVector<T*> list)
 {
-    if (position < 0 || position > mChilds.count()) {
+    if (position < 0 || position > m_childs.count()) {
         return false;
     }
-    auto it = mChilds.begin() + position;
+    auto it = m_childs.begin() + position;
     for (int i = 0; i < list.count(); i++) {
-        list[i]->mParent = this;
-        it = mChilds.insert(it, list[i]); // Inserts before iterator
+        list[i]->m_parent = this;
+        it = m_childs.insert(it, list[i]); // Inserts before iterator
         it++;
     }
     return true;
@@ -158,11 +158,11 @@ bool MixinTreeNode<T>::insertChildren(int position, QVector<T*> list)
 template<typename T>
 bool MixinTreeNode<T>::removeChildren(int position, int count)
 {
-    if (position < 0 || position + count > mChilds.size()) {
+    if (position < 0 || position + count > m_childs.size()) {
         return false;
     }
     for (int i = 0; i < count; ++i) {
-        delete mChilds.takeAt(position);
+        delete m_childs.takeAt(position);
     }
     return true;
 }
@@ -170,13 +170,13 @@ bool MixinTreeNode<T>::removeChildren(int position, int count)
 template<typename T>
 QVector<T*> MixinTreeNode<T>::takeChildren(int position, int count)
 {
-    if (position < 0 || position + count > mChilds.size()) {
+    if (position < 0 || position + count > m_childs.size()) {
         return QVector<T*>();
     }
     QVector<T*> list;
     for (int row = 0; row < count; ++row) {
-        auto child = mChilds.takeAt(position);
-        child->mParent = nullptr;
+        auto child = m_childs.takeAt(position);
+        child->m_parent = nullptr;
         list.append(child);
     }
     return list;

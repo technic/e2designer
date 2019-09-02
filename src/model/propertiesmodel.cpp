@@ -3,15 +3,15 @@
 
 PropertiesModel::PropertiesModel(ScreensModel* model, QObject* parent)
     : QAbstractItemModel(parent)
-    , mDummyRoot(Property::invalid)
-    , mRoot(&mDummyRoot)
-    , mModel(model)
-    , mObserver(new WidgetObserverRegistrator(model, QModelIndex()))
+    , m_dummyRoot(Property::invalid)
+    , m_root(&m_dummyRoot)
+    , m_model(model)
+    , m_observer(new WidgetObserverRegistrator(model, QModelIndex()))
 {
-    Q_CHECK_PTR(mModel);
-    connect(mModel, &ScreensModel::widgetChanged, this, &PropertiesModel::onAttributeChanged);
+    Q_CHECK_PTR(m_model);
+    connect(m_model, &ScreensModel::widgetChanged, this, &PropertiesModel::onAttributeChanged);
 
-    connect(mModel,
+    connect(m_model,
             &ScreensModel::modelAboutToBeReset,
             this,
             &PropertiesModel::onModelAboutToBeReset);
@@ -22,15 +22,15 @@ PropertiesModel::~PropertiesModel() = default;
 void PropertiesModel::setWidget(const QModelIndex& index)
 {
     beginResetModel();
-    mIndex = index;
-    if (mIndex.isValid()) {
-        mTree = std::make_unique<PropertyTree>(&mModel->widget(mIndex));
-        mRoot = mTree->root();
+    m_index = index;
+    if (m_index.isValid()) {
+        m_tree = std::make_unique<PropertyTree>(&m_model->widget(m_index));
+        m_root = m_tree->root();
     } else {
-        mTree.reset();
-        mRoot = &mDummyRoot;
+        m_tree.reset();
+        m_root = &m_dummyRoot;
     }
-    mObserver->setIndex(index);
+    m_observer->setIndex(index);
 
     //    if (mData != nullptr) {
     //        disconnect(mData, &WidgetData::attrChanged,
@@ -74,7 +74,7 @@ QModelIndex PropertiesModel::index(int row, int column, const QModelIndex& paren
 
     Item* parentItem;
     if (!parent.isValid()) {
-        parentItem = mRoot;
+        parentItem = m_root;
     } else {
         parentItem = castItem(parent);
     }
@@ -92,7 +92,7 @@ QModelIndex PropertiesModel::parent(const QModelIndex& index) const
         return QModelIndex();
 
     Item* item = castItem(index)->parent()->self();
-    if (item == mRoot)
+    if (item == m_root)
         return QModelIndex();
     return createIndex(item->myIndex(), ColumnKey, item);
 }
@@ -101,7 +101,7 @@ int PropertiesModel::rowCount(const QModelIndex& parent) const
 {
     Item* parentItem;
     if (!parent.isValid())
-        parentItem = mRoot;
+        parentItem = m_root;
     else
         parentItem = castItem(parent);
 
@@ -144,7 +144,7 @@ bool PropertiesModel::setData(const QModelIndex& index, const QVariant& value, i
     case ColumnValue: {
         const QVariant& newValue = item.convert(value, role);
         if (newValue.isValid()) {
-            mModel->setWidgetAttr(mIndex, item.key(), newValue);
+            m_model->setWidgetAttr(m_index, item.key(), newValue);
         }
         return true;
     }
@@ -169,9 +169,9 @@ Qt::ItemFlags PropertiesModel::flags(const QModelIndex& index) const
 
 void PropertiesModel::onAttributeChanged(const QModelIndex& index, int key)
 {
-    if (index != mIndex)
+    if (index != m_index)
         return;
-    AttrItem* item = mTree->getItemPtr(key);
+    AttrItem* item = m_tree->getItemPtr(key);
     if (item) {
         QModelIndex index = createIndex(item->myIndex(), ColumnValue, item);
         emit dataChanged(index, index);

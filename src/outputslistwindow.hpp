@@ -23,7 +23,7 @@ private slots:
 
 private:
     // refs
-    OutputsModel* mModel;
+    OutputsModel* m_model;
     // own
     Ui::OutputsListWindow* ui;
 };

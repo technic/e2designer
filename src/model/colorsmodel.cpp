@@ -7,30 +7,30 @@
 // Color
 
 Color::Color(const QString& name, QRgb value)
-    : mName(name)
-    , mValue(value)
+    : m_name(name)
+    , m_value(value)
 {}
 QString Color::valueStr() const
 {
-    return QColor::fromRgba(mValue).name(QColor::HexArgb);
+    return QColor::fromRgba(m_value).name(QColor::HexArgb);
 }
 void Color::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "color");
 
-    mName = xml.attributes().value("name").toString();
+    m_name = xml.attributes().value("name").toString();
     QColor color(xml.attributes().value("value").toString());
     // enigma2 has inverted alpha representation
     color.setAlpha(255 - color.alpha());
-    mValue = color.rgba();
+    m_value = color.rgba();
     xml.skipCurrentElement();
 }
 
 void Color::toXml(QXmlStreamWriter& xml) const
 {
     xml.writeStartElement("color");
-    xml.writeAttribute("name", mName);
-    QColor color = QColor::fromRgba(mValue);
+    xml.writeAttribute("name", m_name);
+    QColor color = QColor::fromRgba(m_value);
     // enigma2 has inverted alpha representation
     color.setAlpha(255 - color.alpha());
     xml.writeAttribute("value", color.name(QColor::HexArgb));

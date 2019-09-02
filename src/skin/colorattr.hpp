@@ -31,13 +31,13 @@ public:
 
 protected:
     void setRawValue(QRgb value);
-    QRgb getRawValue() const { return mValue; };
+    QRgb getRawValue() const { return m_value; };
 
 private:
     QString toStr(bool invertAlpha) const;
 
-    QString mName;
-    QRgb mValue;
+    QString m_name;
+    QRgb m_value;
     State m_state;
 };
 Q_DECLARE_METATYPE(ColorAttr);

@@ -13,8 +13,8 @@ public:
     void setInnerRect(const QRect& innerRect);
 
 private:
-    BorderSet* mBorders;
-    QRect mRect;
+    BorderSet* m_borders;
+    QRect m_rect;
 };
 
 #endif // BORDERVIEW_H

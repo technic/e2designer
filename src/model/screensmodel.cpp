@@ -124,11 +124,11 @@ ScreensModel::ScreensModel(ColorsModel& colors,
     , m_colorsModel(colors)
     , m_colorRolesModel(roles)
     , m_fontsModel(fonts)
-    , mRoot(new WidgetData())
+    , m_root(new WidgetData())
     , m_commander(new QUndoStack(this))
 {
     m_commander->setUndoLimit(100);
-    mRoot->setModel(this);
+    m_root->setModel(this);
     connect(&colors, &ColorsModel::valueChanged, this, &ScreensModel::onColorChanged);
     connect(&roles, &ColorRolesModel::colorChanged, this, &ScreensModel::onStyledColorChanged);
     connect(&fonts, &FontsModel::valueChanged, this, &ScreensModel::onFontChanged);
@@ -136,7 +136,7 @@ ScreensModel::ScreensModel(ColorsModel& colors,
 
 ScreensModel::~ScreensModel()
 {
-    delete mRoot;
+    delete m_root;
 }
 QVariant ScreensModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -172,7 +172,7 @@ QModelIndex ScreensModel::parent(const QModelIndex& index) const
         return QModelIndex();
 
     Item* item = castItem(index)->parent()->self();
-    if (item == mRoot)
+    if (item == m_root)
         return QModelIndex();
     return createIndex(item->myIndex(), ColumnElement, item);
 }
@@ -279,7 +279,7 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
     for (int i = 0; i < count; ++i) {
         auto widget = new WidgetData();
         // Top level items should be Screens
-        if (parentItem == mRoot) {
+        if (parentItem == m_root) {
             widget->setType(WidgetData::Screen);
         }
         childs.append(widget);
@@ -304,7 +304,7 @@ QVector<WidgetData*> ScreensModel::takeChildren(int row, int count, WidgetData& 
     Q_ASSERT(count > 0 && 0 <= row && row + count <= parent.childCount());
     QModelIndex parentIndex;
     // createIndex doesn't work for root node
-    if (&parent != mRoot) {
+    if (&parent != m_root) {
         parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
     }
     beginRemoveRows(parentIndex, row, row + count - 1);
@@ -319,7 +319,7 @@ void ScreensModel::insertChildren(int row, QVector<WidgetData*> childs, WidgetDa
     Q_ASSERT(0 <= row && row <= parent.childCount());
     QModelIndex parentIndex;
     // createIndex doesn't work for root node
-    if (&parent != mRoot) {
+    if (&parent != m_root) {
         parentIndex = createIndex(parent.myIndex(), ColumnElement, &parent);
     }
     beginInsertRows(parentIndex, row, row + childs.count() - 1);
@@ -418,20 +418,20 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "screen");
 
-    beginInsertRows(QModelIndex(), mRoot->childCount(), mRoot->childCount());
+    beginInsertRows(QModelIndex(), m_root->childCount(), m_root->childCount());
 
     auto* w = new WidgetData();
     w->setModel(this);
     w->fromXml(xml);
-    mRoot->appendChild(w);
+    m_root->appendChild(w);
 
     endInsertRows();
 }
 
 void ScreensModel::toXml(XmlStreamWriter& xml)
 {
-    for (int i = 0; i < mRoot->childCount(); ++i) {
-        mRoot->child(i)->toXml(xml);
+    for (int i = 0; i < m_root->childCount(); ++i) {
+        m_root->child(i)->toXml(xml);
     }
 }
 
@@ -591,7 +591,7 @@ ScreensModel::Item* ScreensModel::indexToItem(const QModelIndex& index) const
         Q_ASSERT(index.model() == this);
         return static_cast<Item*>(index.internalPointer());
     } else {
-        return mRoot;
+        return m_root;
     }
 }
 
@@ -645,8 +645,8 @@ QVector<QModelIndex> ScreensModel::decodeRows(QDataStream& stream) const
 void ScreensModel::updatePreviewMap()
 {
     m_previews.clear();
-    for (int i = 0; i < mRoot->childCount(); ++i) {
-        const auto* screen = mRoot->child(i);
+    for (int i = 0; i < m_root->childCount(); ++i) {
+        const auto* screen = m_root->child(i);
         QMap<QString, Preview> map;
         for (int j = 0; j < screen->childCount(); ++j) {
             const auto* widget = screen->child(j);
@@ -674,8 +674,8 @@ void ScreensModel::savePreviewTree(const QString& path)
     xml.writeStartDocument();
     xml.writeStartElement("screens");
     // iterate over screens
-    for (int i = 0; i < mRoot->childCount(); ++i) {
-        const auto* screen = mRoot->child(i);
+    for (int i = 0; i < m_root->childCount(); ++i) {
+        const auto* screen = m_root->child(i);
         xml.writeStartElement("screen");
         xml.writeTextElement("name", screen->name());
         xml.writeStartElement("entries");

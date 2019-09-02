@@ -18,11 +18,11 @@ class ScreenView : public QObject
 public:
     ScreenView(ScreensModel* model);
     /// Returns current screen index
-    QModelIndex currentIndex() { return mRoot; }
+    QModelIndex currentIndex() { return m_root; }
     int outputId() const { return mOutputId; }
-    QGraphicsScene* scene() const { return mScene; }
+    QGraphicsScene* scene() const { return m_scene; }
     void setScreen(QModelIndex index);
-    ScreensModel* model() const { return mModel; }
+    ScreensModel* model() const { return m_model; }
 
     void setSelectionModel(QItemSelectionModel* model);
 
@@ -59,19 +59,19 @@ private:
     const int mOutputId = 0;
 
     // ref
-    ScreensModel* mModel;
-    QPointer<QItemSelectionModel> mSelectionModel;
+    ScreensModel* m_model;
+    QPointer<QItemSelectionModel> m_selectionModel;
 
-    QPersistentModelIndex mRoot;
+    QPersistentModelIndex m_root;
     // flag to ignore signals from selectionModel
-    bool mDisableSelectionSlots;
+    bool m_disableSelectionSlots;
 
     // QObject owned
-    QGraphicsScene* mScene;
+    QGraphicsScene* m_scene;
     // references within mScene
-    QGraphicsPixmapItem* mBackground;
-    QGraphicsRectItem* mBackgroundRect;
-    QHash<QPersistentModelIndex, WidgetGraphicsItem*> mWidgets;
+    QGraphicsPixmapItem* m_background;
+    QGraphicsRectItem* m_backgroundRect;
+    QHash<QPersistentModelIndex, WidgetGraphicsItem*> m_widgets;
 
     bool m_showBorders;
 };

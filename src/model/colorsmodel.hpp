@@ -18,9 +18,9 @@ class Color
 public:
     Color(const QString& name = QString(), QRgb value = 0);
 
-    QString name() const { return mName; }
-    QRgb value() const { return mValue; }
-    bool isNull() const { return mName.isNull(); }
+    QString name() const { return m_name; }
+    QRgb value() const { return m_value; }
+    bool isNull() const { return m_name.isNull(); }
     QString valueStr() const;
 
     void fromXml(QXmlStreamReader& xml);
@@ -29,8 +29,8 @@ public:
     typedef QRgb Value;
 
 private:
-    QString mName;
-    QRgb mValue;
+    QString m_name;
+    QRgb m_value;
 };
 
 /**

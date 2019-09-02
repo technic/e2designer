@@ -31,9 +31,9 @@ bool XmlData::nextXmlChild(QXmlStreamReader& xml)
 
 void RawXmlElement::toXml(QXmlStreamWriter& xml) const
 {
-    xml.writeStartElement(mTag);
-    xml.writeAttributes(mAttrs);
-    for (const auto& child : mChilds) {
+    xml.writeStartElement(m_tag);
+    xml.writeAttributes(m_attrs);
+    for (const auto& child : m_childs) {
         child.toXml(xml);
     }
     xml.writeEndElement();
@@ -43,14 +43,14 @@ void RawXmlElement::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement());
 
-    mTag = xml.name().toString();
-    mAttrs = xml.attributes();
+    m_tag = xml.name().toString();
+    m_attrs = xml.attributes();
 
     while (nextXmlChild(xml)) {
         if (xml.isStartElement()) {
             RawXmlElement e;
             e.fromXml(xml);
-            mChilds.append(e);
+            m_childs.append(e);
         }
     }
 }
