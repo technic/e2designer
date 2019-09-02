@@ -646,6 +646,7 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
             auto* widget = new WidgetData();
             if (widget->fromXml(xml)) {
                 appendChild(widget);
+                widget->loadPreview(); // After widget is attached
             } else {
                 delete widget;
                 return false;
@@ -667,6 +668,15 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
         }
     }
 
+    return !xml.hasError();
+}
+
+/**
+ * @brief Load preview value and render from model
+ * according to widget and parent screen names
+ */
+void WidgetData::loadPreview()
+{
     if (m_type == Widget) {
         MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
@@ -678,7 +688,6 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
             }
         }
     }
-    return !xml.hasError();
 }
 
 void WidgetData::toXml(XmlStreamWriter& xml) const

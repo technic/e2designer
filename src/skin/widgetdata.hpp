@@ -151,6 +151,7 @@ public:
     void setPreviewRender(Property::Render render);
     QVariant previewValue() const { return m_previewValue; }
     void setPreviewValue(const QVariant& value);
+    void loadPreview();
     // Render to use on scene
     Property::Render sceneRender() const;
     QVariant scenePreview() const;

@@ -421,9 +421,9 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
     beginInsertRows(QModelIndex(), m_root->childCount(), m_root->childCount());
 
     auto* w = new WidgetData();
-    w->setModel(this);
     w->fromXml(xml);
     m_root->appendChild(w);
+    w->loadPreview(); // After widget is attached to the model
 
     endInsertRows();
 }
