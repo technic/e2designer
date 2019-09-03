@@ -31,7 +31,10 @@ ScreenView::ScreenView(ScreensModel* model)
             &ScreenView::onOutputChanged);
 
     connect(m_model, &ScreensModel::widgetChanged, this, &ScreenView::onWidgetChanged);
-    connect(m_model, &ScreensModel::rowsAboutToBeRemoved, this, &ScreenView::onRowsAboutToBeRemoved);
+    connect(m_model,
+            &ScreensModel::rowsAboutToBeRemoved,
+            this,
+            &ScreenView::onRowsAboutToBeRemoved);
     connect(m_model, &ScreensModel::rowsInserted, this, &ScreenView::onRowsInserted);
     connect(m_model, &ScreensModel::modelReset, this, &ScreenView::onModelReset);
 
@@ -238,7 +241,8 @@ void ScreenView::onSceneSelectionChanged()
     for (auto* item : m_scene->selectedItems()) {
         auto w = qgraphicsitem_cast<WidgetGraphicsItem*>(item);
         if (w) {
-            m_selectionModel->select(makeRowSelection(w->modelIndex()), QItemSelectionModel::Select);
+            m_selectionModel->select(makeRowSelection(w->modelIndex()),
+                                     QItemSelectionModel::Select);
         }
     }
     if (!m_scene->selectedItems().empty()) {
