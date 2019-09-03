@@ -8,24 +8,24 @@ class Item
 public:
     using Value = int;
     Item()
-        : _name()
-        , _value(0)
+        : m_name()
+        , m_value(0)
     {}
     Item(const QString& name, int value)
-        : _name(name)
-        , _value(value)
+        : m_name(name)
+        , m_value(value)
     {}
-    QString name() const { return _name; }
-    bool isNull() const { return _name.isNull(); }
+    QString name() const { return m_name; }
+    bool isNull() const { return m_name.isNull(); }
 
     bool operator==(const Item& other) const
     {
-        return other._name == _name && other._value == _value;
+        return other.m_name == m_name && other.m_value == m_value;
     }
 
 private:
-    QString _name;
-    int _value;
+    QString m_name;
+    int m_value;
 };
 
 QDebug operator<<(QDebug d, const Item& item)

@@ -40,6 +40,11 @@ make
 3. Fork and send GitLab pull requests.
 4. Join discussion on the [openpli forum](https://forums.openpli.org/topic/61204-e2designer-alpha/)
 
+## Code style
+- Use `camelCase` for functions and methods 
+- Use `CapitalizedNames` for classes and types
+- Use `m_fooBar` style for private class members
+
 # License
 GPLv3
 

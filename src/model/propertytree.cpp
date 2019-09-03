@@ -147,7 +147,7 @@ QVariant AttrGroupItem::keyData(int role) const
 {
     switch (role) {
     case Qt::DisplayRole:
-        return mTitle;
+        return m_title;
     case Qt::BackgroundRole:
         return QBrush(QApplication::palette().color(QPalette::Button));
     default:

@@ -63,33 +63,33 @@ bool Dimension::isRelative() const
 // SizeAttr
 
 SizeAttr::SizeAttr(Dimension w, Dimension h)
-    : mWidth(w)
-    , mHeight(h)
+    : m_width(w)
+    , m_height(h)
 {}
 
 QSize SizeAttr::getSize(const WidgetData& widget) const
 {
     QSize ps = widget.parentSize();
-    return QSize(mWidth.getInt(ps.width()), mHeight.getInt(ps.height()));
+    return QSize(m_width.getInt(ps.width()), m_height.getInt(ps.height()));
 }
 
 void SizeAttr::setSize(const WidgetData& widget, const QSize size)
 {
     QSize s = widget.parentSize();
-    mWidth.parseInt(size.width(), s.width());
-    mHeight.parseInt(size.height(), s.height());
+    m_width.parseInt(size.width(), s.width());
+    m_height.parseInt(size.height(), s.height());
 }
 
 QString SizeAttr::toStr() const
 {
-    return mWidth.toStr() + "," + mHeight.toStr();
+    return m_width.toStr() + "," + m_height.toStr();
 }
 void SizeAttr::fromStr(const QString& str)
 {
     QStringList list = str.split(",");
     if (list.length() == 2) {
-        mWidth.parseStr(list[0]);
-        mHeight.parseStr(list[1]);
+        m_width.parseStr(list[0]);
+        m_height.parseStr(list[1]);
     } else {
         qDebug() << "bad position:" << str;
     }

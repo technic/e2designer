@@ -51,11 +51,11 @@ class SizeAttr
 {
 public:
     SizeAttr(Dimension w = Dimension(), Dimension h = Dimension());
-    inline const Dimension& w() const { return mWidth; }
-    inline const Dimension& h() const { return mHeight; }
+    inline const Dimension& w() const { return m_width; }
+    inline const Dimension& h() const { return m_height; }
 
     SizeAttr(const QString& str) { fromStr(str); }
-    bool isRelative() const { return mWidth.isRelative() || mHeight.isRelative(); }
+    bool isRelative() const { return m_width.isRelative() || m_height.isRelative(); }
     QSize getSize(const WidgetData& widget) const;
     void setSize(const WidgetData& widget, const QSize size);
 
@@ -64,11 +64,11 @@ public:
 
     inline bool operator==(const SizeAttr& other)
     {
-        return mWidth == other.mWidth && mHeight == other.mHeight;
+        return m_width == other.m_width && m_height == other.m_height;
     }
 
 private:
-    Dimension mWidth, mHeight;
+    Dimension m_width, m_height;
 };
 Q_DECLARE_METATYPE(SizeAttr);
 

@@ -64,13 +64,13 @@ public:
     {}
     AttrGroupItem(const QString& title)
         : AttrItem()
-        , mTitle(title)
+        , m_title(title)
     {}
     QVariant keyData(int role) const override;
     QVariant data(int role = Qt::UserRole + 1) const override;
 
 private:
-    QString mTitle;
+    QString m_title;
 };
 
 class ColorItem : public AttrItem
