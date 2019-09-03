@@ -116,7 +116,7 @@ AppImage:
 clazy:
   stage: build
   script:
-    - curl -o /usr/local/bin/clazy http://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
+    - curl -L -o /usr/local/bin/clazy https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
     - chmod a+x /usr/local/bin/clazy
     - mkdir -p build && pushd build
     - qmake .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -Werror -fcolor-diagnostics"
