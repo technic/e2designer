@@ -276,7 +276,6 @@ void MainWindow::addScreen()
     model.setWidgetAttr(screen, Property::position, QVariant::fromValue(pos));
     model.setWidgetAttr(screen, Property::size, QVariant::fromValue(size));
     model.setWidgetAttr(screen, Property::name, "UntitledScreen");
-    QVariant(QColor(Qt::red));
 }
 
 void MainWindow::delWidget()
