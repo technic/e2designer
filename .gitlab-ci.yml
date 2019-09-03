@@ -172,6 +172,8 @@ flatpak:
 
 deploy:
   stage: deploy
+  only:
+    - master
   dependencies:
     - AppImage
     - flatpak
