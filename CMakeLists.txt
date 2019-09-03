@@ -35,7 +35,6 @@ set(SOURCE
     src/model/colorsmodel.cpp
     src/model/fontsmodel.cpp
     src/model/movablelistmodel.cpp
-    src/model/namedlist.cpp
     src/model/outputsmodel.cpp
     src/model/propertiesmodel.cpp
     src/model/propertytree.cpp

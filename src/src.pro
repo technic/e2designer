@@ -58,7 +58,6 @@ SOURCES += \
     repository/pixmapstorage.cpp \
     commands/attrcommand.cpp \
     fontlistwindow.cpp \
-    model/namedlist.cpp \
     model/colorsmodel.cpp \
     model/fontsmodel.cpp \
     model/propertiesmodel.cpp \
