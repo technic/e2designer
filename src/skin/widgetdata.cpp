@@ -646,7 +646,6 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
             auto* widget = new WidgetData();
             if (widget->fromXml(xml)) {
                 appendChild(widget);
-                widget->loadPreview(); // After widget is attached
             } else {
                 delete widget;
                 return false;
@@ -673,19 +672,25 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
 
 /**
  * @brief Load preview value and render from model
- * according to widget and parent screen names
+ * according to widget and parent screen names.
+ * If called on a screen apply operation to all child widgets
  */
 void WidgetData::loadPreview()
 {
+    if (!m_model) {
+        return;
+    }
     if (m_type == Widget) {
         MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
             QString screen = ptr->self()->name();
-            if (m_model) {
-                Preview p = m_model->getPreview(screen, name());
-                m_previewRender = p.render;
-                m_previewValue = p.value;
-            }
+            Preview p = m_model->getPreview(screen, name());
+            m_previewRender = p.render;
+            m_previewValue = p.value;
+        }
+    } else if (m_type == Screen) {
+        for (int i = 0; i < childCount(); ++i) {
+            child(i)->loadPreview();
         }
     }
 }
