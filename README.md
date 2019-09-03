@@ -50,6 +50,12 @@ git subtree pull -P Qt-Color-Widgets/ --squash git@gitlab.com:mattia.basaglia/Qt
 git subtree pull -P AppImageUpdaterBridge --squash https://github.com/antony-jr/AppImageUpdaterBridge.git master
 ```
 
+# Develop notes
+To start linux docker image with qt and compiler
+```bash
+docker-compose run e2designer bash
+```
+
 # Credits
 Libraries:
 - [Qt-Color-Widgets](https://github.com/mbasaglia/Qt-Color-Widgets)

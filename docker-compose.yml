@@ -1,0 +1,10 @@
+version: "2"
+services:
+  e2designer:
+    image: registry.gitlab.com/technic93/e2designer:latest
+    build:
+      context: docker/qt
+    working_dir: /project
+    volumes:
+      - "./:/project"
+    privileged: true
