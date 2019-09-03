@@ -21,7 +21,7 @@ class QXmlStreamWriter;
 class ScreensModel;
 class Font;
 
-typedef QString PixmapAttr; // FIXME: HACK
+using PixmapAttr = QString; // FIXME: HACK
 
 class WidgetData : public MixinTreeNode<WidgetData>, public XmlData
 {
