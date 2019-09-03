@@ -24,7 +24,7 @@ ScreenView::ScreenView(ScreensModel* model)
     m_scene->addItem(m_backgroundRect);
 
     // set inital scene size and subscribe to changes
-    setSceneSize(SkinRepository::outputs()->getOutput(mOutputId).size());
+    setSceneSize(SkinRepository::outputs()->getOutput(m_outputId).size());
     connect(SkinRepository::outputs(),
             &OutputsModel::valueChanged,
             this,
@@ -43,7 +43,7 @@ ScreenView::ScreenView(ScreensModel* model)
 
 void ScreenView::onOutputChanged(int id, const VideoOutput& output)
 {
-    if (id == mOutputId) {
+    if (id == m_outputId) {
         setSceneSize(output.size());
     }
 }

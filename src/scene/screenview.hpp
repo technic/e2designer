@@ -19,7 +19,7 @@ public:
     ScreenView(ScreensModel* model);
     /// Returns current screen index
     QModelIndex currentIndex() { return m_root; }
-    int outputId() const { return mOutputId; }
+    int outputId() const { return m_outputId; }
     QGraphicsScene* scene() const { return m_scene; }
     void setScreen(QModelIndex index);
     ScreensModel* model() const { return m_model; }
@@ -56,7 +56,7 @@ private slots:
 private:
     QModelIndex normalizeIndex(const QModelIndex& index) const;
     QItemSelection makeRowSelection(const QModelIndex& index);
-    const int mOutputId = 0;
+    const int m_outputId = 0;
 
     // ref
     ScreensModel* m_model;
