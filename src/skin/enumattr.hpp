@@ -37,25 +37,25 @@ inline void deserialize(const QString& str, T& value)
     value = EnumAttr<T>(str).value();
 }
 
-typedef EnumAttr<PropertyVAlign::Enum> VAlignAttr;
+using VAlignAttr = EnumAttr<PropertyVAlign::Enum>;
 Q_DECLARE_METATYPE(VAlignAttr);
 
-typedef EnumAttr<PropertyHAlign::Enum> HAlignAttr;
+using HAlignAttr = EnumAttr<PropertyHAlign::Enum>;
 Q_DECLARE_METATYPE(HAlignAttr);
 
-typedef EnumAttr<Property::Alphatest> AlphatestAttr;
+using AlphatestAttr = EnumAttr<Property::Alphatest>;
 Q_DECLARE_METATYPE(AlphatestAttr);
 
-typedef EnumAttr<Property::Orientation> OrientationAttr;
+using OrientationAttr = EnumAttr<Property::Orientation>;
 Q_DECLARE_METATYPE(OrientationAttr);
 
-typedef EnumAttr<Property::ScrollbarMode> ScrollbarModeAttr;
+using ScrollbarModeAttr = EnumAttr<Property::ScrollbarMode>;
 Q_DECLARE_METATYPE(ScrollbarModeAttr);
 
-typedef EnumAttr<Property::Render> RenderAttr;
+using RenderAttr = EnumAttr<Property::Render>;
 Q_DECLARE_METATYPE(RenderAttr);
 
-typedef EnumAttr<Property::Flags> FlagsAttr;
+using FlagsAttr = EnumAttr<Property::Flags>;
 Q_DECLARE_METATYPE(FlagsAttr);
 
 #endif // ENUMATTR_HPP

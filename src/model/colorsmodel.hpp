@@ -26,7 +26,7 @@ public:
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    typedef QRgb Value;
+    using Value = QRgb;
 
 private:
     QString m_name;

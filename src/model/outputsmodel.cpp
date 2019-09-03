@@ -1,7 +1,7 @@
 #include "outputsmodel.hpp"
 #include <QDebug>
 
-VideoOutputRepository::VideoOutputRepository() {}
+VideoOutputRepository::VideoOutputRepository() = default;
 void VideoOutputRepository::addFromXml(QXmlStreamReader& xml)
 {
     VideoOutput out;

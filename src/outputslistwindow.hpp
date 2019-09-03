@@ -15,7 +15,7 @@ class OutputsListWindow : public QDialog
 
 public:
     explicit OutputsListWindow(OutputsModel* model, QWidget* parent = nullptr);
-    ~OutputsListWindow();
+    ~OutputsListWindow() final;
 
 private slots:
     void addDefault();

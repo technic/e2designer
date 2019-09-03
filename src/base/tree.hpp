@@ -15,7 +15,7 @@ template<typename T>
 class MixinTreeNode
 {
     // alias
-    typedef MixinTreeNode<T> Node;
+    using Node = MixinTreeNode<T>;
     Q_DISABLE_COPY(MixinTreeNode)
 
 protected:

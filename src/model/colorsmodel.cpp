@@ -81,7 +81,6 @@ void ColorsList::toXml(QXmlStreamWriter& xml) const
 
 ColorsModel::ColorsModel(QObject* parent)
     : MovableListModel(parent)
-    , ColorsList()
 {}
 QVariant ColorsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {

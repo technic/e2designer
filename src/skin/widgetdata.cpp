@@ -629,15 +629,15 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
     }
     QMetaEnum meta = Property::propertyEnum();
     QXmlStreamAttributes attrs = xml.attributes();
-    for (auto it = attrs.cbegin(); it != attrs.cend(); ++it) {
+    for (const auto& attr : attrs) {
         bool ok;
-        m_propertiesOrder.append(it->name().toString());
-        int key = meta.keyToValue(it->name().toLatin1().data(), &ok);
+        m_propertiesOrder.append(attr.name().toString());
+        int key = meta.keyToValue(attr.name().toLatin1().data(), &ok);
         if (ok) {
-            setAttrFromXml(key, it->value().toString());
+            setAttrFromXml(key, attr.value().toString());
         } else {
-            qWarning() << "unknown attribute" << it->name();
-            m_otherAttributes[it->name().toString()] = it->value().toString();
+            qWarning() << "unknown attribute" << attr.name();
+            m_otherAttributes[attr.name().toString()] = attr.value().toString();
         }
     }
 
@@ -797,8 +797,7 @@ void WidgetData::updateCache()
     if (!m_model) {
         return;
     }
-    for (auto it = m_colors.begin(); it != m_colors.end(); ++it) {
-        auto& col = *it;
+    for (auto& col : m_colors) {
         col.reload(m_model->colors());
     }
     // TODO: fonts?

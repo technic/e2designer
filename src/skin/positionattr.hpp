@@ -53,7 +53,7 @@ private:
 
 class WidgetData;
 
-typedef QPair<int, int> AnchorPair;
+using AnchorPair = QPair<int, int>;
 
 class PositionAttr
 {

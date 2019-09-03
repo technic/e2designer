@@ -26,7 +26,7 @@ public:
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    typedef QString Value;
+    using Value = QString;
 
 private:
     void load();

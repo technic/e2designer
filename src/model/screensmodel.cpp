@@ -314,7 +314,7 @@ QVector<WidgetData*> ScreensModel::takeChildren(int row, int count, WidgetData& 
 }
 
 /// Inserts children into parent emitting necessary notifications
-void ScreensModel::insertChildren(int row, QVector<WidgetData*> childs, WidgetData& parent)
+void ScreensModel::insertChildren(int row, const QVector<WidgetData*>& childs, WidgetData& parent)
 {
     Q_ASSERT(0 <= row && row <= parent.childCount());
     QModelIndex parentIndex;

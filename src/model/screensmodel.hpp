@@ -158,7 +158,7 @@ public slots:
 
 protected:
     QVector<WidgetData*> takeChildren(int row, int count, WidgetData& parent);
-    void insertChildren(int row, QVector<WidgetData*> childs, WidgetData& parent);
+    void insertChildren(int row, const QVector<WidgetData*>& childs, WidgetData& parent);
     friend class RemoveRowsCommand;
     friend class InsertRowsCommand;
 

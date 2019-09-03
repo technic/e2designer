@@ -14,7 +14,7 @@ class FontListWindow : public QDialog
 
 public:
     explicit FontListWindow(QWidget* parent = Q_NULLPTR);
-    ~FontListWindow();
+    ~FontListWindow() override;
 
 public slots:
     void remove();

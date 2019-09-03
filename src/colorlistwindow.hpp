@@ -20,7 +20,7 @@ class ColorListWindow : public QDockWidget
 
 public:
     explicit ColorListWindow(QWidget* parent = Q_NULLPTR);
-    ~ColorListWindow();
+    ~ColorListWindow() override;
 
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     QColor color();

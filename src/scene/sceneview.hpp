@@ -10,7 +10,7 @@ public:
 
 protected:
     // QWidget interface
-    void wheelEvent(QWheelEvent* event);
+    void wheelEvent(QWheelEvent* event) override;
 };
 
 #endif // SCENEVIEW_H

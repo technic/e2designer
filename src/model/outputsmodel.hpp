@@ -37,7 +37,7 @@ public:
     int bpp() const { return m_bpp; }
     int id() const { return m_id; }
 
-    typedef VideoOutputData Value;
+    using Value = VideoOutputData;
     VideoOutputData value() const { return VideoOutputData{ size(), m_bpp }; }
     QString name() const { return QString::number(m_id); }
     bool isNull() const { return m_id == -1; }

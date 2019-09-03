@@ -22,7 +22,7 @@ public:
 
 private:
     // You should derive from this class to create an instance
-    SingletonMixin() {}
+    SingletonMixin() = default;
 };
 
 #endif // SINGLETON_H

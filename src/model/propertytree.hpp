@@ -39,7 +39,7 @@ class AttrItem : public MixinTreeNode<AttrItem>
 {
 public:
     explicit AttrItem(int key = Property::invalid);
-    virtual ~AttrItem() {}
+    ~AttrItem() override {}
     void setRoot(PropertyTree* tree);
     int key() const { return m_key; }
     // Iterface for Qt Models
@@ -98,13 +98,13 @@ public:
     QVariant convert(const QVariant& value, int role) override;
 };
 
-typedef EnumItem<PropertyVAlign::Enum> VAlignItem;
-typedef EnumItem<PropertyHAlign::Enum> HAlignItem;
-typedef EnumItem<Property::Alphatest> AlphatestItem;
-typedef EnumItem<Property::Orientation> OrientationItem;
-typedef EnumItem<Property::ScrollbarMode> ScrollbarModeItem;
-typedef EnumItem<Property::Render> RenderItem;
-typedef EnumItem<Property::Flags> FlagsItem;
+using VAlignItem = EnumItem<PropertyVAlign::Enum>;
+using HAlignItem = EnumItem<PropertyHAlign::Enum>;
+using AlphatestItem = EnumItem<Property::Alphatest>;
+using OrientationItem = EnumItem<Property::Orientation>;
+using ScrollbarModeItem = EnumItem<Property::ScrollbarMode>;
+using RenderItem = EnumItem<Property::Render>;
+using FlagsItem = EnumItem<Property::Flags>;
 
 class FontItem : public AttrItem
 {

@@ -36,7 +36,7 @@ public:
     using MixinTreeNode<WidgetData>::parent;
 
     explicit WidgetData();
-    ~WidgetData();
+    ~WidgetData() override;
 
     // expose tree functions
     using Base::child;

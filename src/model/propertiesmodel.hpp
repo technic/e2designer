@@ -13,7 +13,7 @@ class PropertiesModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    typedef AttrItem Item;
+    using Item = AttrItem;
 
     explicit PropertiesModel(ScreensModel* model, QObject* parent = Q_NULLPTR);
     ~PropertiesModel() override;
