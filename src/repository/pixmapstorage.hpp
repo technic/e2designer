@@ -43,7 +43,7 @@ public:
     {
         auto& storage = PixmapStorage::instance();
         if (!m_path.isNull()) {
-            storage.unregisterObserver(path, this);
+            storage.unregisterObserver(m_path, this);
         }
         m_path = path;
         storage.registerObserver(m_path, this);
