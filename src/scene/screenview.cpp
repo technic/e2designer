@@ -136,8 +136,9 @@ void ScreenView::setSelectionModel(QItemSelectionModel* model)
 void ScreenView::deleteSelected()
 {
     // I only delete last clicked one
+    if (m_scene->selectedItems().isEmpty())
+        return;
     QGraphicsItem* item = m_scene->selectedItems().last();
-    // FIXME: size check
     auto w = qgraphicsitem_cast<WidgetGraphicsItem*>(item);
     if (w) {
         QModelIndex i = w->modelIndex();
