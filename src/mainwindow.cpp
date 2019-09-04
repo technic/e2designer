@@ -307,6 +307,16 @@ void MainWindow::editOutputs()
     outputsWindow->show();
 }
 
+void MainWindow::fitWidgetToPixmap()
+{
+    auto* model = SkinRepository::screens();
+    auto index = ui->treeView->selectionModel()->currentIndex();
+    QString path = model->widget(index).pixmap(Property::pixmap);
+    QPixmap pixmap(SkinRepository::instance().resolveFilename(path));
+    if (!pixmap.isNull())
+        model->resizeWidget(index, pixmap.size());
+}
+
 void MainWindow::checkUpdates()
 {
 #ifdef APPIMAGE_UPDATE
@@ -393,6 +403,7 @@ void MainWindow::createActions()
     ui->actionWidget_borders->setChecked(m_view->haveBorders());
     connect(ui->actionWidget_borders, &QAction::triggered, m_view, &ScreenView::displayBorders);
     connect(ui->actionXmlEditor, &QAction::triggered, this, &MainWindow::showXmlEditor);
+    connect(ui->actionFitPixmap, &QAction::triggered, this, &MainWindow::fitWidgetToPixmap);
 
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
     connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);

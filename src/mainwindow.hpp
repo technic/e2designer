@@ -55,6 +55,7 @@ private slots:
     void editColors();
     void editFonts();
     void editOutputs();
+    void fitWidgetToPixmap();
 
     void checkUpdates();
     void setEditorText(const QModelIndex& index);
