@@ -8,6 +8,7 @@
 
 #include "rectselector.hpp"
 #include "repository/skinrepository.hpp"
+#include "repository/pixmapstorage.hpp"
 
 class ScreenView;
 
@@ -15,7 +16,7 @@ class ScreenView;
  * @brief The WidgetView class
  * glue between WidgetItem (data) and GraphicsItem (actual view)
  */
-class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem
+class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem, public PixmapWatcher
 {
     Q_OBJECT
 public:
@@ -44,6 +45,9 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
     void resizeRectEvent(const QRectF& rect) override;
+
+    // PixmapWatcher interface
+    void fileChangedEvent() override;
 
 private:
     // refs

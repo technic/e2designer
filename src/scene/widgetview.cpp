@@ -55,6 +55,12 @@ void WidgetGraphicsItem::resizeRectEvent(const QRectF& r)
     ResizableGraphicsRectItem::resizeRectEvent(r);
 }
 
+void WidgetGraphicsItem::fileChangedEvent()
+{
+    m_pixmap = QPixmap(PixmapWatcher::path());
+    update();
+}
+
 void WidgetGraphicsItem::commitSizeChange(const QSize& size)
 {
     FlagSetter fs(&m_rectChange);
@@ -112,9 +118,12 @@ void WidgetGraphicsItem::updateAttribute(int key)
         //    case Property::font:
         //        m_font = qvariant_cast<QFont>(value);
         //        break;
-    case Property::pixmap:
-        m_pixmap = QPixmap(SkinRepository::instance().resolveFilename(w.pixmap(key)));
+    case Property::pixmap: {
+        auto path = SkinRepository::instance().resolveFilename(w.pixmap(key));
+        PixmapWatcher::setPath(path);
+        m_pixmap = QPixmap(path);
         break;
+    }
         //    case Property::alphatest:
         //        m_alphatest = value.toInt();
         //        break;
