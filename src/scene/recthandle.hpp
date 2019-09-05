@@ -36,4 +36,3 @@ private:
     int m_place;
     bool is_moving;
 };
-

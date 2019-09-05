@@ -13,4 +13,3 @@ public:
     {}
     void writeQuotedCharacters(const QString& text);
 };
-

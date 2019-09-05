@@ -60,4 +60,3 @@ private:
     QPersistentModelIndex m_index;
     QScopedPointer<WidgetObserverRegistrator> m_observer;
 };
-

@@ -11,4 +11,3 @@ protected:
     // QWidget interface
     void wheelEvent(QWheelEvent* event) override;
 };
-

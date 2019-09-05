@@ -26,4 +26,3 @@ public:
                               const QStyleOptionViewItem& option,
                               const QModelIndex& index) const Q_DECL_OVERRIDE;
 };
-

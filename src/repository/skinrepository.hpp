@@ -67,4 +67,3 @@ private:
     bool setError(const QString& message);
     QString m_errorMessage;
 };
-

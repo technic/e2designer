@@ -112,4 +112,3 @@ signals:
 protected:
     void emitValueChanged(const QString& name, const VideoOutput& value) const final;
 };
-

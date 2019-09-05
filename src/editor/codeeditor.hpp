@@ -39,4 +39,3 @@ protected:
 private:
     CodeEditor* m_editor;
 };
-

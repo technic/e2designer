@@ -23,4 +23,3 @@ private:
     Ui::FontListWindow* ui;
     FontsModel* m_model;
 };
-

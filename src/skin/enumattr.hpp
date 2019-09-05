@@ -56,4 +56,3 @@ Q_DECLARE_METATYPE(RenderAttr);
 
 using FlagsAttr = EnumAttr<Property::Flags>;
 Q_DECLARE_METATYPE(FlagsAttr);
-

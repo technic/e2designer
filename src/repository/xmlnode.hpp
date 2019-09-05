@@ -31,4 +31,3 @@ private:
     QXmlStreamAttributes m_attrs;
     QVector<RawXmlElement> m_childs;
 };
-

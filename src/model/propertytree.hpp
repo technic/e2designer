@@ -199,4 +199,3 @@ public:
     QVariant data(int role) const override;
     QVariant convert(const QVariant& value, int role) override;
 };
-

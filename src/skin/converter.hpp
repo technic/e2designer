@@ -408,4 +408,3 @@ protected:
 private:
     int m_type;
 };
-

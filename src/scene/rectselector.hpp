@@ -25,4 +25,3 @@ private:
 
     Coordinate::Type m_xanchor, m_yanchor;
 };
-

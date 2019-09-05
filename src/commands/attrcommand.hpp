@@ -98,4 +98,3 @@ private:
     PositionAttr m_pos;
     SizeAttr m_size;
 };
-

@@ -26,4 +26,3 @@ private:
     // own
     Ui::OutputsListWindow* ui;
 };
-

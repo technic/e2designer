@@ -110,4 +110,3 @@ signals:
 protected:
     void emitValueChanged(const QString& name, const Color& value) const final;
 };
-

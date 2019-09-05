@@ -200,4 +200,3 @@ QString NamedList<T>::getName(const typename T::Value value) const
     }
     return QString();
 }
-

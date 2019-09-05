@@ -105,4 +105,3 @@ private:
 
     QPixmap loadPixmap(const QString& fname);
 };
-

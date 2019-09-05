@@ -20,4 +20,3 @@ private:
     bool m_previous_value;
     bool* m_flag;
 };
-

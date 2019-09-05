@@ -252,4 +252,3 @@ private:
     ScreensModel* m_model;
     QMap<QString, QString> m_otherAttributes;
 };
-

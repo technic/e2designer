@@ -112,4 +112,3 @@ private:
     WindowStyle* m_style;
     ColorsModel& m_colors;
 };
-

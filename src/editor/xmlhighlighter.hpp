@@ -47,4 +47,3 @@ private:
     QTextCharFormat attrValueFormat;
     QTextCharFormat commentFormat;
 };
-

@@ -34,4 +34,3 @@ inline void deserialize(const QString& str, FontAttr& font)
 {
     font = FontAttr(str);
 }
-

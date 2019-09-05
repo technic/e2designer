@@ -61,4 +61,3 @@ inline void deserialize(const QString& str, ColorAttr& color)
 {
     color = ColorAttr(str);
 }
-

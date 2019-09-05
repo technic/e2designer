@@ -34,4 +34,3 @@ QString enumToStr(T value)
 {
     return QMetaEnum::fromType<T>().valueToKey(static_cast<int>(value));
 }
-

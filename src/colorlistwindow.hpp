@@ -60,4 +60,3 @@ private:
     QDataWidgetMapper* m_mapper;
     QPersistentModelIndex m_currentIndex; // TODO: remove
 };
-

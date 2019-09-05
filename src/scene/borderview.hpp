@@ -15,4 +15,3 @@ private:
     BorderSet* m_borders;
     QRect m_rect;
 };
-

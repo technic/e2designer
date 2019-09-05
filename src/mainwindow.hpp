@@ -85,4 +85,3 @@ private:
     //	QSortFilterProxyModel *m_topfilter;
     //	QSortFilterProxyModel *m_headerfilter;
 };
-

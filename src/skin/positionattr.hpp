@@ -87,4 +87,3 @@ inline void deserialize(const QString& str, PositionAttr& pos)
 {
     pos = PositionAttr(str);
 }
-

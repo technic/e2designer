@@ -49,4 +49,3 @@ private:
     int m_bs;
     QVector<Border> m_borders;
 };
-

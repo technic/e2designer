@@ -79,4 +79,3 @@ inline void deserialize(const QString& str, SizeAttr& value)
 {
     value = SizeAttr(str);
 }
-

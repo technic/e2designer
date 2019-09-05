@@ -49,4 +49,3 @@ public:
         Q_UNUSED(object);
     }
 };
-

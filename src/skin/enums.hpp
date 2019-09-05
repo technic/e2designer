@@ -172,4 +172,3 @@ public:
     Q_ENUM(Enum)
 };
 using HAlign = PropertyHAlign::Enum;
-

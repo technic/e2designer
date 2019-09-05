@@ -220,4 +220,3 @@ typename MixinTreeNode<T>::Node* MixinTreeNode<T>::Iterator::node()
         return nullptr;
     }
 }
-

@@ -15,4 +15,3 @@ public:
     SkinEnumList list() const;
     void setList(SkinEnumList value);
 };
-

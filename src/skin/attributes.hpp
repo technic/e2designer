@@ -15,4 +15,3 @@ void deserialize(const QString& str, bool& b);
 
 QString serialize(const QVariant& value);
 void deserialize(const QString& str, QVariant& value);
-

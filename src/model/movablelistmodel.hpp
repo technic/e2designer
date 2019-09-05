@@ -34,4 +34,3 @@ private:
     void encodeRows(const QModelIndexList& indexes, QDataStream& stream) const;
     QList<int> decodeRows(QDataStream& stream) const;
 };
-

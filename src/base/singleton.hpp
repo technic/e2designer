@@ -23,4 +23,3 @@ private:
     // You should derive from this class to create an instance
     SingletonMixin() = default;
 };
-

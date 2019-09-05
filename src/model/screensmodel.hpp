@@ -240,4 +240,3 @@ private:
     // Holds ownership of items until they are passed to the model
     QVector<WidgetData*> m_items;
 };
-

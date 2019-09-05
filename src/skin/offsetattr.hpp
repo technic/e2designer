@@ -23,4 +23,3 @@ inline void deserialize(const QString& str, OffsetAttr& offset)
 {
     offset = OffsetAttr(str);
 }
-
