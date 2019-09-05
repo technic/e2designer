@@ -19,7 +19,8 @@ void PixmapStorage::unregisterObserver(const QString& path, PixmapWatcher* obser
     Q_ASSERT(m_observers.contains(path, observer));
 
     m_observers.remove(path, observer);
-    m_watcher.removePath(path);
+    if (!m_observers.contains(path))
+        m_watcher.removePath(path);
 }
 
 void PixmapStorage::onFileChanged(const QString& path)

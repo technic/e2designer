@@ -29,6 +29,10 @@ private:
     QMultiHash<QString, PixmapWatcher*> m_observers;
 };
 
+/**
+ * @brief Allows to watch a pixmap file
+ * Inherite from this class to act on file changed event
+ */
 class PixmapWatcher
 {
     friend class PixmapStorage;
@@ -47,7 +51,7 @@ public:
         m_path = path;
         storage.registerObserver(m_path, this);
     }
-    ~PixmapWatcher() { PixmapStorage::instance().unregisterObserver(m_path, this); }
+    virtual ~PixmapWatcher() { PixmapStorage::instance().unregisterObserver(m_path, this); }
 
 protected:
     /// Override this function to handle file change events
@@ -56,4 +60,3 @@ protected:
 private:
     QString m_path;
 };
-
