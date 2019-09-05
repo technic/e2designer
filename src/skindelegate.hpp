@@ -1,5 +1,4 @@
-#ifndef SKINDELEGATE_H
-#define SKINDELEGATE_H
+#pragma once
 
 #include <QStyledItemDelegate>
 
@@ -28,4 +27,3 @@ public:
                               const QModelIndex& index) const Q_DECL_OVERRIDE;
 };
 
-#endif // SKINDELEGATE_H

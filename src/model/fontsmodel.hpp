@@ -1,5 +1,4 @@
-#ifndef FONTSMODEL_H
-#define FONTSMODEL_H
+#pragma once
 
 #include "namedlist.hpp"
 #include "repository/xmlnode.hpp"
@@ -102,4 +101,3 @@ protected:
 private:
 };
 
-#endif // FONTSMODEL_H

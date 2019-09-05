@@ -1,5 +1,4 @@
-#ifndef BORDERVIEW_H
-#define BORDERVIEW_H
+#pragma once
 
 #include "model/borderset.hpp"
 #include <QGraphicsRectItem>
@@ -17,4 +16,3 @@ private:
     QRect m_rect;
 };
 
-#endif // BORDERVIEW_H

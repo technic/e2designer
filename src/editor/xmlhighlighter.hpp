@@ -1,5 +1,4 @@
-#ifndef XMLHIGHLIGHTER_H
-#define XMLHIGHLIGHTER_H
+#pragma once
 
 #include <QSyntaxHighlighter>
 
@@ -49,4 +48,3 @@ private:
     QTextCharFormat commentFormat;
 };
 
-#endif // XMLHIGHLIGHTER_H

@@ -1,5 +1,4 @@
-#ifndef ATTRCOMMAND_H
-#define ATTRCOMMAND_H
+#pragma once
 
 #include "skin/positionattr.hpp"
 #include "skin/sizeattr.hpp"
@@ -100,4 +99,3 @@ private:
     SizeAttr m_size;
 };
 
-#endif // ATTRCOMMAND_H

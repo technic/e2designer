@@ -1,5 +1,4 @@
-#ifndef WIDGETVIEW_H
-#define WIDGETVIEW_H
+#pragma once
 
 #include <QFont>
 #include <QGraphicsPixmapItem>
@@ -107,4 +106,3 @@ private:
     QPixmap loadPixmap(const QString& fname);
 };
 
-#endif // WIDGETVIEW_H

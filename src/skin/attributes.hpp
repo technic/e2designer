@@ -1,5 +1,4 @@
-#ifndef ATTRIBUTES_HPP
-#define ATTRIBUTES_HPP
+#pragma once
 
 #include <QtGlobal>
 #include <QColor>
@@ -17,4 +16,3 @@ void deserialize(const QString& str, bool& b);
 QString serialize(const QVariant& value);
 void deserialize(const QString& str, QVariant& value);
 
-#endif // ATTRIBUTES_HPP

@@ -1,5 +1,4 @@
-#ifndef PIXMAPSTORAGE_H
-#define PIXMAPSTORAGE_H
+#pragma once
 
 #include <QObject>
 #include <QPixmapCache>
@@ -58,4 +57,3 @@ private:
     QString m_path;
 };
 
-#endif // PIXMAPSTORAGE_H

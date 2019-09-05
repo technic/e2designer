@@ -1,5 +1,4 @@
-#ifndef WINDOWSTYLE_H
-#define WINDOWSTYLE_H
+#pragma once
 
 #include "skin/positionattr.hpp"
 #include "skin/fontattr.hpp"
@@ -114,4 +113,3 @@ private:
     ColorsModel& m_colors;
 };
 
-#endif // WINDOWSTYLE_H

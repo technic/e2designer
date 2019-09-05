@@ -1,5 +1,4 @@
-#ifndef COLORLISTBOX_H
-#define COLORLISTBOX_H
+#pragma once
 
 #include <QComboBox>
 
@@ -18,4 +17,3 @@ private:
     void populateList();
 };
 
-#endif // COLORLISTBOX_H

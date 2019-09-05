@@ -1,5 +1,4 @@
-#ifndef OUTPUTSMODEL_HPP
-#define OUTPUTSMODEL_HPP
+#pragma once
 
 #include "namedlist.hpp"
 #include "movablelistmodel.hpp"
@@ -114,4 +113,3 @@ protected:
     void emitValueChanged(const QString& name, const VideoOutput& value) const final;
 };
 
-#endif // OUTPUTSMODEL_HPP

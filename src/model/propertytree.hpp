@@ -1,5 +1,4 @@
-#ifndef PROPERTYTREE_HPP
-#define PROPERTYTREE_HPP
+#pragma once
 
 #include "base/tree.hpp"
 #include "skin/widgetdata.hpp"
@@ -201,4 +200,3 @@ public:
     QVariant convert(const QVariant& value, int role) override;
 };
 
-#endif // PROPERTYTREE_HPP

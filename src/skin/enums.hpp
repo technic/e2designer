@@ -1,5 +1,4 @@
-#ifndef ENUMS_HPP
-#define ENUMS_HPP
+#pragma once
 
 #include <QMetaEnum>
 #include <QString>
@@ -174,4 +173,3 @@ public:
 };
 using HAlign = PropertyHAlign::Enum;
 
-#endif // ENUMS_HPP

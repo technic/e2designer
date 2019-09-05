@@ -1,5 +1,4 @@
-#ifndef UNIQUEID_H
-#define UNIQUEID_H
+#pragma once
 
 #include <QtGlobal>
 #include <limits>
@@ -54,4 +53,3 @@ private:
     uint m_id;
 };
 
-#endif // UNIQUEID_H

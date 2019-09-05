@@ -1,5 +1,4 @@
-#ifndef TYPELIST_HPP
-#define TYPELIST_HPP
+#pragma once
 
 #include <limits>
 #include <type_traits>
@@ -51,4 +50,3 @@ public:
     }
 };
 
-#endif // TYPELIST_HPP

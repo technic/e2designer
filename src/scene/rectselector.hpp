@@ -1,5 +1,4 @@
-#ifndef RECTSELECTOR_H
-#define RECTSELECTOR_H
+#pragma once
 
 #include "recthandle.hpp"
 #include "skin/positionattr.hpp"
@@ -27,4 +26,3 @@ private:
     Coordinate::Type m_xanchor, m_yanchor;
 };
 
-#endif // RECTSELECTOR_H

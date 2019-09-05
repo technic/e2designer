@@ -1,5 +1,4 @@
-#ifndef FLAGSETTER_HPP
-#define FLAGSETTER_HPP
+#pragma once
 
 #include <QtGlobal>
 
@@ -22,4 +21,3 @@ private:
     bool* m_flag;
 };
 
-#endif // FLAGSETTER_HPP

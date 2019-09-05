@@ -1,5 +1,4 @@
-#ifndef COLORATTR_HPP
-#define COLORATTR_HPP
+#pragma once
 
 #include <QMetaType>
 #include <QRgb>
@@ -63,4 +62,3 @@ inline void deserialize(const QString& str, ColorAttr& color)
     color = ColorAttr(str);
 }
 
-#endif // COLORATTR_HPP

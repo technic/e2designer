@@ -1,5 +1,4 @@
-#ifndef MOVABLELISTMODEL_HPP
-#define MOVABLELISTMODEL_HPP
+#pragma once
 
 #include <QAbstractTableModel>
 
@@ -36,4 +35,3 @@ private:
     QList<int> decodeRows(QDataStream& stream) const;
 };
 
-#endif // MOVABLELISTMODEL_HPP

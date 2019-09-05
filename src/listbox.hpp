@@ -1,5 +1,4 @@
-#ifndef LISTBOX_H
-#define LISTBOX_H
+#pragma once
 
 #include "model/propertytree.hpp"
 #include <QComboBox>
@@ -17,4 +16,3 @@ public:
     void setList(SkinEnumList value);
 };
 
-#endif // LISTBOX_H

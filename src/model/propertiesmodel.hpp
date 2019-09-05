@@ -1,5 +1,4 @@
-#ifndef PROPERTIESMODEL_H
-#define PROPERTIESMODEL_H
+#pragma once
 
 #include "skin/widgetdata.hpp"
 #include "propertytree.hpp"
@@ -62,4 +61,3 @@ private:
     QScopedPointer<WidgetObserverRegistrator> m_observer;
 };
 
-#endif // PROPERTIESMODEL_H

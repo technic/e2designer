@@ -1,5 +1,4 @@
-#ifndef SKINREPOSITORY_H
-#define SKINREPOSITORY_H
+#pragma once
 
 #include "base/singleton.hpp"
 #include "model/outputsmodel.hpp"
@@ -69,4 +68,3 @@ private:
     QString m_errorMessage;
 };
 
-#endif // SKINREPOSITORY_H

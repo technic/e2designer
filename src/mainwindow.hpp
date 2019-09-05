@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QGraphicsScene>
 #include <QMainWindow>
@@ -87,4 +86,3 @@ private:
     //	QSortFilterProxyModel *m_headerfilter;
 };
 
-#endif // MAINWINDOW_H

@@ -1,5 +1,4 @@
-#ifndef SCREENSMODEL_H
-#define SCREENSMODEL_H
+#pragma once
 
 #include "skin/widgetdata.hpp"
 #include "model/windowstyle.hpp"
@@ -242,4 +241,3 @@ private:
     QVector<WidgetData*> m_items;
 };
 
-#endif // SCREENSMODEL_H

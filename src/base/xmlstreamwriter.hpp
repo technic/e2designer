@@ -1,5 +1,4 @@
-#ifndef XMLSTREAMWRITER_HPP
-#define XMLSTREAMWRITER_HPP
+#pragma once
 
 #include <QXmlStreamWriter>
 
@@ -15,4 +14,3 @@ public:
     void writeQuotedCharacters(const QString& text);
 };
 
-#endif // XMLSTREAMWRITER_HPP

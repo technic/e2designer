@@ -1,5 +1,4 @@
-#ifndef CONVERTER_HPP
-#define CONVERTER_HPP
+#pragma once
 
 #include <QString>
 #include <QVariant>
@@ -410,4 +409,3 @@ private:
     int m_type;
 };
 
-#endif // CONVERTER_HPP

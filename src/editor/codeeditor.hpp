@@ -1,5 +1,4 @@
-#ifndef CODEEDITOR_H
-#define CODEEDITOR_H
+#pragma once
 
 #include <QPlainTextEdit>
 
@@ -41,4 +40,3 @@ private:
     CodeEditor* m_editor;
 };
 
-#endif // CODEEDITOR_H

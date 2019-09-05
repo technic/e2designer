@@ -1,5 +1,4 @@
-#ifndef META_HPP
-#define META_HPP
+#pragma once
 
 #include <QMetaType>
 #include <QMetaEnum>
@@ -36,4 +35,3 @@ QString enumToStr(T value)
     return QMetaEnum::fromType<T>().valueToKey(static_cast<int>(value));
 }
 
-#endif // META_HPP

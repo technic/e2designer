@@ -1,5 +1,4 @@
-#ifndef COLORSMODEL_H
-#define COLORSMODEL_H
+#pragma once
 
 #include "namedlist.hpp"
 #include "movablelistmodel.hpp"
@@ -112,4 +111,3 @@ protected:
     void emitValueChanged(const QString& name, const Color& value) const final;
 };
 
-#endif // COLORSMODEL_H

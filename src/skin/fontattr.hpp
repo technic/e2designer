@@ -1,5 +1,4 @@
-#ifndef FONTATTR_HPP
-#define FONTATTR_HPP
+#pragma once
 
 #include <QString>
 #include <QFont>
@@ -36,4 +35,3 @@ inline void deserialize(const QString& str, FontAttr& font)
     font = FontAttr(str);
 }
 
-#endif // FONTATTR_HPP

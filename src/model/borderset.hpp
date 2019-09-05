@@ -1,5 +1,4 @@
-#ifndef BORDERSET_H
-#define BORDERSET_H
+#pragma once
 
 #include "repository/xmlnode.hpp"
 
@@ -51,4 +50,3 @@ private:
     QVector<Border> m_borders;
 };
 
-#endif // BORDERSET_H

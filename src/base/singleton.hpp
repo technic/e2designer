@@ -1,5 +1,4 @@
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#pragma once
 
 #include <QtGlobal>
 
@@ -25,4 +24,3 @@ private:
     SingletonMixin() = default;
 };
 
-#endif // SINGLETON_H

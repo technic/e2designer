@@ -1,5 +1,4 @@
-#ifndef FOREGROUNDWIDGET_H
-#define FOREGROUNDWIDGET_H
+#pragma once
 
 #include <QGraphicsRectItem>
 
@@ -15,4 +14,3 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 };
 
-#endif // FOREGROUNDWIDGET_H

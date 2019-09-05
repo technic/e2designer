@@ -1,5 +1,4 @@
-#ifndef TREE_H
-#define TREE_H
+#pragma once
 
 #include <QList>
 #include <QtGlobal>
@@ -222,4 +221,3 @@ typename MixinTreeNode<T>::Node* MixinTreeNode<T>::Iterator::node()
     }
 }
 
-#endif // TREE_H

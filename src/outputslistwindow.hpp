@@ -1,5 +1,4 @@
-#ifndef OUTPUTSLISTWINDOW_HPP
-#define OUTPUTSLISTWINDOW_HPP
+#pragma once
 
 #include <QDialog>
 
@@ -28,4 +27,3 @@ private:
     Ui::OutputsListWindow* ui;
 };
 
-#endif // OUTPUTSLISTWINDOW_HPP

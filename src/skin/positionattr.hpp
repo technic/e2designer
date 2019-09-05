@@ -1,5 +1,4 @@
-#ifndef POSITIONATTR_HPP
-#define POSITIONATTR_HPP
+#pragma once
 
 #include <QString>
 #include <QPair>
@@ -89,4 +88,3 @@ inline void deserialize(const QString& str, PositionAttr& pos)
     pos = PositionAttr(str);
 }
 
-#endif // POSITIONATTR_HPP

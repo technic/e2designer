@@ -1,5 +1,4 @@
-#ifndef SCENEVIEW_H
-#define SCENEVIEW_H
+#pragma once
 
 #include <QGraphicsView>
 
@@ -13,4 +12,3 @@ protected:
     void wheelEvent(QWheelEvent* event) override;
 };
 
-#endif // SCENEVIEW_H

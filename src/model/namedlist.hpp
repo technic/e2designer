@@ -1,5 +1,4 @@
-#ifndef NAMEDLIST_H
-#define NAMEDLIST_H
+#pragma once
 
 #include <QVector>
 
@@ -202,4 +201,3 @@ QString NamedList<T>::getName(const typename T::Value value) const
     return QString();
 }
 
-#endif // NAMEDLIST_H

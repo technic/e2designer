@@ -1,5 +1,4 @@
-#ifndef RECTHANDLE_H
-#define RECTHANDLE_H
+#pragma once
 
 #include <QGraphicsRectItem>
 
@@ -38,4 +37,3 @@ private:
     bool is_moving;
 };
 
-#endif // RECTHANDLE_H

@@ -1,5 +1,4 @@
-#ifndef SCREENVIEW_H
-#define SCREENVIEW_H
+#pragma once
 
 #include <QPointer>
 #include <QGraphicsScene>
@@ -76,4 +75,3 @@ private:
     bool m_showBorders;
 };
 
-#endif // SCREENVIEW_H

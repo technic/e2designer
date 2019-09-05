@@ -1,5 +1,4 @@
-#ifndef COLORLISTWINDOW_H
-#define COLORLISTWINDOW_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QDataWidgetMapper>
@@ -62,4 +61,3 @@ private:
     QPersistentModelIndex m_currentIndex; // TODO: remove
 };
 
-#endif // COLORLISTWINDOW_H

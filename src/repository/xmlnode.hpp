@@ -1,5 +1,4 @@
-#ifndef XMLNODE_H
-#define XMLNODE_H
+#pragma once
 
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -33,4 +32,3 @@ private:
     QVector<RawXmlElement> m_childs;
 };
 
-#endif // XMLNODE_H

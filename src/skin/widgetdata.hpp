@@ -1,5 +1,4 @@
-#ifndef WIDGETDATA_H
-#define WIDGETDATA_H
+#pragma once
 
 #include "base/tree.hpp"
 #include "repository/xmlnode.hpp"
@@ -254,4 +253,3 @@ private:
     QMap<QString, QString> m_otherAttributes;
 };
 
-#endif // WIDGETDATA_H

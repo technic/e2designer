@@ -1,5 +1,4 @@
-#ifndef SIZEATTR_HPP
-#define SIZEATTR_HPP
+#pragma once
 
 #include <QSize>
 #include <QString>
@@ -81,4 +80,3 @@ inline void deserialize(const QString& str, SizeAttr& value)
     value = SizeAttr(str);
 }
 
-#endif // SIZEATTR_HPP

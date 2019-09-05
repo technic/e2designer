@@ -1,5 +1,4 @@
-#ifndef FONTLISTWINDOW_H
-#define FONTLISTWINDOW_H
+#pragma once
 
 #include "model/fontsmodel.hpp"
 #include <QDialog>
@@ -25,4 +24,3 @@ private:
     FontsModel* m_model;
 };
 
-#endif // FONTLISTWINDOW_H

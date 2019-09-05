@@ -1,5 +1,4 @@
-#ifndef BACKGROUNDPIXMAP_H
-#define BACKGROUNDPIXMAP_H
+#pragma once
 
 #include <QGraphicsPixmapItem>
 
@@ -27,4 +26,3 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) final;
 };
 
-#endif // BACKGROUNDPIXMAP_H

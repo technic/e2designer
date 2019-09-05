@@ -1,5 +1,4 @@
-#ifndef OFFSETATTR_HPP
-#define OFFSETATTR_HPP
+#pragma once
 
 #include <QString>
 #include <QVariant>
@@ -25,4 +24,3 @@ inline void deserialize(const QString& str, OffsetAttr& offset)
     offset = OffsetAttr(str);
 }
 
-#endif // OFFSETATTR_HPP

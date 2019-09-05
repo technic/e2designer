@@ -1,5 +1,4 @@
-#ifndef ENUMATTR_HPP
-#define ENUMATTR_HPP
+#pragma once
 
 #include "skin/enums.hpp"
 #include <QString>
@@ -58,4 +57,3 @@ Q_DECLARE_METATYPE(RenderAttr);
 using FlagsAttr = EnumAttr<Property::Flags>;
 Q_DECLARE_METATYPE(FlagsAttr);
 
-#endif // ENUMATTR_HPP
