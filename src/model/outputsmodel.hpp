@@ -57,7 +57,6 @@ public:
     void toXml(QXmlStreamWriter& xml) const;
 
     inline VideoOutput getOutput(int id = 0) const { return getValue(QString::number(id)); }
-    void clear() { removeItems(0, itemsCount()); }
 };
 
 class OutputsModel : public MovableListModel, public VideoOutputRepository
@@ -99,6 +98,7 @@ public:
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    void clear() { removeItems(0, itemsCount()); }
 
     bool moveRows(const QModelIndex& sourceParent,
                   int sourceRow,

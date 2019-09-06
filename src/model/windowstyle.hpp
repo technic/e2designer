@@ -83,6 +83,7 @@ public:
     void toXml(QXmlStreamWriter& xml) const;
     inline const WindowStyle getStyle(int id) { return getValue(QString::number(id)); }
     void clear() { removeItems(0, itemsCount()); }
+
 signals:
     void styleChanged(const QString& name, const WindowStyle& value) const;
 

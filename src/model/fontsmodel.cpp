@@ -205,11 +205,11 @@ Qt::ItemFlags FontsModel::flags(const QModelIndex& index) const
     return flags;
 }
 
-bool FontsModel::append(const Font& f)
+bool FontsModel::insert(int row, const Font& item)
 {
-    if (canInsertItem(f)) {
-        beginInsertRows(QModelIndex(), itemsCount(), itemsCount());
-        appendItem(f);
+    if (canInsertItem(item)) {
+        beginInsertRows(QModelIndex(), row, row);
+        insertItem(row, item);
         endInsertRows();
         return true;
     }

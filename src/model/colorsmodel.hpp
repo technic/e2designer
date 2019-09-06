@@ -86,6 +86,7 @@ public:
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    void clear() { removeRows(0, rowCount()); }
 
     bool moveRows(const QModelIndex& sourceParent,
                   int sourceRow,

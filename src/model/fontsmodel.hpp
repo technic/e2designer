@@ -83,10 +83,12 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     // Add data:
-    bool append(const Font& f);
+    bool insert(int row, const Font& f);
+    bool append(const Font& f) { return insert(itemsCount(), f); }
 
     // Remove data:
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+    void clear() { removeRows(0, rowCount()); }
 
     // Xml
     void fromXml(QXmlStreamReader& xml);
