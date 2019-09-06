@@ -2,12 +2,6 @@
 #include <QDebug>
 
 VideoOutputRepository::VideoOutputRepository() = default;
-void VideoOutputRepository::appendFromXml(QXmlStreamReader& xml)
-{
-    VideoOutput out;
-    out.fromXml(xml);
-    appendItem(out);
-}
 
 void VideoOutputRepository::toXml(QXmlStreamWriter& xml) const
 {
@@ -205,6 +199,13 @@ bool OutputsModel::moveRows(const QModelIndex& sourceParent,
     }
     qWarning() << "Requested move is not allowed!";
     return false;
+}
+
+void OutputsModel::appendFromXml(QXmlStreamReader& xml)
+{
+    VideoOutput out;
+    out.fromXml(xml);
+    append(out);
 }
 
 void OutputsModel::emitValueChanged(const QString& name, const VideoOutput& value) const
