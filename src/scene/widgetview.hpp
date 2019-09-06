@@ -8,8 +8,20 @@
 #include "rectselector.hpp"
 #include "repository/skinrepository.hpp"
 #include "repository/pixmapstorage.hpp"
+#include "base/typelist.hpp"
 
 class ScreenView;
+class WidgetGraphicsItem;
+
+using GraphicsItemClasses = TypeList<WidgetGraphicsItem>;
+
+template<typename T>
+static inline int getGraphicsItemType()
+{
+    // It's OK to cast here, because index can not be very large
+    auto index = static_cast<int>(GraphicsItemClasses::getIndex<T>());
+    return QGraphicsItem::UserType + index + 1;
+}
 
 /**
  * @brief The WidgetView class
@@ -21,11 +33,7 @@ class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem, pub
 public:
     WidgetGraphicsItem(ScreenView* sreen, QModelIndex index, WidgetGraphicsItem* parent);
 
-    enum
-    {
-        Type = UserType + 1
-    };
-    int type() const override { return Type; }
+    int type() const override { return getGraphicsItemType<decltype(this)>(); }
     QPersistentModelIndex modelIndex() const { return m_data; }
 
     // QGraphicsItem interface
