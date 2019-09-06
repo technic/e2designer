@@ -234,13 +234,13 @@ bool ColorsModel::moveRows(const QModelIndex& sourceParent,
     }
     bool allowed = beginMoveRows(
       sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild);
-    if (!allowed) {
-        qWarning() << "Requested move is not allowed!";
-        return false;
+    if (allowed) {
+        moveItems(sourceRow, count, destinationChild);
+        endMoveRows();
+        return true;
     }
-    moveItems(sourceRow, count, destinationChild);
-    endMoveRows();
-    return true;
+    qWarning() << "Requested move is not allowed!";
+    return false;
 }
 
 void ColorsModel::fromXml(QXmlStreamReader& xml)
