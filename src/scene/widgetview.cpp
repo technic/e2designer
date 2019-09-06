@@ -107,59 +107,18 @@ void WidgetGraphicsItem::updateAttribute(int key)
     case Property::zPosition:
         setZValue(w.zPosition());
         break;
-        //    case Property::transparent:
-        //        m_transparent = value.toInt();
-        //        break;
-        //    case Property::text:
-        //        m_text = value.toString();
-        //        break;
-        //    case Property::font:
-        //        m_font = qvariant_cast<QFont>(value);
-        //        break;
     case Property::pixmap: {
         auto path = SkinRepository::instance().resolveFilename(w.pixmap(key));
         PixmapWatcher::setPath(path);
         m_pixmap = QPixmap(path);
         break;
     }
-        //    case Property::alphatest:
-        //        m_alphatest = value.toInt();
-        //        break;
-        //    case Property::scale:
-        //        m_scale = value.toInt();
-        //        break;
     case Property::backgroundColor:
         m_background_color = w.getQColor(key);
         break;
     case Property::foregroundColor:
         m_foreground_color = w.getQColor(key);
         break;
-        //    case Property::valign:
-        //        m_valign = value.toInt();
-        //        break;
-        //    case Property::halign:
-        //        m_halign = value.toInt();
-        //        break;
-        //    case Property::borderColor:
-        //        m_border_color = qvariant_cast<QColor>(value);
-        //        break;
-        //    case Property::borderWidth:
-        //        m_border_width = value.toInt();
-        //        break;
-        //    case Property::orientation:
-        //        m_orientation = value.toInt();
-        //        break;
-        //    case Property::render:
-        //        m_render = value.toInt();
-        //        break;
-        //    case Property::previewRender:
-        //        m_preview_render = value.toInt();
-        //        break;
-        //    case Property::previewValue:
-        //        m_preview = value;
-        //        break;
-        //    default:
-        //        return;
     }
     update();
 }

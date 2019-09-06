@@ -60,8 +60,6 @@ private:
     //    // Common
     QColor m_foreground_color;
     QColor m_background_color;
-    //    bool m_transparent;
-    //    int m_border_width;
     //    QColor m_border_color;
 
     //    // Label
