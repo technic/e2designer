@@ -28,8 +28,8 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
     painter.fillRect(event->rect(), QColor(Qt::lightGray).lighter(120));
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
-    int top = (int)blockBoundingGeometry(block).translated(contentOffset()).top();
-    int bottom = top + (int)blockBoundingRect(block).height();
+    int top = int(blockBoundingGeometry(block).translated(contentOffset()).top());
+    int bottom = top + int(blockBoundingRect(block).height());
 
     while (block.isValid() && top <= event->rect().bottom()) {
         if (block.isVisible() && bottom >= event->rect().top()) {
@@ -41,7 +41,7 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 
         block = block.next();
         top = bottom;
-        bottom = top + (int)blockBoundingRect(block).height();
+        bottom = top + int(blockBoundingRect(block).height());
         ++blockNumber;
     }
 }
