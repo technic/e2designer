@@ -39,11 +39,13 @@ public:
     bool open(const QString& path);
     bool save();
     bool saveAs(const QString& path);
+    bool create(const QString& path);
     bool isOpened() const;
 
     bool fromXmlDocument(QXmlStreamReader& xml);
     void fromXml(QXmlStreamReader& xml);
     void toXml(XmlStreamWriter& xml) const;
+    QString skinFilePath();
     QString previewFilePath();
 
     QString lastError() const { return m_errorMessage; }
@@ -66,4 +68,6 @@ private:
     // Error handling
     bool setError(const QString& message);
     QString m_errorMessage;
+
+    void clear();
 };

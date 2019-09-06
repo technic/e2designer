@@ -136,6 +136,25 @@ bool SkinRepository::saveAs(const QString& path)
     return saved;
 }
 
+bool SkinRepository::create(const QString& path)
+{
+    clear();
+    m_directory = QDir();
+    emit filePathChanged(QString());
+
+    auto dir = QDir(path);
+    if (QFileInfo(dir, "skin.xml").exists() || QFileInfo(dir, "preview.xml").exists()) {
+        return setError("This folder already contains a skin");
+    }
+    m_directory = dir;
+    bool saved = save();
+    if (!saved) {
+        m_directory = QDir();
+    }
+    emit filePathChanged(m_directory.filePath("skin.xml"));
+    return saved;
+}
+
 bool SkinRepository::isOpened() const
 {
     // This is default path
@@ -146,12 +165,7 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "skin");
 
-    m_screensModel->clear();
-    m_outputRepository.clear();
-    m_roles.setStyle(nullptr);
-    m_windowStyles.clear();
-    m_colors->removeRows(0, m_colors->rowCount());
-    m_fonts->removeRows(0, m_fonts->rowCount());
+    clear();
 
     while (nextXmlChild(xml)) {
         qDebug() << xml.tokenString() << xml.name() << xml.text() << xml.attributes().value("name");
@@ -198,13 +212,18 @@ void SkinRepository::toXml(XmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-QString SkinRepository::previewFilePath()
+QString SkinRepository::skinFilePath() const
 {
-    return dir().filePath("preview.xml");
+    return m_directory.filePath("skin.xml");
+}
+
+QString SkinRepository::previewFilePath() const
+{
+    return m_directory.filePath("preview.xml");
 }
 
 /**
- * @brief Save error message
+ * @brief Set error message
  * @param message that can be displayed to the user
  * @return always returns false, for use with return statement
  */
@@ -213,4 +232,14 @@ bool SkinRepository::setError(const QString& message)
     m_errorMessage = message;
     qWarning() << "Error occured:" << message;
     return false;
+}
+
+void SkinRepository::clear()
+{
+    m_screensModel->clear();
+    m_outputRepository.clear();
+    m_roles.setStyle(nullptr);
+    m_windowStyles.clear();
+    m_colors->clear();
+    m_fonts->clear();
 }

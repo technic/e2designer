@@ -143,8 +143,30 @@ void MainWindow::onCurrentSelectionChanged(const QModelIndex& index, const QMode
 
 void MainWindow::newSkin()
 {
+    auto& model = SkinRepository::instance();
     if (confirmClose()) {
-        // TODO: create new skin
+        QSettings settings(QCoreApplication::organizationName(),
+                           QCoreApplication::applicationName());
+        QString startdir = settings.value("lastdir").toString();
+        const QString fname = QFileDialog::getSaveFileName(this,
+                                                           tr("New skin file"),
+                                                           startdir + "/skin.xml",
+                                                           tr("Skin file (skin.xml)"),
+                                                           nullptr/*,
+                                                           QFileDialog::DontUseNativeDialog*/);
+        if (fname.isNull())
+            return;
+
+        QString dir = QFileInfo(fname).absoluteDir().path();
+        qDebug() << "creating new skin in" << dir;
+        settings.setValue("lastdir", dir);
+        bool ok = model.create(dir);
+        if (!ok) {
+            QMessageBox::warning(
+              this,
+              tr("Error"),
+              tr("Failed to create skin in %1:\n%2").arg(dir).arg(model.lastError()));
+        }
     }
 }
 
@@ -154,8 +176,6 @@ void MainWindow::open()
         QSettings settings(QCoreApplication::organizationName(),
                            QCoreApplication::applicationName());
         QString startdir = settings.value("lastdir").toString();
-        //		if (startdir)
-        //		QDir::home()
         const QString fname =
           QFileDialog::getOpenFileName(this, tr("Open skin"), startdir, tr("Skin file (skin.xml)"));
         if (!fname.isNull()) {
