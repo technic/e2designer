@@ -250,10 +250,6 @@ void ColorsModel::fromXml(QXmlStreamReader& xml)
     endResetModel();
 }
 
-void ColorsModel::toXml(QXmlStreamWriter& xml) const
-{
-    ColorsList::toXml(xml);
-}
 void ColorsModel::emitValueChanged(const QString& name, const Color& value) const
 {
     emit valueChanged(name, value.value());

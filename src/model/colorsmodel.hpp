@@ -96,7 +96,6 @@ public:
 
     // Xml:
     void fromXml(QXmlStreamReader& xml);
-    void toXml(QXmlStreamWriter& xml) const;
 
     // Get value by name:
     //    inline bool contains(QString name) { return
