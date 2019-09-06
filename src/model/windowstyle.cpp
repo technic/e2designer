@@ -118,8 +118,10 @@ void WindowStyle::setColor(WindowStyleColor::ColorRole role, const ColorAttr& co
 
 // WindowStylesList
 
-void WindowStylesList::append(WindowStyle style)
+void WindowStylesList::appendFromXml(QXmlStreamReader& xml)
 {
+    WindowStyle style;
+    style.fromXml(xml);
     appendItem(style);
 }
 

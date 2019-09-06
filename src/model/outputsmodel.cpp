@@ -2,7 +2,7 @@
 #include <QDebug>
 
 VideoOutputRepository::VideoOutputRepository() = default;
-void VideoOutputRepository::addFromXml(QXmlStreamReader& xml)
+void VideoOutputRepository::appendFromXml(QXmlStreamReader& xml)
 {
     VideoOutput out;
     out.fromXml(xml);

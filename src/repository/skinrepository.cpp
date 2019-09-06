@@ -167,31 +167,20 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
 
     clear();
 
-    while (nextXmlChild(xml)) {
-        qDebug() << xml.tokenString() << xml.name() << xml.text() << xml.attributes().value("name");
-
-        if (xml.isStartElement()) {
-            if (xml.name() == "output") {
-                m_outputRepository.addFromXml(xml);
-
-            } else if (xml.name() == "windowstyle") {
-                WindowStyle style;
-                style.fromXml(xml);
-                m_windowStyles.append(style);
-
-            } else if (xml.name() == "colors") {
-                m_colors->fromXml(xml);
-
-            } else if (xml.name() == "fonts") {
-                m_fonts->fromXml(xml);
-
-            } else if (xml.name() == "screen") {
-                m_screensModel->appendFromXml(xml);
-
-            } else {
-                qWarning() << "Unknown tag" << xml.name();
-                xml.skipCurrentElement();
-            }
+    while (xml.readNextStartElement()) {
+        if (xml.name() == "output") {
+            m_outputRepository.appendFromXml(xml);
+        } else if (xml.name() == "windowstyle") {
+            m_windowStyles.appendFromXml(xml);
+        } else if (xml.name() == "colors") {
+            m_colors->fromXml(xml);
+        } else if (xml.name() == "fonts") {
+            m_fonts->fromXml(xml);
+        } else if (xml.name() == "screen") {
+            m_screensModel->appendFromXml(xml);
+        } else {
+            qWarning() << "Unknown tag" << xml.name();
+            xml.skipCurrentElement();
         }
     }
 

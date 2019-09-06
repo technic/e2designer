@@ -78,7 +78,7 @@ class WindowStylesList : public QObject, public NamedList<WindowStyle>
 {
     Q_OBJECT
 public:
-    void append(WindowStyle style);
+    void appendFromXml(QXmlStreamReader& xml);
     // Xml:
     void toXml(QXmlStreamWriter& xml) const;
     inline const WindowStyle getStyle(int id) { return getValue(QString::number(id)); }

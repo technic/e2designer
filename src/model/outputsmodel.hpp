@@ -53,7 +53,7 @@ class VideoOutputRepository : public NamedList<VideoOutput>, public XmlData
 public:
     VideoOutputRepository();
 
-    void addFromXml(QXmlStreamReader& xml);
+    void appendFromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
     inline VideoOutput getOutput(int id = 0) const { return getValue(QString::number(id)); }
