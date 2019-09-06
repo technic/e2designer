@@ -87,7 +87,6 @@ bool SkinRepository::fromXmlDocument(QXmlStreamReader& xml)
             break;
         }
     }
-    // FIXME: should we call setError() here?
     return !xml.hasError();
 }
 
