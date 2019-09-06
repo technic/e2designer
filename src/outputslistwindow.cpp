@@ -8,7 +8,12 @@ OutputsListWindow::OutputsListWindow(OutputsModel* model, QWidget* parent)
     , ui(new Ui::OutputsListWindow)
 {
     ui->setupUi(this);
+
     ui->tableView->setModel(model);
+    ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView->setDragDropMode(QAbstractItemView::InternalMove);
+    ui->tableView->setDropIndicatorShown(true);
+
     connect(ui->addButton, &QPushButton::clicked, this, &OutputsListWindow::addDefault);
     connect(ui->removeButton, &QPushButton::clicked, this, &OutputsListWindow::removeSelected);
 }
