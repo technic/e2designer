@@ -30,8 +30,6 @@ WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* sreen,
     setFlag(ItemIsMovable, false);
     setFlag(ItemSendsGeometryChanges, true);
 
-    m_type = m_data.data(ScreensModel::TypeRole).toInt();
-
     auto props = Property::propertyEnum();
     for (int i = 0; i < props.keyCount(); ++i) {
         updateAttribute(i);
@@ -185,7 +183,7 @@ void WidgetGraphicsItem::paint(QPainter* painter,
     auto& w = m_model->widget(m_data);
 
     int render;
-    switch (m_type) {
+    switch (w.type()) {
     case WidgetData::Screen:
         render = Property::Screen;
         break;
@@ -199,9 +197,6 @@ void WidgetGraphicsItem::paint(QPainter* painter,
         render = w.render();
         if (render == Property::Widget)
             render = w.previewRender();
-        break;
-    default:
-        render = Property::Widget;
         break;
     }
 

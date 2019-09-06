@@ -57,9 +57,6 @@ private:
     // Observer
     WidgetObserverRegistrator m_observer;
 
-    // Widget Type
-    int m_type;
-
     //    // Common
     QColor m_foreground_color;
     QColor m_background_color;
