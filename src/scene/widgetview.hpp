@@ -16,7 +16,7 @@ class WidgetGraphicsItem;
 using GraphicsItemClasses = TypeList<WidgetGraphicsItem>;
 
 template<typename T>
-static inline int getGraphicsItemType()
+static constexpr inline int getGraphicsItemType()
 {
     using type = std::remove_cv_t<std::remove_pointer_t<T>>;
     // It's OK to cast here, because index can not be very large
@@ -31,10 +31,17 @@ static inline int getGraphicsItemType()
 class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem, public PixmapWatcher
 {
     Q_OBJECT
+    // Helper function to use type in the static members
+    static auto get_type() -> decltype(this);
+
 public:
     WidgetGraphicsItem(ScreenView* sreen, QModelIndex index, WidgetGraphicsItem* parent);
 
-    int type() const override { return getGraphicsItemType<decltype(this)>(); }
+    enum
+    {
+        Type = getGraphicsItemType<decltype(get_type())>()
+    };
+    int type() const override { return Type; }
     QPersistentModelIndex modelIndex() const { return m_data; }
 
     // QGraphicsItem interface
