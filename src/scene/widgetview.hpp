@@ -18,8 +18,9 @@ using GraphicsItemClasses = TypeList<WidgetGraphicsItem>;
 template<typename T>
 static inline int getGraphicsItemType()
 {
+    using type = std::remove_cv_t<std::remove_pointer_t<T>>;
     // It's OK to cast here, because index can not be very large
-    auto index = static_cast<int>(GraphicsItemClasses::getIndex<T>());
+    auto index = static_cast<int>(GraphicsItemClasses::getIndex<type>());
     return QGraphicsItem::UserType + index + 1;
 }
 

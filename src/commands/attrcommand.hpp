@@ -28,8 +28,9 @@ using CommandClasses = TypeList<AttrCommand,
 template<typename T>
 static inline int getCommandId()
 {
+    using type = std::remove_cv_t<std::remove_pointer_t<T>>;
     // It's OK to cast here, because index can not be very large
-    return static_cast<int>(CommandClasses::getIndex<T>());
+    return static_cast<int>(CommandClasses::getIndex<type>());
 }
 
 class AttrCommand : public QUndoCommand
