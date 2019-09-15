@@ -25,7 +25,7 @@ static constexpr inline int getGraphicsItemType()
 }
 
 /**
- * @brief The WidgetView class
+ * @brief The WidgetGraphicsItem class
  * glue between WidgetItem (data) and GraphicsItem (actual view)
  */
 class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem, public PixmapWatcher
