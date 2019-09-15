@@ -31,15 +31,11 @@ static constexpr inline int getGraphicsItemType()
 class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem, public PixmapWatcher
 {
     Q_OBJECT
-    // Helper function to use type in the static members
-    static auto get_type() -> decltype(this);
-
 public:
     WidgetGraphicsItem(ScreenView* sreen, QModelIndex index, WidgetGraphicsItem* parent);
-
     enum
     {
-        Type = getGraphicsItemType<decltype(get_type())>()
+        Type = getGraphicsItemType<WidgetGraphicsItem>()
     };
     int type() const override { return Type; }
     QPersistentModelIndex modelIndex() const { return m_data; }
