@@ -49,9 +49,16 @@ public:
             storage.unregisterObserver(m_path, this);
         }
         m_path = path;
-        storage.registerObserver(m_path, this);
+        if (!m_path.isNull()) {
+            storage.registerObserver(m_path, this);
+        }
     }
-    virtual ~PixmapWatcher() { PixmapStorage::instance().unregisterObserver(m_path, this); }
+    virtual ~PixmapWatcher()
+    {
+        if (!m_path.isNull()) {
+            PixmapStorage::instance().unregisterObserver(m_path, this);
+        }
+    }
 
 protected:
     /// Override this function to handle file change events
