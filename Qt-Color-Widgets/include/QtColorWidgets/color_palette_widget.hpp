@@ -94,6 +94,11 @@ class QCP_EXPORT ColorPaletteWidget : public QWidget
      */
     Q_PROPERTY(int currentRow READ currentRow WRITE setCurrentRow NOTIFY currentRowChanged)
 
+    /**
+     * \brief Palette shown by the widget
+     */
+    Q_PROPERTY(const ColorPalette& currentPalette READ currentPalette NOTIFY currentPaletteChanged)
+
 public:
     ColorPaletteWidget(QWidget* parent = nullptr);
     ~ColorPaletteWidget();
@@ -167,6 +172,7 @@ Q_SIGNALS:
     void currentColorChanged(int index);
     void borderChanged(const QPen& border);
     void currentRowChanged(int currentRow);
+    void currentPaletteChanged(const ColorPalette& palette);
 
 private Q_SLOTS:
     void on_palette_list_currentIndexChanged(int index);
