@@ -140,24 +140,7 @@ void WidgetGraphicsItem::paint(QPainter* painter,
     painter->setCompositionMode(QPainter::CompositionMode_Source);
 
     auto& w = m_model->widget(m_data);
-
-    int render;
-    switch (w.type()) {
-    case WidgetData::Screen:
-        render = Property::Screen;
-        break;
-    case WidgetData::Pixmap:
-        render = Property::Pixmap;
-        break;
-    case WidgetData::Label:
-        render = Property::Label;
-        break;
-    case WidgetData::Widget:
-        render = w.render();
-        if (render == Property::Widget)
-            render = w.previewRender();
-        break;
-    }
+    auto render = w.sceneRender();
 
     switch (render) {
     case Property::Screen:

@@ -5,12 +5,12 @@
 
 PropertyTree::PropertyTree(const WidgetData* widget)
     : m_widget(widget)
-    , m_root(new AttrGroupItem())
+    , m_root(new AttrItem())
 {
     Q_CHECK_PTR(m_widget);
 
-    auto global = new AttrGroupItem("Global");
-    m_root->appendChild(global);
+    using R = Property::Render;
+    auto global = addGroup("General", R::Widget);
     add<TextItem>(Property::name, global);
     add<PositionItem>(Property::position, global);
     add<SizeItem>(Property::size, global);
@@ -21,8 +21,7 @@ PropertyTree::PropertyTree(const WidgetData* widget)
     add<ColorItem>(Property::borderColor, global);
     add<IntegerItem>(Property::borderWidth, global);
 
-    auto text = new AttrGroupItem("Label");
-    m_root->appendChild(text);
+    auto text = addGroup("Label", R::Label);
     add<TextItem>(Property::text, text);
     add<FontItem>(Property::font, text);
     add<VAlignItem>(Property::valign, text);
@@ -30,19 +29,16 @@ PropertyTree::PropertyTree(const WidgetData* widget)
     add<ColorItem>(Property::shadowColor, text);
     add<TextItem>(Property::shadowOffset, text);
 
-    auto pixmap = new AttrGroupItem("Pixmap");
-    m_root->appendChild(pixmap);
+    auto pixmap = addGroup("Pixmap", R::Pixmap);
     add<TextItem>(Property::pixmap, pixmap);
     add<AlphatestItem>(Property::alphatest, pixmap);
     add<IntegerItem>(Property::scale, pixmap);
 
-    auto screen = new AttrGroupItem("Screen");
-    m_root->appendChild(screen);
+    auto screen = addGroup("Screen", R::Screen);
     add<TextItem>(Property::title, screen);
     add<FlagsItem>(Property::flags, screen);
 
-    auto listbox = new AttrGroupItem("Listbox");
-    m_root->appendChild(listbox);
+    auto listbox = addGroup("Listbox", R::Listbox);
     add<IntegerItem>(Property::itemHeight, listbox);
     add<PixmapItem>(Property::selectionPixmap, listbox);
     add<ScrollbarModeItem>(Property::scrollbarMode, listbox);
@@ -50,19 +46,16 @@ PropertyTree::PropertyTree(const WidgetData* widget)
     add<ColorItem>(Property::foregroundColorSelected, listbox);
     add<ColorItem>(Property::backgroundColorSelected, listbox);
 
-    auto slider = new AttrGroupItem("Slider");
-    m_root->appendChild(slider);
+    auto slider = addGroup("Slider", R::Slider);
     add<PixmapItem>(Property::sliderPixmap, slider);
     add<PixmapItem>(Property::backgroundPixmap, slider);
     add<OrientationItem>(Property::orientation, slider);
 
-    auto gauge = new AttrGroupItem("PositionGauge");
-    m_root->appendChild(gauge);
+    auto gauge = addGroup("PositionGauge", R::Slider); // TODO
     add<PixmapItem>(Property::pointer, gauge);
     add<PixmapItem>(Property::seek_pointer, gauge);
 
-    auto widgetItem = new AttrGroupItem("Widget");
-    m_root->appendChild(widgetItem);
+    auto widgetItem = addGroup("Widget", R::Widget);
     add<RenderItem>(Property::render, widgetItem);
     add<TextItem>(Property::source, widgetItem);
     add<RenderItem>(Property::previewRender, widgetItem);
@@ -93,6 +86,14 @@ const WidgetData& PropertyTree::widget()
 void PropertyTree::setWidget(const WidgetData* widget)
 {
     m_widget = widget;
+}
+
+AttrGroupItem* PropertyTree::addGroup(const QString& title, Property::Render render)
+{
+    auto group = new AttrGroupItem(title, render);
+    m_root->appendChild(group);
+    group->setRoot(this);
+    return group;
 }
 
 template<typename T>
@@ -150,6 +151,8 @@ QVariant AttrGroupItem::keyData(int role) const
         return m_title;
     case Qt::BackgroundRole:
         return QBrush(QApplication::palette().color(QPalette::Button));
+    case ShallExpandRole:
+        return shallExpand();
     default:
         return AttrItem::keyData(role);
     }
@@ -163,6 +166,12 @@ QVariant AttrGroupItem::data(int role) const
     default:
         return AttrItem::data(role);
     }
+}
+
+bool AttrGroupItem::shallExpand() const
+{
+    auto r = widget().sceneRender();
+    return r == m_render || m_render == Property::Render::Widget;
 }
 
 // ColorItem

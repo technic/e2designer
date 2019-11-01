@@ -136,7 +136,12 @@ void MainWindow::onCurrentSelectionChanged(const QModelIndex& index, const QMode
     Q_UNUSED(previous);
     qDebug() << "current changed" << index;
     m_propertiesModel->setWidget(index);
-    ui->propView->expandAll();
+    for (int i = 0; i < m_propertiesModel->rowCount(); i++) {
+        auto index = m_propertiesModel->index(i, 0);
+        if (index.data(ShallExpandRole).toBool()) {
+            ui->propView->expand(index);
+        }
+    }
 
     setEditorText(index);
 }

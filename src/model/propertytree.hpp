@@ -6,6 +6,7 @@
 #include <QHash>
 
 class AttrItem;
+class AttrGroupItem;
 
 class PropertyTree
 {
@@ -19,6 +20,8 @@ public:
     void setWidget(const WidgetData* widget);
 
 private:
+    AttrGroupItem* addGroup(const QString& title, Property::Render render);
+
     template<typename T>
     void add(int k, AttrItem* parent);
 
@@ -55,21 +58,29 @@ private:
     // const WidgetData *mWidget;
 };
 
+enum
+{
+    ShallExpandRole = Qt::UserRole + 1
+};
+
 class AttrGroupItem : public AttrItem
 {
 public:
-    AttrGroupItem()
-        : AttrItem()
-    {}
-    AttrGroupItem(const QString& title)
+    // AttrGroupItem()
+    //     : AttrItem()
+    // {}
+    AttrGroupItem(const QString& title, Property::Render render)
         : AttrItem()
         , m_title(title)
+        , m_render(render)
     {}
     QVariant keyData(int role) const override;
     QVariant data(int role = Qt::UserRole + 1) const override;
+    bool shallExpand() const;
 
 private:
     QString m_title;
+    Property::Render m_render;
 };
 
 class ColorItem : public AttrItem

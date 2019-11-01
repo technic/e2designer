@@ -695,6 +695,23 @@ void WidgetData::loadPreview()
     }
 }
 
+Property::Render WidgetData::sceneRender() const
+{
+    switch (type()) {
+    case WidgetData::Screen:
+        return Property::Screen;
+    case WidgetData::Pixmap:
+        return Property::Pixmap;
+    case WidgetData::Label:
+        return Property::Label;
+    case WidgetData::Widget:
+        auto r = render();
+        if (r == Property::Widget)
+            r = previewRender();
+        return r;
+    }
+}
+
 void WidgetData::toXml(XmlStreamWriter& xml) const
 {
     xml.writeStartElement(typeStr());
