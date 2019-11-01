@@ -94,6 +94,21 @@ build:debug:
     paths:
       - ccache/
 
+CodeCheker:
+  stage: build
+  script:
+    - apt-get update && apt-get install -y build-essential gcc-mulitlib python-virtualenv python-dev thrift-compiler
+    - git clone https://github.com/Ericsson/CodeChecker.git --depth 1 ~/codechecker
+    - cd ~/codechecker && make venv && source "$PWD/venv/bin/activate"
+    - make package && export PATH="$PWD/build/CodeChecker/bin:$PATH"
+    - cd "$CI_PROJECT_DIR" && mkdir -p build && pushd build
+    - qmake -spec linux-clang ..
+    - CodeChecker check -b "make" -o ./reports
+    - CodeChecker parse ./reports -e html -o ../reports_html
+  artifacts:
+    paths:
+      - reports_html/
+
 AppImage:
   stage: package
   dependencies:
