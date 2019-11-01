@@ -94,7 +94,7 @@ build:debug:
     paths:
       - ccache/
 
-CodeCheker:
+CodeChecker:
   stage: build
   script:
     - apt-get update && apt-get install -y build-essential gcc-multilib python-virtualenv python-dev thrift-compiler
