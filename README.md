@@ -48,17 +48,18 @@ make
 # License
 GPLv3
 
-# Updating subtrees
+# Develop notes
+## Testing builds in docker
+To start linux docker image with qt and compiler
+```bash
+docker-compose run e2designer bash
+```
+
+## Updating subtrees
 We need to pull upstream from time to time:
 ```
 git subtree pull -P Qt-Color-Widgets/ --squash git@gitlab.com:mattia.basaglia/Qt-Color-Widgets.git master
 git subtree pull -P AppImageUpdaterBridge --squash https://github.com/antony-jr/AppImageUpdaterBridge.git master
-```
-
-# Develop notes
-To start linux docker image with qt and compiler
-```bash
-docker-compose run e2designer bash
 ```
 
 # Credits
