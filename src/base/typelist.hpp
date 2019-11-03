@@ -18,7 +18,7 @@ private:
     static constexpr size_t getIndexImpl()
     {
         auto seq = { same<T, Ts>()... };
-        size_t i = 0u;
+        size_t i = 0U;
         for (auto s : seq) {
             if (s) {
                 return i;
