@@ -1,3 +1,6 @@
 ---
 Checks: "clang-diagnostic-*,clang-analyzer-*,llvm-header-guard"
+CheckOptions:
+  - key: cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
+    value: 1
 ...
