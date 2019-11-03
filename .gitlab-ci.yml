@@ -166,6 +166,7 @@ coverage:
     - lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info
     - lcov --list coverage.info
     - genhtml coverage.info --output-directory coverage-report
+    - bash <(curl -s https://codecov.io/bash) -f coverage.info
     coverage: '/Total:\|(\d+\.?\d+\%)/'
     artifacts:
       paths:
