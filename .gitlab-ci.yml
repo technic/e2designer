@@ -147,7 +147,7 @@ clang-tidy:
     - run-clang-tidy.py
     - pvs-studio-analyzer credentials $PVS_NAME $PVS_KEY
     - pvs-studio-analyzer analyze -o PVS-Studio.log
-    - plog-converter -t html PVS-Studio.log -o ../PVS-Studio.html
+    - plog-converter -t fullhtml PVS-Studio.log -o ../PVS-Studio.html
   artifacts:
     paths:
       - PVS-Studio.html
