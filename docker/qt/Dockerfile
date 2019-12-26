@@ -18,6 +18,7 @@ RUN apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-$v
     && apt-get update
 
 RUN apt-get install -y clang-$v clang-format-$v clang-tidy-$v clang-tools-$v bear python-yaml \
+ && update-alternatives --install /usr/bin/clang clang /usr/bin/clang-$v 100 \
  && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-$v 100 \
  && update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-$v 100 \
  && update-alternatives --install /usr/bin/run-clang-tidy.py run-clang-tidy.py /usr/bin/run-clang-tidy-$v.py 100 \
