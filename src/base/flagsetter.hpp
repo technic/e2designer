@@ -5,7 +5,7 @@
 /**
  * @brief keep bool flag true within current scope
  * use RAII to keep flag true while object alive
- * and set to orginal value when object goes out of scope
+ * and set to original value when object goes out of scope
  */
 
 class FlagSetter
