@@ -388,7 +388,7 @@
    <sender>slide_alpha</sender>
    <signal>valueChanged(int)</signal>
    <receiver>ColorDialog</receiver>
-   <slot>update_widgets()</slot>
+   <slot>set_alpha()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>416</x>
@@ -404,7 +404,7 @@
    <sender>wheel</sender>
    <signal>colorSelected(QColor)</signal>
    <receiver>ColorDialog</receiver>
-   <slot>update_widgets()</slot>
+   <slot>setColorInternal(QColor)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>175</x>
@@ -694,6 +694,7 @@
   <slot>set_rgb()</slot>
   <slot>set_hsv()</slot>
   <slot>setColor(QColor)</slot>
-  <slot>update_widgets()</slot>
+  <slot>setColorInternal(QColor)</slot>
+  <slot>set_alpha()</slot>
  </slots>
 </ui>

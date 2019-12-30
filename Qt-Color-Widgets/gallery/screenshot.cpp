@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2019 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,10 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#include <QApplication>
 #include <cstring>
 #include <algorithm>
-#include <QDebug>
+
+#include <QApplication>
+#include <QCommandLineParser>
 
 #include "QtColorWidgets/color_2d_slider.hpp"
 #include "QtColorWidgets/color_delegate.hpp" /// \todo show it
@@ -33,18 +34,24 @@
 #include "QtColorWidgets/color_preview.hpp"
 #include "QtColorWidgets/color_wheel.hpp"
 #include "QtColorWidgets/hue_slider.hpp"
+#include "QtColorWidgets/gradient_editor.hpp"
 
 bool run = false;
+QStringList just_these;
 
 void screenshot(QWidget& widget, QString name = QString())
 {
-    QPixmap pic(widget.size());
-    widget.render(&pic);
     if ( name.isEmpty() )
     {
         name = widget.metaObject()->className();
         name.remove("color_widgets::");
     }
+    if ( !just_these.isEmpty() && !just_these.contains(name) )
+        return;
+
+    widget.setWindowTitle(name);
+    QPixmap pic(widget.size());
+    widget.render(&pic);
     name += ".png";
     pic.save(name);
     if ( run )
@@ -55,7 +62,15 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    run = a.arguments().contains("--run");
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addPositionalArgument("just_these", "Only these widgets");
+    QCommandLineOption run_option("run", "Show widgets instead of saving to file");
+    parser.addOption(run_option);
+
+    parser.process(a);
+    run = parser.isSet(run_option);
+    just_these = parser.positionalArguments();
 
     QColor demo_color(64,172,143,128);
 
@@ -121,11 +136,9 @@ int main(int argc, char *argv[])
     color_widgets::HueSlider hue_slider;
     hue_slider.setColor(demo_color);
     hue_slider.resize(192, hue_slider.sizeHint().height());
-    QObject::connect(&hue_slider, &color_widgets::HueSlider::valueChanged, [](int i){qDebug() << i;});
 //     hue_slider.setInvertedAppearance(true);
 //     hue_slider.setOrientation(Qt::Vertical);
     screenshot(hue_slider);
-
 
     color_widgets::ColorListWidget list_widget;
     list_widget.setColors({
@@ -137,6 +150,14 @@ int main(int argc, char *argv[])
     });
     list_widget.resize(list_widget.sizeHint());
     screenshot(list_widget);
+
+    color_widgets::GradientEditor editor;
+    QGradientStops gradient_colors;
+    float n_colors = 6;
+    for ( int i = 0; i <= n_colors; ++i )
+        gradient_colors.append(QGradientStop(i/n_colors, QColor::fromHsvF(i/n_colors, 0.5, 1)));
+    editor.setStops(gradient_colors);
+    screenshot(editor);
 
     if ( run )
         return a.exec();

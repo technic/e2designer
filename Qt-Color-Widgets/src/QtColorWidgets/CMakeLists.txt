@@ -20,6 +20,7 @@ set (SOURCES
   gradient_slider.cpp
   hue_slider.cpp
   swatch.cpp
+  gradient_editor.cpp
   )
 
 file(RELATIVE_PATH

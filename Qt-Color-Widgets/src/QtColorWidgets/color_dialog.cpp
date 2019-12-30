@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2019 Mattia Basaglia
  * \copyright Copyright (C) 2014 Calle Laakkonen
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,7 @@ public:
     ButtonMode button_mode;
     bool pick_from_screen;
     bool alpha_enabled;
+    QColor color;
 
     Private() : pick_from_screen(false), alpha_enabled(true)
     {}
@@ -78,9 +79,9 @@ ColorWheel::DisplayFlags ColorDialog::wheelFlags() const
 
 QColor ColorDialog::color() const
 {
-    QColor col = p->ui.wheel->color();
-    if(p->alpha_enabled)
-        col.setAlpha(p->ui.slide_alpha->value());
+    QColor col = p->color;
+    if ( !p->alpha_enabled )
+        col.setAlpha(255);
     return col;
 }
 
@@ -89,17 +90,6 @@ void ColorDialog::setColor(const QColor &c)
     p->ui.preview->setComparisonColor(c);
     p->ui.edit_hex->setModified(false);
     setColorInternal(c);
-}
-
-void ColorDialog::setColorInternal(const QColor &c)
-{
-    /**
-     * \note Unlike setColor, this is used to update the current color which
-     * migth differ from the final selected color
-     */
-    p->ui.wheel->setColor(c);
-    p->ui.slide_alpha->setValue(c.alpha());
-    update_widgets();
 }
 
 void ColorDialog::showColor(const QColor &c)
@@ -161,14 +151,21 @@ ColorDialog::ButtonMode ColorDialog::buttonMode() const
     return p->button_mode;
 }
 
-void ColorDialog::update_widgets()
+void ColorDialog::setColorInternal(const QColor &col)
 {
+    /**
+     * \note Unlike setColor, this is used to update the current color which
+     * migth differ from the final selected color
+     */
+    p->ui.wheel->setColor(col);
+
+    p->color = col;
+
     bool blocked = signalsBlocked();
     blockSignals(true);
     Q_FOREACH(QWidget* w, findChildren<QWidget*>())
         w->blockSignals(true);
 
-    QColor col = color();
 
     p->ui.slide_red->setValue(col.red());
     p->ui.spin_red->setValue(p->ui.slide_red->value());
@@ -206,7 +203,8 @@ void ColorDialog::update_widgets()
     p->ui.slide_alpha->setFirstColor(apha_color);
     apha_color.setAlpha(255);
     p->ui.slide_alpha->setLastColor(apha_color);
-    p->ui.spin_alpha->setValue(p->ui.slide_alpha->value());
+    p->ui.spin_alpha->setValue(col.alpha());
+    p->ui.slide_alpha->setValue(col.alpha());
 
     if ( !p->ui.edit_hex->isModified() )
         p->ui.edit_hex->setColor(col);
@@ -224,12 +222,24 @@ void ColorDialog::set_hsv()
 {
     if ( !signalsBlocked() )
     {
-        p->ui.wheel->setColor(QColor::fromHsv(
-                p->ui.slide_hue->value(),
-                p->ui.slide_saturation->value(),
-                p->ui.slide_value->value()
-            ));
-        update_widgets();
+        QColor col = QColor::fromHsv(
+            p->ui.slide_hue->value(),
+            p->ui.slide_saturation->value(),
+            p->ui.slide_value->value(),
+            p->ui.slide_alpha->value()
+        );
+        p->ui.wheel->setColor(col);
+        setColorInternal(col);
+    }
+}
+
+void ColorDialog::set_alpha()
+{
+    if ( !signalsBlocked() )
+    {
+        QColor col = p->color;
+        col.setAlpha(p->ui.slide_alpha->value());
+        setColorInternal(col);
     }
 }
 
@@ -240,12 +250,13 @@ void ColorDialog::set_rgb()
         QColor col(
                 p->ui.slide_red->value(),
                 p->ui.slide_green->value(),
-                p->ui.slide_blue->value()
+                p->ui.slide_blue->value(),
+                p->ui.slide_alpha->value()
             );
         if (col.saturation() == 0)
             col = QColor::fromHsv(p->ui.slide_hue->value(), 0, col.value());
         p->ui.wheel->setColor(col);
-        update_widgets();
+        setColorInternal(col);
     }
 }
 

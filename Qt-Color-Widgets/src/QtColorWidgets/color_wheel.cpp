@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2019 Mattia Basaglia
  * \copyright Copyright (C) 2017 caryoscelus
  *
  * This program is free software: you can redistribute it and/or modify

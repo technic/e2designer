@@ -12,21 +12,32 @@ define_property (TARGET
   to version string. Suffix is only added if there are some untracked not
   ignored files in repository.")
 
+set(HERE_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 
 function (target_version_information
 	TARGET_NAME i_target_name
     EXPORT_HEADER i_export_header
     EXPORT_MACRO i_export_macro
     VERSIONED_ENTITY i_versioned_entity)
+
   find_file (
 	headerFileTemplate
 	"ProjectVersioning/version.h.in"
 	PATHS ${CMAKE_MODULE_PATH})
 
+    if ( NOT ${headerFileTemplate} )
+        set(headerFileTemplate "${HERE_DIR}/ProjectVersioning/version.h.in")
+    endif()
+
   find_file (
 	sourceFileTemplate
 	"ProjectVersioning/version.c.in"
 	PATHS ${CMAKE_MODULE_PATH})
+
+    if ( NOT ${sourceFileTemplate} )
+        set(sourceFileTemplate "${HERE_DIR}/ProjectVersioning/version.c.in")
+    endif()
 
   exec_program (
 	"git"

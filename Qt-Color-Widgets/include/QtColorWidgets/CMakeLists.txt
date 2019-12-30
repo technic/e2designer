@@ -17,6 +17,7 @@ set (HEADERS
   gradient_slider.hpp
   hue_slider.hpp
   swatch.hpp
+  gradient_editor.hpp
   )
 
 file(RELATIVE_PATH

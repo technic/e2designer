@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2019 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -98,5 +98,5 @@ QString GradientSlider_Plugin::domXml() const
 
 QString GradientSlider_Plugin::includeFile() const
 {
-    return "gradient_slider.hpp";
+    return "QtColorWidgets/gradient_slider.hpp";
 }

@@ -36,7 +36,8 @@ SOURCES += \
     $$PWD/src/QtColorWidgets/color_utils.cpp \
     $$PWD/src/QtColorWidgets/color_2d_slider.cpp \
     $$PWD/src/QtColorWidgets/color_line_edit.cpp \
-    $$PWD/src/QtColorWidgets/color_names.cpp
+    $$PWD/src/QtColorWidgets/color_names.cpp \
+    $$PWD/src/QtColorWidgets/gradient_editor.cpp
 
 HEADERS += \
     $$PWD/include/QtColorWidgets/color_wheel.hpp \
@@ -57,7 +58,8 @@ HEADERS += \
     $$PWD/src/QtColorWidgets/color_utils.hpp \
     $$PWD/include/QtColorWidgets/color_2d_slider.hpp \
     $$PWD/include/QtColorWidgets/color_line_edit.hpp \
-    $$PWD/include/QtColorWidgets/color_names.hpp
+    $$PWD/include/QtColorWidgets/color_names.hpp \
+    $$PWD/include/QtColorWidgets/gradient_editor.hpp
 
 FORMS += \
     $$PWD/src/QtColorWidgets/color_dialog.ui \

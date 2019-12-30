@@ -72,3 +72,10 @@ GradientSlider and HueSlider
 
 **HueSlider** is specifically made to select a hue and has more information
 about the represented color.
+
+
+GradientEditor
+--------------
+![GradientEditor](GradientEditor.png)
+
+**GradientEditor** is similar in appearance to **GradientSlider** but it's for editing the gradient.

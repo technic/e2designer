@@ -19,38 +19,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef COLOR_LIST_PLUGIN_HPP
-#define COLOR_LIST_PLUGIN_HPP
+#ifndef COLOR_WIDGETS_GRADIENT_EDITOR_PLUGIN_HPP
+#define COLOR_WIDGETS_GRADIENT_EDITOR_PLUGIN_HPP
 
+#include <QObject>
 #include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
-class ColorListWidget_Plugin : public QObject, public QDesignerCustomWidgetInterface
+class GradientEditor_Plugin : public QObject, public QDesignerCustomWidgetInterface
 {
     Q_OBJECT
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 
 public:
-    explicit ColorListWidget_Plugin(QObject *parent = 0);
-    
-    void initialize(QDesignerFormEditorInterface *core);
-    bool isInitialized() const;
+    explicit GradientEditor_Plugin(QObject *parent = nullptr);
 
-    QWidget *createWidget(QWidget *parent);
+    void initialize(QDesignerFormEditorInterface *core) Q_DECL_OVERRIDE;
+    bool isInitialized() const Q_DECL_OVERRIDE;
 
-    QString name() const;
-    QString group() const;
-    QIcon icon() const;
-    QString toolTip() const;
-    QString whatsThis() const;
-    bool isContainer() const;
+    QWidget *createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 
-    QString domXml() const;
+    QString name() const Q_DECL_OVERRIDE;
+    QString group() const Q_DECL_OVERRIDE;
+    QIcon icon() const Q_DECL_OVERRIDE;
+    QString toolTip() const Q_DECL_OVERRIDE;
+    QString whatsThis() const Q_DECL_OVERRIDE;
+    bool isContainer() const Q_DECL_OVERRIDE;
 
-    QString includeFile() const;
+    QString domXml() const Q_DECL_OVERRIDE;
+
+    QString includeFile() const Q_DECL_OVERRIDE;
 
 private:
     bool initialized;
-    
 };
 
-#endif // COLOR_LIST_PLUGIN_HPP
+
+#endif // COLOR_WIDGETS_GRADIENT_EDITOR_PLUGIN_HPP
+

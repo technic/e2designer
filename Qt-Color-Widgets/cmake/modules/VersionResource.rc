@@ -23,7 +23,7 @@
 */
 
 #include "VersionInfo.h"
-#include "winres.h"
+#include "winresrc.h"
 
 #if USE_ICON
 IDI_ICON1               ICON                    PRODUCT_ICON

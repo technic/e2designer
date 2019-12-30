@@ -1,11 +1,9 @@
 /**
- * \file gradient_slider.hpp
+ * \file gradient_editor.hpp
  *
  * \author Mattia Basaglia
  *
  * \copyright Copyright (C) 2013-2019 Mattia Basaglia
- * \copyright Copyright (C) 2014 Calle Laakkonen
- * \copyright Copyright (C) 2017 caryoscelus
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef GRADIENT_SLIDER_HPP
-#define GRADIENT_SLIDER_HPP
+#ifndef GRADIENT_EDITOR_HPP
+#define GRADIENT_EDITOR_HPP
 
 #include "colorwidgets_global.hpp"
 
-#include <QSlider>
+#include <QWidget>
 #include <QGradient>
 
 namespace color_widgets {
@@ -34,19 +32,22 @@ namespace color_widgets {
 /**
  * \brief A slider that moves on top of a gradient
  */
-class QCP_EXPORT GradientSlider : public QSlider
+class QCP_EXPORT GradientEditor : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QBrush background READ background WRITE setBackground NOTIFY backgroundChanged)
-    Q_PROPERTY(QGradientStops colors READ colors WRITE setColors DESIGNABLE false)
-    Q_PROPERTY(QColor firstColor READ firstColor WRITE setFirstColor STORED false)
-    Q_PROPERTY(QColor lastColor READ lastColor WRITE setLastColor STORED false)
+    Q_PROPERTY(QGradientStops stops READ stops WRITE setStops NOTIFY stopsChanged)
     Q_PROPERTY(QLinearGradient gradient READ gradient WRITE setGradient)
+    Q_PROPERTY(Qt::Orientation orientation READ orientation WRITE setOrientation)
+    Q_PROPERTY(int selectedStop READ selectedStop WRITE setSelectedStop NOTIFY selectedStopChanged)
+    Q_PROPERTY(QColor selectedColor READ selectedColor WRITE setSelectedColor)
 
 public:
-    explicit GradientSlider(QWidget *parent = 0);
-    explicit GradientSlider(Qt::Orientation orientation, QWidget *parent = 0);
-    ~GradientSlider();
+    explicit GradientEditor(QWidget *parent = 0);
+    explicit GradientEditor(Qt::Orientation orientation, QWidget *parent = 0);
+    ~GradientEditor();
+
+    QSize sizeHint() const override;
 
     /// Get the background, it's visible for transparent gradient stops
     QBrush background() const;
@@ -54,58 +55,52 @@ public:
     void setBackground(const QBrush &bg);
 
     /// Get the colors that make up the gradient
-    QGradientStops colors() const;
+    QGradientStops stops() const;
     /// Set the colors that make up the gradient
-    void setColors(const QGradientStops &colors);
+    void setStops(const QGradientStops &colors);
 
     /// Get the gradient
     QLinearGradient gradient() const;
     /// Set the gradient
     void setGradient(const QLinearGradient &gradient);
 
-    /**
-     * Overload: create an evenly distributed gradient of the given colors
-     */
-    void setColors(const QVector<QColor> &colors);
+    Qt::Orientation orientation() const;
 
     /**
-     * \brief Set the first color of the gradient
-     *
-     * If the gradient is currently empty it will create a stop with the given color
+     * \brief Index of the currently selected gradient stop (or -1 if there is no selection)
      */
-    void setFirstColor(const QColor &c);
+    int selectedStop() const;
 
     /**
-     * \brief Set the last color of the gradient
-     *
-     * If the gradient is has less than two colors,
-     * it will create a stop with the given color
+     * \brief Color of the selected stop
      */
-    void setLastColor(const QColor &c);
+    QColor selectedColor() const;
 
-    /**
-     * \brief Get the first color
-     *
-     * \returns QColor() con empty gradient
-     */
-    QColor firstColor() const;
-
-    /**
-     * \brief Get the last color
-     *
-     * \returns QColor() con empty gradient
-     */
-    QColor lastColor() const;
+public Q_SLOTS:
+    void setOrientation(Qt::Orientation);
+    void setSelectedStop(int stop);
+    void setSelectedColor(const QColor& color);
+    void addStop();
+    void removeStop();
 
 Q_SIGNALS:
     void backgroundChanged(const QBrush&);
-    
+    void stopsChanged(const QGradientStops&);
+    void selectedStopChanged(int);
+
 protected:
     void paintEvent(QPaintEvent *ev) override;
 
     void mousePressEvent(QMouseEvent *ev) override;
     void mouseMoveEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
+    void leaveEvent(QEvent * event) override;
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
+
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent* event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
+    void dropEvent(QDropEvent* event) override;
 
 private:
     class Private;
@@ -114,4 +109,5 @@ private:
 
 } // namespace color_widgets
 
-#endif // GRADIENT_SLIDER_HPP
+#endif // GRADIENT_EDITOR_HPP
+
