@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>background.jpg</file>
+        <file>src/sources.xml</file>
     </qresource>
     <qresource prefix="/icons">
         <file>misc/e2designer.png</file>

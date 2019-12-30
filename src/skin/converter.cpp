@@ -99,7 +99,6 @@ void MockSource::setValue(const QString& key, const QVariant& value)
 
 MockSourceFactory::MockSourceFactory()
 {
-    Q_INIT_RESOURCE(data);
     loadXml(":/sources.xml");
 }
 

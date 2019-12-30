@@ -63,7 +63,6 @@ set(SOURCE
     src/skin/widgetdata.cpp
     src/skindelegate.cpp
     resources.qrc
-    src/data.qrc
     src/skin/enums.hpp
 )
 
