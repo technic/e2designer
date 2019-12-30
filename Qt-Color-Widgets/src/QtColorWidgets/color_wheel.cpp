@@ -21,6 +21,7 @@
  *
  */
 #include "QtColorWidgets/color_wheel.hpp"
+#include "QtColorWidgets/color_utils.hpp"
 
 #include <cmath>
 #include <QMouseEvent>
@@ -28,7 +29,6 @@
 #include <QLineF>
 #include <QDragEnterEvent>
 #include <QMimeData>
-#include "color_utils.hpp"
 
 namespace color_widgets {
 

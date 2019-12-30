@@ -15,7 +15,6 @@ set (SOURCES
   color_preview.cpp
   color_selector.cpp
   color_utils.cpp
-  color_utils.hpp
   color_wheel.cpp
   gradient_slider.cpp
   hue_slider.cpp

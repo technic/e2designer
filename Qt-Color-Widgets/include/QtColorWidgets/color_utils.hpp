@@ -19,6 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#ifndef COLOR_UTILS_HPP
+#define COLOR_UTILS_HPP
+
 #include <QColor>
 #include <qmath.h>
 
@@ -70,3 +73,5 @@ QCP_EXPORT QColor color_from_hsl(qreal hue, qreal sat, qreal lig, qreal alpha = 
 
 } // namespace detail
 } // namespace color_widgets
+
+#endif // COLOR_UTILS_HPP
