@@ -7,7 +7,7 @@ find_package(Git)
 if(GIT_FOUND)
     execute_process(
         COMMAND ${GIT_EXECUTABLE} describe --tags --always
-        WORKING_DIRECTORY "${SRC}"
+        WORKING_DIRECTORY "${local_dir}"
         OUTPUT_VARIABLE build_version
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
