@@ -57,7 +57,7 @@ read_arg plugin_header "Plugin Header" "$(class_to_header "$plugin")"
 read_arg plugin_source "Plugin Source" "$(header_to_source "$plugin_header")"
 read_arg plugin_path "Plugin Path" "$SELFDIR"
 read_arg plugin_author "Author" "$(git config user.name)"
-read_arg plugin_copyright "Copyright" "$(date +%Y) $plugin_author"
+read_arg plugin_copyright "Copyright" "2013-$(date +%Y) $plugin_author"
 
 echo "Summary:"
 echo "  Class:         $class"
@@ -158,7 +158,7 @@ QString $plugin::whatsThis() const
 
 QString $plugin::includeFile() const
 {
-    return "$header";
+    return "QtColorWidgets/$header";
 }
 
 PLUGIN
@@ -190,7 +190,7 @@ cat >"$plugin_path/$plugin_header" <<PLUGIN
 #define $header_guard
 
 #include <QObject>
-#include <QDesignerCustomWidgetInterface>
+#include <QtUiPlugin/QDesignerCustomWidgetInterface>
 
 class $plugin : public QObject, public QDesignerCustomWidgetInterface
 {

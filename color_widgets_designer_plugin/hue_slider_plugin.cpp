@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2019 Mattia Basaglia
  * \copyright Copyright (C) 2014 Calle Laakkonen
  *
  * This program is free software: you can redistribute it and/or modify
@@ -94,5 +94,5 @@ QString HueSlider_Plugin::domXml() const
 
 QString HueSlider_Plugin::includeFile() const
 {
-    return "hue_slider.hpp";
+    return "QtColorWidgets/hue_slider.hpp";
 }

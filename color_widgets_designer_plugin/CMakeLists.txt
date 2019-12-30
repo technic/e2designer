@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2017 Mattia Basaglia
+# Copyright (C) 2013-2019 Mattia Basaglia
 #
 #
 # This software is free software: you can redistribute it and/or modify
@@ -120,6 +120,7 @@ set(SOURCES
   color_palette_widget_plugin.cpp
   color_2d_slider_plugin.cpp
   color_line_edit_plugin.cpp
+  gradient_editor_plugin.cpp
   # add new sources above this line
   )
 
@@ -141,6 +142,7 @@ set(HEADERS
   color_palette_widget_plugin.hpp
   color_2d_slider_plugin.hpp
   color_line_edit_plugin.hpp
+  gradient_editor_plugin.hpp
   # add new headers above this line
   )
 

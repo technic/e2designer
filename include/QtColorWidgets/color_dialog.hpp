@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2017 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2019 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -124,19 +124,18 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     /// Update all the Ui elements to match the selected color
-    void update_widgets();
+    void setColorInternal(const QColor &color);
     /// Update from HSV sliders
     void set_hsv();
     /// Update from RGB sliders
     void set_rgb();
+    /// Update from Alpha slider
+    void set_alpha();
 
     void on_edit_hex_colorChanged(const QColor& color);
     void on_edit_hex_colorEditingFinished(const QColor& color);
 
     void on_buttonBox_clicked(QAbstractButton*);
-
-private:
-    void setColorInternal(const QColor &color);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);

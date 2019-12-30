@@ -1,12 +1,1 @@
-*.pro.user
-ui_*.h
-*.o
-*.so
-*.so.*
-moc_*.cpp
-Makefile
-out/*
 build/
-
-cmake-build-*/
-.idea/
