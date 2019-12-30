@@ -20,9 +20,9 @@ add_subdirectory(Qt-Color-Widgets)
 
 # Application core
 set(SOURCE
-    src/base/flagsetter.cpp
+    src/base/flagsetter.hpp
     src/base/uniqueid.cpp
-    src/base/xmlstreamwriter.cpp
+    src/base/xmlstreamwriter.hpp
     src/colorlistbox.cpp
     src/colorlistwindow.cpp
     src/commands/attrcommand.cpp
