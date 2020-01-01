@@ -65,7 +65,6 @@ SOURCES += \
     model/borderset.cpp \
     model/windowstyle.cpp \
     scene/borderview.cpp \
-    base/flagsetter.cpp \
     skin/attributes.cpp \
     skin/colorattr.cpp \
     skin/fontattr.cpp \
@@ -77,8 +76,7 @@ SOURCES += \
     skin/offsetattr.cpp \
     model/outputsmodel.cpp \
     model/movablelistmodel.cpp \
-    outputslistwindow.cpp \
-    base/xmlstreamwriter.cpp
+    outputslistwindow.cpp
 
 HEADERS += \
     mainwindow.hpp \
@@ -136,9 +134,6 @@ FORMS += \
     colorlistwindow.ui \
     fontlistwindow.ui \
     outputslistwindow.ui
-
-RESOURCES += \
-    data.qrc
 
 unix {
     isEmpty(PREFIX) {
