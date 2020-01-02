@@ -54,7 +54,6 @@ SOURCES += \
     repository/xmlnode.cpp \
     repository/skinrepository.cpp \
     skin/widgetdata.cpp \
-    base/uniqueid.cpp \
     repository/pixmapstorage.cpp \
     commands/attrcommand.cpp \
     fontlistwindow.cpp \
@@ -97,7 +96,6 @@ HEADERS += \
     repository/xmlnode.hpp \
     repository/skinrepository.hpp \
     skin/widgetdata.hpp \
-    base/uniqueid.hpp \
     repository/pixmapstorage.hpp \
     base/tree.hpp \
     commands/attrcommand.hpp \
