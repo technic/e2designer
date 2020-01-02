@@ -72,7 +72,8 @@ QItemSelection ScreenView::makeRowSelection(const QModelIndex& index)
 
 void ScreenView::setScreen(QModelIndex index)
 {
-    Q_ASSERT(index.data(ScreensModel::TypeRole).toInt() == WidgetData::Screen);
+    Q_ASSERT(index.data(ScreensModel::TypeRole).toInt()
+             == static_cast<int>(WidgetData::WidgetType::Screen));
 
     if (m_root == index)
         return;
@@ -268,7 +269,9 @@ void ScreenView::setCurrentWidget(const QModelIndex& current, const QModelIndex&
     }
     // find parent Screen
     QModelIndex index = current;
-    while (index.isValid() && index.data(ScreensModel::TypeRole).toInt() != WidgetData::Screen) {
+    while (index.isValid()
+           && index.data(ScreensModel::TypeRole).toInt()
+                != static_cast<int>(WidgetData::WidgetType::Screen)) {
         index = index.parent();
     }
     if (index.isValid()) {

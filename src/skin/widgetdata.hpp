@@ -54,7 +54,7 @@ public:
     void setModel(ScreensModel* model);
 
     // Widget tag
-    enum WidgetType
+    enum class WidgetType
     {
         Screen,
         Widget,

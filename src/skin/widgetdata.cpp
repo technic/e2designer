@@ -255,7 +255,7 @@ WidgetData::WidgetData()
     , m_orientation(Property::Orientation::orHorizontal)
     , m_render(Property::Render::Widget)
     , m_previewRender(Property::Render::Widget)
-    , m_type(Widget)
+    , m_type(WidgetType::Widget)
     , m_model(nullptr)
 {
     // Call it here because of Qt limitation with static objects
@@ -336,16 +336,16 @@ WidgetData::WidgetType WidgetData::strToType(const QStringRef& str, bool& ok)
 {
     ok = true;
     if (str == "screen") {
-        return Screen;
+        return WidgetType::Screen;
     } else if (str == "widget") {
-        return Widget;
+        return WidgetType::Widget;
     } else if (str == "eLabel") {
-        return Label;
+        return WidgetType::Label;
     } else if (str == "ePixmap") {
-        return Pixmap;
+        return WidgetType::Pixmap;
     } else {
         ok = false;
-        return Widget;
+        return WidgetType::Widget;
     }
 }
 
@@ -642,7 +642,7 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
     }
 
     while (xml.readNextStartElement()) {
-        if (m_type == Screen) {
+        if (m_type == WidgetType::Screen) {
             auto* widget = new WidgetData();
             if (widget->fromXml(xml)) {
                 appendChild(widget);
@@ -680,7 +680,7 @@ void WidgetData::loadPreview()
     if (!m_model) {
         return;
     }
-    if (m_type == Widget) {
+    if (m_type == WidgetType::Widget) {
         MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
             QString screen = ptr->self()->name();
@@ -688,7 +688,7 @@ void WidgetData::loadPreview()
             m_previewRender = p.render;
             m_previewValue = p.value;
         }
-    } else if (m_type == Screen) {
+    } else if (m_type == WidgetType::Screen) {
         for (int i = 0; i < childCount(); ++i) {
             child(i)->loadPreview();
         }
@@ -698,13 +698,13 @@ void WidgetData::loadPreview()
 Property::Render WidgetData::sceneRender() const
 {
     switch (type()) {
-    case WidgetData::Screen:
+    case WidgetType::Screen:
         return Property::Screen;
-    case WidgetData::Pixmap:
+    case WidgetType::Pixmap:
         return Property::Pixmap;
-    case WidgetData::Label:
+    case WidgetType::Label:
         return Property::Label;
-    case WidgetData::Widget:
+    case WidgetType::Widget:
         auto r = render();
         if (r == Property::Widget)
             r = previewRender();

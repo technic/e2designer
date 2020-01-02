@@ -266,27 +266,27 @@ void MainWindow::addSkinItem(WidgetData::WidgetType type)
     auto& model = *SkinRepository::screens();
     model.insertRow(model.rowCount(screen), screen);
     QModelIndex widget = model.index(model.rowCount(screen) - 1, 0, screen);
-    model.setData(widget, type, ScreensModel::TypeRole);
+    model.setData(widget, static_cast<int>(type), ScreensModel::TypeRole);
     auto size = SizeAttr(100, 100);
     model.setWidgetAttr(widget, Property::size, QVariant::fromValue(size));
-    if (type == WidgetData::Widget) {
+    if (type == WidgetData::WidgetType::Widget) {
         model.setWidgetAttr(widget, Property::name, "Untitled");
-    } else if (type == WidgetData::Label) {
+    } else if (type == WidgetData::WidgetType::Label) {
         model.setWidgetAttr(widget, Property::text, "Default text");
     }
 }
 
 void MainWindow::addWidget()
 {
-    addSkinItem(WidgetData::Widget);
+    addSkinItem(WidgetData::WidgetType::Widget);
 }
 void MainWindow::addPixmap()
 {
-    addSkinItem(WidgetData::Pixmap);
+    addSkinItem(WidgetData::WidgetType::Pixmap);
 }
 void MainWindow::addLabel()
 {
-    addSkinItem(WidgetData::Label);
+    addSkinItem(WidgetData::WidgetType::Label);
 }
 void MainWindow::addScreen()
 {
@@ -295,7 +295,7 @@ void MainWindow::addScreen()
     QModelIndex root;
     model.insertRow(model.rowCount(root), root);
     QModelIndex screen = model.index(model.rowCount(root) - 1, 0, root);
-    model.setData(screen, WidgetData::Screen, ScreensModel::TypeRole);
+    model.setData(screen, static_cast<int>(WidgetData::WidgetType::Screen), ScreensModel::TypeRole);
     auto pos = PositionAttr("center,center");
     auto size = SizeAttr(300, 200);
     model.setWidgetAttr(screen, Property::position, QVariant::fromValue(pos));

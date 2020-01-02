@@ -203,13 +203,14 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
         case ColumnElement:
             return widget->typeStr();
         case ColumnName:
+            using WidgetType = WidgetData::WidgetType;
             switch (widget->type()) {
-            case WidgetData::Label:
+            case WidgetType::Label:
                 return widget->text();
-            case WidgetData::Pixmap:
+            case WidgetType::Pixmap:
                 return widget->getAttr(Property::pixmap).toString();
-            case WidgetData::Screen:
-            case WidgetData::Widget:
+            case WidgetType::Screen:
+            case WidgetType::Widget:
                 if (widget->name().isNull() && !widget->source().isEmpty()) {
                     return widget->source();
                 }
@@ -217,7 +218,7 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
             }
         }
     case ScreensModel::TypeRole:
-        return widget->type();
+        return static_cast<int>(widget->type());
     default:
         return QVariant();
     }
@@ -234,13 +235,14 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
     case Qt::EditRole:
         switch (index.column()) {
         case ColumnName:
+            using WidgetType = WidgetData::WidgetType;
             switch (widget->type()) {
-            case WidgetData::Label:
+            case WidgetType::Label:
                 return setWidgetAttr(index, Property::text, value);
-            case WidgetData::Pixmap:
+            case WidgetType::Pixmap:
                 return setWidgetAttr(index, Property::pixmap, value);
-            case WidgetData::Screen:
-            case WidgetData::Widget:
+            case WidgetType::Screen:
+            case WidgetType::Widget:
                 return setWidgetAttr(index, Property::name, value);
             }
         default:
@@ -280,7 +282,7 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
         auto widget = new WidgetData();
         // Top level items should be Screens
         if (parentItem == m_root) {
-            widget->setType(WidgetData::Screen);
+            widget->setType(WidgetData::WidgetType::Screen);
         }
         childs.append(widget);
     }
