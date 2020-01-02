@@ -7,7 +7,7 @@ install:
   - choco install gitversion.portable -y
 
 build_script:
-  - qmake.exe e2designer.pro -spec win32-msvc 
+  - qmake.exe e2designer.pro -spec win32-msvc
   - jom.exe
 
 after_build:
@@ -20,16 +20,16 @@ after_build:
       7z a e2designer_${version}_win.zip .\deploy\*
 
 artifacts:
-  - path: '*.zip'
+  - path: "*.zip"
 
 deploy:
-- provider: BinTray
-  username: technic
-  api_key:
-    secure: jy1FUyYxHh37QsyYOVcrEHNNZLU/T9FFoWwiO4TVcUSfQ4zGu66G/dwxbwSqutfr
-  subject: technic
-  repo: e2designer
-  package: e2designer
-  on:
-    branch: master
-    # appveyor_repo_tag: true
+  - provider: BinTray
+    username: technic
+    api_key:
+      secure: jy1FUyYxHh37QsyYOVcrEHNNZLU/T9FFoWwiO4TVcUSfQ4zGu66G/dwxbwSqutfr
+    subject: technic
+    repo: e2designer
+    package: e2designer
+    on:
+      branch: master
+      # appveyor_repo_tag: true

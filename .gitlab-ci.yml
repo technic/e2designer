@@ -4,14 +4,14 @@ image: registry.gitlab.com/technic93/e2designer:latest
 # gitlab-runner exec docker --docker-pull-policy="if-not-present" --docker-privileged <command>
 
 variables:
-    UBUNTU_IMAGE: registry.gitlab.com/technic93/e2designer:latest
-    FLATPAK_IMAGE: registry.gitlab.com/technic93/e2designer:flatpak
-    BINTRAY_USER: technic
-    BINTRAY_REPO: e2designer
-    BINTRAY_PACKAGE: e2designer
-    BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
-    APP_NAME: org.technic93.e2designer
-    CODE_CHECKER_VER: v6.11.0
+  UBUNTU_IMAGE: registry.gitlab.com/technic93/e2designer:latest
+  FLATPAK_IMAGE: registry.gitlab.com/technic93/e2designer:flatpak
+  BINTRAY_USER: technic
+  BINTRAY_REPO: e2designer
+  BINTRAY_PACKAGE: e2designer
+  BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
+  APP_NAME: org.technic93.e2designer
+  CODE_CHECKER_VER: v6.11.0
 
 stages:
   - images
@@ -21,14 +21,14 @@ stages:
   - deploy
 
 .docker:
-    stage: images
-    image: docker:git
-    services:
-        - docker:dind
-    before_script:
-        - docker info
-        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    when: manual
+  stage: images
+  image: docker:git
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+  when: manual
 
 image:qt:
   extends: .docker
@@ -158,14 +158,14 @@ test:
   dependencies:
     - build:release
   script:
-  - pushd build
-  - make check
+    - pushd build
+    - make check
 
 coverage:
-    stage: tests
-    dependencies:
-      - build:debug
-    script:
+  stage: tests
+  dependencies:
+    - build:debug
+  script:
     - pushd build
     - make check
     - popd
@@ -174,10 +174,10 @@ coverage:
     - lcov --list coverage.info
     - genhtml coverage.info --output-directory coverage-report
     - bash <(curl -s https://codecov.io/bash) -f coverage.info
-    coverage: '/Total:\|(\d+\.?\d+\%)/'
-    artifacts:
-      paths:
-        - coverage-report/
+  coverage: '/Total:\|(\d+\.?\d+\%)/'
+  artifacts:
+    paths:
+      - coverage-report/
 
 flatpak:
   image: $FLATPAK_IMAGE
