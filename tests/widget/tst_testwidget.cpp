@@ -21,6 +21,8 @@ public:
     using Alphatest = Property::Alphatest;
 
 private slots:
+    void initTestCase() { Q_INIT_RESOURCE(resources); }
+
     void generate_code()
     {
         auto const fileName = QStringLiteral("funcs.cpp");

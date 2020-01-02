@@ -48,6 +48,3 @@ unix {
 }
 
 INSTALLS += target
-
-RESOURCES += \
-    ../resources.qrc

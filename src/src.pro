@@ -135,6 +135,9 @@ FORMS += \
     fontlistwindow.ui \
     outputslistwindow.ui
 
+RESOURCES += \
+    ../resources.qrc
+
 unix {
     isEmpty(PREFIX) {
         PREFIX = /usr

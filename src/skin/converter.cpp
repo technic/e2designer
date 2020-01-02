@@ -99,7 +99,7 @@ void MockSource::setValue(const QString& key, const QVariant& value)
 
 MockSourceFactory::MockSourceFactory()
 {
-    loadXml(":/sources.xml");
+    loadXml(":/src/sources.xml");
 }
 
 void MockSourceFactory::loadXml(const QString& path)
@@ -109,7 +109,7 @@ void MockSourceFactory::loadXml(const QString& path)
     QFile file(path);
     bool ok = file.open(QIODevice::ReadOnly);
     if (!ok) {
-        qInfo() << "Can't open source values file" << path;
+        qWarning() << "Can't open source values file" << path;
         return;
     }
 

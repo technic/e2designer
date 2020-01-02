@@ -13,6 +13,7 @@ public:
 private slots:
     void initTestCase()
     {
+        Q_INIT_RESOURCE(resources);
         // Initialize singleton:
         MockSourceFactory::instance();
     }
