@@ -29,7 +29,7 @@ void ResizableGraphicsRectItem::setHandlesVisible(bool visible)
 void ResizableGraphicsRectItem::resizeRect(QPointF p, int handle)
 {
     QRectF newRect = rect();
-    // Depending on active handle resize rect accordinally
+    // Depending on active handle resize rect accordingly
     // Ensure that left <= right and top <= bottom
     if (handle & RectHandle::Left) {
         if (m_xanchor == Coordinate::Type::Center) {
