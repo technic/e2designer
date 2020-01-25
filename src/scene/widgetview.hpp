@@ -32,7 +32,7 @@ class WidgetGraphicsItem : public QObject, public ResizableGraphicsRectItem, pub
 {
     Q_OBJECT
 public:
-    WidgetGraphicsItem(ScreenView* sreen, QModelIndex index, WidgetGraphicsItem* parent);
+    WidgetGraphicsItem(ScreenView* screen, QModelIndex index, WidgetGraphicsItem* parent);
     enum
     {
         Type = getGraphicsItemType<WidgetGraphicsItem>()

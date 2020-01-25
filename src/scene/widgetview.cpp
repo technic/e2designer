@@ -9,12 +9,12 @@
 #include <QPainter>
 #include <QTextDocument>
 
-WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* sreen,
+WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* screen,
                                        QModelIndex index,
                                        WidgetGraphicsItem* parent)
     : ResizableGraphicsRectItem(parent)
-    , m_screen(sreen)
-    , m_model(sreen->model())
+    , m_screen(screen)
+    , m_model(screen->model())
     , m_data(index)
     , m_observer(m_model, index)
     , m_rectChange(false)
