@@ -3,7 +3,7 @@
 #include "skin/positionattr.hpp"
 #include "skin/fontattr.hpp"
 #include "skin/colorattr.hpp"
-#include "borderset.hpp"
+#include "skin/borders.hpp"
 #include "repository/xmlnode.hpp"
 #include "model/namedlist.hpp"
 #include <QMetaEnum>
@@ -65,6 +65,7 @@ public:
 
     ColorAttr getColor(WindowStyleColor::ColorRole role);
     void setColor(WindowStyleColor::ColorRole role, const ColorAttr& color);
+    BorderSet borderSet() const { return m_borderSet; }
 
 private:
     QString m_type;

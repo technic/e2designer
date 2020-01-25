@@ -1,4 +1,4 @@
-#include "borderset.hpp"
+#include "borders.hpp"
 #include "skin/enums.hpp"
 
 // Border
@@ -7,6 +7,7 @@ Border::Border()
     : m_bp(bpInvalid)
     , m_fname()
 {}
+
 void Border::fromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "pixmap");
@@ -112,7 +113,7 @@ void BorderSet::toXml(QXmlStreamWriter& xml) const
     xml.writeEndElement();
 }
 
-const Border& BorderSet::getBorder(int bp)
+const Border& BorderSet::getBorder(Property::BorderPosition bp) const
 {
     return m_borders[bp];
 }

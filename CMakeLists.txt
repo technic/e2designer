@@ -30,7 +30,7 @@ set(SOURCE
     src/fontlistwindow.cpp
     src/listbox.cpp
     src/mainwindow.cpp
-    src/model/borderset.cpp
+    src/model/bordersmodel.cpp
     src/model/colorsmodel.cpp
     src/model/fontsmodel.cpp
     src/model/movablelistmodel.cpp
@@ -52,6 +52,7 @@ set(SOURCE
     src/scene/screenview.cpp
     src/scene/widgetview.cpp
     src/skin/attributes.cpp
+    src/skin/borders.cpp
     src/skin/colorattr.cpp
     src/skin/converter.cpp
     src/skin/enumattr.cpp

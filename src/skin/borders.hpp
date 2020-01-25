@@ -1,6 +1,7 @@
 #pragma once
 
 #include "repository/xmlnode.hpp"
+#include "skin/enums.hpp"
 
 class QXmlStreamReader;
 class QXmlStreamWriter;
@@ -23,6 +24,7 @@ public:
 
     inline int bp() const { return m_bp; }
     inline bool isValid() const { return m_bp != bpInvalid; }
+    inline QString fileName() const { return m_fname; }
     void reset();
 
 private:
@@ -39,11 +41,12 @@ public:
     };
 
     BorderSet();
+    static int count() { return QMetaEnum::fromType<Property::BorderPosition>().keyCount(); }
 
     void fromXml(QXmlStreamReader& xml);
     void toXml(QXmlStreamWriter& xml) const;
 
-    const Border& getBorder(int bp);
+    const Border& getBorder(Property::BorderPosition bp) const;
 
 private:
     int m_bs;
