@@ -2,7 +2,7 @@
 
 #include "repository/pixmapstorage.hpp"
 #include "model/windowstyle.hpp"
-
+#include <memory>
 #include <vector>
 
 class BorderStorage : public QObject
@@ -40,8 +40,8 @@ private:
         void fileChangedEvent() final { storage->reload(index, path()); }
 
     private:
-        int index;
         BorderStorage* storage;
+        int index;
     };
 
     void reload(int index, const QString& path)
