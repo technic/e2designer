@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/borderset.hpp"
+#include "model/bordersmodel.hpp"
 #include <QGraphicsRectItem>
 
 class BorderView : public QObject, public QGraphicsRectItem
