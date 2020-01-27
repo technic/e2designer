@@ -61,10 +61,11 @@ SOURCES += \
     model/fontsmodel.cpp \
     model/propertiesmodel.cpp \
     model/screensmodel.cpp \
-    model/borderset.cpp \
+    model/bordersmodel.cpp \
     model/windowstyle.cpp \
     scene/borderview.cpp \
     skin/attributes.cpp \
+    skin/borders.cpp \
     skin/colorattr.cpp \
     skin/fontattr.cpp \
     skin/sizeattr.cpp \
@@ -105,11 +106,12 @@ HEADERS += \
     model/fontsmodel.hpp \
     model/propertiesmodel.hpp \
     model/screensmodel.hpp \
-    model/borderset.hpp \
+    model/bordersmodel.hpp \
     model/windowstyle.hpp \
     scene/borderview.hpp \
     base/flagsetter.hpp \
     skin/attributes.hpp \
+    skin/borders.hpp \
     skin/enums.hpp \
     skin/fontattr.hpp \
     skin/colorattr.hpp \
