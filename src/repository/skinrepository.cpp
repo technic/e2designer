@@ -40,6 +40,12 @@ QString SkinRepository::resolveFilename(const QString& path) const
     return QString();
 }
 
+/**
+ * @brief Open skin directory containing skin.xml file
+ * @param path
+ * @return if error occurred returns false,
+ * error can be obtained with lastError() method
+ */
 bool SkinRepository::open(const QString& path)
 {
     m_directory = QDir(path);
