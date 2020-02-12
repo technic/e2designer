@@ -118,7 +118,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::openFile(const QString& dirname)
 {
-    SkinRepository::instance().open(dirname);
+    auto& model = SkinRepository::instance();
+    bool ok = model.open(dirname);
+    if (!ok) {
+        QMessageBox::warning(
+          this,
+          tr("Error"),
+          tr("Failed to open skin to directory:\n%1\n%2.").arg(dirname).arg(model.lastError()));
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
