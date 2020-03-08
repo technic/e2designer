@@ -5,11 +5,9 @@
 class XmlStreamWriter : public QXmlStreamWriter
 {
 public:
+    // This supprots only QIODevice now
     XmlStreamWriter(QIODevice* device)
         : QXmlStreamWriter(device)
-    {}
-    XmlStreamWriter(QString* string)
-        : QXmlStreamWriter(string)
     {}
     void writeQuotedCharacters(const QString& text)
     {

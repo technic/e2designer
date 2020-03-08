@@ -4,6 +4,7 @@
 #include <QCloseEvent>
 #include <QColorDialog>
 #include <QFile>
+#include <QBuffer>
 #include <QFileDialog>
 #include <QGraphicsView>
 #include <QItemEditorFactory>
@@ -363,11 +364,16 @@ void MainWindow::checkUpdates()
 
 void MainWindow::setEditorText(const QModelIndex& index)
 {
-    QString str;
-    XmlStreamWriter xml(&str);
+    // Don't write directly to QString,
+    // because modified writer does not support it.
+    QBuffer buf;
+    buf.open(QIODevice::WriteOnly);
+
+    XmlStreamWriter xml(&buf);
     xml.setAutoFormatting(true);
     xml.setAutoFormattingIndent(2);
     SkinRepository::screens()->widget(index).toXml(xml);
+    auto str = QString::fromUtf8(buf.buffer());
     if (str.startsWith('\n')) {
         str.remove(0, 1);
     }
