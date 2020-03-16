@@ -3,6 +3,7 @@
 #include "skin/enums.hpp"
 #include <QString>
 #include <QStringList>
+#include <QDebug>
 #include <type_traits>
 
 /**
