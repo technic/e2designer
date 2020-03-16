@@ -224,7 +224,7 @@ QString SkinRepository::previewFilePath() const
 bool SkinRepository::setError(const QString& message)
 {
     m_errorMessage = message;
-    qWarning() << "Error occured:" << message;
+    qWarning() << "Error occurred:" << message;
     return false;
 }
 
