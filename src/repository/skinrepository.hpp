@@ -3,8 +3,6 @@
 #include "base/singleton.hpp"
 #include "model/outputsmodel.hpp"
 #include "model/colorsmodel.hpp"
-#include "model/colorsmodel.hpp"
-#include "model/fontsmodel.hpp"
 #include "model/fontsmodel.hpp"
 #include "model/screensmodel.hpp"
 #include "model/windowstyle.hpp"
