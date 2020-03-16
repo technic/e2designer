@@ -66,7 +66,8 @@ private:
 template<class T, typename = typename std::enable_if<std::is_enum<T>::value>::type>
 inline QString serialize(T value)
 {
-    return EnumAttr<T>(value).toStr();
+    constexpr bool showDefault = std::is_same_v<T, PropertyHAlign::Enum>;
+    return EnumAttr<T>(value).toStr(!showDefault);
 }
 template<class T, typename = typename std::enable_if<std::is_enum<T>::value>::type>
 inline void deserialize(const QString& str, T& value)
