@@ -5,7 +5,7 @@ RUN apt-get update \
 
 ARG v=9
 RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test \
- && apt-get update && apt-get install gcc-$v g++-$v gcc-$v-base \
+ && apt-get update && apt-get install -y gcc-$v g++-$v gcc-$v-base \
  && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-$v 100 \
  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-$v 100 
 
