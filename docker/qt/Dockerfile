@@ -1,7 +1,13 @@
 FROM ubuntu:16.04
 
 RUN apt-get update \
- && apt-get install -y curl git g++ make software-properties-common
+ && apt-get install -y curl git make software-properties-common
+
+ARG v=9
+RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+ && apt-get update && apt-get install gcc-$v g++-$v gcc-$v-base \
+ && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-$v 100 \
+ && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-$v 100 
 
 ENV Qt=512
 RUN apt-add-repository -y ppa:beineri/opt-qt-5.12.2-xenial \
