@@ -12,14 +12,52 @@ template<class Enum>
 class EnumAttr
 {
 public:
-    EnumAttr();
-    EnumAttr(const QString& str);
-    EnumAttr(const int value);
+    EnumAttr()
+    {
+        QMetaEnum meta = QMetaEnum::fromType<Enum>();
+        if (meta.keyCount() > 0)
+            m_value = meta.value(0);
+        else
+            m_value = 0;
+    }
+    EnumAttr(const QString& str)
+    {
+        QMetaEnum meta = QMetaEnum::fromType<Enum>();
+        bool ok;
+        m_value = meta.keyToValue(str.toLatin1().data(), &ok);
+        if (!ok) {
+            qWarning() << "bad enum " << str;
+            m_value = meta.value(0);
+        }
+    }
+    EnumAttr(const int value)
+    {
+        // TODO: bounds check?
+        m_value = value;
+    }
 
     inline Enum value() const { return Enum(m_value); }
-    QString toStr(bool emptyDefault = true) const;
+    QString toStr(bool emptyDefault = true) const
+    {
+        QMetaEnum meta = QMetaEnum::fromType<Enum>();
+        if (meta.keyCount() > 0) {
+            if (emptyDefault && m_value == meta.value(0))
+                return QString();
+            else
+                return meta.valueToKey(m_value);
+        }
+        return QString();
+    }
     QString toXml() { return toStr(true); }
-    QStringList toStrList() const;
+    QStringList toStrList() const
+    {
+        QMetaEnum meta = QMetaEnum::fromType<Enum>();
+        QStringList list;
+        for (int i = 0; i < meta.keyCount(); ++i) {
+            list.append(QString(meta.key(i)));
+        }
+        return list;
+    }
 
 private:
     int m_value;
