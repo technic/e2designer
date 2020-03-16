@@ -59,7 +59,8 @@ public:
         Screen,
         Widget,
         Label,
-        Pixmap
+        Pixmap,
+        Applet,
     };
     Q_ENUM(WidgetType)
 

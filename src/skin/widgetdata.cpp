@@ -329,6 +329,8 @@ QString WidgetData::typeStr() const
         return "eLabel";
     case WidgetType::Pixmap:
         return "ePixmap";
+    case WidgetType::Applet:
+        return "applet";
     }
 }
 
@@ -343,6 +345,8 @@ WidgetData::WidgetType WidgetData::strToType(const QStringRef& str, bool& ok)
         return WidgetType::Label;
     } else if (str == "ePixmap") {
         return WidgetType::Pixmap;
+    } else if (str == "applet") {
+        return WidgetType::Applet;
     } else {
         ok = false;
         return WidgetType::Widget;
@@ -624,7 +628,7 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
     bool ok;
     m_type = strToType(xml.name(), ok);
     if (!ok) {
-        xml.raiseError(QString("Unknown widget tag %1").arg(xml.name().toString()));
+        xml.raiseError(QString("Unknown widget tag '%1'").arg(xml.name().toString()));
         return false;
     }
     QMetaEnum meta = Property::propertyEnum();
@@ -639,6 +643,11 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
             qWarning() << "unknown attribute" << attr.name();
             m_otherAttributes[attr.name().toString()] = attr.value().toString();
         }
+    }
+
+    // FIXME: replace this if spaghetti with proper OOP solution
+    if (m_type == WidgetType::Applet) {
+        // TODO: store text
     }
 
     while (xml.readNextStartElement()) {
@@ -663,6 +672,7 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
             converter->fromXml(xml);
             m_converters.push_back(std::move(converter));
         } else {
+            qWarning() << "unknown element" << xml.name();
             xml.skipCurrentElement();
         }
     }
@@ -704,11 +714,14 @@ Property::Render WidgetData::sceneRender() const
         return Property::Pixmap;
     case WidgetType::Label:
         return Property::Label;
-    case WidgetType::Widget:
+    case WidgetType::Widget: {
         auto r = render();
         if (r == Property::Widget)
             r = previewRender();
         return r;
+    }
+    case WidgetType::Applet:
+        return Property::Widget;
     }
 }
 
