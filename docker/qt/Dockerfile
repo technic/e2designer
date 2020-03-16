@@ -16,7 +16,8 @@ RUN apt-add-repository -y ppa:beineri/opt-qt-5.12.2-xenial \
 RUN sed -i '/^TEST/d' /opt/qt${Qt}/bin/qt${Qt}-env.sh
 RUN echo "source /opt/qt${Qt}/bin/qt${Qt}-env.sh" >> $HOME/.bashrc
 
-RUN apt-get install -y fuse ccache zsync gcovr lcov doxygen graphviz python3-requests
+RUN apt-get install -y fuse ccache zsync gcovr lcov doxygen graphviz python3-requests \
+    apt-transport-https ca-certificates
 
 ARG v=8
 RUN apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-$v main" \
