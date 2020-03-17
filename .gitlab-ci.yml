@@ -143,7 +143,7 @@ clazy:
     - chmod a+x /usr/local/bin/clazy
     - mkdir -p build && pushd build
     - qmake -spec linux-clang .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -Werror -fcolor-diagnostics"
-    - CLAZY_IGNORE_DIRS="/opt/qt${Qt}|/project/Qt-Color-Widgets" make
+    - CLAZY_IGNORE_DIRS="/opt/qt${Qt}|.*/Qt-Color-Widgets" make
   allow_failure: true
   when: manual
 
