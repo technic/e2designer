@@ -146,6 +146,7 @@ clang-tidy:
     - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -Wno-register"
     - bear make -j$(nproc)
     - run-clang-tidy.py
+    - sed -e 's/"c++ /"clang++ /' -i compile_commands.json
     - pvs-studio-analyzer credentials $PVS_NAME $PVS_KEY
     - pvs-studio-analyzer analyze -o PVS-Studio.log
     - plog-converter -t fullhtml PVS-Studio.log -o ../PVS-Studio.html
