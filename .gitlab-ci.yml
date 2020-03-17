@@ -191,7 +191,8 @@ coverage:
 flatpak:
   image: $FLATPAK_IMAGE
   stage: package
-  needs: []
+  needs:
+    - image:flatpak
   before_script:
     - flatpak --version
     - flatpak-builder --version
