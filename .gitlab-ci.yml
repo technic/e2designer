@@ -107,7 +107,9 @@ CodeChecker:
     - cd ~/codechecker && make venv && source "$PWD/venv/bin/activate"
     - make package && export PATH="$PWD/build/CodeChecker/bin:$PATH"
     - cd "$CI_PROJECT_DIR" && mkdir -p build && pushd build
-    - qmake -spec linux-clang ..
+    - curl -L -o /usr/local/bin/clazy https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
+    - chmod a+x /usr/local/bin/clazy
+    - qmake -spec linux-clang .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -fcolor-diagnostics"
     - CodeChecker check -b "make" -o ./reports
     - CodeChecker parse ./reports -e html -o ../reports_html
   artifacts:
@@ -140,9 +142,10 @@ clazy:
     - curl -L -o /usr/local/bin/clazy https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
     - chmod a+x /usr/local/bin/clazy
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -Werror -fcolor-diagnostics"
-    - make
+    - qmake -spec linux-clang .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -Werror -fcolor-diagnostics"
+    - CLAZY_IGNORE_DIRS="/opt/qt${Qt}|/project/Qt-Color-Widgets" make
   allow_failure: true
+  when: manual
 
 clang-tidy:
   stage: build
