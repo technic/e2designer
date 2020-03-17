@@ -16,8 +16,7 @@ variables:
 stages:
   - images
   - build
-  - tests
-  - package
+  - tasks
   - deploy
 
 .docker:
@@ -116,7 +115,7 @@ CodeChecker:
       - reports_html/
 
 AppImage:
-  stage: package
+  stage: tasks
   needs:
     - job: build:release
       artifacts: true
@@ -161,7 +160,7 @@ clang-tidy:
       - PVS-Studio.html
 
 test:
-  stage: tests
+  stage: tasks
   needs:
     - job: build:release
       artifacts: true
@@ -170,7 +169,7 @@ test:
     - make check
 
 coverage:
-  stage: tests
+  stage: tasks
   needs:
     - job: build:debug
       artifacts: true
@@ -190,7 +189,7 @@ coverage:
 
 flatpak:
   image: $FLATPAK_IMAGE
-  stage: package
+  stage: tasks
   needs:
     - image:flatpak
   before_script:
