@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 RUN apt-get update \
  && apt-get install -y curl git make software-properties-common
 
-ARG v=9
+ARG v=7
 RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test \
  && apt-get update && apt-get install -y gcc-$v g++-$v gcc-$v-base \
  && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-$v 100 \
