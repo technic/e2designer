@@ -28,19 +28,24 @@ stages:
   before_script:
     - docker info
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-  when: manual
 
 image:qt:
   extends: .docker
   script:
     - docker build docker/qt --pull -t $UBUNTU_IMAGE
     - docker push $UBUNTU_IMAGE
+  only:
+    changes:
+      - docker/qt/**/*
 
 image:flatpak:
   extends: .docker
   script:
     - docker build docker/flatpak --pull -t $FLATPAK_IMAGE
     - docker push $FLATPAK_IMAGE
+  only:
+    changes:
+      - docker/flatpak/**/*
 
 format:
   stage: build
