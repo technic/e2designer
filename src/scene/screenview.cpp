@@ -280,7 +280,7 @@ void ScreenView::setCurrentWidget(const QModelIndex& current, const QModelIndex&
         qWarning() << "failed to set current widget: screen not found!";
         return;
     }
-    // current widgget should be in the scene
+    // current widget should be in the scene
     Q_ASSERT(m_widgets.contains(normalizeIndex(current)));
     m_widgets[normalizeIndex(current)]->setSelected(true);
 }

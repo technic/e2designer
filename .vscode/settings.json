@@ -12,6 +12,7 @@
         "qcompare",
         "qfindtestdata",
         "qgetenv",
+        "qgraphicsitem",
         "qreal",
         "quintptr",
         "qverify"
