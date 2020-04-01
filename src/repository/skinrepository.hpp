@@ -22,6 +22,7 @@ class SkinRepository : public QObject, public SingletonMixin<SkinRepository>, pu
     Q_DISABLE_COPY(SkinRepository)
 
 public:
+    // Never call this manually. FIXME: declare private
     explicit SkinRepository(QObject* parent = Q_NULLPTR);
 
     // functions for easy access to singleton childs
