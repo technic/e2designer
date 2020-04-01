@@ -49,6 +49,34 @@ private slots:
                      QString("w%1").arg(i));
         }
     }
+
+    void test_xml()
+    {
+        auto* colors = new ColorsModel(this);
+        auto* colorRoles = new ColorRolesModel(*colors, this);
+        auto* fonts = new FontsModel(this);
+        ScreensModel model(*colors, *colorRoles, *fonts, this);
+
+        model.insertRow(0, QModelIndex());
+        auto s = model.index(0, 0, QModelIndex());
+        model.insertRow(0, s);
+        auto w = model.index(0, 0, s);
+
+        model.setWidgetAttr(w, Property::name, "wn");
+        model.setWidgetAttr(w, Property::text, "text_a");
+        model.setWidgetAttr(w, Property::previewValue, "value");
+
+        QCOMPARE(model.widgetAttr(w, Property::text), "text_a");
+        QCOMPARE(model.widgetAttr(w, Property::previewValue), "value");
+
+        QXmlStreamReader xml_data(QString(R"#(<widget name="wn" text="text_b"/>)#"));
+        xml_data.readNextStartElement();
+        model.setWidgetDataFromXml(w, xml_data);
+
+        w = model.index(0, 0, s); // Get new index after widget was reloaded
+        QCOMPARE(model.widgetAttr(w, Property::text), "text_b");
+        QCOMPARE(model.widgetAttr(w, Property::previewValue), "value");
+    }
 };
 
 QTEST_APPLESS_MAIN(TestScreensModel)
