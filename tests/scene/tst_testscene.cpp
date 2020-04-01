@@ -34,7 +34,7 @@ private slots:
         // Move widget into the screen and select
         m_model->moveRows(QModelIndex(), 0, 1, s0, 0);
         selection->setCurrentIndex(s0.child(0, 0), QItemSelectionModel::Current);
-        qDebug() << selection->currentIndex();
+        qDebug() << selection->currentIndex().data();
     }
 
 private:
@@ -45,9 +45,9 @@ private:
 
     void printSubTree(QModelIndex index, int level = 0)
     {
-        qDebug() << "*" + QString("-").repeated(level)
-                 << m_model->data(index, Qt::DisplayRole).toString()
-                 << m_model->data(index.sibling(index.row(), 1), Qt::DisplayRole).toString();
+        qDebug().noquote()
+          << "*" + QString("-").repeated(level) << m_model->data(index, Qt::DisplayRole).toString()
+          << m_model->data(index.sibling(index.row(), 1), Qt::DisplayRole).toString();
         for (int r = 0; r < m_model->rowCount(index); ++r) {
             printSubTree(m_model->index(r, 0, index), level + 1);
         }

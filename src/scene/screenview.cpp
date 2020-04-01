@@ -35,6 +35,8 @@ ScreenView::ScreenView(ScreensModel* model)
             &ScreensModel::rowsAboutToBeRemoved,
             this,
             &ScreenView::onRowsAboutToBeRemoved);
+    connect(m_model, &ScreensModel::rowsAboutToBeMoved, this, &ScreenView::onRowsAboutToBeMoved);
+    connect(m_model, &ScreensModel::rowsMoved, this, &ScreenView::onRowsMoved);
     connect(m_model, &ScreensModel::rowsInserted, this, &ScreenView::onRowsInserted);
     connect(m_model, &ScreensModel::modelReset, this, &ScreenView::onModelReset);
 
@@ -165,11 +167,43 @@ void ScreenView::onWidgetChanged(const QModelIndex& index, int key)
     }
 }
 
+/**
+ * @brief Check if @p index is equal to or is child of @a m_root
+ * @param index
+ * @return
+ */
+bool ScreenView::belongsToRoot(QModelIndex index) const
+{
+    while (index.isValid() && !(index == m_root)) {
+        index = index.parent();
+    }
+    return index.isValid();
+}
+
+/**
+ * @brief Check if @p index is a parent of @a m_root
+ * @param index
+ * @return
+ */
+bool ScreenView::containsOurRoot(const QModelIndex& index, int first, int last) const
+{
+    QModelIndex root = m_root;
+    while (root.isValid()) {
+        QModelIndex parent = root.parent();
+        if (parent == index) {
+            break;
+        } else {
+            root = parent;
+        }
+    }
+    int r = root.row();
+    return root.isValid() && (first <= r && r <= last);
+}
+
 void ScreenView::onRowsAboutToBeRemoved(const QModelIndex& parent, int first, int last)
 {
-    // check if delete our root
-    const int r = m_root.row();
-    if (m_root.parent() == parent && first <= r && r <= last) {
+    if (containsOurRoot(parent, first, last)) {
+        // our root is one of the deleted elements
         WidgetGraphicsItem* screen = m_widgets[m_root];
         if (screen) {
             m_scene->removeItem(screen);
@@ -177,28 +211,55 @@ void ScreenView::onRowsAboutToBeRemoved(const QModelIndex& parent, int first, in
             m_widgets.clear();
         }
     } else {
-        // just rely on our map
+        // part of our screen's children will be removed
+        removeChildren(parent, first, last);
+    }
+}
+
+void ScreenView::onRowsAboutToBeMoved(const QModelIndex& sourceParent,
+                                      int sourceStart,
+                                      int sourceEnd,
+                                      const QModelIndex& destinationParent,
+                                      int destinationRow)
+{
+    if (belongsToRoot(sourceParent) && !belongsToRoot(destinationParent)) {
+        // some children will disappear in our screen subtree
+        removeChildren(sourceParent, sourceStart, sourceEnd);
+    }
+    Q_UNUSED(destinationRow)
+}
+
+void ScreenView::onRowsMoved(const QModelIndex& parent,
+                             int start,
+                             int end,
+                             const QModelIndex& destination,
+                             int row)
+{
+    if (!belongsToRoot(parent) && belongsToRoot(destination)) {
+        // children has appeared in our screen subtree
+        onRowsInserted(destination, row, row + end - start);
+    }
+}
+
+void ScreenView::removeChildren(const QModelIndex& parent, int first, int last)
+{
+    if (belongsToRoot(parent)) {
+        // rely on our map
         for (int i = first; i <= last; ++i) {
             QModelIndex index = m_model->index(i, 0, parent);
             Q_ASSERT(m_widgets.contains(index));
 
-            if (m_widgets.contains(index)) {
-                WidgetGraphicsItem* w = m_widgets.take(index);
-                // releases ownership
-                m_scene->removeItem(w);
-                delete w;
-            }
+            WidgetGraphicsItem* w = m_widgets.take(index);
+            // releases ownership
+            m_scene->removeItem(w);
+            delete w;
         }
     }
 }
 
 void ScreenView::onRowsInserted(const QModelIndex& parent, int first, int last)
 {
-    QModelIndex widget = parent;
-    while (widget.isValid() && !(widget == m_root)) {
-        widget = widget.parent();
-    }
-    if (!widget.isValid())
+    if (!belongsToRoot(parent))
         return;
 
     // Ok it belongs to our root

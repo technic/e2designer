@@ -37,6 +37,16 @@ private slots:
     // Screens Model
     void onWidgetChanged(const QModelIndex& index, int key);
     void onRowsAboutToBeRemoved(const QModelIndex& parent, int first, int last);
+    void onRowsAboutToBeMoved(const QModelIndex& sourceParent,
+                              int sourceStart,
+                              int sourceEnd,
+                              const QModelIndex& destinationParent,
+                              int destinationRow);
+    void onRowsMoved(const QModelIndex& parent,
+                     int start,
+                     int end,
+                     const QModelIndex& destination,
+                     int row);
     void onRowsInserted(const QModelIndex& parent, int first, int last);
     void onModelAboutToBeReset();
     void onModelReset();
@@ -55,6 +65,10 @@ private slots:
 private:
     QModelIndex normalizeIndex(const QModelIndex& index) const;
     QItemSelection makeRowSelection(const QModelIndex& index);
+    bool belongsToRoot(QModelIndex index) const;
+    bool containsOurRoot(const QModelIndex& index, int first, int last) const;
+    void removeChildren(const QModelIndex& parent, int first, int last);
+
     const int m_outputId = 0;
 
     // ref
