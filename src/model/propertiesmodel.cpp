@@ -161,7 +161,7 @@ Qt::ItemFlags PropertiesModel::flags(const QModelIndex& index) const
     auto* attr = static_cast<AttrItem*>(index.internalPointer());
 
     if (index.column() == ColumnKey || attr->key() == Property::invalid) {
-        return Qt::ItemIsEnabled;
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
     } else {
         return Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }

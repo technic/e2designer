@@ -84,7 +84,11 @@ MainWindow::MainWindow(QWidget* parent)
             &MainWindow::setTitle);
 
     ui->propView->setModel(m_propertiesModel);
-    ui->propView->setIndentation(5);
+    // start editing with one click
+    connect(ui->propView,
+            &QTreeView::clicked,
+            ui->propView,
+            qOverload<const QModelIndex&>(&QTreeView::edit));
 
     //	SkinDelegate *delegate = new SkinDelegate(this);
     //	ui->propView->setItemDelegate(delegate);

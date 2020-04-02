@@ -44,7 +44,7 @@
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QTreeView" name="propView">
+       <widget class="CustomTreeView" name="propView">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -58,7 +58,7 @@
          </size>
         </property>
         <property name="editTriggers">
-         <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+         <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
         </property>
         <property name="animated">
          <bool>true</bool>
@@ -424,6 +424,11 @@
    <class>CodeEditor</class>
    <extends>QPlainTextEdit</extends>
    <header>editor/codeeditor.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>CustomTreeView</class>
+   <extends>QTreeView</extends>
+   <header>customtreeview.hpp</header>
   </customwidget>
  </customwidgets>
  <resources>

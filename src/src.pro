@@ -79,6 +79,7 @@ SOURCES += \
     outputslistwindow.cpp
 
 HEADERS += \
+    customtreeview.hpp \
     mainwindow.hpp \
     skindelegate.hpp \
     colorlistwindow.hpp \
