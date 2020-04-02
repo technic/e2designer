@@ -102,9 +102,13 @@ build:debug:
 build:cmake:
   stage: build
   script:
-    - cmake -S . -B build
-    - cmake --build build
-    - ctest build
+    - curl https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
+    - apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'
+    - apt-get update && apt-get install -y cmake
+    - mkdir -p build && pushd build
+    - cmake ..
+    - cmake --build .
+    - ctest
 
 CodeChecker:
   stage: build
