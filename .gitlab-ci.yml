@@ -99,6 +99,13 @@ build:debug:
     paths:
       - ccache/
 
+build:cmake:
+  stage: build
+  script:
+    - cmake -S . -B build
+    - cmake --build build
+    - ctest build
+
 CodeChecker:
   stage: build
   script:
