@@ -59,9 +59,10 @@ private slots:
 
         model.insertRow(0, QModelIndex());
         auto s = model.index(0, 0, QModelIndex());
+        model.setWidgetAttr(s, Property::name, "sn");
+
         model.insertRow(0, s);
         auto w = model.index(0, 0, s);
-
         model.setWidgetAttr(w, Property::name, "wn");
         model.setWidgetAttr(w, Property::text, "text_a");
         model.setWidgetAttr(w, Property::previewValue, "value");

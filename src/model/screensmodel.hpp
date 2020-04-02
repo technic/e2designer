@@ -141,7 +141,7 @@ public:
     void unregisterObserver(const QModelIndex& index);
 
     // Build preview map from widget tree
-    void updatePreviewMap();
+    void updatePreviewMap(const QModelIndex& index);
     void savePreviewTree(const QString& path);
 
 signals:

@@ -473,6 +473,9 @@ bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamRead
         delete widget;
         return false;
     }
+    // store preview modification separately, because they are not in xml
+    updatePreviewMap(index);
+
     QModelIndex parent = index.parent();
     m_commander->beginMacro("Edit XML source");
     // Remove old widget
@@ -481,6 +484,8 @@ bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamRead
     auto child = QVector<WidgetData*>{ widget };
     m_commander->push(new InsertRowsCommand(*indexToItem(parent), index.row(), child));
     m_commander->endMacro();
+    // recover preview data
+    widget->loadPreview();
     return true;
 }
 
@@ -644,19 +649,28 @@ QVector<QModelIndex> ScreensModel::decodeRows(QDataStream& stream) const
     return rows;
 }
 
-void ScreensModel::updatePreviewMap()
+void ScreensModel::updatePreviewMap(const QModelIndex& index)
 {
-    m_previews.clear();
-    for (int i = 0; i < m_root->childCount(); ++i) {
-        const auto* screen = m_root->child(i);
-        QMap<QString, Preview> map;
-        for (int j = 0; j < screen->childCount(); ++j) {
-            const auto* widget = screen->child(j);
-            if (!widget->previewValue().isNull())
-                map[widget->name()] = Preview(widget->previewValue(), widget->previewRender());
+    auto screen = indexToItem(index);
+    if (screen) {
+        // if it was a widget get a parent screen
+        if (screen->type() != WidgetData::WidgetType::Screen) {
+            auto ptr = screen->parent();
+            if (ptr) {
+                screen = ptr->self();
+            }
         }
-        if (!map.empty())
-            m_previews[screen->name()] = map;
+        QString screen_name = screen->name();
+        if (screen_name.isEmpty()) {
+            return;
+        }
+        auto& map = m_previews[screen_name];
+        for (int i = 0; i < screen->childCount(); ++i) {
+            auto w = screen->child(i);
+            if (!w->name().isEmpty()) {
+                map[w->name()] = Preview(w->previewValue(), w->previewRender());
+            }
+        }
     }
 }
 
