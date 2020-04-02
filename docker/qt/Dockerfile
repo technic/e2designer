@@ -10,7 +10,7 @@ RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test \
  && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-$v 100 
 
 ENV Qt=512
-RUN apt-add-repository -y ppa:beineri/opt-qt-5.12.2-xenial \
+RUN apt-add-repository -y ppa:beineri/opt-qt-5.12.7-xenial \
  && apt-get update && apt-get install -y qt${Qt}base qt${Qt}tools qt${Qt}svg libgl1-mesa-dev
 # disable grep and exec part of the script
 RUN sed -i '/^TEST/d' /opt/qt${Qt}/bin/qt${Qt}-env.sh
