@@ -58,6 +58,11 @@ MainWindow::MainWindow(QWidget* parent)
     auto highlighter = new XMLHighlighter(ui->textEdit->document());
     Q_UNUSED(highlighter);
 
+    connect(ui->textEdit,
+            &QPlainTextEdit::modificationChanged,
+            ui->refreshButton,
+            &QPushButton::setEnabled);
+
     ui->treeView->setModel(SkinRepository::screens());
     ui->treeView->setDragEnabled(true);
     //	ui->treeView->setDropIndicatorShown(true);
@@ -378,6 +383,7 @@ void MainWindow::setEditorText(const QModelIndex& index)
         str.remove(0, 1);
     }
     ui->textEdit->document()->setPlainText(str);
+    ui->textEdit->document()->setModified(false);
 }
 
 void MainWindow::loadEditorText()
@@ -397,6 +403,7 @@ void MainWindow::loadEditorText()
     }
     index = model->index(index.row(), ScreensModel::ColumnElement, parent);
     ui->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Current);
+    ui->textEdit->document()->setModified(false);
 }
 
 void MainWindow::showXmlEditor(bool show)
