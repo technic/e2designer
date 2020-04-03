@@ -12,6 +12,7 @@ variables:
   BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
   APP_NAME: org.technic93.e2designer
   CODE_CHECKER_VER: v6.11.0
+  CLAZY_VER: "1.6"
 
 stages:
   - images
@@ -118,9 +119,9 @@ CodeChecker:
     - cd ~/codechecker && make venv && source "$PWD/venv/bin/activate"
     - make package && export PATH="$PWD/build/CodeChecker/bin:$PATH"
     - cd "$CI_PROJECT_DIR" && mkdir -p build && pushd build
-    - curl -L -o /usr/local/bin/clazy https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
-    - chmod a+x /usr/local/bin/clazy
-    - qmake -spec linux-clang .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -fcolor-diagnostics"
+    - curl -L -o /usr/local/bin/clang++-clazy "https://downloads.kdab.com/clazy/$CLAZY_VER/Clazy-x86_64-$CLAZY_VER.AppImage"
+    - chmod a+x /usr/local/bin/clnag++-clazy
+    - qmake -spec linux-clang .. "QMAKE_CXX = clang++-clazy" "QMAKE_CXXFLAGS += -fcolor-diagnostics"
     - CodeChecker check -b "make" -o ./reports
     - CodeChecker parse ./reports -e html -o ../reports_html
   artifacts:
