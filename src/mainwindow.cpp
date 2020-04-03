@@ -454,6 +454,12 @@ void MainWindow::createActions()
     connect(ui->actionXmlEditor, &QAction::triggered, this, &MainWindow::showXmlEditor);
     connect(ui->actionFitPixmap, &QAction::triggered, this, &MainWindow::fitWidgetToPixmap);
 
+    connect(ui->actionUndoStack, &QAction::triggered, ui->dockWidget, &QDockWidget::setVisible);
+    connect(ui->dockWidget,
+            &QDockWidget::visibilityChanged,
+            ui->actionUndoStack,
+            &QAction::setChecked);
+
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
     connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);
     connect(ui->actionEditOutputs, &QAction::triggered, this, &MainWindow::editOutputs);
