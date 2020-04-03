@@ -8,8 +8,10 @@ finish-args:
   - --socket=x11
   - --socket=wayland
   - --filesystem=host
+rename-desktop-file: e2designer.desktop
+rename-appdata-file: e2designer.appdata.xml
 cleanup:
-  - /usr
+  - /lib/*.a
 modules:
   - name: e2designer
     buildsystem: qmake
