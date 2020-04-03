@@ -213,6 +213,7 @@ flatpak:
     - desktop-file-validate misc/e2designer.desktop
     - cat $APP_NAME.yaml | yaml2json.py > $APP_NAME.json
     - flatpak-builder --ccache --repo=flatpak-repo flatpak-build $APP_NAME.json
+    - flatpak-builder --env=QT_QPA_PLATFORM=offscreen --run flatpak-build $APP_NAME.json e2designer -h
     - flatpak build-bundle flatpak-repo e2designer.flatpak $APP_NAME
   artifacts:
     paths:
