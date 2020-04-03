@@ -9,6 +9,7 @@
     "cmake.configureOnOpen": true,
     "cSpell.words": [
         "cbegin",
+        "doxygen",
         "qcompare",
         "qfindtestdata",
         "qgetenv",
