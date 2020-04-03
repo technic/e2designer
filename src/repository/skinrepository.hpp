@@ -6,6 +6,7 @@
 #include "model/fontsmodel.hpp"
 #include "model/screensmodel.hpp"
 #include "model/windowstyle.hpp"
+#include "model/bordersmodel.hpp"
 #include <QDir>
 #include <QObject>
 
@@ -31,6 +32,7 @@ public:
     static ScreensModel* screens() { return instance().m_screensModel; }
     static OutputsModel* outputs() { return &instance().m_outputRepository; }
     static WindowStylesList* styles() { return &instance().m_windowStyles; }
+    static BorderStorage* borders() { return &instance().m_borders; }
     QSize outputSize() const;
     inline QDir dir() const { return m_directory; }
     QString resolveFilename(const QString& path) const;
@@ -57,6 +59,7 @@ private slots:
 private:
     ColorsModel* m_colors;
     ColorRolesModel m_roles;
+    BorderStorage m_borders;
     FontsModel* m_fonts;
     ScreensModel* m_screensModel;
     OutputsModel m_outputRepository;

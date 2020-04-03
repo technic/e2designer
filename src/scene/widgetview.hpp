@@ -9,6 +9,7 @@
 #include "repository/skinrepository.hpp"
 #include "repository/pixmapstorage.hpp"
 #include "base/typelist.hpp"
+#include "scene/borderview.hpp"
 
 class ScreenView;
 class WidgetGraphicsItem;
@@ -69,6 +70,9 @@ private:
     // Observer
     WidgetObserverRegistrator m_observer;
 
+    // Borders graphicsItem
+    BorderView* m_border;
+
     //    // Common
     QColor m_foreground_color;
     QColor m_background_color;
@@ -111,4 +115,5 @@ private:
     void paintSlider(QPainter* painter, const WidgetData& w);
 
     QPixmap loadPixmap(const QString& fname);
+    void updateBorderRect();
 };

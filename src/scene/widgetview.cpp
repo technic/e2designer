@@ -17,12 +17,18 @@ WidgetGraphicsItem::WidgetGraphicsItem(ScreenView* screen,
     , m_model(screen->model())
     , m_data(index)
     , m_observer(m_model, index)
+    , m_border(nullptr)
     , m_rectChange(false)
 {
     Q_ASSERT(m_data.column() == ScreensModel::ColumnElement);
 
     qDebug() << "create WidgetView for" << m_data.data(Qt::DisplayRole)
              << m_data.sibling(m_data.row(), ScreensModel::ColumnName).data(Qt::DisplayRole);
+
+    if (m_model->widget(m_data).type() == WidgetData::WidgetType::Screen) {
+        m_border = new BorderView(this);
+        m_border->setFlag(ItemStacksBehindParent, true);
+    }
 
     // interact with user
     setFlags(ItemIsSelectable | ItemIsFocusable);
@@ -51,6 +57,8 @@ void WidgetGraphicsItem::resizeRectEvent(const QRectF& r)
     }
     // update QGraphicsRectItem
     ResizableGraphicsRectItem::resizeRectEvent(r);
+    // redraw decoration
+    updateBorderRect();
 }
 
 void WidgetGraphicsItem::fileChangedEvent()
@@ -95,6 +103,7 @@ void WidgetGraphicsItem::updateAttribute(int key)
         r.moveTopLeft(QPointF(0, 0));
         setRect(r);
         updateHandlesPos();
+        updateBorderRect();
         break;
     }
     case Property::size: {
@@ -102,6 +111,7 @@ void WidgetGraphicsItem::updateAttribute(int key)
         r.setSize(w.selfSize());
         setRect(r);
         updateHandlesPos();
+        updateBorderRect();
         break;
     }
     case Property::zPosition:
@@ -118,6 +128,15 @@ void WidgetGraphicsItem::updateAttribute(int key)
         break;
     case Property::foregroundColor:
         m_foreground_color = w.getQColor(key);
+        break;
+    case Property::flags:
+        if (m_border) {
+            if (w.flags() == Property::wfBorder) {
+                m_border->show();
+            } else {
+                m_border->hide();
+            }
+        }
         break;
     }
     update();
@@ -235,6 +254,13 @@ void WidgetGraphicsItem::paintSlider(QPainter* painter, const WidgetData& w)
         painter->fillRect(rect(), QBrush(m_background_color));
     }
     painter->fillRect(r, QBrush(m_foreground_color));
+}
+
+void WidgetGraphicsItem::updateBorderRect()
+{
+    if (m_border) {
+        m_border->setInnerRect(rect());
+    }
 }
 
 void WidgetGraphicsItem::keyPressEvent(QKeyEvent* event)

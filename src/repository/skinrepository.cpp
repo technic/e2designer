@@ -192,6 +192,7 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
     if (m_windowStyles.itemsCount() > 0) {
         defaultStyle = m_windowStyles.itemAt(0);
         m_roles.setStyle(&defaultStyle);
+        m_borders.setStyle(&defaultStyle);
     }
 }
 
