@@ -24,6 +24,7 @@ set(SOURCE
     src/base/xmlstreamwriter.hpp
     src/colorlistbox.cpp
     src/colorlistwindow.cpp
+    src/customtreeview.hpp
     src/commands/attrcommand.cpp
     src/editor/codeeditor.cpp
     src/editor/xmlhighlighter.cpp
