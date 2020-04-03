@@ -66,6 +66,20 @@ void CodeEditor::resizeEvent(QResizeEvent* event)
     m_numbers_area->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
+void CodeEditor::wheelEvent(QWheelEvent* event)
+{
+    if (event->modifiers() & Qt::ControlModifier) {
+        if (event->angleDelta().y() > 0) {
+            zoomIn();
+        } else {
+            zoomOut();
+        }
+        event->accept();
+    } else {
+        QPlainTextEdit::wheelEvent(event);
+    }
+}
+
 void CodeEditor::updateLineNumberAreaWidth(int newBlockCount)
 {
     setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
