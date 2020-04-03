@@ -27,7 +27,7 @@ VERSION_FILE = $$OUT_PWD/gitversion.cpp
 message(Store version in $${VERSION_FILE})
 
 # Makefile target required to build gitversion.o
-versiontarget.target = gitversion.cpp
+versiontarget.target = $${VERSION_FILE}
 win32 {
     # Change directory to QTDIR where required dll's are located
     versiontarget.commands += $$QMAKE_CD "$(QTDIR)\bin" &&
