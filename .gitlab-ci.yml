@@ -10,7 +10,7 @@ variables:
   BINTRAY_REPO: e2designer
   BINTRAY_PACKAGE: e2designer
   BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
-  APP_NAME: io.github.technic93.e2designer
+  APP_NAME: io.github.technic.e2designer
   CODE_CHECKER_VER: v6.11.0
   CLAZY_VER: "1.6"
 
