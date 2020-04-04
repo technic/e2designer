@@ -1,4 +1,5 @@
 QT -= gui
+QT += core
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -22,8 +23,6 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    gitversion.hpp
 
 DISTFILES += \
     git-version.pri

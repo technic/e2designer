@@ -13,9 +13,9 @@ bool writeFile(const QString& filename, const QString& version)
         return false;
     }
     QTextStream output(&f);
-    output << "#include \"gitversion.hpp\""
+    output << "#pragma once"
            << "\n";
-    output << QString("const char* Git::version = \"%1\"").arg(version) << ";"
+    output << QString("struct Git { static constexpr char version[] = \"%1\"; };").arg(version)
            << "\n";
     f.close();
     if (f.error() != QFileDevice::NoError) {
@@ -29,14 +29,14 @@ int main(int argc, char* argv[])
 {
     QCoreApplication app(argc, argv);
 
-    QString outputFile = "gitversion.cpp";
+    QString outputFile = "gitversion.hpp";
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Get version from git and write into a cpp file.");
+    parser.setApplicationDescription("Get version from git and write into a hpp file.");
     parser.addHelpOption();
     parser.addOption(QCommandLineOption("C", "Working directory", "directory"));
     parser.addPositionalArgument(
-      "cppfile",
+      "hppfile",
       QString("Destination file to create, default value is %1").arg(outputFile),
       "[file]");
     parser.process(app);

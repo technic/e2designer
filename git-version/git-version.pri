@@ -23,7 +23,7 @@ else {
 }
 message(Using executable $${TOOLFILE})
 
-VERSION_FILE = $$OUT_PWD/gitversion.cpp
+VERSION_FILE = $$OUT_PWD/gitversion.hpp
 message(Store version in $${VERSION_FILE})
 
 # Makefile target required to build gitversion.o
@@ -36,5 +36,5 @@ versiontarget.commands += $${TOOLFILE} -C "$$_PRO_FILE_PWD_" "$${VERSION_FILE}"
 versiontarget.depends = FORCE
 QMAKE_EXTRA_TARGETS += versiontarget
 
-SOURCES += $$VERSION_FILE
-HEADERS += gitversion.hpp
+HEADERS += $${VERSION_FILE}
+PRE_TARGETDEPS += $${VERSION_FILE}
