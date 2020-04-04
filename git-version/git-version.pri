@@ -27,13 +27,14 @@ VERSION_FILE = $$OUT_PWD/gitversion.hpp
 message(Store version in $${VERSION_FILE})
 
 # qmake rules to generate gitversion.hpp
+versiontarget.name = generate gitversion.hpp
 versiontarget.depends = FORCE
-versiontarget.output = $$VERSION_FILE
+versiontarget.output = $${VERSION_FILE}
 win32 {
     # Change directory to QTDIR where required dll's are located
     versiontarget.commands += $$QMAKE_CD "$(QTDIR)\bin" &&
 }
-versiontarget.commands += $${TOOLFILE} -C "$$_PRO_FILE_PWD_" "${QMAKE_FILE_OUT}"
+versiontarget.commands += $${TOOLFILE} -C $$_PRO_FILE_PWD_ $${VERSION_FILE}
 # link to qmake variables
 versiontarget.input = VERSION_FILE
 versiontarget.variable_out = HEADERS
