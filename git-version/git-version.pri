@@ -26,15 +26,16 @@ message(Using executable $${TOOLFILE})
 VERSION_FILE = $$OUT_PWD/gitversion.hpp
 message(Store version in $${VERSION_FILE})
 
-# Makefile target required to build gitversion.o
-versiontarget.target = $${VERSION_FILE}
+# qmake rules to generate gitversion.hpp
+versiontarget.depends = FORCE
+versiontarget.output = $$VERSION_FILE
 win32 {
     # Change directory to QTDIR where required dll's are located
     versiontarget.commands += $$QMAKE_CD "$(QTDIR)\bin" &&
 }
-versiontarget.commands += $${TOOLFILE} -C "$$_PRO_FILE_PWD_" "$${VERSION_FILE}"
-versiontarget.depends = FORCE
-QMAKE_EXTRA_TARGETS += versiontarget
+versiontarget.commands += $${TOOLFILE} -C "$$_PRO_FILE_PWD_" "${QMAKE_FILE_OUT}"
+# link to qmake variables
+versiontarget.input = VERSION_FILE
+versiontarget.variable_out = HEADERS
 
-HEADERS += $${VERSION_FILE}
-PRE_TARGETDEPS += $${VERSION_FILE}
+QMAKE_EXTRA_COMPILERS += versiontarget
