@@ -8,7 +8,7 @@ build/
 doxygen/
 
 # flatpak
-org.technic93.e2designer.json
+io.github.technic93.e2designer.json
 .flatpak-builder/
 flatpak-build/
 flatpak-repo/
