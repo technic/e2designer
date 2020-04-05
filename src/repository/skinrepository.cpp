@@ -79,19 +79,11 @@ bool SkinRepository::open(const QString& path)
 
 bool SkinRepository::fromXmlDocument(QXmlStreamReader& xml)
 {
-    while (!xml.atEnd()) {
-        xml.readNext();
-        switch (xml.tokenType()) {
-        case QXmlStreamReader::StartElement:
-            if (xml.name() == "skin") {
-                fromXml(xml);
-            } else {
-                xml.raiseError(tr("Unknow tag in skin: ") + xml.name());
-            }
-            break;
-        default:
-            break;
-        }
+    xml.readNextStartElement();
+    if (xml.name() == "skin") {
+        fromXml(xml);
+    } else {
+        xml.raiseError(tr("Unknow tag in skin: ") + xml.name());
     }
     return !xml.hasError();
 }
