@@ -38,6 +38,7 @@ gcc | clang {
 
 SOURCES += \
     mainwindow.cpp \
+    skin/includefile.cpp \
     skindelegate.cpp \
     colorlistwindow.cpp \
     colorlistbox.cpp \
@@ -81,6 +82,7 @@ SOURCES += \
 HEADERS += \
     customtreeview.hpp \
     mainwindow.hpp \
+    skin/includefile.hpp \
     skindelegate.hpp \
     colorlistwindow.hpp \
     colorlistbox.hpp \

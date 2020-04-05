@@ -62,6 +62,7 @@ set(SOURCE
     src/skin/positionattr.cpp
     src/skin/sizeattr.cpp
     src/skin/widgetdata.cpp
+    src/skin/includefile.cpp
     resources.qrc
     src/skin/enums.hpp
 )

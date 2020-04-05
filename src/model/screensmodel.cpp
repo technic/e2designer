@@ -2,6 +2,7 @@
 #include "commands/attrcommand.hpp"
 #include "repository/skinrepository.hpp"
 #include "model/windowstyle.hpp"
+#include "skin/includefile.hpp"
 #include <QUndoStack>
 #include <QMimeData>
 #include <QByteArray>
@@ -428,6 +429,20 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
     w->fromXml(xml);
     m_root->appendChild(w);
     w->loadPreview(); // After widget is attached to the model
+
+    endInsertRows();
+}
+
+void ScreensModel::appendIncludeFromXml(QXmlStreamReader& xml)
+{
+    Q_ASSERT(xml.isStartElement() && xml.name() == "include");
+
+    beginInsertRows(QModelIndex(), m_root->childCount(), m_root->childCount());
+
+    auto* element = new IncludeFile();
+    element->fromXml(xml);
+    m_root->appendChild(element);
+    element->loadPreview(); // After it is attached to the model
 
     endInsertRows();
 }

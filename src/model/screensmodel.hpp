@@ -106,6 +106,7 @@ public:
 
     // Xml:
     void appendFromXml(QXmlStreamReader& xml);
+    void appendIncludeFromXml(QXmlStreamReader& xml);
     void toXml(XmlStreamWriter& xml);
 
     // Read only access to widget:

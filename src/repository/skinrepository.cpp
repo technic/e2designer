@@ -175,6 +175,8 @@ void SkinRepository::fromXml(QXmlStreamReader& xml)
             m_fonts->fromXml(xml);
         } else if (xml.name() == "screen") {
             m_screensModel->appendFromXml(xml);
+        } else if (xml.name() == "include") {
+            m_screensModel->appendIncludeFromXml(xml);
         } else {
             qWarning() << "Unknown tag" << xml.name();
             xml.skipCurrentElement();
