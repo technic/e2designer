@@ -39,7 +39,7 @@ unix {
     desktopFiles.path = $$PREFIX/share/applications/
 
     iconFiles.files = ../misc/e2designer.png
-    iconFiles.path = $$PREFIX/share/pixmaps/
+    iconFiles.path = $$PREFIX/share/icons/hicolor/256x256/apps/
 
     miscFiles.files = ../misc/e2designer.appdata.xml
     miscFiles.path = $$PREFIX/share/metainfo/
