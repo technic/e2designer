@@ -170,6 +170,9 @@ public:
     QVariant getAttr(int key) const;
     bool setAttr(int key, const QVariant& value);
 
+    // Other attributes
+    QString getAttr(const QString& key) const;
+
     // Required for the optimisation:
     // only widgets which are viewed by someone
     // listen to color/font changed signals

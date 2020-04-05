@@ -798,6 +798,15 @@ bool WidgetData::setAttr(int key, const QVariant& value)
     return false;
 }
 
+QString WidgetData::getAttr(const QString& key) const
+{
+    auto it = m_otherAttributes.find(key);
+    if (it != m_otherAttributes.cend()) {
+        return *it;
+    }
+    return QString();
+}
+
 void WidgetData::onColorChanged(const QString& name, QRgb value)
 {
     for (auto it = m_colors.begin(); it != m_colors.end(); ++it) {
