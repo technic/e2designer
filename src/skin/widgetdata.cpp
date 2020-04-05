@@ -746,6 +746,8 @@ void WidgetData::toXml(XmlStreamWriter& xml) const
     }
     for (auto it = reflection.cbegin(); it != reflection.cend(); ++it) {
         const int key = it.key();
+        if (m_type == WidgetType::Applet)
+            continue; // This is ugly hack!
         if (key > Property::preview)
             continue;
         if (m_propertiesOrder.contains(meta.valueToKey(key)))
