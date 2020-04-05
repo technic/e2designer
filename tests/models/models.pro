@@ -11,5 +11,4 @@ include(../../src/src.pri)
 SOURCES += \
     tst_screensmodel.cpp
 
-HEADERS += \
-    autotests.hpp
+HEADERS +=

@@ -1,7 +1,6 @@
 #include <QTest>
 #include <QAbstractItemModel>
 #include <QAbstractItemModelTester>
-#include "autotests.hpp"
 #include "model/screensmodel.hpp"
 #include "model/colorsmodel.hpp"
 #include "model/fontsmodel.hpp"
@@ -81,10 +80,5 @@ private slots:
 };
 
 QTEST_APPLESS_MAIN(TestScreensModel)
-
-// static Test test([](int argc, char** argv) -> int {
-//     TestScreensModel tc;
-//     return QTest::qExec(&tc, argc, argv);
-// });
 
 #include "tst_screensmodel.moc"
