@@ -647,7 +647,8 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
 
     // FIXME: replace this if spaghetti with proper OOP solution
     if (m_type == WidgetType::Applet) {
-        // TODO: store text
+        m_appletCode = xml.readElementText();
+        return !xml.hasError();
     }
 
     while (xml.readNextStartElement()) {
@@ -759,6 +760,10 @@ void WidgetData::toXml(XmlStreamWriter& xml) const
             if (!it.value().isNull())
                 xml.writeAttribute(it.key(), it.value());
         }
+    }
+
+    if (m_type == WidgetType::Applet) {
+        xml.writeCharacters(m_appletCode);
     }
 
     for (int i = 0; i < childCount(); ++i) {

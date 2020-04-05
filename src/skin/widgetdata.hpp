@@ -237,6 +237,9 @@ private:
     Property::Render m_render;
     QString m_source;
 
+    // Applet
+    QString m_appletCode;
+
     // Preview
     Property::Render m_previewRender;
     QVariant m_previewValue;
