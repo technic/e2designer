@@ -209,7 +209,7 @@ flatpak:
     - flatpak --version
     - flatpak-builder --version
   script:
-    - appstream-util validate misc/e2designer.appdata.xml
+    - flatpak run org.freedesktop.appstream-glib validate misc/e2designer.appdata.xml
     - desktop-file-validate misc/e2designer.desktop
     - cat $APP_NAME.yaml | yaml2json.py > $APP_NAME.json
     - flatpak-builder --ccache --repo=flatpak-repo flatpak-build $APP_NAME.json

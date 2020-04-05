@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2020 Alex Maystrenko -->
 <component type="desktop-application">
         <id>io.github.technic.e2designer</id>
         <metadata_license>CC0-1.0</metadata_license>
@@ -10,12 +11,17 @@
         </description>
         <launchable type="desktop-id">e2designer.desktop</launchable>
         <url type="homepage">https://gitlab.com/technic93/e2designer</url>
+        <url type="bugtracker">https://gitlab.com/technic93/e2designer/-/issues</url>
         <screenshots>
                 <screenshot type="default">
                         <image>https://gitlab.com/technic93/e2designer/raw/master/screenshot.png</image>
                 </screenshot>
         </screenshots>
+        <releases>
+                <release version="0.2" date="2020-04-03"/>
+        </releases>
         <translation type="qt">e2designer</translation>
+        <content_rating type="oars-1.0" />
         <update_contact>alexeytech@gmail.com</update_contact>
         <provides>
                 <id>e2designer.desktop</id>
