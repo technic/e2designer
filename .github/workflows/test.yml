@@ -34,6 +34,6 @@ jobs:
           name: macos installer
           path: app/e2designer.dmg
       - name: Deploy to bintray
-      - run: |
+        run: |
           export VERSION=$(git describe)
           curl -T app/e2designer.dmg -u "technic:$BINTRAY_API_KEY" "$BINTRAY_URL/$VERSION/e2designer-$VERSION.dmg"
