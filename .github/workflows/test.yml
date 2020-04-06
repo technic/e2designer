@@ -18,8 +18,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get git log
         run: |
-          git fetch --tags
-          git branch --create-reflog master origin/master
+          git fetch --unshallow --tags
+          git describe
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
       - name: Build
