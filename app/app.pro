@@ -50,9 +50,7 @@ unix {
 macx {
     icon_file.target = icon.icns
     icon_file.depends = ../misc/e2designer.png
-    icon_file.commands = mkdir iconset \
-        && cp $${icon_file.depends} iconset \
-        && iconutil --convert icns --output $${icon_file.target} iconset
+    icon_file.commands = ../mkicns.sh $${icon_file.depends} $${icon_file.target}
     QMAKE_EXTRA_TARGETS += icon_file
     ICON = $${icon_file.target}
 }
