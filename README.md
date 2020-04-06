@@ -19,8 +19,9 @@ Skin editor for enigma2 written in C++/Qt5 framework.
 
 Portable builds:
 
-- Windows - download & extract.
+- Windows - download & extract, then run
 - Portable Linux version - download, allow to execute and run.
+- MacOS - download dmg file, allow not trusted apps, install and run. This file is not signed 
 
 # Controls
 
@@ -28,16 +29,20 @@ Portable builds:
 - Arrows - Move widget
 - Shift + Arrows - Precise move widget
 
-# Build dependencies
-
-System with C++17 support and Qt version 5.11.
-
 # Compile from sources
+
+Navigate to the e2designer sources and run
 
 ```
 qmake
 make
 ```
+
+The executable will be named ./app/e2designer or similar
+
+## Build dependencies
+
+System with C++17 support and Qt version 5.11. or later
 
 # Contributing
 
@@ -65,7 +70,7 @@ docker-compose run e2designer bash
 ## Updating subtrees
 We need to pull upstream from time to time:
 ```
-git subtree pull -P Qt-Color-Widgets/ --squash git@gitlab.com:mattia.basaglia/Qt-Color-Widgets.git master
+git subtree pull -P Qt-Color-Widgets --squash git@gitlab.com:mattia.basaglia/Qt-Color-Widgets.git master
 git subtree pull -P AppImageUpdaterBridge --squash https://github.com/antony-jr/AppImageUpdaterBridge.git master
 ```
 
