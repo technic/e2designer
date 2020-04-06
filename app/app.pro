@@ -47,4 +47,13 @@ unix {
     INSTALLS += desktopFiles iconFiles miscFiles
 }
 
+macx {
+    icon_file.target = icon.icns
+    icon_file.depends = ../misc/e2designer.png
+    icon_file.commands = mkdir iconset \
+        && cp $${icon_file.depends} iconset \
+        && iconutil --convert icns --output $${icon_file.target} iconset
+    ICON = $${icon_file.target}
+}
+
 INSTALLS += target
