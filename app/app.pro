@@ -53,6 +53,7 @@ macx {
     icon_file.commands = mkdir iconset \
         && cp $${icon_file.depends} iconset \
         && iconutil --convert icns --output $${icon_file.target} iconset
+    QMAKE_EXTRA_TARGETS += icon_file
     ICON = $${icon_file.target}
 }
 
