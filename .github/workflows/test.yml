@@ -25,7 +25,16 @@ jobs:
         run: |
           macdeployqt -verbose=2 -dmg app/e2designer.app
           find app
+          export version=$(git describe)
       - uses: actions/upload-artifact@v1
         with:
           name: macos installer
           path: app/e2designer.dmg
+      - uses: hpcsc/upload-bintray-docker-action@v1
+        with:
+          repository: e2designer
+          package: e2designer
+          version: ${{env.version}}
+          sourcePath: app/*.dmg
+          username: technic
+          apiKey: ${{secrets.BINTRAY_API_KEY}}
