@@ -27,12 +27,6 @@ LIBDIR = $$relative_path($$PWD, $$_PRO_FILE_PWD_)
 OUTDIR = $$clean_path($$OUT_PWD/$${LIBDIR})
 #message("Binary dir: $${OUTDIR}")
 
-macx {
-    frameworks += $$files($${OUTDIR}/$${LIBNAME}.framework)
-    LIBS += -F$${OUTDIR}/ -framework $${LIBNAME}
-    PRE_TARGETDEPS += $${OUTDIR}/$${LIBNAME}.framework
-    INCLUDEPATH += -F$${LIBDIR}
-}
 win32 {
     *msvc* {
         LIBS += $${OUTDIR}/$${WINDIR}/$${LIBNAME}.$${LIB_EXTENSION}
@@ -42,7 +36,7 @@ win32 {
         PRE_TARGETDEPS += $${OUTDIR}/$${WINDIR}/lib$${LIBNAME}.$${LIB_EXTENSION}
     }
 }
-unix:!macx {
+unix {
     LIBS += -L$${OUTDIR}/ -l$${LIBNAME}
     PRE_TARGETDEPS += $${OUTDIR}/lib$${LIBNAME}.$${LIB_EXTENSION}
 }
