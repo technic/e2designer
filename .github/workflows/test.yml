@@ -23,7 +23,7 @@ jobs:
           make check
       - name: Package
         run: |
-          macdeployqt -verbose=2 -dmg app/e2designer.app
+          macdeployqt app/e2designer.app -verbose=2 -dmg 
           find app
           export version=$(git describe)
       - uses: actions/upload-artifact@v1
