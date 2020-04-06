@@ -1,0 +1,27 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build_mac:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+      - name: Build
+        run: |
+          qmake
+          make
+      - name: Test
+        run: |
+          make check
+      - name: Package
+        run: |
+          macdeployqt app/e2designer.app
+          find app
