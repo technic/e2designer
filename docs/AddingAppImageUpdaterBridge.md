@@ -1,7 +1,7 @@
 ---
 id: AddingAppImageUpdaterBridge
 title: Add AppImage Updater Bridge to your Project
-sidebar_label: Add AppImage Updater Bridge to your Project.
+sidebar_label: Adding to your Project.
 ---
 
 AppImage Updater Bridge can compiled with both *QMake* and *CMake* , I recommend you to use *QMake* if you are
@@ -134,6 +134,7 @@ find_package(Qt5Widgets)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) # just in case!
 # Add include directory
 include_directories(AppImageUpdaterBridge)
+include_directories(AppImageUpdaterBridge/include)
 
 # include subdirectories 
 add_subdirectory(AppImageUpdaterBridge)
