@@ -4,7 +4,7 @@ Skin editor for enigma2 written in C++/Qt5 framework.
 
 [ ![](https://gitlab.com/technic93/e2designer/badges/master/pipeline.svg) ](https://gitlab.com/technic93/e2designer/pipelines/master/latest)
 [ ![](https://ci.appveyor.com/api/projects/status/9t4t1mlsohkxec6o/branch/master?svg=true) ](https://ci.appveyor.com/project/technic/e2designer/branch/master)
-[ ![Download](https://api.bintray.com/packages/technic/e2designer/e2designer/images/download.svg) ](https://bintray.com/technic/e2designer/e2designer/_latestVersion#files)
+[ ![Download](https://img.shields.io/bintray/v/technic/e2designer/e2designer?label=Download) ](https://bintray.com/technic/e2designer/e2designer/_latestVersion#files)
 
 [ ![Coverage](https://gitlab.com/technic93/e2designer/badges/master/coverage.svg) ](https://gitlab.com/technic93/e2designer/builds/artifacts/master/file/coverage-report/index.html?job=coverage)
 [ ![codecov](https://codecov.io/gl/technic93/e2designer/branch/master/graph/badge.svg) ](https://codecov.io/gl/technic93/e2designer)
