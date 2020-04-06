@@ -1,5 +1,5 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
-project(AppImageUpdaterBridge VERSION 1.1.2)
+project(AppImageUpdaterBridge VERSION 1.1.5)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -8,6 +8,7 @@ set(CMAKE_AUTOUIC ON)
 
 option(LG "LOGGING_DISABLED" OFF)
 option(NG "NO_GUI" OFF)
+option(BAP "BUILD_AS_PLUGIN" OFF)
 
 # Let cmake know that this is a release build.
 if(NOT CMAKE_BUILD_TYPE)
@@ -84,9 +85,19 @@ else()
 	include/appimageupdaterdialog.hpp)
 endif()
 
-add_library(AppImageUpdaterBridge ${source})
+if(BUILD_AS_PLUGIN)
+   message("-- [*] IMPORTANT: Building as a Qt Plugin.")
+   add_definitions(-DBUILD_AS_PLUGIN)
+   list(APPEND source src/appimageupdaterbridge.cc
+	              include/appimageupdaterbridge_p.hpp
+	              include/appimageupdaterbridgeinterface.hpp)
+   add_library(AppImageUpdaterBridge SHARED ${source})
+else()
+    add_library(AppImageUpdaterBridge ${source})
+endif()
+
 target_link_libraries(AppImageUpdaterBridge PUBLIC Qt5::Core Qt5::Network)
-target_include_directories(AppImageUpdaterBridge INTERFACE "$<BUILD_INTERFACE:. include>")
+target_include_directories(AppImageUpdaterBridge INTERFACE "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include>")
 target_include_directories(AppImageUpdaterBridge INTERFACE "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/AppImageUpdaterBridge>" )
 
 if(NOT NO_GUI)
@@ -96,13 +107,13 @@ endif()
 
 # Add pkg-config and install instructions
 configure_file(
-  "${CMAKE_SOURCE_DIR}/other/pkgconfig/AppImageUpdaterBridge.pc.in"
-  "${CMAKE_BINARY_DIR}/AppImageUpdaterBridge.pc"
+  "${PROJECT_SOURCE_DIR}/other/pkgconfig/AppImageUpdaterBridge.pc.in"
+  "${PROJECT_BINARY_DIR}/AppImageUpdaterBridge.pc"
   @ONLY
 )
 
 install(FILES
-  ${CMAKE_BINARY_DIR}/AppImageUpdaterBridge.pc
+  ${PROJECT_BINARY_DIR}/AppImageUpdaterBridge.pc
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 install(TARGETS
@@ -120,7 +131,7 @@ if(NOT NO_GUI)
     set(PACKAGE_FIND_DEPENDENCY_QTWIDGETS "find_dependency(Qt5Widgets ${MIN_QT_VERSION})")
 endif()
 configure_package_config_file(
-  "${CMAKE_SOURCE_DIR}/other/cmake/AppImageUpdaterBridgeConfig.cmake.in"
+  "${PROJECT_SOURCE_DIR}/other/cmake/AppImageUpdaterBridgeConfig.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/AppImageUpdaterBridgeConfig.cmake"
   INSTALL_DESTINATION  ${CMAKECONFIG_INSTALL_DIR}
 )
