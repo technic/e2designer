@@ -48,6 +48,8 @@ public:
     T* child(int i) const { return m_childs[i]; }
     int childCount() const { return m_childs.size(); }
 
+    // TODO: unique_ptr and move semantics
+
     // takes ownership
     void appendChild(T* child) { insertChild(m_childs.size(), child); }
     virtual bool insertChild(int position, T* child);
