@@ -31,7 +31,7 @@ private:
 
 /**
  * @brief Allows to watch a pixmap file
- * Inherite from this class to act on file changed event
+ * Inherit from this class to act on file changed event
  */
 class PixmapWatcher
 {
