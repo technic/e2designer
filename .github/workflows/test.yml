@@ -10,6 +10,10 @@ jobs:
   build_mac:
     runs-on: macos-latest
 
+    env:
+      BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
+      BINTRAY_API_KEY: ${{secrets.BINTRAY_API_KEY}}
+
     steps:
       - uses: actions/checkout@v2
       - name: Install Qt
@@ -25,16 +29,11 @@ jobs:
         run: |
           macdeployqt app/e2designer.app -verbose=2 -dmg 
           find app
-          export version=$(git describe)
       - uses: actions/upload-artifact@v1
         with:
           name: macos installer
           path: app/e2designer.dmg
-      - uses: hpcsc/upload-bintray-docker-action@v1
-        with:
-          repository: e2designer
-          package: e2designer
-          version: ${{env.version}}
-          sourcePath: app/*.dmg
-          username: technic
-          apiKey: ${{secrets.BINTRAY_API_KEY}}
+      - name: Deploy to bintray
+      - run: |
+          export VERSION=$(git describe)
+          curl -T app/e2designer.dmg -u "technic:$BINTRAY_API_KEY" "$BINTRAY_URL/$VERSION/e2designer-$VERSION.dmg"
