@@ -76,7 +76,7 @@ private:
 
     //	SkinModel *m_model;
 
-    ScreenView* m_view;
+    SkinScene* m_scene;
 
     // QObject owned
     PropertiesModel* m_propertiesModel;

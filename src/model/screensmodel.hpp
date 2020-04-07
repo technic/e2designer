@@ -56,7 +56,8 @@ public:
     };
     enum
     {
-        TypeRole = Qt::UserRole + 1
+        TypeRole = Qt::UserRole + 1,
+        PanelIndexRole,
     };
 
     // Header:

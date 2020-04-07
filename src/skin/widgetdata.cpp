@@ -314,7 +314,7 @@ bool WidgetData::setType(int type)
 
 void WidgetData::setType(WidgetType type)
 {
-    m_type = type;
+    m_type = type; // FIXME: this is bad
     //    emit typeChanged(m_type);
 }
 
@@ -331,6 +331,8 @@ QString WidgetData::typeStr() const
         return "ePixmap";
     case WidgetType::Applet:
         return "applet";
+    case WidgetType::Panel:
+        return "panel";
     }
 }
 
@@ -347,6 +349,8 @@ WidgetData::WidgetType WidgetData::strToType(const QStringRef& str, bool& ok)
         return WidgetType::Pixmap;
     } else if (str == "applet") {
         return WidgetType::Applet;
+    } else if (str == "panel") {
+        return WidgetType::Panel;
     } else {
         ok = false;
         return WidgetType::Widget;
@@ -631,19 +635,8 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
         xml.raiseError(QString("Unknown widget tag '%1'").arg(xml.name().toString()));
         return false;
     }
-    QMetaEnum meta = Property::propertyEnum();
-    QXmlStreamAttributes attrs = xml.attributes();
-    for (const auto& attr : attrs) {
-        bool ok;
-        m_propertiesOrder.append(attr.name().toString());
-        int key = meta.keyToValue(attr.name().toLatin1().data(), &ok);
-        if (ok) {
-            setAttrFromXml(key, attr.value().toString());
-        } else {
-            qWarning() << "unknown attribute" << attr.name();
-            m_otherAttributes[attr.name().toString()] = attr.value().toString();
-        }
-    }
+
+    parseAttributes(xml.attributes());
 
     // FIXME: replace this if spaghetti with proper OOP solution
     if (m_type == WidgetType::Applet) {
@@ -679,6 +672,23 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
     }
 
     return !xml.hasError();
+}
+
+void WidgetData::parseAttributes(QXmlStreamAttributes attrs)
+{
+    QMetaEnum meta = Property::propertyEnum();
+
+    for (const auto& attr : attrs) {
+        bool ok;
+        m_propertiesOrder.append(attr.name().toString());
+        int key = meta.keyToValue(attr.name().toLatin1().data(), &ok);
+        if (ok) {
+            setAttrFromXml(key, attr.value().toString());
+        } else {
+            qWarning() << "unknown attribute" << attr.name();
+            m_otherAttributes[attr.name().toString()] = attr.value().toString();
+        }
+    }
 }
 
 /**
@@ -730,6 +740,24 @@ void WidgetData::toXml(XmlStreamWriter& xml) const
 {
     xml.writeStartElement(typeStr());
 
+    writeAttributes(xml);
+
+    if (m_type == WidgetType::Applet) {
+        xml.writeCharacters(m_appletCode);
+    }
+
+    for (int i = 0; i < childCount(); ++i) {
+        child(i)->toXml(xml);
+    }
+    for (auto& item : qAsConst(m_converters)) {
+        item->toXml(xml);
+    }
+
+    xml.writeEndElement();
+}
+
+void WidgetData::writeAttributes(XmlStreamWriter& xml) const
+{
     QMetaEnum meta = Property::propertyEnum();
     for (const QString& name : m_propertiesOrder) {
         bool ok;
@@ -763,19 +791,6 @@ void WidgetData::toXml(XmlStreamWriter& xml) const
                 xml.writeAttribute(it.key(), it.value());
         }
     }
-
-    if (m_type == WidgetType::Applet) {
-        xml.writeCharacters(m_appletCode);
-    }
-
-    for (int i = 0; i < childCount(); ++i) {
-        child(i)->toXml(xml);
-    }
-    for (auto& item : qAsConst(m_converters)) {
-        item->toXml(xml);
-    }
-
-    xml.writeEndElement();
 }
 
 QVariant WidgetData::getAttr(int key) const

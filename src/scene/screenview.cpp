@@ -6,30 +6,157 @@
 #include <QCoreApplication>
 #include <QGraphicsPixmapItem>
 
-ScreenView::ScreenView(ScreensModel* model)
+QModelIndex normalizeIndex(const QModelIndex& index)
+{
+    return index.sibling(index.row(), ScreensModel::ColumnElement);
+}
+
+SkinScene::SkinScene(ScreensModel* model)
     : m_model(model)
-    , m_selectionModel(nullptr)
-    , m_disableSelectionSlots(false)
-    , m_scene(new QGraphicsScene(this))
     , m_background(new BackgroundPixmap(QPixmap(":/background.jpg")))
     , m_backgroundRect(new BackgroundRect(QRectF()))
-    , m_showBorders(true)
 {
     // Add background pixmap on top, it has composition DestinationOver
     m_background->setZValue(1000);
-    m_scene->addItem(m_background);
+    addItem(m_background);
     // Add OSD background below, it has compostion Source
     m_backgroundRect->setBrush(QBrush(QColor(Qt::transparent)));
     m_backgroundRect->setZValue(-1000);
-    m_scene->addItem(m_backgroundRect);
+    addItem(m_backgroundRect);
 
     // set inital scene size and subscribe to changes
     setSceneSize(SkinRepository::outputs()->getOutput(m_outputId).size());
     connect(SkinRepository::outputs(),
             &OutputsModel::valueChanged,
             this,
-            &ScreenView::onOutputChanged);
+            &SkinScene::onOutputChanged);
+}
 
+void SkinScene::onOutputChanged(int id, const VideoOutput& output)
+{
+    if (id == m_outputId) {
+        setSceneSize(output.size());
+    }
+}
+
+void SkinScene::setSceneSize(const QSize& size)
+{
+    setSceneRect(0, 0, size.width(), size.height());
+    m_backgroundRect->setRect(0, 0, size.width(), size.height());
+    // Adjust background scale
+    QSizeF pixmapSize = m_background->boundingRect().size();
+    qreal sw = size.width() / pixmapSize.width();
+    qreal sh = size.height() / pixmapSize.height();
+    m_background->setTransform(QTransform::fromScale(sw, sh));
+}
+
+void SkinScene::setSelectionModel(QItemSelectionModel* model)
+{
+    if (Q_UNLIKELY(model->model() != m_model)) {
+        qWarning() << "failed to set selectionModel"
+                   << "because it works on a different model";
+        return;
+    }
+
+    // disconnect from old model
+    if (m_selectionModel) {
+        disconnect(m_selectionModel,
+                   &QItemSelectionModel::currentChanged,
+                   this,
+                   &SkinScene::setCurrentWidget);
+    }
+    m_selectionModel = model;
+    // connect to new model
+    if (m_selectionModel) {
+        connect(m_selectionModel,
+                &QItemSelectionModel::currentChanged,
+                this,
+                &SkinScene::setCurrentWidget);
+    }
+
+    // forward to screens
+    for (const auto& s : m_screens) {
+        s->setSelectionModel(model);
+    }
+}
+
+void SkinScene::displayBorders(bool display)
+{
+    for (const auto& s : m_screens) {
+        s->displayBorders(display);
+    }
+}
+
+void SkinScene::setCurrentWidget(const QModelIndex& current, const QModelIndex& previous)
+{
+    QModelIndex index = current;
+    // find parent Screen
+    while (index.isValid()
+           && index.data(ScreensModel::TypeRole).toInt()
+                != static_cast<int>(WidgetData::WidgetType::Screen)) {
+        index = index.parent();
+    }
+    if (index.isValid()) {
+        // exit if we have it
+        for (auto& s : m_screens) {
+            if (s->rootIndex() == index)
+                return;
+        }
+        setScreen(index);
+    }
+}
+
+void SkinScene::setScreen(QModelIndex index)
+{
+    Q_ASSERT(index.data(ScreensModel::TypeRole).toInt()
+             == static_cast<int>(WidgetData::WidgetType::Screen));
+
+    index = normalizeIndex(index);
+
+    if (!m_screens.empty() && m_screens.front()->rootIndex() == index) {
+        return;
+    }
+    // remove all views
+    m_screens.clear();
+    clearSelection();
+
+    addScreenRecursive(index);
+}
+
+void SkinScene::addScreenRecursive(QModelIndex index)
+{
+    Q_ASSERT(index.data(ScreensModel::TypeRole).toInt()
+             == static_cast<int>(WidgetData::WidgetType::Screen));
+
+    // create views for new screen and its panels
+    auto s = std::make_unique<ScreenView>(m_model, index, this);
+    s->setSelectionModel(m_selectionModel);
+    m_screens.push_back(std::move(s));
+
+    for (int i = 0; i < m_model->rowCount(index); ++i) {
+        QModelIndex child = m_model->index(i, ScreensModel::ColumnElement, index);
+        if (child.data(ScreensModel::TypeRole).toInt()
+            == static_cast<int>(WidgetData::WidgetType::Panel)) {
+            auto panel = child.data(ScreensModel::PanelIndexRole).toModelIndex();
+            if (panel.isValid()) {
+                qDebug() << panel.data(ScreensModel::TypeRole)
+                         << m_model->widgetAttr(panel, Property::name);
+                addScreenRecursive(normalizeIndex(panel));
+            }
+        }
+    }
+}
+
+//
+
+ScreenView::ScreenView(ScreensModel* model, QModelIndex index, SkinScene* scene)
+    : m_model(model)
+    , m_root(index)
+    , m_scene(scene)
+    , m_selectionModel(nullptr)
+    , m_disableSelectionSlots(false)
+    , m_showBorders(true)
+{
     connect(m_model, &ScreensModel::widgetChanged, this, &ScreenView::onWidgetChanged);
     connect(m_model,
             &ScreensModel::rowsAboutToBeRemoved,
@@ -41,29 +168,20 @@ ScreenView::ScreenView(ScreensModel* model)
     connect(m_model, &ScreensModel::modelReset, this, &ScreenView::onModelReset);
 
     connect(m_scene, &QGraphicsScene::selectionChanged, this, &ScreenView::onSceneSelectionChanged);
+
+    setScreen(m_root);
 }
 
-void ScreenView::onOutputChanged(int id, const VideoOutput& output)
+ScreenView::~ScreenView()
 {
-    if (id == m_outputId) {
-        setSceneSize(output.size());
+    auto it = m_widgets.find(m_root);
+    if (it != m_widgets.end()) {
+        WidgetGraphicsItem* screen = *it;
+        // All child WidgetGraphicsItems will be removed recursively from scene
+        m_scene->removeItem(screen);
+        // Delete it, because now we have the ownership
+        delete screen;
     }
-}
-
-void ScreenView::setSceneSize(const QSize& size)
-{
-    m_scene->setSceneRect(0, 0, size.width(), size.height());
-    m_backgroundRect->setRect(0, 0, size.width(), size.height());
-    // Adjust background scale
-    QSizeF pixmapSize = m_background->boundingRect().size();
-    qreal sw = size.width() / pixmapSize.width();
-    qreal sh = size.height() / pixmapSize.height();
-    m_background->setTransform(QTransform::fromScale(sw, sh));
-}
-
-QModelIndex ScreenView::normalizeIndex(const QModelIndex& index) const
-{
-    return index.sibling(index.row(), ScreensModel::ColumnElement);
 }
 
 QItemSelection ScreenView::makeRowSelection(const QModelIndex& index)
@@ -77,8 +195,8 @@ void ScreenView::setScreen(QModelIndex index)
     Q_ASSERT(index.data(ScreensModel::TypeRole).toInt()
              == static_cast<int>(WidgetData::WidgetType::Screen));
 
-    if (m_root == index)
-        return;
+    //    if (m_root == index)
+    //        return;
 
     qDebug() << "to delete:" << m_widgets.size();
 
@@ -327,6 +445,7 @@ void ScreenView::setCurrentWidget(const QModelIndex& current, const QModelIndex&
     if (previous.isValid()) {
         qDebug() << "previous in the scene:" << m_widgets.contains(normalizeIndex(previous));
     }
+
     // find parent Screen
     QModelIndex index = current;
     while (index.isValid()
@@ -334,15 +453,18 @@ void ScreenView::setCurrentWidget(const QModelIndex& current, const QModelIndex&
                 != static_cast<int>(WidgetData::WidgetType::Screen)) {
         index = index.parent();
     }
-    if (index.isValid()) {
-        setScreen(index);
-    } else {
-        qWarning() << "failed to set current widget: screen not found!";
-        return;
-    }
+
+    //    if (index.isValid()) {
+    //        setScreen(index);
+    //    } else {
+    //        qWarning() << "failed to set current widget: screen not found!";
+    //        return;
+    //    }
+
     // current widget should be in the scene
-    Q_ASSERT(m_widgets.contains(normalizeIndex(current)));
-    m_widgets[normalizeIndex(current)]->setSelected(true);
+    // Q_ASSERT(m_widgets.contains(normalizeIndex(current)));
+    if (m_widgets.contains(normalizeIndex(current)))
+        m_widgets[normalizeIndex(current)]->setSelected(true);
 }
 
 void ScreenView::updateSelection(const QItemSelection& selected, const QItemSelection& deselected)

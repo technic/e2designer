@@ -73,11 +73,15 @@ public:
             return pNode != other.pNode || pStack != other.pStack;
         }
 
+        // Usual iterator interface
         Iterator& operator++();
 
         // you need to compare with dfs_end() before calling this
         T& operator*() { return *(node()->self()); }
         T* operator->() { return node()->self(); }
+
+        // Skip current node
+        void skip();
 
     private:
         enum BeginEnd
@@ -220,5 +224,13 @@ typename MixinTreeNode<T>::Node* MixinTreeNode<T>::Iterator::node()
         return pStack.top();
     } else {
         return nullptr;
+    }
+}
+
+template<typename T>
+void MixinTreeNode<T>::Iterator::skip()
+{
+    if (!pStack.empty()) {
+        pStack.pop();
     }
 }

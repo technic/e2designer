@@ -61,6 +61,7 @@ public:
         Label,
         Pixmap,
         Applet,
+        Panel,
     };
     Q_ENUM(WidgetType)
 
@@ -188,6 +189,10 @@ public:
     void onStyledColorChanged(WindowStyleColor::ColorRole role, QRgb value);
     void onFontChanged(const QString& name, const Font& value);
     void updateCache();
+
+protected:
+    void parseAttributes(QXmlStreamAttributes attrs);
+    void writeAttributes(XmlStreamWriter& xml) const;
 
 private:
     void sizeChanged();

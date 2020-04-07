@@ -11,7 +11,7 @@ class TestScene : public QObject
 public:
     TestScene()
         : m_model(SkinRepository::screens())
-        , m_view(new ScreenView(m_model))
+        , m_view(new SkinScene(m_model))
     {
         bool ok = SkinRepository::instance().open(
           QFileInfo(QFINDTESTDATA("skin.xml")).absoluteDir().path());
@@ -39,7 +39,7 @@ private slots:
 
 private:
     ScreensModel* m_model;
-    ScreenView* m_view;
+    SkinScene* m_view;
 
     void printTree() { printSubTree(QModelIndex()); }
 

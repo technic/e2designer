@@ -36,7 +36,7 @@ using AppImageUpdaterBridge::AppImageUpdaterDialog;
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , m_view(new ScreenView(SkinRepository::screens()))
+    , m_scene(new SkinScene(SkinRepository::screens()))
     , m_propertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 #ifdef APPIMAGE_UPDATE
     , m_updater(new AppImageUpdaterDialog(QPixmap(":/icons/misc/e2designer.png"), this))
@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget* parent)
     //	SkinDelegate *delegate = new SkinDelegate(this);
     //	ui->propView->setItemDelegate(delegate);
 
-    ui->graphicsView->setScene(m_view->scene());
+    ui->graphicsView->setScene(m_scene);
 
     // Setup default editors
     auto* delegate = new QStyledItemDelegate(this);
@@ -112,7 +112,7 @@ MainWindow::MainWindow(QWidget* parent)
     // Synchronize selections
 
     ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_view->setSelectionModel(ui->treeView->selectionModel());
+    m_scene->setSelectionModel(ui->treeView->selectionModel());
 
     connect(ui->treeView->selectionModel(),
             &QItemSelectionModel::currentChanged,
@@ -122,7 +122,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    delete m_view;
+    delete m_scene;
     delete ui;
 }
 
@@ -274,7 +274,7 @@ void MainWindow::setTitle(const QString& skinPath)
 void MainWindow::addSkinItem(WidgetData::WidgetType type)
 {
     // Get parent screen for new skin item
-    auto screen = m_view->currentIndex();
+    auto screen = ui->treeView->selectionModel()->currentIndex();
     if (!screen.isValid()) {
         QMessageBox::warning(this, tr("Error"), tr("Can not add widget to the skin top level"));
         return;
@@ -322,7 +322,7 @@ void MainWindow::addScreen()
 
 void MainWindow::delWidget()
 {
-    if (!m_view)
+    if (!m_scene)
         return;
     QModelIndex idx = ui->treeView->selectionModel()->currentIndex();
     SkinRepository::screens()->removeRow(idx.row(), idx.parent());
@@ -449,8 +449,8 @@ void MainWindow::createActions()
         ui->actionCheckForUpdates->setVisible(false);
     }
 
-    ui->actionWidget_borders->setChecked(m_view->haveBorders());
-    connect(ui->actionWidget_borders, &QAction::triggered, m_view, &ScreenView::displayBorders);
+    // TODO: ui->actionWidget_borders->setChecked(m_scene->haveBorders());
+    connect(ui->actionWidget_borders, &QAction::triggered, m_scene, &SkinScene::displayBorders);
     connect(ui->actionXmlEditor, &QAction::triggered, this, &MainWindow::showXmlEditor);
     connect(ui->actionFitPixmap, &QAction::triggered, this, &MainWindow::fitWidgetToPixmap);
 

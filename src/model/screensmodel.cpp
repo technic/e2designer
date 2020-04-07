@@ -192,6 +192,8 @@ int ScreensModel::columnCount(const QModelIndex& parent) const
 
 QVariant ScreensModel::data(const QModelIndex& index, int role) const
 {
+    using WidgetType = WidgetData::WidgetType;
+
     if (!index.isValid())
         return QVariant();
 
@@ -204,13 +206,13 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
         case ColumnElement:
             return widget->typeStr();
         case ColumnName:
-            using WidgetType = WidgetData::WidgetType;
             switch (widget->type()) {
             case WidgetType::Label:
                 return widget->text();
             case WidgetType::Pixmap:
                 return widget->getAttr(Property::pixmap).toString();
             case WidgetType::Screen:
+            case WidgetType::Panel:
             case WidgetType::Widget:
                 if (widget->name().isNull() && !widget->source().isEmpty()) {
                     return widget->source();
@@ -222,6 +224,22 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
         }
     case ScreensModel::TypeRole:
         return static_cast<int>(widget->type());
+    case ScreensModel::PanelIndexRole: {
+        // TODO: is some sort of cache required?
+        auto it = m_root->dfs_begin();
+        while (it != m_root->dfs_end()) {
+            if (it->type() == WidgetType::Screen) {
+                if (it->name() == widget->name()) {
+                    return createIndex(it->myIndex(), ColumnElement, it->self());
+                } else {
+                    it.skip(); // skip this node
+                }
+            } else {
+                ++it; // traverse also children
+            }
+        }
+        return QModelIndex();
+    }
     default:
         return QVariant();
     }
@@ -246,7 +264,10 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
                 return setWidgetAttr(index, Property::pixmap, value);
             case WidgetType::Screen:
             case WidgetType::Widget:
+            case WidgetType::Panel:
                 return setWidgetAttr(index, Property::name, value);
+            case WidgetType::Applet:
+                return false; // TODO: what to set here?
             }
         default:
             return false;
