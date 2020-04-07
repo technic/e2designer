@@ -10,6 +10,9 @@
     <height>721</height>
    </rect>
   </property>
+  <property name="windowTitle">
+   <string>Color palette</string>
+  </property>
   <widget class="QWidget" name="dockWidgetContents">
    <property name="windowTitle">
     <string>Dialog</string>
