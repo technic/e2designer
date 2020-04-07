@@ -98,9 +98,8 @@ void ScreenView::setScreen(QModelIndex index)
 
     for (int i = 0; i < m_model->rowCount(m_root); ++i) {
         QModelIndex widgetIndex = m_model->index(i, ScreensModel::ColumnElement, m_root);
-        auto* view = new WidgetGraphicsItem(this, widgetIndex, screen);
         Q_ASSERT(!m_widgets.contains(widgetIndex));
-        m_widgets[widgetIndex] = view;
+        m_widgets[widgetIndex] = new WidgetGraphicsItem(this, widgetIndex, screen);
     }
 }
 
