@@ -33,7 +33,7 @@ public:
 
     // Mixin (CRTP) magic
     // We require that MixinTreeNode<T> is base of T!
-    // Abuse leads to undefined behavoir
+    // Abuse leads to undefined behavior
 
     T* self() { return static_cast<T*>(this); }
     const T* self() const { return static_cast<const T*>(this); }
@@ -207,7 +207,7 @@ typename MixinTreeNode<T>::Iterator& MixinTreeNode<T>::Iterator::operator++()
 
     Node* v = pStack.top();
     pStack.pop();
-    for (Node* w : v->mChilds) {
+    for (Node* w : v->m_childs) {
         pStack.push(w);
     }
     return *this;
