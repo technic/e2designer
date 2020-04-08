@@ -11,7 +11,7 @@ variables:
   BINTRAY_PACKAGE: e2designer
   BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
   APP_NAME: io.github.technic.e2designer
-  CODE_CHECKER_VER: v6.11.0
+  CODE_CHECKER_VER: v6.11.1
   CLAZY_VER: "1.6"
 
 stages:
@@ -74,14 +74,13 @@ build:release:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = ccache g++"
-    - scan-build -o ../report make -j$(nproc)
-    - ccache -s
+    - qmake .. "QMAKE_CXX = ccache g++" "QMAKE_CXXFLAGS += -fcolor-diagnostics"
+    - make -j$(nproc)
     - make -C app INSTALL_ROOT=$(pwd)/appdir install
+    - ccache -s
   artifacts:
     paths:
       - build/
-      - report/
   cache:
     paths:
       - ccache/
@@ -90,7 +89,8 @@ build:debug:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = ccache g++" "CONFIG += debug" "QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage" "QMAKE_LFLAGS += --coverage"
+    - qmake .. "QMAKE_CXX = ccache g++" "CONFIG += debug"
+      "QMAKE_CXXFLAGS += -fcolor-diagnostics -fprofile-arcs -ftest-coverage" "QMAKE_LFLAGS += --coverage"
     - make -j$(nproc)
     - ccache -s
   artifacts:
@@ -111,18 +111,33 @@ build:cmake:
     - cmake --build .
     - QT_QPA_PLATFORM=offscreen ctest
 
-CodeChecker:
+build:clang:
   stage: build
+  script:
+    - mkdir -p build && pushd build
+    - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
+    - bear make -j$(nproc)
+    - sed -e 's/"c++ /"clang++ /' -i compile_commands.json
+    - ccache -s
+  artifacts:
+    paths:
+      - build/
+  cache:
+    paths:
+      - ccache/
+
+CodeChecker:
+  stage: tasks
+  needs:
+    - job: build:clang
+      artifacts: true
   script:
     - apt-get update && apt-get install -y build-essential gcc-multilib python-virtualenv python-dev thrift-compiler
     - git clone https://github.com/Ericsson/CodeChecker.git -b "$CODE_CHECKER_VER" --depth 1 ~/codechecker
     - cd ~/codechecker && make venv && source "$PWD/venv/bin/activate"
     - make package && export PATH="$PWD/build/CodeChecker/bin:$PATH"
-    - cd "$CI_PROJECT_DIR" && mkdir -p build && pushd build
-    - curl -L -o /usr/local/bin/clang++-clazy "https://downloads.kdab.com/clazy/$CLAZY_VER/Clazy-x86_64-$CLAZY_VER.AppImage"
-    - chmod a+x /usr/local/bin/clang++-clazy
-    - qmake -spec linux-clang .. "QMAKE_CXX = clang++-clazy" "QMAKE_CXXFLAGS += -fcolor-diagnostics"
-    - CodeChecker check -b "make" -o ./reports
+    - cd "$CI_PROJECT_DIR" && pushd build
+    - CodeChecker analyze compile_commands.json -o ./reports
     - CodeChecker parse ./reports -e html -o ../reports_html
   artifacts:
     paths:
@@ -149,24 +164,25 @@ AppImage:
       - build/*.AppImage.zsync
 
 clazy:
-  stage: build
+  stage: tasks
+  needs:
+    - job: build:clang
+      artifacts: true
   script:
-    - curl -L -o /usr/local/bin/clazy https://downloads.kdab.com/clazy/1.5/Clazy-x86_64-1.5.AppImage
+    - curl -L -o /usr/local/bin/clazy "https://downloads.kdab.com/clazy/$CLAZY_VER/Clazy-x86_64-$CLAZY_VER.AppImage"
     - chmod a+x /usr/local/bin/clazy
-    - mkdir -p build && pushd build
-    - qmake -spec linux-clang .. "QMAKE_CXX = clazy" "QMAKE_CXXFLAGS += -Werror -fcolor-diagnostics"
-    - CLAZY_IGNORE_DIRS="/opt/qt${Qt}|.*/Qt-Color-Widgets" make
-  allow_failure: true
+    - pushd build
+    - export CLAZY_IGNORE_DIRS="/opt/qt${Qt}|.*/Qt-Color-Widgets"
+    - find .. -name '*.hpp' -o -name '*.cpp' | xargs clazy --standalone -p compile_commands.json
   when: manual
 
-clang-tidy:
-  stage: build
+PVS-Studio:
+  stage: tasks
+  needs:
+    - job: build:clang
+      artifacts: true
   script:
-    - mkdir -p build && cd build
-    - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -Wno-register"
-    - bear make -j$(nproc)
-    - run-clang-tidy.py
-    - sed -e 's/"c++ /"clang++ /' -i compile_commands.json
+    - pushd build
     - pvs-studio-analyzer credentials $PVS_NAME $PVS_KEY
     - pvs-studio-analyzer analyze -o PVS-Studio.log
     - plog-converter -t fullhtml PVS-Studio.log -o ../PVS-Studio.html
