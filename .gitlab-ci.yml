@@ -74,7 +74,7 @@ build:release:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = ccache g++" "QMAKE_CXXFLAGS += -fcolor-diagnostics"
+    - qmake .. "QMAKE_CXX = ccache g++"
     - make -j$(nproc)
     - make -C app INSTALL_ROOT=$(pwd)/appdir install
     - ccache -s
@@ -90,7 +90,7 @@ build:debug:
   script:
     - mkdir -p build && pushd build
     - qmake .. "QMAKE_CXX = ccache g++" "CONFIG += debug"
-      "QMAKE_CXXFLAGS += -fcolor-diagnostics -fprofile-arcs -ftest-coverage" "QMAKE_LFLAGS += --coverage"
+      "QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage" "QMAKE_LFLAGS += --coverage"
     - make -j$(nproc)
     - ccache -s
   artifacts:
