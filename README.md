@@ -8,8 +8,8 @@ Skin editor for enigma2 written in C++/Qt5 framework.
 
 [ ![Coverage](https://gitlab.com/technic93/e2designer/badges/master/coverage.svg) ](https://gitlab.com/technic93/e2designer/builds/artifacts/master/file/coverage-report/index.html?job=coverage)
 [ ![codecov](https://codecov.io/gl/technic93/e2designer/branch/master/graph/badge.svg) ](https://codecov.io/gl/technic93/e2designer)
-[ ![CodeChecker](https://img.shields.io/badge/CodeChecker-results-blue) ](https://gitlab.com/technic93/e2designer/builds/artifacts/master/file/reports_html/index.html?job=CodeChecker)
-[ ![PVS-Studio](https://img.shields.io/badge/PVS-report-yellow) ](https://gitlab.com/technic93/e2designer/builds/artifacts/master/file/PVS-Studio.html/index.html?job=clang-tidy)
+[ ![CodeChecker](https://img.shields.io/badge/CodeChecker-results-yellow) ](https://gitlab.com/technic93/e2designer/builds/artifacts/master/file/reports_html/index.html?job=CodeChecker)
+[ ![PVS-Studio](https://img.shields.io/badge/PVS-report-yellow) ](https://gitlab.com/technic93/e2designer/builds/artifacts/master/file/PVS-Studio.html/index.html?job=PVS-Studio)
 
 # Screenshot
 
