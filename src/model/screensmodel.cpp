@@ -467,7 +467,7 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
 
 void ScreensModel::appendIncludeFromXml(QXmlStreamReader& xml)
 {
-    Q_ASSERT(xml.isStartElement() && xml.name() == "include");
+    Q_ASSERT(xml.isStartElement() && xml.name() == IncludeFile::tag);
 
     beginInsertRows(QModelIndex(), m_root->childCount(), m_root->childCount());
 
