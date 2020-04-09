@@ -240,7 +240,7 @@ static WidgetReflection reflection;
 
 // WidgetData
 
-WidgetData::WidgetData()
+WidgetData::WidgetData(WidgetType type)
     : MixinTreeNode<WidgetData>(crtp_guard())
     , m_zValue(0)
     , m_transparent(false)
@@ -256,14 +256,31 @@ WidgetData::WidgetData()
     , m_orientation(Property::Orientation::orHorizontal)
     , m_render(Property::Render::Widget)
     , m_previewRender(Property::Render::Widget)
-    , m_type(WidgetType::Widget)
+    , m_type(type)
     , m_model(nullptr)
 {
     // Call it here because of Qt limitation with static objects
     Q_ASSERT(reflection.hasAllKeys());
 }
 
-WidgetData::~WidgetData() = default;
+WidgetData* WidgetData::createFromXml(QXmlStreamReader& xml)
+{
+    Q_ASSERT(xml.isStartElement());
+
+    bool ok;
+    auto type = strToType(xml.name(), ok);
+    if (!ok) {
+        xml.raiseError(QString("Unknown widget tag '%1'").arg(xml.name().toString()));
+        return nullptr;
+    }
+    auto widget = new WidgetData(type);
+    ok = widget->fromXml(xml);
+    if (ok) {
+        return widget;
+    }
+    delete widget;
+    return nullptr;
+}
 
 bool WidgetData::insertChild(int position, WidgetData* child)
 {
@@ -300,23 +317,6 @@ void WidgetData::setModel(ScreensModel* model)
     for (int i = 0; i < childCount(); ++i) {
         child(i)->setModel(m_model);
     }
-}
-
-bool WidgetData::setType(int type)
-{
-    int typeCount = QMetaEnum::fromType<WidgetType>().keyCount();
-    if (type >= 0 && type < typeCount) {
-        m_type = static_cast<WidgetType>(type);
-        //        emit typeChanged(m_type);
-        return true;
-    }
-    return false;
-}
-
-void WidgetData::setType(WidgetType type)
-{
-    m_type = type; // FIXME: this is bad
-    //    emit typeChanged(m_type);
 }
 
 QString WidgetData::typeStr() const
@@ -631,11 +631,8 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
     Q_ASSERT(xml.isStartElement());
 
     bool ok;
-    m_type = strToType(xml.name(), ok);
-    if (!ok) {
-        xml.raiseError(QString("Unknown widget tag '%1'").arg(xml.name().toString()));
-        return false;
-    }
+    auto type = strToType(xml.name(), ok);
+    Q_ASSERT(ok && type == m_type);
 
     parseAttributes(xml.attributes());
 
@@ -647,11 +644,10 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
 
     while (xml.readNextStartElement()) {
         if (m_type == WidgetType::Screen) {
-            auto* widget = new WidgetData();
-            if (widget->fromXml(xml)) {
+            auto widget = WidgetData::createFromXml(xml);
+            if (widget) {
                 appendChild(widget);
             } else {
-                delete widget;
                 return false;
             }
         } else if (xml.name() == "convert") {

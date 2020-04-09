@@ -125,6 +125,9 @@ public:
     // Edit widget with XML editor
     bool setWidgetDataFromXml(const QModelIndex& index, QXmlStreamReader& xml);
 
+    // Add widget with type
+    bool insertWidget(int row, const QModelIndex& parent, WidgetData::WidgetType type);
+
     // Access associated fonts and colors
     const ColorsModel& colors() const { return m_colorsModel; }
     const FontsModel& fonts() const { return m_fontsModel; }

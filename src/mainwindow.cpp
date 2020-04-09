@@ -281,9 +281,8 @@ void MainWindow::addSkinItem(WidgetData::WidgetType type)
     }
     // TODO: should model provide more friendly interface?
     auto& model = *SkinRepository::screens();
-    model.insertRow(model.rowCount(screen), screen);
+    model.insertWidget(model.rowCount(screen), screen, type);
     QModelIndex widget = model.index(model.rowCount(screen) - 1, 0, screen);
-    model.setData(widget, static_cast<int>(type), ScreensModel::TypeRole);
     auto size = SizeAttr(100, 100);
     model.setWidgetAttr(widget, Property::size, QVariant::fromValue(size));
     if (type == WidgetData::WidgetType::Widget) {
@@ -310,9 +309,8 @@ void MainWindow::addScreen()
     auto& model = *SkinRepository::screens();
     // TODO: should model provide more friendly interface?
     QModelIndex root;
-    model.insertRow(model.rowCount(root), root);
+    model.insertWidget(model.rowCount(root), root, WidgetData::WidgetType::Screen);
     QModelIndex screen = model.index(model.rowCount(root) - 1, 0, root);
-    model.setData(screen, static_cast<int>(WidgetData::WidgetType::Screen), ScreensModel::TypeRole);
     auto pos = PositionAttr("center,center");
     auto size = SizeAttr(300, 200);
     model.setWidgetAttr(screen, Property::position, QVariant::fromValue(pos));

@@ -2,7 +2,7 @@
 #include "repository/skinrepository.hpp"
 
 IncludeFile::IncludeFile()
-    : WidgetData()
+    : WidgetData(WidgetType::Widget)
 {}
 
 bool IncludeFile::fromXml(QXmlStreamReader& xml)
@@ -27,9 +27,10 @@ bool IncludeFile::fromXml(QXmlStreamReader& xml)
     if (inner_xml.name() == "skin") {
         while (inner_xml.readNextStartElement()) {
             if (inner_xml.name() == "screen") {
-                WidgetData* widget = new WidgetData();
-                widget->fromXml(inner_xml);
-                appendChild(widget);
+                auto widget = WidgetData::createFromXml(inner_xml);
+                if (widget) {
+                    appendChild(widget);
+                }
             } else {
                 qWarning() << "Unexpected tag in inner xml file" << xml.name();
                 inner_xml.skipCurrentElement();

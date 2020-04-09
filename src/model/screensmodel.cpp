@@ -125,7 +125,7 @@ ScreensModel::ScreensModel(ColorsModel& colors,
     , m_colorsModel(colors)
     , m_colorRolesModel(roles)
     , m_fontsModel(fonts)
-    , m_root(new WidgetData())
+    , m_root(new WidgetData(WidgetData::WidgetType::Widget))
     , m_commander(new QUndoStack(this))
 {
     m_commander->setUndoLimit(100);
@@ -272,9 +272,6 @@ bool ScreensModel::setData(const QModelIndex& index, const QVariant& value, int 
         default:
             return false;
         }
-    case ScreensModel::TypeRole:
-        // FIXME: use Commands
-        return widget->setType(value.toInt());
     default:
         return false;
     }
@@ -294,6 +291,18 @@ Qt::ItemFlags ScreensModel::flags(const QModelIndex& index) const
     }
 }
 
+bool ScreensModel::insertWidget(int row, const QModelIndex& parent, WidgetData::WidgetType type)
+{
+    Item* parentItem = indexToItem(parent);
+    if (row < 0 || row > rowCount(parent)) {
+        return false;
+    }
+
+    QVector<WidgetData*> childs{ new WidgetData(type) };
+    m_commander->push(new InsertRowsCommand(*parentItem, row, childs));
+    return true;
+}
+
 bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
 {
     Item* parentItem = indexToItem(parent);
@@ -301,14 +310,15 @@ bool ScreensModel::insertRows(int row, int count, const QModelIndex& parent)
         return false;
     }
 
+    using t = WidgetData::WidgetType;
+    auto type = t::Widget;
+    // Top level items should be Screens
+    if (parentItem == m_root) {
+        type = t::Screen;
+    }
     QVector<WidgetData*> childs;
     for (int i = 0; i < count; ++i) {
-        auto widget = new WidgetData();
-        // Top level items should be Screens
-        if (parentItem == m_root) {
-            widget->setType(WidgetData::WidgetType::Screen);
-        }
-        childs.append(widget);
+        childs.append(new WidgetData(type));
     }
     m_commander->push(new InsertRowsCommand(*parentItem, row, childs));
     return true;
@@ -444,13 +454,14 @@ void ScreensModel::appendFromXml(QXmlStreamReader& xml)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == "screen");
 
-    beginInsertRows(QModelIndex(), m_root->childCount(), m_root->childCount());
+    auto* w = WidgetData::createFromXml(xml);
+    if (!w) {
+        return;
+    }
 
-    auto* w = new WidgetData();
-    w->fromXml(xml);
+    beginInsertRows(QModelIndex(), m_root->childCount(), m_root->childCount());
     m_root->appendChild(w);
     w->loadPreview(); // After widget is attached to the model
-
     endInsertRows();
 }
 
@@ -506,9 +517,8 @@ bool ScreensModel::setWidgetDataFromXml(const QModelIndex& index, QXmlStreamRead
     if (!index.isValid()) {
         return false;
     }
-    auto* widget = new WidgetData();
-    if (!widget->fromXml(xml)) {
-        delete widget;
+    auto* widget = WidgetData::createFromXml(xml);
+    if (!widget) {
         return false;
     }
     // store preview modification separately, because they are not in xml

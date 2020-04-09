@@ -19,6 +19,7 @@ class TestWidget : public QObject
     Q_OBJECT
 public:
     using Alphatest = Property::Alphatest;
+    using WidgetType = WidgetData::WidgetType;
 
 private slots:
     void initTestCase() { Q_INIT_RESOURCE(resources); }
@@ -52,7 +53,7 @@ private slots:
 
     void test_color()
     {
-        WidgetData w;
+        WidgetData w(WidgetType::Widget);
         ColorAttr col(Qt::red);
         w.setColor(Property::backgroundColor, col);
         QVERIFY(w.color(Property::backgroundColor).value() == Qt::red);
@@ -60,7 +61,7 @@ private slots:
     }
     void test_alphatest()
     {
-        WidgetData w;
+        WidgetData w(WidgetType::Widget);
         Alphatest alpha(Alphatest::on);
         w.setAlphatest(alpha);
         QVERIFY(w.alphatest() == Alphatest::on);
@@ -76,13 +77,14 @@ private slots:
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
 
-        WidgetData w;
-        QVERIFY(w.fromXml(xml));
-        QVERIFY(w.name() == "test1");
-        QVERIFY(w.alphatest() == Alphatest::blend);
-        QVERIFY(w.position() == PositionAttr(10, 20));
-        QVERIFY(w.size() == SizeAttr(100, 300));
-        QVERIFY(w.color(Property::backgroundColor).value() == QColor(Qt::red));
+        WidgetData* w = WidgetData::createFromXml(xml);
+        QVERIFY(w);
+        QVERIFY(w->name() == "test1");
+        QVERIFY(w->alphatest() == Alphatest::blend);
+        QVERIFY(w->position() == PositionAttr(10, 20));
+        QVERIFY(w->size() == SizeAttr(100, 300));
+        QVERIFY(w->color(Property::backgroundColor).value() == QColor(Qt::red));
+        delete w;
     }
 
     void test_invalid_xml()
@@ -90,7 +92,7 @@ private slots:
         QXmlStreamReader xml(R"(<widget name="foobar"><widget_bad/>)");
         xml.readNextStartElement();
 
-        WidgetData w;
+        WidgetData w(WidgetType::Widget);
         QCOMPARE(w.fromXml(xml), false);
         QVERIFY(xml.hasError());
         qDebug() << xml.error() << xml.errorString();
@@ -101,7 +103,7 @@ private slots:
         QXmlStreamReader xml(R"(<badtag name="foobar"><badtag/>)");
         xml.readNextStartElement();
 
-        WidgetData w;
+        WidgetData w(WidgetType::Widget);
         QCOMPARE(w.fromXml(xml), false);
         QVERIFY(xml.hasError());
         qDebug() << xml.error() << xml.errorString();
@@ -116,7 +118,7 @@ private slots:
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
 
-        WidgetData w;
+        WidgetData w(WidgetType::Widget);
         w.fromXml(xml);
 
         PropertyTree tree(&w);
@@ -203,7 +205,7 @@ private slots:
         QVERIFY(file.open(QIODevice::ReadOnly));
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
-        WidgetData w;
+        WidgetData w(WidgetType::Widget);
         w.fromXml(xml);
 
         QCOMPARE(w.scenePreview().toString(), QDateTime::currentDateTime().toString("h:mm"));

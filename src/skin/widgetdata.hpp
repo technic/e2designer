@@ -34,8 +34,20 @@ class WidgetData : public MixinTreeNode<WidgetData>, public XmlData
 public:
     using MixinTreeNode<WidgetData>::parent;
 
-    explicit WidgetData();
-    ~WidgetData() override;
+    // Widget tag
+    enum class WidgetType
+    {
+        Screen,
+        Widget,
+        Label,
+        Pixmap,
+        Applet,
+        Panel,
+    };
+    Q_ENUM(WidgetType)
+
+    explicit WidgetData(WidgetType type);
+    static WidgetData* createFromXml(QXmlStreamReader& xml);
 
     // expose tree functions
     using Base::child;
@@ -53,21 +65,7 @@ public:
     ScreensModel* model() const { return m_model; }
     void setModel(ScreensModel* model);
 
-    // Widget tag
-    enum class WidgetType
-    {
-        Screen,
-        Widget,
-        Label,
-        Pixmap,
-        Applet,
-        Panel,
-    };
-    Q_ENUM(WidgetType)
-
     WidgetType type() const { return m_type; }
-    bool setType(int type);
-    void setType(WidgetType type);
     QString typeStr() const;
     static WidgetType strToType(const QStringRef& str, bool& ok);
 
