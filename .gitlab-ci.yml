@@ -82,6 +82,7 @@ build:release:
     paths:
       - build/
   cache:
+    key: ${CI_JOB_NAME}
     paths:
       - ccache/
 
@@ -97,6 +98,7 @@ build:debug:
     paths:
       - build/
   cache:
+    key: ${CI_JOB_NAME}
     paths:
       - ccache/
 
@@ -123,6 +125,7 @@ build:clang:
     paths:
       - build/
   cache:
+    key: ${CI_JOB_NAME}
     paths:
       - ccache/
 
@@ -239,9 +242,13 @@ deploy:
   stage: deploy
   only:
     - master
-  dependencies:
-    - AppImage
-    - flatpak
+  needs:
+    - job: AppImage
+      artifacts: true
+    - job: flatpak
+      artifacts: true
+    - test
+    - coverage
   script:
     - curl -T build/e2designer-$VERSION-x86_64.AppImage -u technic:$BINTRAY_API_KEY
       $BINTRAY_URL/$VERSION/e2designer-$VERSION-x86_64.AppImage
