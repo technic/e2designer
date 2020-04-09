@@ -400,6 +400,7 @@ QSize WidgetData::parentSize() const
     if (p && p->isChild()) {
         return p->self()->selfSize();
     } else {
+        // TODO: should depend on output id
         return SkinRepository::instance().outputSize();
     }
 }
