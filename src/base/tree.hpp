@@ -18,8 +18,15 @@ class MixinTreeNode
     Q_DISABLE_COPY(MixinTreeNode)
 
 protected:
+    // This helps to ensure that CRTP pattern is used by subclasses
+    class crtp_guard
+    {
+        friend T;
+        crtp_guard() = default;
+    };
+    
     // You must inherit from this class
-    MixinTreeNode()
+    MixinTreeNode(crtp_guard)
         : m_parent(nullptr)
     {
         // This can catch some errors, but not all

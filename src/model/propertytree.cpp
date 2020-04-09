@@ -111,7 +111,8 @@ void PropertyTree::add(int k, AttrItem* parent)
 // AttrItem
 
 AttrItem::AttrItem(int key)
-    : m_key(key)
+    : MixinTreeNode<AttrItem>(crtp_guard())
+    , m_key(key)
     , m_tree(nullptr)
 {}
 

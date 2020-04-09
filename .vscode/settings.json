@@ -1,7 +1,7 @@
 {
     "cmake.configureArgs": [
         "-DCMAKE_PREFIX_PATH=C:\\Qt\\5.12.4\\msvc2017_64",
-        "-DCMAKE_UNITY_BUILD=ON"
+        // "-DCMAKE_UNITY_BUILD=ON"
     ],
     "cmake.testEnvironment": {
         "PATH": "C:\\Qt\\5.12.4\\msvc2017_64\\bin;${env.PATH}"
@@ -9,6 +9,7 @@
     "cmake.configureOnOpen": true,
     "cSpell.words": [
         "cbegin",
+        "crtp",
         "doxygen",
         "qcompare",
         "qfindtestdata",

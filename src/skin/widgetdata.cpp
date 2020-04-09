@@ -241,7 +241,8 @@ static WidgetReflection reflection;
 // WidgetData
 
 WidgetData::WidgetData()
-    : m_zValue(0)
+    : MixinTreeNode<WidgetData>(crtp_guard())
+    , m_zValue(0)
     , m_transparent(false)
     , m_borderWidth(0)
     , m_alphatest(Property::Alphatest::off)
