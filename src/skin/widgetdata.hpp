@@ -171,7 +171,7 @@ public:
     bool setAttr(int key, const QVariant& value);
 
     // Other attributes
-    QString getAttr(const QString& key) const;
+    virtual QString getAttr(const QString& key) const;
 
     // Required for the optimisation:
     // only widgets which are viewed by someone

@@ -83,3 +83,11 @@ void IncludeFile::toXml(XmlStreamWriter& xml) const
 
     file.close();
 }
+
+QString IncludeFile::getAttr(const QString& key) const
+{
+    if (key == "filename") {
+        return m_fileName;
+    }
+    return WidgetData::getAttr(key);
+}

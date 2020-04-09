@@ -12,6 +12,8 @@ public:
     bool fromXml(QXmlStreamReader& xml) override;
     void toXml(XmlStreamWriter& xml) const override;
 
+    QString getAttr(const QString& key) const override;
+
 private:
     QString m_fileName;
     void read(const QString& fileName);

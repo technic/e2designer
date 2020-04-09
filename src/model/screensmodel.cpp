@@ -220,6 +220,8 @@ QVariant ScreensModel::data(const QModelIndex& index, int role) const
                 return widget->name();
             case WidgetType::Applet:
                 return widget->getAttr("type");
+            case WidgetType::Include:
+                return widget->getAttr("filename");
             }
         }
     case ScreensModel::TypeRole:
