@@ -460,6 +460,9 @@ void MainWindow::createActions()
             ui->actionUndoStack,
             &QAction::setChecked);
 
+    connect(ui->actionToolbar, &QAction::triggered, ui->mainToolBar, &QToolBar::setVisible);
+    connect(ui->mainToolBar, &QToolBar::visibilityChanged, ui->actionToolbar, &QAction::setChecked);
+
     connect(ui->actionEditColors, &QAction::triggered, this, &MainWindow::editColors);
     connect(ui->actionEditFonts, &QAction::triggered, this, &MainWindow::editFonts);
     connect(ui->actionEditOutputs, &QAction::triggered, this, &MainWindow::editOutputs);
