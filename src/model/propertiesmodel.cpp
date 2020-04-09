@@ -15,6 +15,7 @@ PropertiesModel::PropertiesModel(ScreensModel* model, QObject* parent)
             &ScreensModel::modelAboutToBeReset,
             this,
             &PropertiesModel::onModelAboutToBeReset);
+    // TODO: also watch for rows remove signal
 }
 
 PropertiesModel::~PropertiesModel() = default;
@@ -23,7 +24,9 @@ void PropertiesModel::setWidget(const QModelIndex& index)
 {
     beginResetModel();
     m_index = index;
-    if (m_index.isValid()) {
+    if (m_index.isValid()
+        && m_index.data(ScreensModel::TypeRole)
+             != static_cast<int>(WidgetData::WidgetType::Include)) {
         m_tree = std::make_unique<PropertyTree>(&m_model->widget(m_index));
         m_root = m_tree->root();
     } else {

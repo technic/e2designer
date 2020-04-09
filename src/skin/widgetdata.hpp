@@ -43,6 +43,7 @@ public:
         Pixmap,
         Applet,
         Panel,
+        Include,
     };
     Q_ENUM(WidgetType)
 

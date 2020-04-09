@@ -2,7 +2,7 @@
 #include "repository/skinrepository.hpp"
 
 IncludeFile::IncludeFile()
-    : WidgetData(WidgetType::Widget)
+    : WidgetData(WidgetType::Include)
 {}
 
 bool IncludeFile::fromXml(QXmlStreamReader& xml)

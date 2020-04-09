@@ -334,6 +334,8 @@ QString WidgetData::typeStr() const
         return "applet";
     case WidgetType::Panel:
         return "panel";
+    case WidgetType::Include:
+        return "include";
     }
 }
 
