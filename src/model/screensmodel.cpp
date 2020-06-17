@@ -65,45 +65,6 @@ void ScreensTree::loadPreviews(const QString& path)
     }
 }
 
-void ScreensTree::savePreviews(const QString& path)
-{
-    QFile file(path);
-    bool ok = file.open(QIODevice::WriteOnly);
-    if (!ok)
-        return;
-    QXmlStreamWriter xml(&file);
-    xml.setAutoFormatting(true);
-    xml.setAutoFormattingIndent(2);
-
-    xml.writeStartDocument();
-    xml.writeStartElement("screens");
-    // iterate over screens
-    for (auto s = m_previews.begin(); s != m_previews.end(); ++s) {
-        if (s.value().empty())
-            continue;
-        xml.writeStartElement("screen");
-        xml.writeTextElement("name", s.key());
-        xml.writeStartElement("entries");
-        // iterate over widgets
-        for (auto w = s.value().begin(); w != s.value().end(); ++w) {
-            auto valueStr = w.value().value.toString();
-            auto renderStr = EnumAttr<Property::Render>(w.value().render).toStr();
-            if (valueStr.isEmpty())
-                continue;
-            xml.writeStartElement("entry");
-            xml.writeAttribute("name", w.key());
-            xml.writeAttribute("value", valueStr);
-            xml.writeAttribute("render", renderStr);
-            xml.writeAttribute("type", "string"); // compatibility
-            xml.writeEndElement();
-        }
-        xml.writeEndElement();
-        xml.writeEndElement();
-    }
-    xml.writeEndElement();
-    xml.writeEndDocument();
-}
-
 Preview ScreensTree::getPreview(const QString& screen, const QString& widget) const
 {
     auto screen_it = m_previews.find(screen);

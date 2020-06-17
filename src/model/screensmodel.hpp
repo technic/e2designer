@@ -20,11 +20,6 @@ class ScreensTree
 {
 public:
     void loadPreviews(const QString& path);
-    /**
-     * @brief Save previews stored in QMap
-     * @param path Xml file name
-     */
-    void savePreviews(const QString& path);
     Preview getPreview(const QString& screen, const QString& widget) const;
 
 protected:
