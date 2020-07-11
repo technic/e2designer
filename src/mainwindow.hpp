@@ -49,6 +49,7 @@ private slots:
     void addPixmap();
     void addLabel();
     void addScreen();
+    void addPanel();
 
     void delWidget();
     void editColors();

@@ -287,6 +287,8 @@ void MainWindow::addSkinItem(WidgetData::WidgetType type)
     model.setWidgetAttr(widget, Property::size, QVariant::fromValue(size));
     if (type == WidgetData::WidgetType::Widget) {
         model.setWidgetAttr(widget, Property::name, "Untitled");
+    } else if (type == WidgetData::WidgetType::Panel) {
+        model.setWidgetAttr(widget, Property::name, "SomePanel");
     } else if (type == WidgetData::WidgetType::Label) {
         model.setWidgetAttr(widget, Property::text, "Default text");
     }
@@ -304,6 +306,12 @@ void MainWindow::addLabel()
 {
     addSkinItem(WidgetData::WidgetType::Label);
 }
+
+void MainWindow::addPanel()
+{
+    addSkinItem(WidgetData::WidgetType::Panel);
+}
+
 void MainWindow::addScreen()
 {
     auto& model = *SkinRepository::screens();
@@ -436,6 +444,7 @@ void MainWindow::createActions()
     connect(ui->actionDeleteWidget, &QAction::triggered, this, &MainWindow::delWidget);
     connect(ui->actionAddPixmap, &QAction::triggered, this, &MainWindow::addPixmap);
     connect(ui->actionAddLabel, &QAction::triggered, this, &MainWindow::addLabel);
+    connect(ui->actionAddPanel, &QAction::triggered, this, &MainWindow::addPanel);
     connect(ui->actionAddScreen, &QAction::triggered, this, &MainWindow::addScreen);
 
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);

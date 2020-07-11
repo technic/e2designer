@@ -143,7 +143,7 @@
      <x>0</x>
      <y>0</y>
      <width>729</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="nativeMenuBar">
@@ -171,6 +171,7 @@
     <addaction name="actionAddLabel"/>
     <addaction name="actionAddPixmap"/>
     <addaction name="actionAddScreen"/>
+    <addaction name="actionAddPanel"/>
     <addaction name="separator"/>
     <addaction name="actionEditColors"/>
     <addaction name="actionEditFonts"/>
@@ -446,6 +447,11 @@
    </property>
    <property name="text">
     <string>Toolbar</string>
+   </property>
+  </action>
+  <action name="actionAddPanel">
+   <property name="text">
+    <string>Add Panel</string>
    </property>
   </action>
  </widget>
