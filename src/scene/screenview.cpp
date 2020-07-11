@@ -131,6 +131,11 @@ void SkinScene::addScreenRecursive(QModelIndex index)
     // create views for new screen and its panels
     auto s = std::make_unique<ScreenView>(m_model, index, this);
     s->setSelectionModel(m_selectionModel);
+    // if (!m_screens.empty()) {
+    // Panels should be below current screen elements
+    // FIXME: this is not exactly enigma2 specification, but a quick fix
+    //        s->setZIndex(-1);
+    // }
     m_screens.push_back(std::move(s));
 
     for (int i = 0; i < m_model->rowCount(index); ++i) {
@@ -218,6 +223,14 @@ void ScreenView::setScreen(QModelIndex index)
         QModelIndex widgetIndex = m_model->index(i, ScreensModel::ColumnElement, m_root);
         Q_ASSERT(!m_widgets.contains(widgetIndex));
         m_widgets[widgetIndex] = new WidgetGraphicsItem(this, widgetIndex, screen);
+    }
+}
+
+void ScreenView::setZIndex(qreal z)
+{
+    auto* screen = m_widgets[m_root];
+    if (screen) {
+        screen->setZValue(z);
     }
 }
 

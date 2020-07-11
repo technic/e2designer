@@ -66,6 +66,7 @@ public:
     QModelIndex currentIndex() { return m_root; }
     QGraphicsScene* scene() const { return m_scene; }
     void setScreen(QModelIndex index);
+    void setZIndex(qreal z);
     ScreensModel* model() const { return m_model; }
 
     QModelIndex rootIndex() const { return m_root; }
