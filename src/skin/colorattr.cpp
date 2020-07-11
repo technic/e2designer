@@ -8,6 +8,7 @@ ColorAttr::ColorAttr()
     , m_value(0)
     , m_state(State::Null)
 {}
+
 ColorAttr::ColorAttr(const QColor& color)
     : m_name()
     , m_value(color.rgba())

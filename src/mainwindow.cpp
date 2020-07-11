@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "skindelegate.hpp"
 #include "ui_mainwindow.h"
 
 #include <QCloseEvent>
@@ -96,9 +97,10 @@ MainWindow::MainWindow(QWidget* parent)
     ui->graphicsView->setScene(m_scene);
 
     // Setup default editors
-    auto* delegate = new QStyledItemDelegate(this);
+    auto* delegate = new PropertyDelegate(this);
     auto* factory = new QItemEditorFactory();
-    factory->registerEditor(QVariant::Color, new QStandardItemEditorCreator<ColorListBox>());
+    factory->registerEditor(qMetaTypeId<ColorAttr>(),
+                            new QStandardItemEditorCreator<ColorChooser>());
     factory->registerEditor(qMetaTypeId<SkinEnumList>(), new QStandardItemEditorCreator<ListBox>());
     delegate->setItemEditorFactory(factory);
     ui->propView->setItemDelegate(delegate);

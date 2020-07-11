@@ -181,10 +181,12 @@ QVariant ColorItem::data(int role) const
 {
     switch (role) {
     case Qt::DecorationRole:
-    case Qt::EditRole:
         return widget().getQColor(key());
     case Qt::DisplayRole:
         return widget().color(key()).toString();
+    case Qt::EditRole:
+        // return widget().getQColor(key());
+        return QVariant::fromValue(widget().color(key()));
     default:
         return AttrItem::data(role);
     }
@@ -194,7 +196,8 @@ QVariant ColorItem::convert(const QVariant& value, int role)
 {
     switch (role) {
     case Qt::EditRole:
-        return QVariant::fromValue(ColorAttr(qvariant_cast<QString>(value)));
+        return value;
+        //        return QVariant::fromValue(ColorAttr(qvariant_cast<QString>(value)));
     default:
         return AttrItem::convert(value, role);
     }

@@ -4,6 +4,7 @@
 SkinDelegate::SkinDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
 {}
+
 QWidget* SkinDelegate::createEditor(QWidget* parent,
                                     const QStyleOptionViewItem& option,
                                     const QModelIndex& index) const
