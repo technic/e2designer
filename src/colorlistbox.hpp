@@ -4,7 +4,6 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QDebug>
-#include <QProxyStyle>
 #include <QToolButton>
 #include <QtColorWidgets/color_dialog.hpp>
 #include <skin/colorattr.hpp>
@@ -94,13 +93,21 @@ private slots:
 
     void setColorName(const QString& name)
     {
-        if (!name.isEmpty()) {
-            setColor(ColorAttr(name));
+        // TODO: validator is probably a better option
+        if (nameIsComplete(name)) {
+            // Don't invert alpha, because it is correct in the editor
+            setColor(ColorAttr(name, false));
             emit colorChanged();
         }
     }
 
 private:
+    bool nameIsComplete(const QString& name)
+    {
+        bool invalid = name.isEmpty() || (name[0] == "#" && name.size() != 9);
+        return !invalid;
+    }
+
     ColorAttr m_color;
 
     // QObject owned
