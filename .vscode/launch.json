@@ -10,7 +10,9 @@
             "request": "launch",
             // Target is selected in the CMake Tools status bar
             "program": "${command:cmake.launchTargetPath}",
-            "args": [],
+            "args": [
+                "${env:HOME}\\Projects\\iptvdream-4x\\skin-fhd"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [
