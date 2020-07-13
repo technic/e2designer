@@ -31,6 +31,14 @@ public:
                               const QModelIndex& index) const Q_DECL_OVERRIDE;
 };
 
+class BaseDelegatePainter
+{
+public:
+    virtual void paint(QPainter* painter,
+                       const QStyleOptionViewItem& option,
+                       const QModelIndex& index) const;
+};
+
 class PropertyDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -39,6 +47,11 @@ public:
     PropertyDelegate(QObject* parent = nullptr)
         : QStyledItemDelegate(parent)
     {}
+
+    void registerDelegatePainter(int type, std::unique_ptr<BaseDelegatePainter>&& painterImpl)
+    {
+        //        painters.insert(type, painterImpl);
+    }
 
     QWidget* createEditor(QWidget* parent,
                           const QStyleOptionViewItem& option,
@@ -53,6 +66,24 @@ public:
         }
         return editor;
     }
+
+    void paint(QPainter* painter,
+               const QStyleOptionViewItem& option,
+               const QModelIndex& index) const override
+    {
+        int type = index.data(Qt::EditRole).userType();
+        auto painterImpl = painters.value(type);
+        if (painterImpl) {
+            painterImpl->paint(painter, option, index);
+        } else {
+            QStyledItemDelegate::paint(painter, option, index);
+        }
+    }
+
+protected:
+    void updateEditorGeometry(QWidget* editor,
+                              const QStyleOptionViewItem& option,
+                              const QModelIndex& index) const override;
 
 private slots:
     void commitEditorData()
@@ -72,4 +103,13 @@ private:
             connect(editor, prop.notifySignal(), this, metaObject()->method(slotIndex));
         }
     }
+
+    QHash<int, BaseDelegatePainter*> painters;
+};
+
+class ColorPropertyPainter : public BaseDelegatePainter
+{
+    void paint(QPainter* painter,
+               const QStyleOptionViewItem& option,
+               const QModelIndex& index) const final;
 };

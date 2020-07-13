@@ -23,6 +23,7 @@ set(SOURCE
     src/base/flagsetter.hpp
     src/base/xmlstreamwriter.hpp
     src/colorlistbox.cpp
+    src/skindelegate.cpp
     src/colorlistwindow.cpp
     src/customtreeview.hpp
     src/commands/attrcommand.cpp

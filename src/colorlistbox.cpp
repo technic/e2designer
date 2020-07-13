@@ -5,6 +5,7 @@ ColorListBox::ColorListBox(QWidget* parent)
     : QComboBox(parent)
 {
     populateList();
+    setEditable(true);
 }
 
 QString ColorListBox::color() const
@@ -15,14 +16,16 @@ QString ColorListBox::color() const
 void ColorListBox::setColor(const QString& color)
 {
     setCurrentIndex(findText(color));
+    setEditText(color);
 }
 
 void ColorListBox::populateList()
 {
+    QPixmap px(iconSize());
     auto* colors = SkinRepository::colors();
     for (int i = 0; i < colors->rowCount(); ++i) {
         const Color& color = colors->itemAt(i);
-        insertItem(i, color.name());
-        setItemData(i, QColor::fromRgba(color.value()), Qt::DecorationRole);
+        px.fill(color.value());
+        addItem(QIcon(px), color.name());
     }
 }

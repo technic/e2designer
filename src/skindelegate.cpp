@@ -1,5 +1,10 @@
 #include "skindelegate.hpp"
 #include <QComboBox>
+#include <QLineEdit>
+#include <QApplication>
+#include <QTableView>
+#include <QPainter>
+#include <QDebug>
 
 SkinDelegate::SkinDelegate(QObject* parent)
     : QStyledItemDelegate(parent)
@@ -70,5 +75,40 @@ void SkinDelegate::updateEditorGeometry(QWidget* editor,
                                         const QModelIndex& index) const
 {
     editor->setGeometry(option.rect);
+
     Q_UNUSED(index);
+}
+
+// void ColorPropertyPainter::paint(QPainter* painter,
+//                                 const QStyleOptionViewItem& option,
+//                                 const QModelIndex& index) const
+//{
+//    option.rect.height() painter->fillRect(0,
+//                                           0,
+//                                           option.rect.height(),
+//                                           qMin(option.rect.width(), option.rect.height()),
+//                                           QBrush());
+//}
+
+void PropertyDelegate::updateEditorGeometry(QWidget* editor,
+                                            const QStyleOptionViewItem& option,
+                                            const QModelIndex& index) const
+{
+    int type = index.data(Qt::EditRole).userType();
+    if (type == qMetaTypeId<ColorAttr>()) {
+        editor->setGeometry(option.rect);
+
+        qDebug() << option.rect << "SIZE:" << editor->size() << "hint/min/max" << editor->sizeHint()
+                 << editor->minimumSize() << editor->maximumSize();
+
+    } else {
+        QStyledItemDelegate::updateEditorGeometry(editor, option, index);
+    }
+    return;
+
+    if (painters.contains(type)) {
+        editor->setGeometry(option.rect);
+    } else {
+        QStyledItemDelegate::updateEditorGeometry(editor, option, index);
+    }
 }

@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QDebug>
+#include <QProxyStyle>
+#include <QToolButton>
 #include <QtColorWidgets/color_dialog.hpp>
 #include <skin/colorattr.hpp>
 
@@ -34,12 +36,21 @@ public:
         , m_btn(new QPushButton())
         , m_dialog(new color_widgets::ColorDialog(this))
     {
-        m_dialog->setAlphaEnabled(true);
+        // Editor is shown on top of the delegate.
+        // Always fill background, to ensure that the editor not transparent
         setAutoFillBackground(true);
-        auto hbox = new QHBoxLayout(this);
-        hbox->setMargin(0);
-        hbox->addWidget(m_comboBox);
-        hbox->addWidget(m_btn);
+
+        // Do not expand the button horizontally
+        m_btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        m_btn->setIcon(QIcon(":/icons/icons/color-circle.svg"));
+
+        // Enable alpha channel editing in color dialog
+        m_dialog->setAlphaEnabled(true);
+
+        auto layout = new QHBoxLayout(this);
+        layout->setMargin(0);
+        layout->addWidget(m_comboBox);
+        layout->addWidget(m_btn);
 
         connect(m_comboBox, &ColorListBox::currentTextChanged, this, &ColorChooser::setColorName);
         connect(m_btn, &QPushButton::clicked, this, &ColorChooser::showDialog);
@@ -50,11 +61,12 @@ public:
     }
 
     ColorAttr color() const { return m_color; }
+
     void setColor(const ColorAttr& color)
     {
         m_color = color;
         m_comboBox->blockSignals(true);
-        m_comboBox->setColor(color.name());
+        m_comboBox->setColor(color.toString());
         m_comboBox->blockSignals(false);
     }
 
@@ -62,15 +74,23 @@ signals:
     void colorChanged();
 
 private slots:
-    void showDialog() { m_dialog->open(); }
+    void showDialog()
+    {
+        if (m_color.state() == ColorAttr::State::Fixed) {
+            m_dialog->showColor(m_color.value());
+        } else {
+            m_dialog->open();
+        }
+    }
+
     void setQColor(const QColor& color)
     {
         if (color.isValid()) {
-            qDebug() << color << color.alpha();
             setColor(ColorAttr(color));
             emit colorChanged();
         }
     }
+
     void setColorName(const QString& name)
     {
         if (!name.isEmpty()) {
@@ -80,9 +100,10 @@ private slots:
     }
 
 private:
+    ColorAttr m_color;
+
+    // QObject owned
     ColorListBox* m_comboBox;
     QPushButton* m_btn;
     color_widgets::ColorDialog* m_dialog;
-
-    ColorAttr m_color;
 };

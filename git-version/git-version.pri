@@ -28,7 +28,7 @@ message(Store version in $${VERSION_FILE})
 
 # qmake rules to generate gitversion.hpp
 versiontarget.name = generate gitversion.hpp
-versiontarget.depends = FORCE
+# versiontarget.depends = FORCE
 versiontarget.output = $${VERSION_FILE}
 win32 {
     # Change directory to QTDIR where required dll's are located
