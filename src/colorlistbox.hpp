@@ -39,6 +39,7 @@ public:
         // Editor is shown on top of the delegate.
         // Always fill background, to ensure that the editor not transparent
         setAutoFillBackground(true);
+        setFocusProxy(m_comboBox);
 
         // Do not expand the button horizontally
         m_btn->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
