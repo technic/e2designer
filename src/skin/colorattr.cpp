@@ -73,7 +73,7 @@ QString ColorAttr::toStr(bool invertAlpha) const
     }
 }
 
-static ConverterRegistrator color_cr(&ColorAttr::toString);
+static ConverterRegistration color_cr(&ColorAttr::toString);
 
 // CachedColor
 

@@ -7,10 +7,10 @@
  * @brief Wrapper around QMetaType::registerConverter()
  */
 
-struct ConverterRegistrator
+struct ConverterRegistration
 {
     template<typename Function>
-    ConverterRegistrator(Function f)
+    ConverterRegistration(Function f)
     {
         QMetaType::registerConverter(f);
     }

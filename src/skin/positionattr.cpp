@@ -106,4 +106,4 @@ void PositionAttr::fromStr(const QString& str)
     }
 }
 
-static ConverterRegistrator position_cr(&PositionAttr::toStr);
+static ConverterRegistration position_cr(&PositionAttr::toStr);

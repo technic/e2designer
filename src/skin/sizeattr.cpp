@@ -95,4 +95,4 @@ void SizeAttr::fromStr(const QString& str)
     }
 }
 
-static ConverterRegistrator cr(&SizeAttr::toStr);
+static ConverterRegistration cr(&SizeAttr::toStr);
