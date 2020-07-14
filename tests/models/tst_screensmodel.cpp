@@ -77,6 +77,22 @@ private slots:
         QCOMPARE(model.widgetAttr(w, Property::text), "text_b");
         QCOMPARE(model.widgetAttr(w, Property::previewValue), "value");
     }
+
+    void test_duplicate_widget()
+    {
+        auto* colors = new ColorsModel(this);
+        auto* colorRoles = new ColorRolesModel(*colors, this);
+        auto* fonts = new FontsModel(this);
+        ScreensModel model(*colors, *colorRoles, *fonts, this);
+
+        model.insertRow(0);
+        auto screen0 = model.index(0, 0);
+        model.setWidgetAttr(screen0, Property::text, "some text");
+
+        model.duplicateWdiget(screen0);
+        auto screen1 = model.index(1, 0);
+        QCOMPARE(model.widgetAttr(screen1, Property::text), "some text");
+    }
 };
 
 QTEST_APPLESS_MAIN(TestScreensModel)

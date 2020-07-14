@@ -136,6 +136,8 @@ public:
     void moveWidget(const QModelIndex& index, const QPoint& pos);
     void changeWidgetRect(const QModelIndex& index, const QRect& rect);
 
+    void duplicateWdiget(const QModelIndex& index);
+
     // widgetChanged only emitted for widgets being observed
     void registerObserver(const QModelIndex& index);
     void unregisterObserver(const QModelIndex& index);
