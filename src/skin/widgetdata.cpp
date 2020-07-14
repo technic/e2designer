@@ -243,26 +243,28 @@ static WidgetReflection reflection;
 
 // WidgetData
 
+WidgetData::WidgetAttributes::WidgetAttributes()
+    : zValue(0)
+    , transparent(false)
+    , borderWidth(0)
+    , alphatest(Property::Alphatest::off)
+    , scale(0)
+    , valign(PropertyVAlign::top)
+    , halign(PropertyHAlign::left)
+    , noWrap(false)
+    , flags(Property::Flags::wfBorder)
+    , itemHeight(0)
+    , scrollbarMode(Property::ScrollbarMode::showNever)
+    , orientation(Property::Orientation::orHorizontal)
+    , render(Property::Render::Widget)
+    , previewRender(Property::Render::Widget)
+{}
+
 WidgetData::WidgetData(WidgetType type)
     : MixinTreeNode<WidgetData>(crtp_guard())
-    , m_zValue(0)
-    , m_transparent(false)
-    , m_borderWidth(0)
-    , m_alphatest(Property::Alphatest::off)
-    , m_scale(0)
-    , m_valign(PropertyVAlign::top)
-    , m_halign(PropertyHAlign::left)
-    , m_noWrap(false)
-    , m_flags(Property::Flags::wfBorder)
-    , m_itemHeight(0)
-    , m_scrollbarMode(Property::ScrollbarMode::showNever)
-    , m_orientation(Property::Orientation::orHorizontal)
-    , m_render(Property::Render::Widget)
-    , m_previewRender(Property::Render::Widget)
     , m_type(type)
     , m_model(nullptr)
-{
-}
+{}
 
 WidgetData* WidgetData::createFromXml(QXmlStreamReader& xml)
 {
@@ -363,36 +365,36 @@ WidgetData::WidgetType WidgetData::strToType(const QStringRef& str, bool& ok)
 
 void WidgetData::resize(const QSizeF& size)
 {
-    m_size.setSize(*this, size.toSize());
+    m_attrs.size.setSize(*this, size.toSize());
     sizeChanged();
 }
 
 void WidgetData::setSize(const SizeAttr& size)
 {
-    m_size = size;
+    m_attrs.size = size;
     sizeChanged();
 }
 
 void WidgetData::move(const QPointF& pos)
 {
-    m_position.setPoint(*this, pos.toPoint());
+    m_attrs.position.setPoint(*this, pos.toPoint());
     notifyAttrChange(Property::position);
 }
 
 void WidgetData::setPosition(const PositionAttr& pos)
 {
-    m_position = pos;
+    m_attrs.position = pos;
     notifyAttrChange(Property::position);
 }
 
 QPoint WidgetData::absolutePosition() const
 {
-    return m_position.toPoint(*this);
+    return m_attrs.position.toPoint(*this);
 }
 
 QSize WidgetData::selfSize() const
 {
-    return m_size.getSize(*this);
+    return m_attrs.size.getSize(*this);
 }
 
 QSize WidgetData::parentSize() const
@@ -408,13 +410,13 @@ QSize WidgetData::parentSize() const
 
 void WidgetData::setZPosition(int z)
 {
-    m_zValue = z;
+    m_attrs.zValue = z;
     notifyAttrChange(Property::zPosition);
 }
 
 void WidgetData::setTransparent(bool val)
 {
-    m_transparent = val;
+    m_attrs.transparent = val;
     notifyAttrChange(Property::transparent);
 }
 
@@ -424,23 +426,23 @@ ColorAttr WidgetData::color(int key) const
     case Property::foregroundColor:
     case Property::backgroundColor:
     default:
-        return m_colors[key];
+        return m_attrs.colors[key];
     }
 }
 
 void WidgetData::setColor(int key, const ColorAttr& color)
 {
-    m_colors[key] = color;
+    m_attrs.colors[key] = color;
     if (m_model) {
-        m_colors[key].reload(m_model->colors());
+        m_attrs.colors[key].reload(m_model->colors());
         notifyAttrChange(key);
     }
 }
 
 QColor WidgetData::getQColor(int key) const
 {
-    if (m_colors[key].isDefined()) {
-        return m_colors[key].getQColor();
+    if (m_attrs.colors[key].isDefined()) {
+        return m_attrs.colors[key].getQColor();
     } else if (m_model) {
         switch (key) {
         case Property::foregroundColor:
@@ -457,125 +459,125 @@ QColor WidgetData::getQColor(int key) const
 
 void WidgetData::setFont(const FontAttr& font)
 {
-    m_font = font;
+    m_attrs.font = font;
     notifyAttrChange(Property::font);
 }
 
 void WidgetData::setBorderWidth(int px)
 {
-    m_borderWidth = px;
+    m_attrs.borderWidth = px;
     notifyAttrChange(Property::borderWidth);
 }
 
 void WidgetData::setText(const QString& text)
 {
-    m_text = text;
+    m_attrs.text = text;
     notifyAttrChange(Property::text);
 }
 
 void WidgetData::setHalign(PropertyHAlign::Enum align)
 {
-    m_halign = align;
+    m_attrs.halign = align;
     notifyAttrChange(Property::halign);
 }
 
 void WidgetData::setValign(PropertyVAlign::Enum align)
 {
-    m_valign = align;
+    m_attrs.valign = align;
     notifyAttrChange(Property::valign);
 }
 
 void WidgetData::setShadowOffset(const OffsetAttr& offset)
 {
-    m_shadowOffset = offset;
+    m_attrs.shadowOffset = offset;
     notifyAttrChange(Property::shadowOffset);
 }
 
 void WidgetData::setNoWrap(bool value)
 {
-    m_noWrap = value;
+    m_attrs.noWrap = value;
     notifyAttrChange(Property::noWrap);
 }
 
 void WidgetData::setItemHeight(int px)
 {
-    m_itemHeight = px;
+    m_attrs.itemHeight = px;
     notifyAttrChange(Property::itemHeight);
 }
 
 void WidgetData::setScrollbarMode(Property::ScrollbarMode mode)
 {
-    m_scrollbarMode = mode;
+    m_attrs.scrollbarMode = mode;
     notifyAttrChange(Property::scrollbarMode);
 }
 
 PixmapAttr WidgetData::pixmap(int key) const
 {
-    return m_pixmaps[key];
+    return m_attrs.pixmaps[key];
 }
 
 void WidgetData::setPixmap(int key, const PixmapAttr& p)
 {
-    m_pixmaps[key] = p;
+    m_attrs.pixmaps[key] = p;
     notifyAttrChange(key);
 }
 
 bool WidgetData::hasFlag(int key) const
 {
-    return m_switches[key];
+    return m_attrs.switches[key];
 }
 
 void WidgetData::setFlag(int key, bool value)
 {
-    m_switches[key] = value;
+    m_attrs.switches[key] = value;
     notifyAttrChange(key);
 }
 
 void WidgetData::setAlphatest(Property::Alphatest value)
 {
-    m_alphatest = value;
+    m_attrs.alphatest = value;
     notifyAttrChange(Property::alphatest);
 }
 
 void WidgetData::setScale(int scale)
 {
-    m_scale = scale;
+    m_attrs.scale = scale;
     notifyAttrChange(Property::scale);
 }
 
 void WidgetData::setOrientation(Property::Orientation orientation)
 {
-    m_orientation = orientation;
+    m_attrs.orientation = orientation;
     notifyAttrChange(Property::orientation);
 }
 
 void WidgetData::setName(const QString& name)
 {
-    m_name = name;
+    m_attrs.name = name;
     notifyAttrChange(Property::name);
 }
 
 void WidgetData::setRender(Property::Render render)
 {
-    m_render = render;
+    m_attrs.render = render;
     notifyAttrChange(Property::render);
 }
 
 void WidgetData::setSource(const QString& source)
 {
-    m_source = source;
+    m_attrs.source = source;
     notifyAttrChange(Property::source);
 }
 
 void WidgetData::setPreviewRender(Property::Render render)
 {
-    m_previewRender = render;
+    m_attrs.previewRender = render;
     notifyAttrChange(Property::previewRender);
 }
 
 void WidgetData::setPreviewValue(const QVariant& value)
 {
-    m_previewValue = value;
+    m_attrs.previewValue = value;
     notifyAttrChange(Property::previewValue);
 }
 
@@ -601,7 +603,7 @@ QVariant WidgetData::scenePreview() const
         finalSource = m_converters.back().get();
     }
     using R = Property::Render;
-    switch (m_render) {
+    switch (m_attrs.render) {
     case R::Label:
         return finalSource->getText();
     case R::Slider:
@@ -613,13 +615,13 @@ QVariant WidgetData::scenePreview() const
 
 void WidgetData::setTitle(const QString& text)
 {
-    m_title = text;
+    m_attrs.title = text;
     notifyAttrChange(Property::title);
 }
 
 void WidgetData::setFlags(Property::Flags flags)
 {
-    m_flags = flags;
+    m_attrs.flags = flags;
     notifyAttrChange(Property::flags);
 }
 
@@ -642,7 +644,7 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
 
     // FIXME: replace this if spaghetti with proper OOP solution
     if (m_type == WidgetType::Applet) {
-        m_appletCode = xml.readElementText();
+        m_attrs.appletCode = xml.readElementText();
         return !xml.hasError();
     }
 
@@ -687,7 +689,7 @@ void WidgetData::parseAttributes(QXmlStreamAttributes attrs)
             setAttrFromXml(key, attr.value().toString());
         } else {
             qWarning() << "unknown attribute" << attr.name();
-            m_otherAttributes[attr.name().toString()] = attr.value().toString();
+            m_attrs.otherAttributes[attr.name().toString()] = attr.value().toString();
         }
     }
 }
@@ -707,8 +709,8 @@ void WidgetData::loadPreview()
         if (ptr) {
             QString screen = ptr->self()->name();
             Preview p = m_model->getPreview(screen, name());
-            m_previewRender = p.render;
-            m_previewValue = p.value;
+            m_attrs.previewRender = p.render;
+            m_attrs.previewValue = p.value;
         }
     } else if (m_type == WidgetType::Screen) {
         for (int i = 0; i < childCount(); ++i) {
@@ -744,7 +746,7 @@ void WidgetData::toXml(XmlStreamWriter& xml) const
     writeAttributes(xml);
 
     if (m_type == WidgetType::Applet) {
-        xml.writeCharacters(m_appletCode);
+        xml.writeCharacters(m_attrs.appletCode);
     }
 
     for (int i = 0; i < childCount(); ++i) {
@@ -768,7 +770,7 @@ void WidgetData::writeAttributes(XmlStreamWriter& xml) const
             auto it = reflection.find(key);
             value = it.value()->getStr(*this);
         } else {
-            value = m_otherAttributes.value(name);
+            value = m_attrs.otherAttributes.value(name);
         }
         if (!value.isNull())
             xml.writeAttribute(name, value);
@@ -786,7 +788,7 @@ void WidgetData::writeAttributes(XmlStreamWriter& xml) const
         if (!value.isNull())
             xml.writeAttribute(name, value);
     }
-    for (auto it = m_otherAttributes.cbegin(); it != m_otherAttributes.cend(); ++it) {
+    for (auto it = m_attrs.otherAttributes.cbegin(); it != m_attrs.otherAttributes.cend(); ++it) {
         if (!m_propertiesOrder.contains(it.key())) {
             if (!it.value().isNull())
                 xml.writeAttribute(it.key(), it.value());
@@ -816,8 +818,8 @@ bool WidgetData::setAttr(int key, const QVariant& value)
 
 QString WidgetData::getAttr(const QString& key) const
 {
-    auto it = m_otherAttributes.find(key);
-    if (it != m_otherAttributes.cend()) {
+    auto it = m_attrs.otherAttributes.find(key);
+    if (it != m_attrs.otherAttributes.cend()) {
         return *it;
     }
     return QString();
@@ -825,7 +827,7 @@ QString WidgetData::getAttr(const QString& key) const
 
 void WidgetData::onColorChanged(const QString& name, QRgb value)
 {
-    for (auto it = m_colors.begin(); it != m_colors.end(); ++it) {
+    for (auto it = m_attrs.colors.begin(); it != m_attrs.colors.end(); ++it) {
         auto& col = *it;
         if (col.name() == name) {
             col.updateValue(value);
@@ -859,7 +861,7 @@ void WidgetData::updateCache()
     if (!m_model) {
         return;
     }
-    for (auto& col : m_colors) {
+    for (auto& col : m_attrs.colors) {
         col.reload(m_model->colors());
     }
     // TODO: fonts?
@@ -875,10 +877,10 @@ void WidgetData::sizeChanged()
 
 void WidgetData::parentSizeChanged()
 {
-    if (m_position.isRelative()) {
+    if (m_attrs.position.isRelative()) {
         notifyAttrChange(Property::position);
     }
-    if (m_size.isRelative()) {
+    if (m_attrs.size.isRelative()) {
         notifyAttrChange(Property::size);
         for (int i = 0; i < childCount(); ++i) {
             child(i)->parentSizeChanged();

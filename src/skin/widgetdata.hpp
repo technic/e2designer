@@ -71,12 +71,12 @@ public:
     static WidgetType strToType(const QStringRef& str, bool& ok);
 
     // size
-    SizeAttr size() const { return m_size; }
+    SizeAttr size() const { return m_attrs.size; }
     void resize(const QSizeF& size);
     void setSize(const SizeAttr& size);
 
     // postion
-    PositionAttr position() const { return m_position; }
+    PositionAttr position() const { return m_attrs.position; }
     void move(const QPointF& pos);
     void setPosition(const PositionAttr& pos);
 
@@ -86,9 +86,9 @@ public:
     QSize parentSize() const;
 
     // Common
-    int zPosition() const { return m_zValue; }
+    int zPosition() const { return m_attrs.zValue; }
     void setZPosition(int z);
-    bool transparent() const { return m_transparent; }
+    bool transparent() const { return m_attrs.transparent; }
     void setTransparent(bool val);
 
     // Colors
@@ -103,53 +103,53 @@ public:
     void setFlag(int key, bool value);
 
     // Font
-    FontAttr font() const { return m_font; }
+    FontAttr font() const { return m_attrs.font; }
     void setFont(const FontAttr& font);
 
     // Borders
-    int borderWidth() const { return m_borderWidth; }
+    int borderWidth() const { return m_attrs.borderWidth; }
     void setBorderWidth(int px);
 
     // Label
-    QString text() const { return m_text; }
+    QString text() const { return m_attrs.text; }
     void setText(const QString& text);
-    PropertyHAlign::Enum halign() const { return m_halign; }
+    PropertyHAlign::Enum halign() const { return m_attrs.halign; }
     void setHalign(PropertyHAlign::Enum align);
-    PropertyVAlign::Enum valign() const { return m_valign; }
+    PropertyVAlign::Enum valign() const { return m_attrs.valign; }
     void setValign(PropertyVAlign::Enum align);
-    OffsetAttr shadowOffset() const { return m_shadowOffset; }
+    OffsetAttr shadowOffset() const { return m_attrs.shadowOffset; }
     void setShadowOffset(const OffsetAttr& offset);
-    bool noWrap() const { return m_noWrap; }
+    bool noWrap() const { return m_attrs.noWrap; }
     void setNoWrap(bool value);
 
     // List
-    int itemHeight() const { return m_itemHeight; }
+    int itemHeight() const { return m_attrs.itemHeight; }
     void setItemHeight(int px);
-    Property::ScrollbarMode scrollbarMode() const { return m_scrollbarMode; }
+    Property::ScrollbarMode scrollbarMode() const { return m_attrs.scrollbarMode; }
     void setScrollbarMode(Property::ScrollbarMode mode);
 
     // Pixmap
-    Property::Alphatest alphatest() const { return m_alphatest; }
+    Property::Alphatest alphatest() const { return m_attrs.alphatest; }
     void setAlphatest(Property::Alphatest value);
-    int scale() const { return m_scale; }
+    int scale() const { return m_attrs.scale; }
     void setScale(int scale);
 
     // Slider
-    Property::Orientation orientation() const { return m_orientation; }
+    Property::Orientation orientation() const { return m_attrs.orientation; }
     void setOrientation(Property::Orientation orientation);
 
     // Widget
-    QString name() const { return m_name; }
+    QString name() const { return m_attrs.name; }
     void setName(const QString& name);
-    Property::Render render() const { return m_render; }
+    Property::Render render() const { return m_attrs.render; }
     void setRender(Property::Render render);
-    QString source() const { return m_source; }
+    QString source() const { return m_attrs.source; }
     void setSource(const QString& source);
 
     // Widget preview
-    Property::Render previewRender() const { return m_previewRender; }
+    Property::Render previewRender() const { return m_attrs.previewRender; }
     void setPreviewRender(Property::Render render);
-    QVariant previewValue() const { return m_previewValue; }
+    QVariant previewValue() const { return m_attrs.previewValue; }
     void setPreviewValue(const QVariant& value);
     void loadPreview();
     // Render to use on scene
@@ -157,9 +157,9 @@ public:
     QVariant scenePreview() const;
 
     // Screen
-    QString title() const { return m_title; }
+    QString title() const { return m_attrs.title; }
     void setTitle(const QString& text);
-    Property::Flags flags() const { return m_flags; }
+    Property::Flags flags() const { return m_attrs.flags; }
     void setFlags(Property::Flags flags);
 
     // Xml
@@ -200,67 +200,83 @@ private:
     void notifyAttrChange(int key);
     void setAttrFromXml(int key, const QString& str);
 
-    // Size and position
-    Size m_size;
-    Position m_position;
+    class WidgetAttributes
+    {
+    public:
+        // Constructor which initializes default values
+        WidgetAttributes();
 
-    // Common
-    QString m_name;
-    int m_zValue;
-    bool m_transparent;
-    //    ColorAttr m_borderColor;
-    int m_borderWidth;
+        // Size and position
+        Size size;
+        Position position;
 
-    // Pixmap
-    //    PixmapAttr m_pixmap;
-    Property::Alphatest m_alphatest;
-    int m_scale;
+        // Common
+        QString name;
+        int zValue;
+        bool transparent;
+        //    ColorAttr m_borderColor;
+        int borderWidth;
 
-    // Label
-    QString m_text;
-    FontAttr m_font;
-    PropertyVAlign::Enum m_valign;
-    PropertyHAlign::Enum m_halign;
-    //    ColorAttr m_shadowColor;
-    OffsetAttr m_shadowOffset;
-    bool m_noWrap;
+        // Pixmap
+        //    PixmapAttr m_pixmap;
+        Property::Alphatest alphatest;
+        int scale;
 
-    // Screen
-    QString m_title;
-    Property::Flags m_flags;
+        // Label
+        QString text;
+        FontAttr font;
+        PropertyVAlign::Enum valign;
+        PropertyHAlign::Enum halign;
+        //    ColorAttr m_shadowColor;
+        OffsetAttr shadowOffset;
+        bool noWrap;
 
-    // List
-    int m_itemHeight;
-    //    PixmapAttr m_selectionPixmap;
-    //    bool m_selectionDisabled;
-    Property::ScrollbarMode m_scrollbarMode;
-    //    bool m_enableWrapAround;
+        // Screen
+        QString title;
+        Property::Flags flags;
 
-    // Slider
-    //    PixmapAttr m_sliderPixmap;
-    //    PixmapAttr m_backgroundPixmap;
-    Property::Orientation m_orientation;
+        // List
+        int itemHeight;
+        //    PixmapAttr m_selectionPixmap;
+        //    bool m_selectionDisabled;
+        Property::ScrollbarMode scrollbarMode;
+        //    bool m_enableWrapAround;
 
-    // Widget
-    Property::Render m_render;
-    QString m_source;
+        // Slider
+        //    PixmapAttr m_sliderPixmap;
+        //    PixmapAttr m_backgroundPixmap;
+        Property::Orientation orientation;
 
-    // Applet
-    QString m_appletCode;
+        // Widget
+        Property::Render render;
+        QString source;
 
-    // Preview
-    Property::Render m_previewRender;
-    QVariant m_previewValue;
+        // Applet
+        QString appletCode;
 
-    // named by key
-    QHash<int, CachedColor> m_colors;
-    QHash<int, PixmapAttr> m_pixmaps;
-    QHash<int, bool> m_switches;
+        // Preview
+        Property::Render previewRender;
+        QVariant previewValue;
+
+        // named by key
+        QHash<int, CachedColor> colors;
+        QHash<int, PixmapAttr> pixmaps;
+        QHash<int, bool> switches;
+
+        // Unknown attributes
+        QMap<QString, QString> otherAttributes;
+    };
+
+    // Store
+    WidgetAttributes m_attrs;
+
+    // Order of attributes that was in xml. We want to preserve it upon serialization
+    QVector<QString> m_propertiesOrder;
 
     // Other
     WidgetType m_type;
-    QVector<QString> m_propertiesOrder;
     std::vector<std::unique_ptr<Converter>> m_converters;
+
+    // Reference to the model, that owns this widget
     ScreensModel* m_model;
-    QMap<QString, QString> m_otherAttributes;
 };

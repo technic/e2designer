@@ -24,7 +24,7 @@ protected:
         friend T;
         crtp_guard() = default;
     };
-    
+
     // You must inherit from this class
     MixinTreeNode(crtp_guard)
         : m_parent(nullptr)
@@ -66,6 +66,9 @@ public:
     void clear() { removeChildren(0, m_childs.size()); }
     // releases ownership
     virtual QVector<T*> takeChildren(int position, int count);
+
+    // Deep copy
+    void clone();
 
     /**
      * @brief DFS tree iterator
