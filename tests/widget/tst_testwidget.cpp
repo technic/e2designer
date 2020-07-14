@@ -92,8 +92,7 @@ private slots:
         QXmlStreamReader xml(R"(<widget name="foobar"><widget_bad/>)");
         xml.readNextStartElement();
 
-        WidgetData w(WidgetType::Widget);
-        QCOMPARE(w.fromXml(xml), false);
+        QCOMPARE(WidgetData::createFromXml(xml), nullptr);
         QVERIFY(xml.hasError());
         qDebug() << xml.error() << xml.errorString();
     }
@@ -104,7 +103,7 @@ private slots:
         xml.readNextStartElement();
 
         WidgetData w(WidgetType::Widget);
-        QCOMPARE(w.fromXml(xml), false);
+        QCOMPARE(WidgetData::createFromXml(xml), nullptr);
         QVERIFY(xml.hasError());
         qDebug() << xml.error() << xml.errorString();
     }
@@ -118,13 +117,13 @@ private slots:
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
 
-        WidgetData w(WidgetType::Widget);
-        w.fromXml(xml);
-
-        PropertyTree tree(&w);
+        auto w = WidgetData::createFromXml(xml);
+        QVERIFY(w);
+        PropertyTree tree(w);
         QVERIFY(tree.getItemPtr(Property::position)->data(Qt::DisplayRole) == "10,20");
         QVERIFY(tree.getItemPtr(Property::size)->data(Qt::DisplayRole) == "100,300");
         QVERIFY(tree.getItemPtr(Property::alphatest)->data(Qt::DisplayRole) == "blend");
+        delete w;
     }
 
     void test_modelSignal()
@@ -205,10 +204,11 @@ private slots:
         QVERIFY(file.open(QIODevice::ReadOnly));
         QXmlStreamReader xml(&file);
         xml.readNextStartElement();
-        WidgetData w(WidgetType::Widget);
-        w.fromXml(xml);
 
-        QCOMPARE(w.scenePreview().toString(), QDateTime::currentDateTime().toString("h:mm"));
+        auto w = WidgetData::createFromXml(xml);
+        QVERIFY(w);
+        QCOMPARE(w->scenePreview().toString(), QDateTime::currentDateTime().toString("h:mm"));
+        delete w;
     }
 
     void test_ColorRoles()

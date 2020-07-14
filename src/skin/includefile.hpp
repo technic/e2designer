@@ -9,7 +9,8 @@ public:
 
     IncludeFile();
 
-    bool fromXml(QXmlStreamReader& xml) override;
+    bool fromXml(QXmlStreamReader& xml);
+
     void toXml(XmlStreamWriter& xml) const override;
 
     QString getAttr(const QString& key) const override;

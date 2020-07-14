@@ -163,7 +163,6 @@ public:
     void setFlags(Property::Flags flags);
 
     // Xml
-    virtual bool fromXml(QXmlStreamReader& xml);
     virtual void toXml(XmlStreamWriter& xml) const;
 
     // Attribute get/set QVariant methods
@@ -194,6 +193,8 @@ protected:
     void writeAttributes(XmlStreamWriter& xml) const;
 
 private:
+    bool fromXml(QXmlStreamReader& xml);
+
     void sizeChanged();
     void parentSizeChanged();
     void notifyAttrChange(int key);
