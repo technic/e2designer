@@ -218,6 +218,9 @@ WidgetReflection::WidgetReflection()
     add(p::source, &w::source, &w::setSource);
     add(p::previewRender, &w::previewRender, &w::setPreviewRender);
     add(p::previewValue, &w::previewValue, &w::setPreviewValue);
+
+    // Call it here because of Qt limitation with static objects
+    Q_ASSERT(hasAllKeys());
 }
 
 bool WidgetReflection::hasAllKeys()
@@ -259,8 +262,6 @@ WidgetData::WidgetData(WidgetType type)
     , m_type(type)
     , m_model(nullptr)
 {
-    // Call it here because of Qt limitation with static objects
-    Q_ASSERT(reflection.hasAllKeys());
 }
 
 WidgetData* WidgetData::createFromXml(QXmlStreamReader& xml)
