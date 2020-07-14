@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QStyledItemDelegate>
