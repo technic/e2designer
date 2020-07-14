@@ -148,7 +148,7 @@ private slots:
         QCOMPARE(spy.first().at(1), Property::transparent);
     }
 
-    void test_colorPalleteSignals()
+    void test_colorPaletteSignals()
     {
         auto colors = new ColorsModel(this);
         auto colorRoles = new ColorRolesModel(*colors, this);
