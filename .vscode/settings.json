@@ -15,6 +15,7 @@
         "qfindtestdata",
         "qgetenv",
         "qgraphicsitem",
+        "qobject",
         "qreal",
         "qtest",
         "quintptr",
