@@ -402,7 +402,7 @@ bool ScreensModel::dropMimeData(const QMimeData* data,
 
     bool ok = true;
     for (auto index : qAsConst(rows)) {
-        ok |= moveRow(index.parent(), index.row(), parent, row);
+        ok &= moveRow(index.parent(), index.row(), parent, row);
     }
     if (!ok) {
         qWarning() << "Move rows failed";
