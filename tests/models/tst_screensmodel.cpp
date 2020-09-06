@@ -91,7 +91,7 @@ private slots:
 
         model.duplicateWdiget(screen0);
         auto screen1 = model.index(1, 0);
-        QCOMPARE(model.widgetAttr(screen1, Property::text), "some text");
+        QCOMPARE(model.widgetAttr(screen1, Property::text).toString(), "some text");
     }
 };
 

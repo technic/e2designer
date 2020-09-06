@@ -3,6 +3,7 @@
 #include <QTimer>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
+#include <QBuffer>
 
 #include "model/colorsmodel.hpp"
 #include "model/windowstyle.hpp"
@@ -657,17 +658,7 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
                 return false;
             }
         } else if (xml.name() == "convert") {
-            auto name = xml.attributes().value("type");
-            std::unique_ptr<Converter> converter;
-            if (!name.isNull()) {
-                converter = ConverterFactory::instance().createConverterByName(name.toString());
-            }
-            if (!converter) {
-                // Fallback to default implementation
-                converter = std::make_unique<Converter>();
-            }
-            converter->fromXml(xml);
-            m_converters.push_back(std::move(converter));
+            appendConverterFromXml(xml);
         } else {
             qWarning() << "unknown element" << xml.name();
             xml.skipCurrentElement();
@@ -675,6 +666,22 @@ bool WidgetData::fromXml(QXmlStreamReader& xml)
     }
 
     return !xml.hasError();
+}
+
+void WidgetData::appendConverterFromXml(QXmlStreamReader& xml)
+{
+    Q_ASSERT(xml.isStartElement() && xml.name() == "convert");
+    auto name = xml.attributes().value("type");
+    std::unique_ptr<Converter> converter;
+    if (!name.isNull()) {
+        converter = ConverterFactory::instance().createConverterByName(name.toString());
+    }
+    if (!converter) {
+        // Fallback to default implementation
+        converter = std::make_unique<Converter>();
+    }
+    converter->fromXml(xml);
+    m_converters.push_back(std::move(converter));
 }
 
 void WidgetData::parseAttributes(QXmlStreamAttributes attrs)
@@ -752,11 +759,17 @@ void WidgetData::toXml(XmlStreamWriter& xml) const
     for (int i = 0; i < childCount(); ++i) {
         child(i)->toXml(xml);
     }
+
+    convertersToXml(xml);
+
+    xml.writeEndElement();
+}
+
+void WidgetData::convertersToXml(XmlStreamWriter& xml) const
+{
     for (auto& item : qAsConst(m_converters)) {
         item->toXml(xml);
     }
-
-    xml.writeEndElement();
 }
 
 void WidgetData::writeAttributes(XmlStreamWriter& xml) const
@@ -823,6 +836,35 @@ QString WidgetData::getAttr(const QString& key) const
         return *it;
     }
     return QString();
+}
+
+WidgetData* WidgetData::clone() const
+{
+    // Model of copied widget should be nullptr
+    auto* copied = new WidgetData(m_type);
+    copied->m_attrs = m_attrs;
+    copied->m_propertiesOrder = m_propertiesOrder;
+
+    // Ugly hack with xml serialization
+    QBuffer buf;
+    buf.open(QIODevice::WriteOnly);
+    XmlStreamWriter writer(&buf);
+    convertersToXml(writer);
+    buf.close();
+
+    buf.open(QIODevice::ReadOnly);
+    QXmlStreamReader reader(&buf);
+    while (reader.readNextStartElement()) {
+        copied->appendConverterFromXml(reader);
+    }
+
+    // Copy children recursively
+    for (int i = 0; i < childCount(); ++i) {
+        WidgetData* childCopy = child(i)->clone();
+        copied->appendChild(childCopy);
+    }
+
+    return copied;
 }
 
 void WidgetData::onColorChanged(const QString& name, QRgb value)

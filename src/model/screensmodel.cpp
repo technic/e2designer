@@ -528,10 +528,12 @@ void ScreensModel::changeWidgetRect(const QModelIndex& index, const QRect& rect)
     }
 }
 
-void ScreensModel::duplicateWdiget(const QModelIndex& index) {
+void ScreensModel::duplicateWdiget(const QModelIndex& index)
+{
     auto* widget = indexToItem(index);
     if (widget && widget->parent()) {
-        // TODO: implement
+        auto* widget_copy = widget->clone();
+        // insertWidget();
     }
 }
 

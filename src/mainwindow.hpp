@@ -62,6 +62,8 @@ private slots:
     void loadEditorText();
     void showXmlEditor(bool show);
 
+    void cloneSelectedWidget();
+
 private:
     // menu and toolbar
     void createActions();

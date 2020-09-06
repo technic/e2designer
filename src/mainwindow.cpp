@@ -338,6 +338,15 @@ void MainWindow::delWidget()
     // FIXME: is m_view always authoritative?
 }
 
+void MainWindow::cloneSelectedWidget()
+{
+    QModelIndex idx = ui->treeView->selectionModel()->currentIndex();
+    if (!idx.isValid()) {
+        return;
+    }
+    SkinRepository::screens()->duplicateWdiget(idx);
+}
+
 void MainWindow::editColors()
 {
     auto colorsWindow = new ColorListWindow(this);
@@ -444,6 +453,7 @@ void MainWindow::createActions()
 
     connect(ui->actionAddWidget, &QAction::triggered, this, &MainWindow::addWidget);
     connect(ui->actionDeleteWidget, &QAction::triggered, this, &MainWindow::delWidget);
+    connect(ui->actionCloneWidget, &QAction::triggered, this, &MainWindow::cloneSelectedWidget);
     connect(ui->actionAddPixmap, &QAction::triggered, this, &MainWindow::addPixmap);
     connect(ui->actionAddLabel, &QAction::triggered, this, &MainWindow::addLabel);
     connect(ui->actionAddPanel, &QAction::triggered, this, &MainWindow::addPanel);

@@ -168,6 +168,7 @@
     <addaction name="separator"/>
     <addaction name="actionAddWidget"/>
     <addaction name="actionDeleteWidget"/>
+    <addaction name="actionCloneWidget"/>
     <addaction name="actionAddLabel"/>
     <addaction name="actionAddPixmap"/>
     <addaction name="actionAddScreen"/>
@@ -216,6 +217,8 @@
    <addaction name="separator"/>
    <addaction name="actionAddWidget"/>
    <addaction name="actionDeleteWidget"/>
+   <addaction name="actionCloneWidget"/>
+   <addaction name="separator"/>
    <addaction name="actionXmlEditor"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
@@ -284,7 +287,7 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset theme="document-new">
+    <iconset>
      <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
@@ -452,6 +455,11 @@
   <action name="actionAddPanel">
    <property name="text">
     <string>Add Panel</string>
+   </property>
+  </action>
+  <action name="actionCloneWidget">
+   <property name="text">
+    <string>&amp;Clone Widget</string>
    </property>
   </action>
  </widget>

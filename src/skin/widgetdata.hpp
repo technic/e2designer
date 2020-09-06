@@ -172,6 +172,9 @@ public:
     // Other attributes
     virtual QString getAttr(const QString& key) const;
 
+    // Deep copy
+    WidgetData* clone() const;
+
     // Required for the optimisation:
     // only widgets which are viewed by someone
     // listen to color/font changed signals
@@ -194,6 +197,9 @@ protected:
 
 private:
     bool fromXml(QXmlStreamReader& xml);
+
+    void appendConverterFromXml(QXmlStreamReader& xml);
+    void convertersToXml(XmlStreamWriter& xml) const;
 
     void sizeChanged();
     void parentSizeChanged();
