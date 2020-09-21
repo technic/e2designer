@@ -532,8 +532,8 @@ void ScreensModel::duplicateWdiget(const QModelIndex& index)
 {
     auto* widget = indexToItem(index);
     if (widget && widget->parent()) {
-        auto* widget_copy = widget->clone();
-        // insertWidget();
+        auto child = QVector<WidgetData*>{ widget->clone() };
+        m_commander->push(new InsertRowsCommand(*indexToItem(index.parent()), index.row(), child));
     }
 }
 
