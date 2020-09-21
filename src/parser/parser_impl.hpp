@@ -457,7 +457,7 @@ std::unique_ptr<AstNode> parseAst(Input&& in)
 {
     try {
         return parse_tree::parse<grammar, AstNode, AstSelector, nothing, tracer>(in);
-    } catch (const pegtl::parse_error& e) {
+    } catch (const parse_error& e) {
         // This catch block needs access to the input
         const auto p = e.positions.front();
         qDebug().noquote() << e.what() << '\n'
