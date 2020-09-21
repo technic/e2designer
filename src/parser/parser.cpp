@@ -8,7 +8,7 @@
 
 using namespace tao;
 
-long evaluateNumber(const parser::Expression& expr)
+int evaluateNumber(const parser::Expression& expr)
 {
     return expr.evaluateNumber(PseudoPythonParser::ctx);
 }
