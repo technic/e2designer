@@ -74,9 +74,9 @@ build:release:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = ccache g++"
-    - make -j$(nproc)
-    - make -C app INSTALL_ROOT=$(pwd)/appdir install
+    - cmake -DCMAKE_BUILD_TYPE=Release ..
+    - cmake --build .
+    - cmake --install . --prefix $(pwd)/appdir
     - ccache -s
   artifacts:
     paths:
