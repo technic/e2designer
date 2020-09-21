@@ -32,6 +32,10 @@ RUN apt-get install -y clang-$v clang-format-$v clang-tidy-$v clang-tools-$v bea
  && update-alternatives --install /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-$v 100 \
  && update-alternatives --install /usr/bin/scan-build scan-build /usr/bin/scan-build-$v 100
 
+RUN curl https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add - \
+ && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main' \
+ && apt-get update && apt-get install -y cmake
+
 RUN apt-get install -y apt-transport-https ca-certificates \
  && curl https://files.viva64.com/etc/pubkey.txt | apt-key add - \
  && curl https://files.viva64.com/etc/viva64.list -o /etc/apt/sources.list.d/viva64.list \
