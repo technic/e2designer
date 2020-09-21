@@ -92,7 +92,7 @@ build:debug:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - CXXFLAGS="-fprofile-arcs -ftest-coverage" LDFLAGS="--coverage" cmake -DCMAKE_BUILD_TYPE=Debug ..
+    - CXXFLAGS="--coverage" cmake -DCMAKE_BUILD_TYPE=Debug ..
     - cmake --build .
     - ccache -s
   artifacts:
