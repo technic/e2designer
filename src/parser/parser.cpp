@@ -124,9 +124,8 @@ public:
             obj.size = Coordinate{ evaluateNumber(*tuple.values.at(0)),
                                    evaluateNumber(*tuple.values.at(1)) };
         });
-        addParam("png", [this](const parser::Expression& expr) {
-            obj.valueIdx = evaluateNumber(expr);
-        });
+        addParam("png",
+                 [this](const parser::Expression& expr) { obj.valueIdx = evaluateNumber(expr); });
         addParam("flags",
                  [this](const parser::Expression& expr) { obj.flags = evaluateNumber(expr); });
     }
