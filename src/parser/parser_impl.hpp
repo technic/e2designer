@@ -114,8 +114,8 @@ public:
         if (is<U>()) {
             return static_cast<U&>(*this);
         }
-        auto message = std::stringstream()
-                       << "Expected " << typeid(U).name() << " got " << m_id.name();
+        std::stringstream message;
+        message << "Expected " << typeid(U).name() << " got " << m_id.name();
         throw std::runtime_error{ message.str() };
     }
 
@@ -125,15 +125,15 @@ public:
         if (is<U>()) {
             return static_cast<const U&>(*this);
         }
-        auto message = std::stringstream()
-                       << "Expected " << typeid(U).name() << " got " << m_id.name();
+        std::stringstream message;
+        message << "Expected " << typeid(U).name() << " got " << m_id.name();
         throw std::runtime_error{ message.str() };
     }
 
     virtual long evaluateNumber(const Context& ctx) const
     {
-        auto message = std::stringstream()
-                       << "Expression of type " << m_id.name() << " does not evaluate to number";
+        std::stringstream message;
+        message << "Expression of type " << m_id.name() << " does not evaluate to number";
         throw std::runtime_error{ message.str() };
     }
 
