@@ -114,8 +114,8 @@ build:clang:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
-    - bear make -j$(nproc)
+    - CXX="clang++" CXXFLAGS="-fcolor-diagnostics" cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    - cmake --build .
     - sed -e 's/"c++ /"clang++ /' -i compile_commands.json
     - ccache -s
   artifacts:
