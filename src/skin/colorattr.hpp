@@ -28,6 +28,18 @@ public:
     QString toString() const { return toStr(false); }
     inline QString toXml() const { return toStr(true); }
 
+    bool operator==(const ColorAttr& other) const
+    {
+        switch (m_state) {
+        case State::Null:
+            return m_state == other.m_state;
+        case State::Fixed:
+            return m_state == other.m_state && m_value == other.m_value;
+        case State::Named:
+            return m_state == other.m_state && m_name == other.m_name;
+        }
+    }
+
 protected:
     void setRawValue(QRgb value);
     QRgb getRawValue() const { return m_value; };

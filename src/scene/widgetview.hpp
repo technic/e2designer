@@ -113,6 +113,7 @@ private:
     void paintLabel(QPainter* painter, const WidgetData& w);
     void paintPixmap(QPainter* painter, const WidgetData& w);
     void paintSlider(QPainter* painter, const WidgetData& w);
+    void paintListbox(QPainter* painter, const WidgetData& w);
 
     QPixmap loadPixmap(const QString& fname);
     void updateBorderRect();

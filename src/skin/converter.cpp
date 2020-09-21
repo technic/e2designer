@@ -188,7 +188,8 @@ ConverterFactory::ConverterFactory()
     registerObject<ClockToText>();
     registerObject<RemainingToText>();
     registerObject<ProgressToText>();
-}
+    registerObject<TemplatedMultiContent>();
+};
 
 std::unique_ptr<Converter> ConverterFactory::createConverterByName(const QString& name)
 {
@@ -479,4 +480,18 @@ QString ProgressToText::getText()
 void ProgressToText::parseArgument()
 {
     m_type = strToEnum<Arg>(arg());
+}
+
+QVariant TemplatedMultiContent::getVariant(const QString& key)
+{
+    QVariantList values;
+    for (auto& s : parent()->getText().split(',')) {
+        values.push_back(s);
+    }
+    return QVariant::fromValue(QPair{ tpl, values });
+}
+
+void TemplatedMultiContent::parseArgument()
+{
+    tpl = PseudoPythonParser().parseFull(arg());
 }
