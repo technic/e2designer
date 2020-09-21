@@ -76,7 +76,7 @@ build:release:
     - mkdir -p build && pushd build
     - cmake -DCMAKE_BUILD_TYPE=Release ..
     - cmake --build .
-    - cmake --install . --prefix $(pwd)/appdir
+    - cmake --install . --prefix $(pwd)/appdir/usr
     - ccache -s
   artifacts:
     paths:
