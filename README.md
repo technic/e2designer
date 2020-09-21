@@ -31,18 +31,20 @@ Portable builds:
 
 # Compile from sources
 
+This is a usual CMake poject.
 Navigate to the e2designer sources and run
 
-```
-qmake
-make
+```bash
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
 ```
 
 The executable will be named ./app/e2designer or similar
 
 ## Build dependencies
 
-System with C++17 support and Qt version 5.11. or later
+System with C++17 support and Qt version 5.12 or later
 
 # Contributing
 
@@ -72,12 +74,15 @@ We need to pull upstream from time to time:
 ```
 git subtree pull -P Qt-Color-Widgets --squash git@gitlab.com:mattia.basaglia/Qt-Color-Widgets.git master
 git subtree pull -P AppImageUpdaterBridge --squash https://github.com/antony-jr/AppImageUpdaterBridge.git master
+git subtree pull -P pegtl --squash https://github.com/taocpp/PEGTL.git 2.8.3
 ```
+The pegtl library has release cycle, so pull the latest stable tag.
 
 # Credits
 Libraries:
 - [Qt-Color-Widgets](https://github.com/mbasaglia/Qt-Color-Widgets)
 - [AppImageUpdaterBridge](https://github.com/antony-jr/AppImageUpdaterBridge)
+- [PEGTL](https://github.com/taocpp/PEGTL)
 
 Application icon made by [Picol](https://www.flaticon.com/authors/picol)
 from [Flaticon](https://www.flaticon.com/)
