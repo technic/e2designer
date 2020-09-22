@@ -727,7 +727,7 @@ void ScreensModel::savePreviewTree(const QString& path)
             if (valueStr.isEmpty())
                 continue;
             xml.writeStartElement("entry");
-            xml.writeAttribute("name", widget->name());
+            xml.writeAttribute("name", widget->previewName());
             xml.writeAttribute("value", valueStr);
             xml.writeAttribute("render", renderStr);
             xml.writeAttribute("type", "string"); // compatibility

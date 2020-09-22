@@ -721,7 +721,7 @@ void WidgetData::loadPreview()
         MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
             QString screen = ptr->self()->name();
-            Preview p = m_model->getPreview(screen, name());
+            Preview p = m_model->getPreview(screen, previewName());
             m_attrs.previewRender = p.render;
             m_attrs.previewValue = p.value;
         }
@@ -730,6 +730,14 @@ void WidgetData::loadPreview()
             child(i)->loadPreview();
         }
     }
+}
+
+QString WidgetData::previewName() const
+{
+    if (name().isEmpty()) {
+        return source();
+    }
+    return name();
 }
 
 Property::Render WidgetData::sceneRender() const
