@@ -38,7 +38,13 @@ void Painter::accept(const multicontent::EntryPixmap& e)
     } else {
         srcRect = QRect(QPoint(0, 0), dstRect.size());
     }
+
+    painter->save();
+    if (e.alpha == Property::Alphatest::blend || e.alpha == Property::Alphatest::on) {
+        painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+    }
     painter->drawPixmap(dstRect, pixmap, srcRect);
+    painter->restore();
 }
 
 void Painter::accept(const multicontent::EntryProgress& e)
