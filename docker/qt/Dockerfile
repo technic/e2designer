@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 RUN apt-get update \
- && apt-get install -y curl git make software-properties-common
+ && apt-get install -y curl git make software-properties-common lcov
 
 ARG v=7
 RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test \
@@ -16,7 +16,7 @@ RUN apt-add-repository -y ppa:beineri/opt-qt-5.12.7-xenial \
 RUN sed -i '/^TEST/d' /opt/qt${Qt}/bin/qt${Qt}-env.sh
 RUN echo "source /opt/qt${Qt}/bin/qt${Qt}-env.sh" >> $HOME/.bashrc
 
-RUN apt-get install -y fuse ccache zsync gcovr lcov doxygen graphviz python3-requests \
+RUN apt-get install -y fuse ccache zsync gcovr doxygen graphviz python3-requests \
     apt-transport-https ca-certificates
 
 ARG v=8
