@@ -9,7 +9,7 @@ install:
 build_script:
   - mkdir build
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - cmake -A x64 -DCMAKE_BUILD_TYPE=Release ..
   - cmake --build .
   - cmake --install . --prefix appdir
 
