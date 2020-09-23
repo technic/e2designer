@@ -16,7 +16,7 @@ cleanup:
   - /lib/*.a
 modules:
   - name: e2designer
-    buildsystem: qmake
+    buildsystem: cmake
     builddir: true
     sources:
       - type: git
