@@ -24,13 +24,14 @@ jobs:
         uses: jurplel/install-qt-action@v2
       - name: Build
         run: |
-          qmake
-          make
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
       - name: Test
         run: |
-          make check
+          cmake --build build --target test
       - name: Package
         run: |
+          cmake --install build --prefix appdir
           macdeployqt app/e2designer.app -verbose=2 -dmg 
           find app
       - uses: actions/upload-artifact@v1
