@@ -45,7 +45,7 @@ public:
                 }
             }
             if (j == params.size()) {
-                throw std::runtime_error{ "unknow kvarg " + kvarg.key };
+                throw std::runtime_error{ "unknown kvarg " + kvarg.key };
             }
         }
 
