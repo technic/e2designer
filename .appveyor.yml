@@ -8,7 +8,7 @@ install:
 
 build_script:
   - cmake -A x64 -B build
-  - cmake --build build --configure Release
+  - cmake --build build --config Release
   - cmake --install build --prefix appdir
 
 after_build:
