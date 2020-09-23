@@ -32,7 +32,7 @@ jobs:
       - name: Package
         run: |
           mkdir appdir
-          ./mkicons.sh misc/e2designer.png appdir/icons.icns
+          ./mkicns.sh misc/e2designer.png appdir/icons.icns
           cmake --install build --prefix appdir --component application
           macdeployqt appdir/bin/e2designer.app -verbose=2 -dmg 
           find appdir
