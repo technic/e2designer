@@ -7,15 +7,13 @@ install:
   - choco install gitversion.portable -y
 
 build_script:
-  - mkdir build
-  - cd build
-  - cmake -A x64 -DCMAKE_BUILD_TYPE=Release ..
-  - cmake --build .
-  - cmake --install . --prefix appdir
+  - cmake -A x64 -B build
+  - cmake --build build --configure Release
+  - cmake --install build --prefix appdir
 
 after_build:
   - mkdir deploy
-  - copy appdir\e2designer.exe deploy\e2designer.exe
+  - copy appdir\bin\e2designer.exe deploy\e2designer.exe
   - windeployqt --release deploy/e2designer.exe
   - ps: |
       $version = git describe

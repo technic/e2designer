@@ -104,3 +104,7 @@ if (UNIX)
     install(FILES misc/e2designer.png DESTINATION share/icons/hicolor/256x256/app)
     install(FILES misc/e2designer.appdata.xml DESTINATION share/metainfo)
 endif()
+
+if (WIN32)
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+endif()
