@@ -104,14 +104,6 @@ build:debug:
     paths:
       - ccache/
 
-build:cmake:
-  stage: build
-  script:
-    - mkdir -p build && pushd build
-    - cmake ..
-    - cmake --build .
-    - QT_QPA_PLATFORM=offscreen ctest
-
 build:clang:
   stage: build
   script:
