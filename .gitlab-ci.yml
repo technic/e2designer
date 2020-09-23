@@ -220,6 +220,8 @@ coverage:
 flatpak:
   image: $FLATPAK_IMAGE
   stage: build
+  only:
+    - master
   before_script:
     - flatpak --version
     - flatpak-builder --version
