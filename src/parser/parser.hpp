@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_map>
 #include <QString>
 #include "base/singleton.hpp"
 #include "skin/colorattr.hpp"
