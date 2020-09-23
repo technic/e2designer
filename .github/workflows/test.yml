@@ -43,4 +43,4 @@ jobs:
       - name: Deploy to bintray
         run: |
           export VERSION=$(git describe)
-          curl -T app/bin/e2designer.dmg -u "technic:$BINTRAY_API_KEY" "$BINTRAY_URL/$VERSION/e2designer-$VERSION.dmg"
+          curl -T appdir/bin/e2designer.dmg -u "technic:$BINTRAY_API_KEY" "$BINTRAY_URL/$VERSION/e2designer-$VERSION.dmg"
