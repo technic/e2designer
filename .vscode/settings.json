@@ -11,6 +11,7 @@
         "cbegin",
         "crtp",
         "doxygen",
+        "noquote",
         "qcompare",
         "qfindtestdata",
         "qgetenv",
@@ -19,6 +20,7 @@
         "qreal",
         "qtest",
         "quintptr",
+        "qvariant",
         "qverify"
     ]
 }

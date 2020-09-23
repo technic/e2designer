@@ -18,10 +18,16 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build QtColorWidgets shared library")
 set(BUILD_STATIC_LIBS ON  CACHE BOOL "Build QtColorWidgets static library")
 add_subdirectory(Qt-Color-Widgets)
 
+# PEGTL
+set(PEGTL_BUILD_TESTS OFF CACHE BOOL "Build PEGTL tests")
+set(PEGTL_BUILD_EXAMPLES OFF CACHE BOOL "Build PEGTL examples")
+add_subdirectory(pegtl)
+
 # Application core
 set(SOURCE
     src/base/flagsetter.hpp
     src/base/xmlstreamwriter.hpp
+    src/parser/parser.cpp
     src/colorlistbox.cpp
     src/skindelegate.cpp
     src/colorlistwindow.cpp
@@ -53,6 +59,7 @@ set(SOURCE
     src/scene/sceneview.cpp
     src/scene/screenview.cpp
     src/scene/widgetview.cpp
+    src/scene/entrypainter.cpp
     src/skin/attributes.cpp
     src/skin/borders.cpp
     src/skin/colorattr.cpp
@@ -70,7 +77,7 @@ set(SOURCE
 
 include_directories(src)
 add_library(srclib ${SOURCE})
-target_link_libraries(srclib Qt5::Core Qt5::Widgets Qt5::Gui QtColorWidgets)
+target_link_libraries(srclib Qt5::Core Qt5::Widgets Qt5::Gui QtColorWidgets taocpp::pegtl)
 
 # Application executable
 add_executable(${PROJECT_NAME} app/main.cpp)
@@ -89,3 +96,15 @@ add_custom_target(
 )
 add_dependencies(${PROJECT_NAME} version)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/generated)
+
+# installation
+if (UNIX)
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+    install(FILES misc/e2designer.desktop DESTINATION share/applications)
+    install(FILES misc/e2designer.png DESTINATION share/icons/hicolor/256x256/app)
+    install(FILES misc/e2designer.appdata.xml DESTINATION share/metainfo)
+endif()
+
+if (WIN32)
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+endif()

@@ -10,6 +10,7 @@
 #include "base/xmlstreamwriter.hpp"
 #include "base/singleton.hpp"
 #include "base/meta.hpp"
+#include "parser/parser.hpp"
 
 class QXmlStreamReader;
 
@@ -37,6 +38,21 @@ public:
 
 private:
     Source* m_parent;
+};
+
+class PreviewSource : public Source
+{
+public:
+    PreviewSource(QVariant&& value)
+        : m_value(value)
+    {}
+
+    QString getText() final { return m_value.toString(); }
+    int getValue() final { return m_value.toInt(); }
+    QVariant getVariant(const QString& key) final { return m_value; }
+
+private:
+    QVariant m_value;
 };
 
 class MockSource : public Source
@@ -408,3 +424,18 @@ protected:
 private:
     int m_type;
 };
+
+class TemplatedMultiContent : public Converter
+{
+    Q_GADGET
+public:
+    QVariant getVariant(const QString& key) final;
+
+protected:
+    void parseArgument() final;
+
+private:
+    TemplatedContent tpl;
+};
+
+Q_DECLARE_METATYPE(TemplatedContent)

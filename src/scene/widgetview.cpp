@@ -3,6 +3,7 @@
 #include "screenview.hpp"
 #include "base/flagsetter.hpp"
 #include "skin/widgetdata.hpp"
+#include "parser/parser.hpp"
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
@@ -176,6 +177,8 @@ void WidgetGraphicsItem::paint(QPainter* painter,
     case Property::Slider:
         paintSlider(painter, w);
         break;
+    case Property::Listbox:
+        paintListbox(painter, w);
     default:
         qDebug() << "no render to paint";
         break;
@@ -254,6 +257,20 @@ void WidgetGraphicsItem::paintSlider(QPainter* painter, const WidgetData& w)
         painter->fillRect(rect(), QBrush(m_background_color));
     }
     painter->fillRect(r, QBrush(m_foreground_color));
+}
+
+void WidgetGraphicsItem::paintListbox(QPainter* painter, const WidgetData& w)
+{
+    painter->save();
+
+    painter->setPen(m_foreground_color);
+    painter->setBrush(m_foreground_color);
+
+    auto content = qvariant_cast<QPair<TemplatedContent, QVariantList>>(w.scenePreview());
+    Painter impl{ painter, content.first, content.second };
+    impl.paint();
+
+    painter->restore();
 }
 
 void WidgetGraphicsItem::updateBorderRect()

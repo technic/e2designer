@@ -11,7 +11,7 @@ variables:
   BINTRAY_PACKAGE: e2designer
   BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
   APP_NAME: io.github.technic.e2designer
-  CODE_CHECKER_VER: v6.11.1
+  CODE_CHECKER_VER: v6.14.0
   CLAZY_VER: "1.6"
 
 stages:
@@ -61,6 +61,9 @@ before_script:
   - . /opt/qt${Qt}/bin/qt${Qt}-env.sh
   - which qmake
   - qmake --version
+  - which cmake
+  - cmake --version
+  - gcc --version
   - g++ --version
   - clang++ --version
   - mkdir -p ccache
@@ -74,9 +77,9 @@ build:release:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = ccache g++"
-    - make -j$(nproc)
-    - make -C app INSTALL_ROOT=$(pwd)/appdir install
+    - cmake -DCMAKE_BUILD_TYPE=Release ..
+    - cmake --build .
+    - cmake --install . --prefix $(pwd)/appdir/usr
     - ccache -s
   artifacts:
     paths:
@@ -90,9 +93,8 @@ build:debug:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake .. "QMAKE_CXX = ccache g++" "CONFIG += debug"
-      "QMAKE_CXXFLAGS += -fprofile-arcs -ftest-coverage" "QMAKE_LFLAGS += --coverage"
-    - make -j$(nproc)
+    - CXXFLAGS="--coverage" cmake -DCMAKE_BUILD_TYPE=Debug ..
+    - cmake --build .
     - ccache -s
   artifacts:
     paths:
@@ -105,9 +107,6 @@ build:debug:
 build:cmake:
   stage: build
   script:
-    - curl https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
-    - apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'
-    - apt-get update && apt-get install -y cmake
     - mkdir -p build && pushd build
     - cmake ..
     - cmake --build .
@@ -117,8 +116,8 @@ build:clang:
   stage: build
   script:
     - mkdir -p build && pushd build
-    - qmake -spec linux-clang .. "QMAKE_CXXFLAGS += -fcolor-diagnostics"
-    - bear make -j$(nproc)
+    - CXX="clang++" CXXFLAGS="-fcolor-diagnostics" cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+    - cmake --build .
     - sed -e 's/"c++ /"clang++ /' -i compile_commands.json
     - ccache -s
   artifacts:
@@ -135,10 +134,15 @@ CodeChecker:
     - job: build:clang
       artifacts: true
   script:
-    - apt-get update && apt-get install -y build-essential gcc-multilib python-virtualenv python-dev thrift-compiler
+    - add-apt-repository -y ppa:deadsnakes/ppa
+    - apt-get update && apt-get install -y python3.7 python3.7-venv python3.7-dev
+    - update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 100
+    - apt-get install -y build-essential thrift-compiler virtualenv python3-setuptools python3-virtualenv
+    - curl -sL https://deb.nodesource.com/setup_12.x | bash
+    - apt-get install -y nodejs
     - git clone https://github.com/Ericsson/CodeChecker.git -b "$CODE_CHECKER_VER" --depth 1 ~/codechecker
     - cd ~/codechecker && make venv && source "$PWD/venv/bin/activate"
-    - make package && export PATH="$PWD/build/CodeChecker/bin:$PATH"
+    - BUILD_LOGGER_64_BIT_ONLY=YES make package && export PATH="$PWD/build/CodeChecker/bin:$PATH"
     - cd "$CI_PROJECT_DIR" && pushd build
     - CodeChecker analyze compile_commands.json -o ./reports
     - CodeChecker parse ./reports -e html -o ../reports_html
@@ -198,9 +202,9 @@ test:
   needs:
     - job: build:release
       artifacts: true
-  script:
+  script: 
     - pushd build
-    - QT_QPA_PLATFORM=offscreen make check
+    - QT_QPA_PLATFORM=offscreen ctest
 
 coverage:
   stage: tasks
@@ -209,7 +213,7 @@ coverage:
       artifacts: true
   script:
     - pushd build
-    - QT_QPA_PLATFORM=offscreen make check
+    - QT_QPA_PLATFORM=offscreen ctest
     - popd
     - lcov --no-external --directory . --capture --output-file coverage.info
     - lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info

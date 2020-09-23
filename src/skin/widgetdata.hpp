@@ -152,6 +152,8 @@ public:
     QVariant previewValue() const { return m_attrs.previewValue; }
     void setPreviewValue(const QVariant& value);
     void loadPreview();
+    // Key to use for preview lookup
+    QString previewName() const;
     // Render to use on scene
     Property::Render sceneRender() const;
     QVariant scenePreview() const;

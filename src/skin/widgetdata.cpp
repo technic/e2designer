@@ -584,12 +584,14 @@ void WidgetData::setPreviewValue(const QVariant& value)
 
 QVariant WidgetData::scenePreview() const
 {
-    if (this->source().isNull()) {
-        return previewValue();
+    Source* source = nullptr;
+    PreviewSource previewSource{ previewValue() };
+
+    if (!this->source().isNull()) {
+        source = MockSourceFactory::instance().getReference(this->source());
     }
-    auto source = MockSourceFactory::instance().getReference(this->source());
     if (!source) {
-        return previewValue();
+        source = &previewSource;
     }
 
     for (size_t i = 0; i < m_converters.size(); ++i) {
@@ -599,6 +601,7 @@ QVariant WidgetData::scenePreview() const
             m_converters[i]->attach(m_converters[i - 1].get());
         }
     }
+
     Source* finalSource = source;
     if (!m_converters.empty()) {
         finalSource = m_converters.back().get();
@@ -606,9 +609,12 @@ QVariant WidgetData::scenePreview() const
     using R = Property::Render;
     switch (m_attrs.render) {
     case R::Label:
+    case R::FixedLabel:
         return finalSource->getText();
     case R::Slider:
         return finalSource->getValue();
+    case R::Listbox:
+        return finalSource->getVariant(QString());
     default:
         return QVariant();
     }
@@ -715,7 +721,7 @@ void WidgetData::loadPreview()
         MixinTreeNode<WidgetData>* ptr = parent();
         if (ptr) {
             QString screen = ptr->self()->name();
-            Preview p = m_model->getPreview(screen, name());
+            Preview p = m_model->getPreview(screen, previewName());
             m_attrs.previewRender = p.render;
             m_attrs.previewValue = p.value;
         }
@@ -724,6 +730,14 @@ void WidgetData::loadPreview()
             child(i)->loadPreview();
         }
     }
+}
+
+QString WidgetData::previewName() const
+{
+    if (name().isEmpty()) {
+        return source();
+    }
+    return name();
 }
 
 Property::Render WidgetData::sceneRender() const
@@ -741,7 +755,7 @@ Property::Render WidgetData::sceneRender() const
             r = previewRender();
         return r;
     }
-    case WidgetType::Applet:
+    default:
         return Property::Widget;
     }
 }
