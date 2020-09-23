@@ -111,5 +111,5 @@ endif()
 
 if (APPLE)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
-    set_target_properties(${PROJECT_NAME} MACOSX_BUNDLE TRUE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
 endif()
