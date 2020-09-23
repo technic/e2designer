@@ -52,6 +52,8 @@ public:
         return constructEntry();
     }
 
+    virtual ~AbstractBuilder() = default;
+
 protected:
     struct Param
     {
