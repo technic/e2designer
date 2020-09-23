@@ -98,13 +98,18 @@ add_dependencies(${PROJECT_NAME} version)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/generated)
 
 # installation
-if (UNIX)
-    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+if (UNIX AND NOT APPLE)
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
     install(FILES misc/e2designer.desktop DESTINATION share/applications)
     install(FILES misc/e2designer.png DESTINATION share/icons/hicolor/256x256/app)
     install(FILES misc/e2designer.appdata.xml DESTINATION share/metainfo)
 endif()
 
 if (WIN32)
-    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
+endif()
+
+if (APPLE)
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
+    set_target_properties(foo ${PROJECT_NAME} MACOSX_BUNDLE TRUE)
 endif()

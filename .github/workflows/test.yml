@@ -31,13 +31,15 @@ jobs:
           cmake --build build --target test
       - name: Package
         run: |
-          cmake --install build --prefix appdir
-          macdeployqt app/e2designer.app -verbose=2 -dmg 
-          find app
+          mkdir appdir
+          ./mkicons.sh misc/e2designer.png appdir/icons.icns
+          cmake --install build --prefix appdir --component application
+          macdeployqt appdir/bin/e2designer.app -verbose=2 -dmg 
+          find appdir
       - uses: actions/upload-artifact@v1
         with:
           name: macos installer
-          path: app/e2designer.dmg
+          path: appdir/bin/e2designer.dmg
       - name: Deploy to bintray
         run: |
           export VERSION=$(git describe)
