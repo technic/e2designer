@@ -3,15 +3,48 @@
 #include <QtGlobal>
 #include <QColor>
 #include <QString>
+#include <QVariant>
 
-QString serialize(int value);
-void deserialize(const QString& str, int& value);
+inline QString serialize(int value)
+{
+    if (value != 0) {
+        return QString::number(value);
+    } else {
+        return QString();
+    }
+}
+inline void deserialize(const QString& str, int& value)
+{
+    value = str.toInt();
+}
 
-QString serialize(const QString& str);
-void deserialize(const QString& str, QString& value);
+inline QString serialize(const QString& str)
+{
+    return str;
+}
+inline void deserialize(const QString& str, QString& value)
+{
+    value = str;
+}
 
-QString serialize(bool b);
-void deserialize(const QString& str, bool& b);
+inline QString serialize(bool b)
+{
+    if (b) {
+        return QString("1");
+    } else {
+        return QString();
+    }
+}
+inline void deserialize(const QString& str, bool& b)
+{
+    b = str.toInt();
+}
 
-QString serialize(const QVariant& value);
-void deserialize(const QString& str, QVariant& value);
+inline QString serialize(const QVariant& value)
+{
+    return value.toString();
+}
+inline void deserialize(const QString& str, QVariant& value)
+{
+    value = str;
+}

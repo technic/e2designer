@@ -60,7 +60,6 @@ set(SOURCE
     src/scene/screenview.cpp
     src/scene/widgetview.cpp
     src/scene/entrypainter.cpp
-    src/skin/attributes.cpp
     src/skin/borders.cpp
     src/skin/colorattr.cpp
     src/skin/converter.cpp
