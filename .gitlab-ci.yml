@@ -57,6 +57,16 @@ format:
       \( -name '*.hpp' -o -name '*.cpp' \) -print)
     - git diff --exit-code
 
+doxygen:
+  stage: build
+  before_script:
+    - doxygen --version
+  script:
+    - doxygen
+  artifacts:
+    paths:
+      - doxygen/html/  
+
 before_script:
   - . /opt/qt${Qt}/bin/qt${Qt}-env.sh
   - which qmake
