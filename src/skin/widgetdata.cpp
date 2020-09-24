@@ -607,7 +607,7 @@ QVariant WidgetData::scenePreview() const
         finalSource = m_converters.back().get();
     }
     using R = Property::Render;
-    switch (m_attrs.render) {
+    switch (sceneRender()) {
     case R::Label:
     case R::FixedLabel:
         return finalSource->getText();
