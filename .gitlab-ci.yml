@@ -59,7 +59,7 @@ format:
       $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' \) -prune -o
       \( -name '*.hpp' -o -name '*.cpp' \) -print)
     - git diff --exit-code
-    - cmakelint CMakeLists.txt
+    - cmakelint --linelength=100 CMakeLists.txt
 
 doxygen:
   stage: build
