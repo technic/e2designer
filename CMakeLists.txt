@@ -89,7 +89,7 @@ add_subdirectory(tests)
 # git version
 find_package(Git)
 add_custom_target(
-    version ${CMAKE_COMMAND} 
+    version ${CMAKE_COMMAND}
     -D local_dir=${CMAKE_SOURCE_DIR} -D output_dir=${CMAKE_BINARY_DIR}
     -P ${CMAKE_SOURCE_DIR}/git-version/git-version.cmake
 )
@@ -97,18 +97,18 @@ add_dependencies(${PROJECT_NAME} version)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/generated)
 
 # installation
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
     install(FILES misc/e2designer.desktop DESTINATION share/applications)
     install(FILES misc/e2designer.png DESTINATION share/icons/hicolor/256x256/app)
     install(FILES misc/e2designer.appdata.xml DESTINATION share/metainfo)
 endif()
 
-if (WIN32)
+if(WIN32)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
 endif()
 
-if (APPLE)
+if(APPLE)
     install(TARGETS ${PROJECT_NAME} RUNTIME COMPONENT application)
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
 endif()
