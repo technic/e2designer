@@ -50,12 +50,15 @@ image:flatpak:
 format:
   stage: build
   before_script:
+    - pip install cmakelint
     - clang-format --version
+    - cmakelint --version
   script:
     - clang-format -style=file -i
       $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' \) -prune -o
       \( -name '*.hpp' -o -name '*.cpp' \) -print)
     - git diff --exit-code
+    - cmakelint CMakeLists.txt
 
 doxygen:
   stage: build
