@@ -50,7 +50,8 @@ image:flatpak:
 format:
   stage: build
   before_script:
-    - pip install cmakelint
+    - apt-get update && apt-get install -y python3-pip
+    - pip3 install cmakelint
     - clang-format --version
     - cmakelint --version
   script:
