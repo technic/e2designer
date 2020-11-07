@@ -401,7 +401,7 @@ QSize WidgetData::selfSize() const
 QSize WidgetData::parentSize() const
 {
     MixinTreeNode<WidgetData>* p = parent();
-    if (p && p->isChild()) {
+    if (p && p->isChild() && p->self()->type() != WidgetType::Include) {
         return p->self()->selfSize();
     } else {
         // TODO: should depend on output id
