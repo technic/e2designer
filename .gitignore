@@ -4,6 +4,7 @@
 .vagrant/
 *.log
 build/
+install/
 .cache/
 doxygen/
 

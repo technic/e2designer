@@ -97,6 +97,9 @@ add_dependencies(${PROJECT_NAME} version)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/generated)
 
 # installation
+get_target_property(_qmake_executable Qt5::qmake IMPORTED_LOCATION)
+get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
+
 if(UNIX AND NOT APPLE)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
     install(FILES misc/e2designer.desktop DESTINATION share/applications)
@@ -106,6 +109,17 @@ endif()
 
 if(WIN32)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
+    # At build stage we copy required files to temporary folder
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND "${WINDEPLOYQT_EXECUTABLE}" 
+        ARGS --verbose 1 --dir "${CMAKE_CURRENT_BINARY_DIR}/deployqt" "$<TARGET_FILE:${PROJECT_NAME}>"
+        DEPENDS ${PROJECT_NAME}
+        COMMENT "Running windeployqt..."
+    )
+    # At intall stage we copy contents of this folder to destination
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/deployqt/" DESTINATION bin)
 endif()
 
 if(APPLE)
