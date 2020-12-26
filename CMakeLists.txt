@@ -109,6 +109,7 @@ endif()
 
 if(WIN32)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE TRUE)
     find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}")
     # At build stage we copy required files to temporary folder
     add_custom_command(
