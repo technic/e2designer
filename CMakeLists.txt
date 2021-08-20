@@ -114,8 +114,9 @@ if(WIN32)
     # At build stage we copy required files to temporary folder
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND "${WINDEPLOYQT_EXECUTABLE}" 
-        ARGS --verbose 1 --dir "${CMAKE_CURRENT_BINARY_DIR}/deployqt" "$<TARGET_FILE:${PROJECT_NAME}>"
+        COMMAND "${WINDEPLOYQT_EXECUTABLE}"
+        ARGS --verbose 1 --dir "${CMAKE_CURRENT_BINARY_DIR}/deployqt"
+        "$<TARGET_FILE:${PROJECT_NAME}>"
         DEPENDS ${PROJECT_NAME}
         COMMENT "Running windeployqt..."
     )
