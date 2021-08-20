@@ -82,6 +82,7 @@ private:
     SkinScene* m_scene;
 
     // QObject owned
+    QSortFilterProxyModel* m_proxyModel;
     PropertiesModel* m_propertiesModel;
     AppImageUpdaterBridge::AppImageUpdaterDialog* m_updater;
 

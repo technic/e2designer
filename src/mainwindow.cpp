@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , m_scene(new SkinScene(SkinRepository::screens()))
+    , m_proxyModel(new QSortFilterProxyModel(this))
     , m_propertiesModel(new PropertiesModel(SkinRepository::screens(), this))
 #ifdef APPIMAGE_UPDATE
     , m_updater(new AppImageUpdaterDialog(QPixmap(":/icons/misc/e2designer.png"), this))
@@ -64,7 +65,16 @@ MainWindow::MainWindow(QWidget* parent)
             ui->refreshButton,
             &QPushButton::setEnabled);
 
-    ui->treeView->setModel(SkinRepository::screens());
+    m_proxyModel->setSourceModel(SkinRepository::screens());
+    m_proxyModel->setFilterKeyColumn(ScreensModel::ColumnName);
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    connect(ui->lineEdit,
+            &QLineEdit::textChanged,
+            m_proxyModel,
+            &QSortFilterProxyModel::setFilterFixedString);
+
+    //    ui->treeView->setModel(m_proxyModel);
+    ui->treeView->setModel(m_proxyModel->sourceModel());
     ui->treeView->setDragEnabled(true);
     //	ui->treeView->setDropIndicatorShown(true);
     ui->treeView->setAcceptDrops(true);
