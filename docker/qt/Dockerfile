@@ -37,6 +37,6 @@ RUN curl https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | a
  && apt-get update && apt-get install -y cmake
 
 RUN apt-get install -y apt-transport-https ca-certificates \
- && curl https://files.viva64.com/etc/pubkey.txt | apt-key add - \
- && curl https://files.viva64.com/etc/viva64.list -o /etc/apt/sources.list.d/viva64.list \
+ && curl -L https://files.viva64.com/etc/pubkey.txt | apt-key add - \
+ && curl -L https://files.viva64.com/etc/viva64.list -o /etc/apt/sources.list.d/viva64.list \
  && apt-get update && apt-get -y install pvs-studio
