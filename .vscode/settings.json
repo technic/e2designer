@@ -3,6 +3,7 @@
         "-DCMAKE_PREFIX_PATH=C:\\Qt\\5.12.4\\msvc2017_64",
         // "-DCMAKE_UNITY_BUILD=ON"
     ],
+    "cmake.generator": "Ninja",
     "cmake.installPrefix": "${workspaceRoot}/install",
     "cmake.testEnvironment": {
         "PATH": "C:\\Qt\\5.12.4\\msvc2017_64\\bin;${env.PATH}"
