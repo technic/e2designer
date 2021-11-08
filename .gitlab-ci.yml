@@ -34,20 +34,18 @@ image:qt:
   script:
     - docker build docker/qt --pull -t $UBUNTU_IMAGE
     - docker push $UBUNTU_IMAGE
-  rules:
-    - changes:
+  only:
+    changes:
       - docker/qt/**/*
-    - when: manual
 
 image:flatpak:
   extends: .docker
   script:
     - docker build docker/flatpak --pull -t $FLATPAK_IMAGE
     - docker push $FLATPAK_IMAGE
-  rules:
-    - changes:
+  only:
+    changes:
       - docker/flatpak/**/*
-    - when: manual
 
 format:
   stage: build
