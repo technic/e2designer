@@ -48,7 +48,7 @@ jobs:
     
     - name: Collect coverage
       run: |
-        apt-get install -y lcov
+        sudo apt-get install -y lcov
         lcov --no-external --directory . --capture --output-file coverage.info
         lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info
         lcov --list coverage.info
