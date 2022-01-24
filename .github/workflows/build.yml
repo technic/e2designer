@@ -78,6 +78,7 @@ jobs:
       run: |
         clang-format --version
         clang-format -style=file -i \
-          $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' -o path './pegtl' \) -prune -o \
+          $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' -o -path './pegtl' \) -prune -o \
           \( -name '*.hpp' -o -name '*.cpp' \) -print)
         git diff --exit-code
+
