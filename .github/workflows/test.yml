@@ -3,16 +3,10 @@ name: build
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 jobs:
   build_mac:
     runs-on: macos-latest
-
-    env:
-      BINTRAY_URL: https://api.bintray.com/content/technic/e2designer/e2designer
-      BINTRAY_API_KEY: ${{secrets.BINTRAY_API_KEY}}
 
     steps:
       - uses: actions/checkout@v2
@@ -31,18 +25,19 @@ jobs:
       - name: Test
         run: |
           cmake --build build --target test
+      - name: Generate Icons
+        run: ./mkicns.sh misc/e2designer.png appdir/icons.icns
       - name: Package
-        run: |
-          mkdir appdir
-          ./mkicns.sh misc/e2designer.png appdir/icons.icns
-          cmake --install build --prefix appdir --component application
-          macdeployqt appdir/bin/e2designer.app -verbose=2 -dmg 
-          find appdir
+        run: cmake --build build --target package
       - uses: actions/upload-artifact@v1
         with:
           name: macos installer
-          path: appdir/bin/e2designer.dmg
-      - name: Deploy to bintray
-        run: |
-          export VERSION=$(git describe)
-          curl -T appdir/bin/e2designer.dmg -u "technic:$BINTRAY_API_KEY" "$BINTRAY_URL/$VERSION/e2designer-$VERSION.dmg"
+          path: build/bin/e2designer.dmg
+      - uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/bin/e2designer.dmg
+          asset_name: macOS app
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Latest build from master"
