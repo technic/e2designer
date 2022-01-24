@@ -46,3 +46,22 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: QT_QPA_PLATFORM=offscreen ctest -C ${{env.BUILD_TYPE}}
 
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: CMake lint
+      run: |
+        pip3 install cmakelint
+        cmakelint --version
+        cmakelint --linelength=100 CMakeLists.txt
+
+    - name: clang-format
+      run: |
+        clang-format --version
+        clang-format -style=file -i \
+          $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' \) -prune -o \
+          \( -name '*.hpp' -o -name '*.cpp' \) -print)
+        git diff --exit-code
