@@ -38,13 +38,29 @@ jobs:
 
     - name: Build
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: CXXFLAGS="--coverage" cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: QT_QPA_PLATFORM=offscreen ctest -C ${{env.BUILD_TYPE}}
+    
+    - name: Collect coverage
+      run: |
+        lcov --no-external --directory . --capture --output-file coverage.info
+        lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info
+        lcov --list coverage.info
+        genhtml coverage.info --output-directory coverage-report
+    
+    - uses: codecov/codecov-action@v2
+      with:
+        files: ./coverage.info
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage-report
+        path: coverage-report/
 
   lint:
     runs-on: ubuntu-latest
@@ -62,6 +78,6 @@ jobs:
       run: |
         clang-format --version
         clang-format -style=file -i \
-          $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' \) -prune -o \
+          $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' -o path './pegtl' \) -prune -o \
           \( -name '*.hpp' -o -name '*.cpp' \) -print)
         git diff --exit-code
