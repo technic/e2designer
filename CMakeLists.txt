@@ -24,6 +24,12 @@ set(PEGTL_BUILD_TESTS OFF CACHE BOOL "Build PEGTL tests")
 set(PEGTL_BUILD_EXAMPLES OFF CACHE BOOL "Build PEGTL examples")
 add_subdirectory(pegtl)
 
+# Coverage
+option(CODE_COVERAGE, "enable compiler coverage flag")
+if(CODE_COVERAGE AND NOT WIN32)
+    add_compile_options(--coverage)
+endif()
+
 # Application core
 set(SOURCE
     src/base/flagsetter.hpp
