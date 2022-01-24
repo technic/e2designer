@@ -62,6 +62,18 @@ jobs:
       with:
         name: coverage-report
         path: coverage-report/
+    
+    - name: Package
+      run: cmake --build build --target package
+    
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: build/bin/e2designer-*-Linux.sh
+        asset_name: Linux portable executable
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "Latest build from master"
 
   lint:
     runs-on: ubuntu-latest
