@@ -128,7 +128,7 @@ if(WIN32)
         DEPENDS ${PROJECT_NAME}
         COMMENT "Running windeployqt..."
     )
-    # At intall stage we copy contents of this folder to destination
+    # At install stage we copy contents of this folder to destination
     install(DIRECTORY "${CMAKE_BINARY_DIR}/deployqt/" DESTINATION bin)
 endif()
 
