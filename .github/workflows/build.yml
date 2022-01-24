@@ -1,0 +1,85 @@
+name: CMake
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+    
+    env:
+      QtVer: 512
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install Qt
+      run: |
+        sudo apt-add-repository -y ppa:beineri/opt-qt-5.12.10-focal
+        sudo apt-get update -q
+        sudo apt-get install -y qt${QtVer}base qt${QtVer}tools qt${QtVer}svg libgl1-mesa-dev
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: |
+        /opt/qt${QtVer}/bin/qt${QtVer}-env.sh
+        cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: CXXFLAGS="--coverage" cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      # Execute tests defined by the CMake configuration.  
+      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      run: QT_QPA_PLATFORM=offscreen ctest -C ${{env.BUILD_TYPE}}
+    
+    - name: Collect coverage
+      run: |
+        sudo apt-get install -y lcov
+        lcov --no-external --directory . --capture --output-file coverage.info
+        lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info
+        lcov --list coverage.info
+        genhtml coverage.info --output-directory coverage-report
+    
+    - uses: codecov/codecov-action@v2
+      with:
+        files: ./coverage.info
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage-report
+        path: coverage-report/
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: CMake lint
+      run: |
+        pip3 install cmakelint
+        cmakelint --version
+        cmakelint --linelength=100 CMakeLists.txt
+
+    - name: clang-format
+      run: |
+        clang-format --version
+        clang-format -style=file -i \
+          $(find . \( -path './Qt-Color-Widgets' -o -path './AppImageUpdaterBridge' -o -path './pegtl' \) -prune -o \
+          \( -name '*.hpp' -o -name '*.cpp' \) -print)
+        git diff --exit-code
+
