@@ -139,7 +139,7 @@ if(APPLE)
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND "${MACDEPLOYQT_EXECUTABLE}"
-        ARGS "$<TARGET_FILE:${PROJECT_NAME}>" -verbose=2
+        ARGS "$<TARGET_FILE:${PROJECT_NAME}>/../.." -verbose=2
         DEPENDS ${PROJECT_NAME}
         COMMENT "Running macdeployqt..."
     )
