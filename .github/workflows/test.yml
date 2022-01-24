@@ -26,7 +26,9 @@ jobs:
         run: |
           cmake --build build --target test
       - name: Generate Icons
-        run: ./mkicns.sh misc/e2designer.png appdir/icons.icns
+        run: |
+          mkdir appdir 
+          ./mkicns.sh misc/e2designer.png appdir/icons.icns
       - name: Package
         run: cmake --build build --target package
       - uses: actions/upload-artifact@v1
