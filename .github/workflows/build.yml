@@ -69,7 +69,7 @@ jobs:
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/bin/e2designer-*-Linux.sh
+        file: build/e2designer-*-Linux.sh
         asset_name: Linux portable executable
         tag: ${{ github.ref }}
         overwrite: true
