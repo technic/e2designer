@@ -38,8 +38,8 @@ jobs:
       - uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/bin/e2designer.dmg
-          asset_name: macOS app
+          file: build/e2designer-*.dmg
+          file_glob: true
           tag: ${{ github.ref }}
           overwrite: true
           body: "Latest build from master"
