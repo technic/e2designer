@@ -135,6 +135,14 @@ endif()
 if(APPLE)
     install(TARGETS ${PROJECT_NAME} RUNTIME COMPONENT application)
     set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE TRUE)
+    find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${_qt_bin_idr}")
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND "${MACDEPLOYQT_EXECUTABLE}"
+        ARGS "$<TARGET_FILE:${PROJECT_NAME}>" -verbose=2
+        DEPENDS ${PROJECT_NAME}
+        COMMENT "Running macdeployqt..."
+    )
 endif()
 
 # CPack
