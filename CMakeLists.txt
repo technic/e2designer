@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.16)
 project(e2designer)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -28,6 +28,7 @@ add_subdirectory(pegtl)
 option(CODE_COVERAGE, "enable compiler coverage flag")
 if(CODE_COVERAGE AND NOT WIN32)
     add_compile_options(--coverage)
+    add_link_options(--coverage)
 endif()
 
 # Application core
