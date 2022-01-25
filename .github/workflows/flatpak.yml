@@ -19,3 +19,13 @@ jobs:
       with:
         manifest-path: io.github.technic.e2designer.yaml
         cache-key: flatpak-builder-${{ github.sha }}
+
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: app.flatpak
+        asset_name: e2designer-$tag.flatpak
+        tag: latest
+        overwrite: true
+        prerelease: true
+        body: "Latest build from master"
