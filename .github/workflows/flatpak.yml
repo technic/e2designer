@@ -17,5 +17,5 @@ jobs:
     - uses: actions/checkout@v2
     - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
       with:
-        manifest-path: io.github.technic.e2designer.yml
+        manifest-path: io.github.technic.e2designer.yaml
         cache-key: flatpak-builder-${{ github.sha }}
