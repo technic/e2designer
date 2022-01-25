@@ -38,22 +38,22 @@ jobs:
         version: ${{env.QT_VERSION}}
       if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
     
-    - name: Install Ninja
-      run: sudo apt-get install -y ninja-build
-      if: matrix.os == 'ubuntu-latest'
+    # - name: Install Ninja
+    #   run: sudo apt-get install -y ninja-build
+    #   if: matrix.os == 'ubuntu-latest'
 
-    - name: Install Ninja
-      run: brew install ninja
-      if: matrix.os == 'macos-latest'
+    # - name: Install Ninja
+    #   run: brew install ninja
+    #   if: matrix.os == 'macos-latest'
     
-    - name: Install Ninja
-      run: choco install ninja
-      if: matrix.os == 'windows-latest'
+    # - name: Install Ninja
+    #   run: choco install ninja
+    #   if: matrix.os == 'windows-latest'
 
     - name: Configure CMake
       env:
         COVERAGE: ${{ fromJSON('{"true":"ON", "false":"OFF"}')[matrix.os == 'ubuntu-latest'] }}
-      run: cmake -B ${{github.workspace}}/build -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCODE_COVERAGE=${{env.COVERAGE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCODE_COVERAGE=${{env.COVERAGE}}
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
