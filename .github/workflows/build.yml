@@ -72,18 +72,18 @@ jobs:
         lcov --remove coverage.info "moc_*" "*.moc" "qrc_*" "tests/*" --output-file coverage.info
         lcov --list coverage.info
         genhtml coverage.info --output-directory coverage-report
-      if: ${{matrix.coverage}} == 'ON'
+      if: matrix.coverage == 'ON'
     
     - uses: codecov/codecov-action@v2
       with:
         files: ./coverage.info
-      if: ${{matrix.coverage}} == 'ON'
+      if: matrix.coverage == 'ON'
 
     - uses: actions/upload-artifact@v2
       with:
         name: coverage-report
         path: coverage-report/
-      if: ${{matrix.coverage}} == 'ON'
+      if: matrix.coverage == 'ON'
     
     - name: Package
       run: cmake --build build --target package
@@ -91,7 +91,7 @@ jobs:
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/$${{matrix.artifact}}
+        file: build/${{matrix.artifact}}
         file_glob: true
         tag: latest
         overwrite: true
