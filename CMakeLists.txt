@@ -133,8 +133,8 @@ if(WIN32)
         COMMENT "Running windeployqt..."
     )
     # At install stage we copy contents of this folder to destination
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/deployqt/" DESTINATION bin)
-    set(CPACK_GENERATOR NSIS)
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/deployqt/" DESTINATION bin COMPONENT application)
+    set(CPACK_GENERATOR NSIS ZIP)
 endif()
 
 if(APPLE)
@@ -153,5 +153,6 @@ endif()
 
 # CPack
 set(CPACK_PACKAGE_VENDOR "technic")
+set(CPACK_COMPONENTS_ALL application)
 # set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPack Component Example")
 include(CPack)
