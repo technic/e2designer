@@ -37,6 +37,18 @@ jobs:
       with:
         version: ${{env.QT_VERSION}}
       if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
+    
+    - name: Install Ninja
+      run: apt-get install -y ninja-build
+      if: matrix.os == 'ubuntu-latest'
+
+    - name: Install Ninja
+      run: brew install ninja
+      if: matrix.os == 'macos-latest'
+    
+    - name: Install Ninja
+      run: choco install ninja
+      if: matrix.os == 'windows-latest'
 
     - name: Configure CMake
       env:
