@@ -18,13 +18,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - runs-on: ubuntu-latest
+          - os: ubuntu-latest
             coverage: ON
             artifact: e2designer-*-Linux.sh
-          - runs-on: windows-latest
+          - os: windows-latest
             coverage: OFF
             artifact: e2designer-*-win64.exe
-          - runs-on: macos-latest
+          - os: macos-latest
             coverage: OFF
             artifact: e2designer-*.dmg
     
