@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-project(e2designer 
-    VERSION 0.2.0 
+project(e2designer
+    VERSION 0.2.0
     DESCRIPTION "Skin editor for enigma2 written with Qt5"
     HOMEPAGE_URL "https://github.com/technic/e2designer"
 )
