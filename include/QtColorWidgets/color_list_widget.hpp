@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,9 @@ class QCP_EXPORT ColorListWidget : public AbstractWidgetList
     Q_OBJECT
 
     Q_PROPERTY(QList<QColor> colors READ colors WRITE setColors NOTIFY colorsChanged )
-    Q_PROPERTY(ColorWheel::DisplayFlags wheelFlags READ wheelFlags WRITE setWheelFlags NOTIFY wheelFlagsChanged)
+    Q_PROPERTY(ColorWheel::ShapeEnum wheelShape READ wheelShape WRITE setWheelShape NOTIFY wheelShapeChanged)
+    Q_PROPERTY(ColorWheel::ColorSpaceEnum colorSpace READ colorSpace WRITE setColorSpace NOTIFY colorSpaceChanged)
+    Q_PROPERTY(bool wheelRotating READ wheelRotating WRITE setWheelRotating NOTIFY wheelRotatingChanged)
 
 public:
     explicit ColorListWidget(QWidget *parent = 0);
@@ -45,14 +47,20 @@ public:
 
     void append();
 
-    ColorWheel::DisplayFlags wheelFlags() const;
+    ColorWheel::ShapeEnum wheelShape() const;
+    ColorWheel::ColorSpaceEnum colorSpace() const;
+    bool wheelRotating() const;
 
 Q_SIGNALS:
     void colorsChanged(const QList<QColor>&);
-    void wheelFlagsChanged(ColorWheel::DisplayFlags flags);
+    void wheelShapeChanged(ColorWheel::ShapeEnum shape);
+    void colorSpaceChanged(ColorWheel::ColorSpaceEnum space);
+    void wheelRotatingChanged(bool rotating);
 
 public Q_SLOTS:
-    void setWheelFlags(ColorWheel::DisplayFlags flags);
+    void setWheelShape(ColorWheel::ShapeEnum shape);
+    void setColorSpace(ColorWheel::ColorSpaceEnum space);
+    void setWheelRotating(bool rotating);
 
 private Q_SLOTS:
     void emit_changed();

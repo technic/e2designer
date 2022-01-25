@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2019 Mattia Basaglia
+# Copyright (C) 2013-2020 Mattia Basaglia
 #
 #
 # This software is free software: you can redistribute it and/or modify
@@ -27,29 +27,16 @@ set (CMAKE_MODULE_PATH
 
 include (CheckCXXCompilerFlag)
 
-include (../cmake/qt-configuration.cmake)
 include (../cmake/versioning.cmake)
 
 
 SET (${PROJECT_NAME}_VERSION_MAJOR 2)
-SET (${PROJECT_NAME}_VERSION_MINOR 0)
+SET (${PROJECT_NAME}_VERSION_MINOR 2)
 SET (${PROJECT_NAME}_VERSION_PATCH 0)
 SET (${PROJECT_NAME}_VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH}")
 
 
-set (QT_SUPPORTED_VERSIONS 5)
-
-select_qt (
-  QT_SUPPORTED_VERSIONS "${QT_SUPPORTED_VERSIONS}"
-  QT_DEFAULT_VERSION 5)
-
-set (REQUIRED_QT_COMPONENTS
-  Designer
-  )
-find_qt (
-  QT_SUPPORTED_VERSIONS "${QT_SUPPORTED_VERSIONS}"
-  REQUIRED_COMPONENTS "${REQUIRED_QT_COMPONENTS}"
-  OPTIONAL_COMPONENTS "")
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Designer REQUIRED)
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -98,13 +85,9 @@ set_target_properties (${TARGET_NAME}
 
 target_link_libraries(${TARGET_NAME}
   PRIVATE
-  ${COLOR_WIDGETS_LIBRARY})
-
-use_qt (
-  TARGET_NAME ${TARGET_NAME}
-  QT_SUPPORTED_VERSIONS "${QT_SUPPORTED_VERSIONS}"
-  REQUIRED_COMPONENTS "${REQUIRED_QT_COMPONENTS}"
-  OPTIONAL_COMPONENTS "")
+  ${COLOR_WIDGETS_LIBRARY}
+  Qt${QT_VERSION_MAJOR}::Designer
+  )
 
 
 # Sources
@@ -155,7 +138,7 @@ endforeach (HEADER IN HEADERS)
 
 # install
 get_target_property (QT_QMAKE_EXECUTABLE
-  Qt5::qmake LOCATION)
+  Qt${QT_VERSION_MAJOR}::qmake LOCATION)
 
 execute_process (
   COMMAND ${QT_QMAKE_EXECUTABLE} -query QT_INSTALL_PLUGINS

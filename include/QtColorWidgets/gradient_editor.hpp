@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,8 @@
 #include <QGradient>
 
 namespace color_widgets {
+
+class ColorDialog;
 
 /**
  * \brief A slider that moves on top of a gradient
@@ -67,6 +69,11 @@ public:
     Qt::Orientation orientation() const;
 
     /**
+     * \brief Dialog shown when double clicking a stop
+     */
+    ColorDialog* dialog() const;
+
+    /**
      * \brief Index of the currently selected gradient stop (or -1 if there is no selection)
      */
     int selectedStop() const;
@@ -101,6 +108,9 @@ protected:
     void dragMoveEvent(QDragMoveEvent* event) override;
     void dragLeaveEvent(QDragLeaveEvent *event) override;
     void dropEvent(QDropEvent* event) override;
+
+private Q_SLOTS:
+    void dialogUpdate(const QColor& c);
 
 private:
     class Private;

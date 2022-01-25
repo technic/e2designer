@@ -38,7 +38,7 @@ function (install_project
   include(CMakePackageConfigHelpers)
 
   string (TOLOWER ${i_target_name} CMAKE_BASE_FILE_NAME)
-  string (TOLOWER ${i_target_output_suffix} CMAKE_FILE_OUTPUT_SUFFIX)
+  string (TOLOWER "${i_target_output_suffix}" CMAKE_FILE_OUTPUT_SUFFIX)
 
   write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/${i_target_name}/${CMAKE_BASE_FILE_NAME}${CMAKE_FILE_OUTPUT_SUFFIX}-config-version.cmake"

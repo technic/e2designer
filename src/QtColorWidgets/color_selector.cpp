@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -50,8 +50,10 @@ ColorSelector::ColorSelector(QWidget *parent) :
     connect(this,SIGNAL(colorChanged(QColor)),this,SLOT(update_old_color(QColor)));
     connect(p->dialog,&QDialog::rejected,this,&ColorSelector::reject_dialog);
     connect(p->dialog,&ColorDialog::colorSelected, this, &ColorSelector::accept_dialog);
-    connect(p->dialog,&ColorDialog::wheelFlagsChanged,
-                this, &ColorSelector::wheelFlagsChanged);
+
+    connect(p->dialog, &ColorDialog::wheelRotatingChanged, this, &ColorSelector::wheelRotatingChanged);
+    connect(p->dialog, &ColorDialog::wheelShapeChanged, this, &ColorSelector::wheelShapeChanged);
+    connect(p->dialog, &ColorDialog::colorSpaceChanged, this, &ColorSelector::colorSpaceChanged);
 
     setAcceptDrops(true);
 }
@@ -83,9 +85,34 @@ void ColorSelector::setDialogModality(Qt::WindowModality m)
     Q_EMIT dialogModalityChanged(m);
 }
 
-ColorWheel::DisplayFlags ColorSelector::wheelFlags() const
+void ColorSelector::setWheelShape(ColorWheel::ShapeEnum shape)
 {
-    return p->dialog->wheelFlags();
+    p->dialog->setWheelShape(shape);
+}
+
+ColorWheel::ShapeEnum ColorSelector::wheelShape() const
+{
+    return p->dialog->wheelShape();
+}
+
+void ColorSelector::setColorSpace(ColorWheel::ColorSpaceEnum space)
+{
+    p->dialog->setColorSpace(space);
+}
+
+ColorWheel::ColorSpaceEnum ColorSelector::colorSpace() const
+{
+    return p->dialog->colorSpace();
+}
+
+void ColorSelector::setWheelRotating(bool rotating)
+{
+    p->dialog->setWheelRotating(rotating);
+}
+
+bool ColorSelector::wheelRotating() const
+{
+    return p->dialog->wheelRotating();
 }
 
 void ColorSelector::showDialog()
@@ -93,13 +120,13 @@ void ColorSelector::showDialog()
     p->old_color = color();
     p->dialog->setColor(color());
     connect_dialog();
+#ifdef Q_OS_ANDROID
+    p->dialog->showMaximized();
+#else
     p->dialog->show();
+#endif
 }
 
-void ColorSelector::setWheelFlags(ColorWheel::DisplayFlags flags)
-{
-    p->dialog->setWheelFlags(flags);
-}
 
 void ColorSelector::connect_dialog()
 {
@@ -118,6 +145,7 @@ void ColorSelector::accept_dialog()
 {
     setColor(p->dialog->color());
     p->old_color = color();
+    Q_EMIT colorSelected(color());
 }
 
 void ColorSelector::reject_dialog()
