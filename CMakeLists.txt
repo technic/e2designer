@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
-project(e2designer)
+project(e2designer 
+    VERSION 0.2.0 
+    DESCRIPTION "Skin editor for enigma2 written with Qt5"
+    HOMEPAGE_URL "https://github.com/technic/e2designer"
+)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -148,13 +152,6 @@ if(APPLE)
 endif()
 
 # CPack
-
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_PACKAGE_VENDOR "technic")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Skin editor for enigma2 written with Qt5")
-set(CPACK_PACKAGE_VERSION "0.2.0")
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "2")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
 # set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPack Component Example")
 include(CPack)
