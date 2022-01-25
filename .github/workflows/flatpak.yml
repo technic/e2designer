@@ -1,0 +1,21 @@
+name: Flatpak
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-5.14
+      options: --privileged
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
+      with:
+        manifest-path: io.github.technic.e2designer.yml
+        cache-key: flatpak-builder-${{ github.sha }}
