@@ -115,7 +115,7 @@ get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 if(UNIX AND NOT APPLE)
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin COMPONENT application)
     install(FILES misc/e2designer.desktop DESTINATION share/applications)
-    install(FILES misc/e2designer.png DESTINATION share/icons/hicolor/256x256/app)
+    install(FILES misc/e2designer.png DESTINATION share/icons/hicolor/256x256/apps)
     install(FILES misc/e2designer.appdata.xml DESTINATION share/metainfo)
 endif()
 
