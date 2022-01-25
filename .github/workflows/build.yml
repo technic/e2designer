@@ -16,6 +16,7 @@ jobs:
   build:
   
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
@@ -47,7 +48,7 @@ jobs:
       uses: jurplel/install-qt-action@v2
       with:
         version: ${{env.QT_VERSION}}
-      if: matrix.os == 'windows-lates' || matrix.os == 'macos-latest'
+      if: matrix.os == 'windows-latest' || matrix.os == 'macos-latest'
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
