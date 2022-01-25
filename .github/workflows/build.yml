@@ -35,7 +35,7 @@ jobs:
     
     - name: Install Qt
       env:
-        QtVer: $${{env.QT_VERSION_ALIAS}}
+        QtVer: ${{env.QT_VERSION_ALIAS}}
       run: |
         sudo apt-add-repository -y ppa:beineri/opt-qt-${{env.QT_VERSION}}-focal
         sudo apt-get update -q
