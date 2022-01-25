@@ -96,6 +96,7 @@ jobs:
           build/e2designer-*-Darwin.dmg
         fail_on_unmatched_files: false
         prerelease: true
+        tag_name: latest
         body: "Latest build from master"
 
   lint:
