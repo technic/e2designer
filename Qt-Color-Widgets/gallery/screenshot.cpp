@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,6 +24,9 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QComboBox>
+#include <QListView>
+#include <QTableWidget>
 
 #include "QtColorWidgets/color_2d_slider.hpp"
 #include "QtColorWidgets/color_delegate.hpp" /// \todo show it
@@ -33,8 +36,11 @@
 #include "QtColorWidgets/color_palette_widget.hpp"
 #include "QtColorWidgets/color_preview.hpp"
 #include "QtColorWidgets/color_wheel.hpp"
+#include "QtColorWidgets/harmony_color_wheel.hpp"
 #include "QtColorWidgets/hue_slider.hpp"
 #include "QtColorWidgets/gradient_editor.hpp"
+#include "QtColorWidgets/gradient_list_model.hpp"
+#include "QtColorWidgets/gradient_delegate.hpp"
 
 bool run = false;
 QStringList just_these;
@@ -76,9 +82,11 @@ int main(int argc, char *argv[])
 
     color_widgets::ColorPalette palette1;
     color_widgets::ColorPalette palette2;
+    color_widgets::ColorPalette palette3;
     int palette_columns = 12;
     palette1.setName("Palette 1");
     palette2.setName("Palette 2");
+    palette3.setName("Palette 3");
     palette1.setColumns(palette_columns);
     palette2.setColumns(palette_columns);
     for ( int i = 0; i < 6; i++ )
@@ -89,10 +97,14 @@ int main(int argc, char *argv[])
             palette1.appendColor(QColor::fromHsvF(i/8.0,1-f,0.5+f/2));
             palette2.appendColor(QColor::fromHsvF(i/8.0,1-f,1-f));
         }
+
+        palette3.appendColor(QColor::fromHsvF(i/8.0, 0.8, 1));
     }
     color_widgets::ColorPaletteModel palette_model;
     palette_model.addPalette(palette1, false);
     palette_model.addPalette(palette2, false);
+    palette_model.addPalette(palette3, false);
+
 
 
     color_widgets::ColorPreview preview;
@@ -102,6 +114,7 @@ int main(int argc, char *argv[])
     screenshot(preview);
 
     color_widgets::ColorDialog dialog;
+    dialog.setColorSpace(color_widgets::ColorWheel::ColorLCH);
     dialog.setColor(demo_color);
     screenshot(dialog);
 
@@ -122,6 +135,13 @@ int main(int argc, char *argv[])
     wheel.setColor(demo_color);
     screenshot(wheel);
 
+    color_widgets::HarmonyColorWheel harwheel;
+    harwheel.resize(256, 256);
+    harwheel.setColor(demo_color);
+    harwheel.addHarmony(.333, true);
+    harwheel.addHarmony(.667, true);
+    screenshot(harwheel);
+
     color_widgets::Swatch swatch;
     swatch.setPalette(palette1);
     swatch.resize(swatch.sizeHint());
@@ -130,8 +150,11 @@ int main(int argc, char *argv[])
     color_widgets::ColorPaletteWidget palette_widget;
     palette_widget.setModel(&palette_model);
     screenshot(palette_widget);
-    palette_widget.setReadOnly(true);
-    screenshot(palette_widget, "ColorPaletteWidget_readonly");
+
+    color_widgets::ColorPaletteWidget palette_widget1;
+    palette_widget1.setModel(&palette_model);
+    palette_widget1.setReadOnly(true);
+    screenshot(palette_widget1, "ColorPaletteWidget_readonly");
 
     color_widgets::HueSlider hue_slider;
     hue_slider.setColor(demo_color);
@@ -153,11 +176,44 @@ int main(int argc, char *argv[])
 
     color_widgets::GradientEditor editor;
     QGradientStops gradient_colors;
-    float n_colors = 6;
+    float n_colors = 4;
     for ( int i = 0; i <= n_colors; ++i )
         gradient_colors.append(QGradientStop(i/n_colors, QColor::fromHsvF(i/n_colors, 0.5, 1)));
     editor.setStops(gradient_colors);
     screenshot(editor);
+
+    QComboBox gradient_list;
+    color_widgets::GradientListModel gradient_model;
+    gradient_model.setGradient("Rainbow", gradient_colors);
+    gradient_model.setGradient("Black to Transparent", QGradientStops{{0, Qt::black}, {1, QColor(0, 0, 0, 0)}});
+    gradient_list.setModel(&gradient_model);
+    gradient_model.setIconSize(QSize(128, 24));
+    gradient_list.setIconSize(gradient_model.iconSize());
+    QObject::connect(&editor, &color_widgets::GradientEditor::stopsChanged, &gradient_model,
+            [&gradient_model](const QGradientStops& stops){ gradient_model.setGradient("Rainbow", stops); });
+    gradient_list.resize(gradient_list.sizeHint());
+    screenshot(gradient_list, "GradientListModel_combo");
+
+    QListView gradient_view;
+    color_widgets::GradientDelegate gradient_delegate;
+    gradient_view.setItemDelegate(&gradient_delegate);
+    gradient_view.setModel(&gradient_model);
+//     gradient_model.setEditMode(color_widgets::GradientListModel::EditName);
+    gradient_model.setEditMode(color_widgets::GradientListModel::EditGradient);
+    gradient_view.resize(QSize(gradient_view.sizeHintForColumn(0) + 4, gradient_view.sizeHint().height()));
+    screenshot(gradient_view, "GradientListModel_view");
+
+    QTableWidget gradient_table;
+    gradient_table.setItemDelegate(&gradient_delegate);
+    gradient_table.setRowCount(2);
+    gradient_table.setColumnCount(2);
+    gradient_table.setItem(0, 0, new QTableWidgetItem());
+    gradient_table.item(0, 0)->setData(Qt::EditRole, QVariant::fromValue(gradient_model.gradientBrush(0)));
+    gradient_table.setItem(0, 1, new QTableWidgetItem(gradient_model.nameFromIndex(0)));
+    gradient_table.setItem(1, 0, new QTableWidgetItem());
+    gradient_table.item(1, 0)->setData(Qt::EditRole, QVariant::fromValue(gradient_model.gradientBrush(1)));
+    gradient_table.setItem(1, 1, new QTableWidgetItem(gradient_model.nameFromIndex(1)));
+    screenshot(gradient_table, "GradientDelegate_table");
 
     if ( run )
         return a.exec();

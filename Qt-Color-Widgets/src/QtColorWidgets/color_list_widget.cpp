@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,7 +29,9 @@ class ColorListWidget::Private
 public:
     QList<QColor>               colors;
     QSignalMapper               mapper;
-    ColorWheel::DisplayFlags  wheel_flags;
+    ColorWheel::ShapeEnum       wheel_shape = ColorWheel::ShapeTriangle;
+    ColorWheel::ColorSpaceEnum  color_space = ColorWheel::ColorHSV;
+    bool                        wheel_rotating = true;
 };
 
 ColorListWidget::ColorListWidget(QWidget *parent)
@@ -37,7 +39,6 @@ ColorListWidget::ColorListWidget(QWidget *parent)
 {
     connect(this, &AbstractWidgetList::removed, this, &ColorListWidget::handle_removed);
     connect(&p->mapper, SIGNAL(mapped(int)), SLOT(color_changed(int)));
-    p->wheel_flags = ColorWheel::defaultDisplayFlags();
 }
 
 ColorListWidget::~ColorListWidget()
@@ -108,24 +109,41 @@ void ColorListWidget::append_widget(int col)
     //connect(cbs,SIGNAL(colorChanged(QColor)),SLOT(emit_changed()));
     p->mapper.setMapping(cbs,col);
     connect(cbs,SIGNAL(colorChanged(QColor)),&p->mapper,SLOT(map()));
-    connect(this,&ColorListWidget::wheelFlagsChanged,
-            cbs,&ColorSelector::setWheelFlags);
+    connect(this, &ColorListWidget::wheelRotatingChanged, cbs, &ColorSelector::setWheelRotating);
+    connect(this, &ColorListWidget::wheelShapeChanged, cbs, &ColorSelector::setWheelShape);
+    connect(this, &ColorListWidget::colorSpaceChanged, cbs, &ColorSelector::setColorSpace);
     appendWidget(cbs);
     setRowHeight(count()-1,22);
 }
 
-ColorWheel::DisplayFlags ColorListWidget::wheelFlags() const
+void ColorListWidget::setWheelShape(ColorWheel::ShapeEnum shape)
 {
-    return p->wheel_flags;
+    Q_EMIT wheelShapeChanged(p->wheel_shape = shape);
 }
 
-void ColorListWidget::setWheelFlags(ColorWheel::DisplayFlags flags)
+ColorWheel::ShapeEnum ColorListWidget::wheelShape() const
 {
-    if ( p->wheel_flags != flags )
-    {
-        p->wheel_flags = flags;
-        Q_EMIT wheelFlagsChanged(flags);
-    }
+    return p->wheel_shape;
+}
+
+void ColorListWidget::setColorSpace(ColorWheel::ColorSpaceEnum space)
+{
+    Q_EMIT colorSpaceChanged(p->color_space = space);
+}
+
+ColorWheel::ColorSpaceEnum ColorListWidget::colorSpace() const
+{
+    return p->color_space;
+}
+
+void ColorListWidget::setWheelRotating(bool rotating)
+{
+    Q_EMIT wheelRotatingChanged(p->wheel_rotating = rotating);
+}
+
+bool ColorListWidget::wheelRotating() const
+{
+    return p->wheel_rotating;
 }
 
 } // namespace color_widgets

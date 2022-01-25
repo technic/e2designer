@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013-2019 Mattia Basaglia
+# Copyright (C) 2013-2020 Mattia Basaglia
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
@@ -14,9 +14,10 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-
 cmake_minimum_required (VERSION 3.1 FATAL_ERROR)
+if ( ${CMAKE_VERSION} VERSION_GREATER "3.12.0")
+    cmake_policy(SET CMP0077 NEW)
+endif()
 
 set(COLORWIDGET_PROJECT_NAME QtColorWidgets)
 project(${COLORWIDGET_PROJECT_NAME} CXX)
@@ -31,29 +32,21 @@ set (CMAKE_MODULE_PATH
 include (CheckCXXCompilerFlag)
 
 include (cmake/install.cmake)
-include (cmake/qt-configuration.cmake)
 include (cmake/versioning.cmake)
 
 
 SET (${COLORWIDGET_PROJECT_NAME}_VERSION_MAJOR 2)
-SET (${COLORWIDGET_PROJECT_NAME}_VERSION_MINOR 0)
+SET (${COLORWIDGET_PROJECT_NAME}_VERSION_MINOR 2)
 SET (${COLORWIDGET_PROJECT_NAME}_VERSION_PATCH 0)
 SET (${COLORWIDGET_PROJECT_NAME}_VERSION "${${COLORWIDGET_PROJECT_NAME}_VERSION_MAJOR}.${${COLORWIDGET_PROJECT_NAME}_VERSION_MINOR}.${${COLORWIDGET_PROJECT_NAME}_VERSION_PATCH}")
 
 
-set (QT_SUPPORTED_VERSIONS 5)
 
-select_qt (
-  QT_SUPPORTED_VERSIONS "${QT_SUPPORTED_VERSIONS}"
-  QT_DEFAULT_VERSION 5)
 
-set (REQUIRED_QT_COMPONENTS
-  Widgets
-  )
-find_qt (
-  QT_SUPPORTED_VERSIONS "${QT_SUPPORTED_VERSIONS}"
-  REQUIRED_COMPONENTS "${REQUIRED_QT_COMPONENTS}"
-  OPTIONAL_COMPONENTS "")
+set(QT_VERSION_MAJOR 5)
+find_package(QT NAMES Qt5 Qt6 Qt4 COMPONENTS Core QUIET)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Widgets REQUIRED)
+
 
 # Auto generate moc files
 set(CMAKE_AUTOMOC ON)
@@ -67,7 +60,13 @@ option(BUILD_SHARED_LIBS "Build the shared library" ON)
 option(BUILD_STATIC_LIBS "Build the static library" OFF)
 
 set (TARGET_NAME ${COLORWIDGET_PROJECT_NAME})
-set (TARGET_OUTPUT_SUFFIX "-Qt${QT_VERSION}${${COLORWIDGET_PROJECT_NAME}_VERSION_MAJOR}")
+option(COLOR_WIDGETS_QT_SUFFIX "Append qt version to the target output files" OFF)
+if ( COLOR_WIDGETS_QT_SUFFIX )
+    set (TARGET_OUTPUT_SUFFIX "-Qt${QT_VERSION}${${COLORWIDGET_PROJECT_NAME}_VERSION_MAJOR}")
+else()
+    set (TARGET_OUTPUT_SUFFIX "")
+endif()
+
 set (INCLUDE_PREFIX "QtColorWidgets")
 set (COLOR_WIDGETS_LIBRARY "${TARGET_NAME}")
 
@@ -122,7 +121,7 @@ generate_versioning_information (
     VERSIONED_ENTITY ${COLORWIDGET_PROJECT_NAME}
     INCLUDE_PREFIX ${INCLUDE_PREFIX}
     COMPANY_NAME "Mattia Basaglia"
-    COMPANY_COPYRIGHT "Mattia Basaglia Copyright (C) 2013-2017"
+    COMPANY_COPYRIGHT "Mattia Basaglia Copyright (C) 2013-2020"
     FILE_DESCRIPTION "Color wheel widget and dialog for Qt${QT_VERSION}"
 )
 
@@ -142,17 +141,13 @@ add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/resources/${INCLUDE_PREFIX})
 add_subdirectory (${CMAKE_CURRENT_SOURCE_DIR}/src/${INCLUDE_PREFIX})
 
 
-use_qt (
-  TARGET_NAME ${TARGET_NAME}
-  QT_SUPPORTED_VERSIONS "${QT_SUPPORTED_VERSIONS}"
-  REQUIRED_COMPONENTS "${REQUIRED_QT_COMPONENTS}"
-  OPTIONAL_COMPONENTS "")
+target_link_libraries (${TARGET_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 
 install_project (
   PROJECT_NAME ${COLORWIDGET_PROJECT_NAME}
   TARGET_NAME ${TARGET_NAME}
-  TARGET_OUTPUT_SUFFIX ${TARGET_OUTPUT_SUFFIX}
+  TARGET_OUTPUT_SUFFIX "${TARGET_OUTPUT_SUFFIX}"
   EXPORT_HEADER ${EXPORT_HEADER}
   INCLUDE_PREFIX ${INCLUDE_PREFIX}
   HEADER_MATCHING_REGEX "^.*\.h$|^.*\.hpp$|^.*$"
@@ -169,3 +164,11 @@ if (${QTCOLORWIDGETS_DESIGNER_PLUGIN})
         add_subdirectory (color_widgets_designer_plugin)
     endif(Qt5Designer_FOUND)
 endif()
+
+configure_file(Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+add_custom_target(
+    ${COLORWIDGET_PROJECT_NAME}_docs
+    COMMAND doxygen Doxyfile
+    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/gallery/*.png ${CMAKE_CURRENT_BINARY_DIR}/doxygen/html
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)

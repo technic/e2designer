@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,6 +34,7 @@ class ColorPaletteWidget::Private : public Ui::ColorPaletteWidget
 public:
     ColorPaletteModel* model = nullptr;
     bool read_only = false;
+    QColor default_color;
 
     bool hasSelectedPalette()
     {
@@ -134,14 +135,22 @@ ColorPaletteWidget::ColorPaletteWidget(QWidget* parent)
     connect(p->button_color_add, &QAbstractButton::clicked, [this](){
         if ( !p->read_only && p->hasSelectedPalette() )
         {
-            ColorDialog dialog(this);
-            dialog.setAlphaEnabled(false);
-            if ( p->swatch->selected() != -1 )
-                dialog.setColor(p->swatch->selectedColor());
-            if ( dialog.exec() )
+            if ( p->default_color.isValid() )
             {
-                p->swatch->palette().appendColor(dialog.color());
+                p->swatch->palette().appendColor(p->default_color);
                 p->swatch->setSelected(p->swatch->palette().count()-1);
+            }
+            else
+            {
+                ColorDialog dialog(this);
+                dialog.setAlphaEnabled(false);
+                if ( p->swatch->selected() != -1 )
+                    dialog.setColor(p->swatch->selectedColor());
+                if ( dialog.exec() )
+                {
+                    p->swatch->palette().appendColor(dialog.color());
+                    p->swatch->setSelected(p->swatch->palette().count()-1);
+                }
             }
         }
     });
@@ -186,7 +195,7 @@ ColorPaletteWidget::ColorPaletteWidget(QWidget* parent)
     });
     /// \todo Show a dialog that asks for the number of columns (?)
     connect(p->button_palette_new, &QAbstractButton::clicked, [this](){
-        if ( p->hasSelectedPalette() )
+        if ( p->model )
         {
             bool ok = false;
             QString name = QInputDialog::getText(this, tr("New Palette"),
@@ -289,9 +298,23 @@ void ColorPaletteWidget::setModel(ColorPaletteModel* model)
 {
     if ( model == p->model )
         return;
+
+    if ( p->model )
+    {
+        disconnect(model, &QAbstractItemModel::dataChanged, this, nullptr);
+    }
+
     p->model = model;
     p->swatch->setPalette(ColorPalette());
     p->palette_list->setModel(model);
+
+    if ( model )
+    {
+        connect(model, &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &index){
+            if ( index.row() == p->palette_list->currentIndex() )
+                p->swatch->setPalette(p->model->palette(index.row()));
+        });
+    }
 }
 
 void ColorPaletteWidget::setColorSize(const QSize& colorSize)
@@ -332,10 +355,11 @@ void ColorPaletteWidget::setReadOnly(bool readOnly)
 
 bool ColorPaletteWidget::setCurrentColor(const QColor& color)
 {
+    QColor rgb = color.toRgb();
     const auto& palette = p->swatch->palette();
     for ( int i = 0; i < palette.count(); i++ )
     {
-        if ( palette.colorAt(i) == color )
+        if ( palette.colorAt(i).toRgb() == rgb )
         {
             p->swatch->setSelected(i);
             return true;
@@ -411,6 +435,17 @@ void ColorPaletteWidget::setCurrentRow(int row)
 void ColorPaletteWidget::clearCurrentColor()
 {
     p->swatch->clearSelection();
+}
+
+QColor ColorPaletteWidget::defaultColor() const
+{
+    return p->default_color;
+}
+
+
+void ColorPaletteWidget::setDefaultColor(const QColor& color)
+{
+    Q_EMIT(p->default_color = color);
 }
 
 } // namespace color_widgets

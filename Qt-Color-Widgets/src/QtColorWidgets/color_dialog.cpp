@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  * \copyright Copyright (C) 2014 Calle Laakkonen
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,13 @@
 
 #include <QDropEvent>
 #include <QDragEnterEvent>
-#include <QDesktopWidget>
 #include <QMimeData>
 #include <QPushButton>
 #include <QScreen>
 
+#include "QtColorWidgets/color_utils.hpp"
+
+#include <QDebug>
 namespace color_widgets {
 
 class ColorDialog::Private
@@ -44,6 +46,16 @@ public:
     Private() : pick_from_screen(false), alpha_enabled(true)
     {}
 
+#ifdef Q_OS_ANDROID
+    void screen_rotation()
+    {
+        auto scr = QApplication::primaryScreen();
+        if ( scr->size().height() > scr->size().width() )
+            ui.layout_main->setDirection(QBoxLayout::TopToBottom);
+        else
+            ui.layout_main->setDirection(QBoxLayout::LeftToRight);
+    }
+#endif
 };
 
 ColorDialog::ColorDialog(QWidget *parent, Qt::WindowFlags f) :
@@ -53,13 +65,27 @@ ColorDialog::ColorDialog(QWidget *parent, Qt::WindowFlags f) :
 
     setAcceptDrops(true);
 
+#ifdef Q_OS_ANDROID
+    connect(
+        QGuiApplication::primaryScreen(),
+        &QScreen::primaryOrientationChanged,
+        this,
+        [this]{p->screen_rotation();}
+    );
+    p->ui.wheel->setWheelWidth(50);
+    p->screen_rotation();
+#else
     // Add "pick color" button
     QPushButton *pickButton = p->ui.buttonBox->addButton(tr("Pick"), QDialogButtonBox::ActionRole);
     pickButton->setIcon(QIcon::fromTheme(QStringLiteral("color-picker")));
+#endif
 
     setButtonMode(OkApplyCancel);
 
-    connect(p->ui.wheel,&ColorWheel::displayFlagsChanged,this, &ColorDialog::wheelFlagsChanged);
+    connect(p->ui.wheel, &ColorWheel::colorSpaceChanged, this, &ColorDialog::colorSpaceChanged);
+    connect(p->ui.wheel, &ColorWheel::selectorShapeChanged, this, &ColorDialog::wheelShapeChanged);
+    connect(p->ui.wheel, &ColorWheel::rotatingSelectorChanged, this, &ColorDialog::wheelRotatingChanged);
+
 }
 
 ColorDialog::~ColorDialog()
@@ -70,11 +96,6 @@ ColorDialog::~ColorDialog()
 QSize ColorDialog::sizeHint() const
 {
     return QSize(400,0);
-}
-
-ColorWheel::DisplayFlags ColorDialog::wheelFlags() const
-{
-    return p->ui.wheel->displayFlags();
 }
 
 QColor ColorDialog::color() const
@@ -96,11 +117,6 @@ void ColorDialog::showColor(const QColor &c)
 {
     setColor(c);
     show();
-}
-
-void ColorDialog::setWheelFlags(ColorWheel::DisplayFlags flags)
-{
-    p->ui.wheel->setDisplayFlags(flags);
 }
 
 void ColorDialog::setPreviewDisplayMode(ColorPreview::DisplayMode mode)
@@ -324,22 +340,11 @@ void ColorDialog::dropEvent(QDropEvent *event)
     }
 }
 
-static QColor get_screen_color(const QPoint &global_pos)
-{
-    int screenNum = QApplication::desktop()->screenNumber(global_pos);
-    QScreen *screen = QApplication::screens().at(screenNum);
-
-    WId wid = QApplication::desktop()->winId();
-    QImage img = screen->grabWindow(wid, global_pos.x(), global_pos.y(), 1, 1).toImage();
-
-    return img.pixel(0,0);
-}
-
 void ColorDialog::mouseReleaseEvent(QMouseEvent *event)
 {
     if (p->pick_from_screen)
     {
-        setColorInternal(get_screen_color(event->globalPos()));
+        setColorInternal(utils::get_screen_color(event->globalPos()));
         p->pick_from_screen = false;
         releaseMouse();
     }
@@ -349,8 +354,60 @@ void ColorDialog::mouseMoveEvent(QMouseEvent *event)
 {
     if (p->pick_from_screen)
     {
-        setColorInternal(get_screen_color(event->globalPos()));
+        setColorInternal(utils::get_screen_color(event->globalPos()));
     }
+}
+
+void ColorDialog::keyReleaseEvent(QKeyEvent *ev)
+{
+    QDialog::keyReleaseEvent(ev);
+
+#ifdef Q_OS_ANDROID
+    if ( ev->key() == Qt::Key_Back )
+    {
+        reject();
+        ev->accept();
+    }
+#endif
+}
+
+void ColorDialog::setWheelShape(ColorWheel::ShapeEnum shape)
+{
+    p->ui.wheel->setSelectorShape(shape);
+}
+
+ColorWheel::ShapeEnum ColorDialog::wheelShape() const
+{
+    return p->ui.wheel->selectorShape();
+}
+
+void ColorDialog::setColorSpace(ColorWheel::ColorSpaceEnum space)
+{
+    p->ui.wheel->setColorSpace(space);
+}
+
+ColorWheel::ColorSpaceEnum ColorDialog::colorSpace() const
+{
+    return p->ui.wheel->colorSpace();
+}
+
+void ColorDialog::setWheelRotating(bool rotating)
+{
+    p->ui.wheel->setRotatingSelector(rotating);
+}
+
+bool ColorDialog::wheelRotating() const
+{
+    return p->ui.wheel->rotatingSelector();
+}
+
+int ColorDialog::exec()
+{
+#if defined(Q_OS_ANDROID) && !defined(Q_OS_ANDROID_FAKE)
+    showMaximized();
+    setFocus();
+#endif
+    return QDialog::exec();
 }
 
 } // namespace color_widgets

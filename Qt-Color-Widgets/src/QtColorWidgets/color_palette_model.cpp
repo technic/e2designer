@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -269,6 +269,8 @@ bool ColorPaletteModel::updatePalette(int index, const ColorPalette& palette, bo
     // Update the palette
     ColorPalette& local_palette = p->palettes[index] = palette;
     p->fixUnnamed(local_palette);
+
+    Q_EMIT dataChanged(this->index(index), this->index(index));
 
     if ( save )
         return p->save(local_palette, filename);

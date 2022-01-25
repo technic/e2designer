@@ -3,7 +3,7 @@
  *
  * \author Mattia Basaglia
  *
- * \copyright Copyright (C) 2013-2019 Mattia Basaglia
+ * \copyright Copyright (C) 2013-2020 Mattia Basaglia
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -99,6 +99,11 @@ class QCP_EXPORT ColorPaletteWidget : public QWidget
      */
     Q_PROPERTY(const ColorPalette& currentPalette READ currentPalette NOTIFY currentPaletteChanged)
 
+    /**
+     * \brief If a valid color, it's used when adding new colors to palettes
+     */
+    Q_PROPERTY(QColor defaultColor READ defaultColor WRITE setDefaultColor NOTIFY defaultColorChanged)
+
 public:
     ColorPaletteWidget(QWidget* parent = nullptr);
     ~ColorPaletteWidget();
@@ -122,6 +127,11 @@ public:
     QColor currentColor() const;
 
     int currentRow() const;
+
+    /**
+     * \brief Default color when adding a color to the current palette
+     */
+    QColor defaultColor() const;
 
 public Q_SLOTS:
     void setModel(ColorPaletteModel* model);
@@ -161,6 +171,12 @@ public Q_SLOTS:
      */
     void setCurrentRow(int currentRow);
 
+    /**
+     * \brief Sets the default for new colors
+     * If invalid, it will show a dialog
+     */
+    void setDefaultColor(const QColor& color);
+
 Q_SIGNALS:
     void modelChanged(ColorPaletteModel* model);
     void colorSizeChanged(const QSize& colorSize);
@@ -173,6 +189,7 @@ Q_SIGNALS:
     void borderChanged(const QPen& border);
     void currentRowChanged(int currentRow);
     void currentPaletteChanged(const ColorPalette& palette);
+    void defaultColorChanged(const QColor& color);
 
 private Q_SLOTS:
     void on_palette_list_currentIndexChanged(int index);
