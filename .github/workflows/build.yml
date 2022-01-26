@@ -121,11 +121,6 @@ jobs:
         manifest-path: io.github.technic.e2designer.yaml
         cache-key: flatpak-builder-${{ github.sha }}
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: flatpak
-        path: app.flatpak
-
   lint:
     runs-on: ubuntu-latest
 
