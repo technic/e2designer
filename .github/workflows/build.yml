@@ -144,7 +144,9 @@ jobs:
     - uses: actions/download-artifact@v2
 
     - name: Inspect directory
-      run: ls -laR
+      run: |
+        mv app-x86_64/app.flatpak app-x86_64/e2designer-latest.flatpak
+        ls -laR
 
     - uses: marvinpinto/action-automatic-releases@latest
       with:
