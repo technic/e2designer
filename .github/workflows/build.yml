@@ -143,14 +143,14 @@ jobs:
     steps:
     - uses: actions/download-artifact@v2
 
-    - name: Prepare directory
-      run: |
-        mv app.flatpak build/e2designer-latest.flatpak
-        ls -laR
+    - name: Inspect directory
+      run: ls -laR
 
     - uses: marvinpinto/action-automatic-releases@latest
       with:
-        files: build/*
+        files: |
+          package-*/*
+          app-*/*.flatpak
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         prerelease: true
         automatic_release_tag: latest
