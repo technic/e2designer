@@ -93,8 +93,6 @@ jobs:
 
     - uses: AppImageCrafters/build-appimage-action@master
       if: matrix.os == 'ubuntu-latest'
-      env:
-        UPDATE_INFO: gh-releases-zsync|technic|e2designer|latest|e2designer-*x86_64.AppImage.zsync
       with:
         recipe: AppImageBuilder.yml
 
