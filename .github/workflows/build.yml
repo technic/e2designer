@@ -96,6 +96,7 @@ jobs:
           build/e2designer-*-Darwin.dmg
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         prerelease: true
+        automatic_release_tag: latest
         title: "Latest build from master"
 
   lint:
