@@ -87,17 +87,32 @@ jobs:
     - name: Package
       run: cmake --build build --target package
     
-    - uses: marvinpinto/action-automatic-releases@latest
+    - uses: actions/upload-artifact@v2
       with:
-        files: |
+        name: package-${{matrix.os}}
+        path: |
           build/e2designer-*-Linux.sh
           build/e2designer-*-win64.exe
           build/e2designer-*-win64.zip
           build/e2designer-*-Darwin.dmg
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        prerelease: true
-        automatic_release_tag: latest
-        title: "Latest build from master"
+        if-no-files-found: error
+  
+  flatpak:
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-5.15
+      options: --privileged
+    steps:
+    - uses: actions/checkout@v2
+    - uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v4
+      with:
+        manifest-path: io.github.technic.e2designer.yaml
+        cache-key: flatpak-builder-${{ github.sha }}
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: flatpak
+        path: app.flatpak
 
   lint:
     runs-on: ubuntu-latest
@@ -119,3 +134,24 @@ jobs:
           \( -name '*.hpp' -o -name '*.cpp' \) -print)
         git diff --exit-code
 
+  upload:
+    name: Release and upload
+    needs:
+      - build
+      - flatpak
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v2
+
+    - name: Prepare directory
+      run: |
+        mv app.flatpak build/e2designer-latest.flatpak
+        ls -laR
+
+    - uses: marvinpinto/action-automatic-releases@latest
+      with:
+        files: build/*
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        prerelease: true
+        automatic_release_tag: latest
+        title: "Latest build from master"
