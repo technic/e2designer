@@ -3,7 +3,6 @@
 Skin editor for enigma2 written in C++/Qt5 framework.
 
 [ ![Build workflow](https://github.com/technic/e2designer/actions/workflows/build.yml/badge.svg) ](https://github.com/technic/e2designer/actions/workflows/build.yml)
-[ ![Flatpak workflow](https://github.com/technic/e2designer/actions/workflows/flatpak.yml/badge.svg) ](https://github.com/technic/e2designer/actions/workflows/flatpak.yml)
 [ ![GitHub release](https://img.shields.io/github/v/release/technic/e2designer?include_prereleases&label=Dowload) ](https://github.com/technic/e2designer/releases)
 <!-- [ ![codecov](https://codecov.io/gl/technic93/e2designer/branch/master/graph/badge.svg) ](https://codecov.io/gl/technic93/e2designer) -->
 
