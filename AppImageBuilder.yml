@@ -1,7 +1,7 @@
 # appimage-builder recipe see https://appimage-builder.readthedocs.io for details
 version: 1
 AppDir:
-  path: /root/AppDir
+  path: AppDir
   app_info:
     id: io.github.technic.e2designer
     name: e2designer
@@ -10,8 +10,7 @@ AppDir:
     exec: usr/bin/e2designer
     exec_args: $@
   apt:
-    arch:
-    - amd64
+    arch: amd64
     allow_unauthenticated: true
     sources:
     - sourceline: deb http://archive.ubuntu.com/ubuntu/ focal main restricted
