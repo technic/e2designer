@@ -97,6 +97,7 @@ jobs:
         fail_on_unmatched_files: false
         prerelease: true
         tag_name: latest
+        target_commitish: ${{ github.ref }}
         body: "Latest build from master"
 
   lint:
