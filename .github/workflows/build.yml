@@ -87,6 +87,17 @@ jobs:
     - name: Package
       run: cmake --build build --target package
     
+    - name: Prepare AppImage
+      run: cmake --install build --prefix=AppDir/usr --config ${{env.BUILD_TYPE}}
+      if: matrix.os == 'ubuntu-latest'
+
+    - uses: AppImageCrafters/build-appimage-action@master
+      if: matrix.os == 'ubuntu-latest'
+      env:
+        UPDATE_INFO: gh-releases-zsync|technic|e2designer|latest|e2designer-*x86_64.AppImage.zsync
+      with:
+        recipe: AppImageBuilder.yml
+
     - uses: actions/upload-artifact@v2
       with:
         name: package-${{matrix.os}}
@@ -95,6 +106,7 @@ jobs:
           build/e2designer-*-win64.exe
           build/e2designer-*-win64.zip
           build/e2designer-*-Darwin.dmg
+          e2designer-*.AppImage*
         if-no-files-found: error
   
   flatpak:
