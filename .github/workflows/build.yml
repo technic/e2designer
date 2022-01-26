@@ -158,7 +158,8 @@ jobs:
     - uses: marvinpinto/action-automatic-releases@latest
       with:
         files: |
-          package-*/
+          package-*/build/*
+          package-ubuntu-latest/*.AppImage*
           app-*/*.flatpak
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         prerelease: true
